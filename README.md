@@ -13,6 +13,9 @@ Finally, remember that, while having these features in another software is *(in 
 ## Now that you're ready, how do you use YAAL ?
 
 Here's a few docs to teach you everything this software can do :
-- Settings :
+- Command line arguments :
 - Custom Launchers :
-- Command line arguments : 
+- Settings :
+- Tools : 
+
+
