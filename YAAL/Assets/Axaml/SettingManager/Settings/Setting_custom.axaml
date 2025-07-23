@@ -1,0 +1,57 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="YAAL.Setting_Custom"
+             HorizontalAlignment="Stretch"
+             Height="70"
+             >
+  <Border 
+    Name="BackgroundColor"
+    BorderBrush="Gray"
+    BorderThickness="1"
+    CornerRadius="4"
+    Margin="8"
+    Padding="8"
+    HorizontalAlignment="Stretch"
+    Background="#FFF"
+          >
+    <Grid RowDefinitions="8,*,8">
+		<Grid ColumnDefinitions="*, 8, 30" Grid.Row="1" VerticalAlignment="Center">
+			<Button 
+				Name="removeComponent"
+				Content="—" 
+				Grid.Column="2" 
+				HorizontalContentAlignment="Center"
+				VerticalContentAlignment="Center"
+				HorizontalAlignment="Center"
+				VerticalAlignment="Center"
+				Height="30"
+				/>
+			<Grid ColumnDefinitions="*, 8, 20, 8, *" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="0">
+				<TextBox
+				  Name="SettingName"
+				  Grid.Column="0"
+				  VerticalAlignment="Center"
+				  ToolTip.Tip="The name is used to use settings as shortcuts via ${name}"/>
+				<TextBlock
+				  Text="=>"
+				  Grid.Column="2"
+				  HorizontalAlignment="Center"
+				  VerticalAlignment="Center"
+				  FontSize="25"
+				  />
+				<TextBox
+				  Name="Value"
+				  Grid.Column="4"
+				  VerticalAlignment="Center"
+				  ToolTip.Tip="What will replace ${name}"/>
+			</Grid>
+		</Grid>
+    </Grid>
+    
+  </Border>
+</UserControl>
+
+<!-- SizeToContent="WidthAndHeight" 
+
+Width="800"
+Height="200" -->

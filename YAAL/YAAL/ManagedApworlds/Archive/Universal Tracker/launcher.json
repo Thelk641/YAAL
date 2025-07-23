@@ -1,0 +1,30 @@
+{
+  "instructions": {
+    "0-Apworld": {
+      "apworldTarget": "C:\\ProgramData\\Archipelago\\custom_worlds\\tracker.apworld",
+      "necessaryFile": "True"
+    },
+    "1-Apworld": {
+      "apworldTarget": "${base:apworld}",
+      "necessaryFile": "True"
+    },
+    "2-Open": {
+      "args": "",
+      "processName": "",
+      "path": "${bizhawk} \"${baseSetting:rom}\""
+    }
+  },
+  "settings": {
+    "launcherName": "Universal Tracker",
+    "gameName": "Universal Tracker",
+    "githubURL": "",
+    "filters": "",
+    "apworld": "C:\\ProgramData\\Archipelago\\custom_worlds\\tracker.apworld",
+    "Debug_Async": "Debug_CLMaker_Async",
+    "Debug_SlotName": "Debug_CLMaker_Slot",
+    "Debug_Patch": "",
+    "Debug_AsyncName": "Debug_CLMaker_Async",
+    "Debug_launcherSelect": "The Legend of Zelda - Oracle of Seasons"
+  },
+  "isGame": false
+}

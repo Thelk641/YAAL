@@ -1,0 +1,48 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        x:Class="YAAL.Error">
+	<Border Margin="8" HorizontalAlignment="Stretch">
+		<Grid RowDefinitions="35,8,*">
+			<Border
+				Grid.Row="0"
+				Name="Background_0"
+				Background="#AAA"
+				BorderBrush="Gray"
+				BorderThickness="1"
+				CornerRadius="4"
+				Padding="8"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				>
+				<TextBlock
+					Name="ErrorName"
+					Text="Error : bla bla bla"
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch"
+					/>
+			</Border>
+			<Border
+				Grid.Row="2"
+				Name="Background_1"
+				Background="#AAA"
+				BorderBrush="Gray"
+				BorderThickness="1"
+				CornerRadius="4"
+				Padding="8"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				>
+				<TextBlock
+					Name="ErrorContent"
+					Text="Error : bla bla bla"
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch"
+					TextWrapping="Wrap"
+					/>
+			</Border>
+		</Grid>
+	</Border>
+</UserControl>

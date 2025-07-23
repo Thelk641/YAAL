@@ -1,0 +1,161 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="YAAL.Command_RegEx"
+             HorizontalAlignment="Stretch"
+             Height="140"
+             MinWidth="450"
+             >     
+  <Border 
+    Name="BackgroundColor"
+    BorderBrush="Gray"
+    BorderThickness="1"
+    CornerRadius="4"
+    Margin="8"
+    Padding="8"
+    HorizontalAlignment="Stretch"
+    Background="#FFF"
+          >
+    <Grid ColumnDefinitions="30, 8, 120, 8, *" VerticalAlignment="Stretch">
+		<Grid RowDefinitions="0,*,8,*,0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="0">
+			<Button Name="MoveUp" Content="↑" Grid.Row="1" Width="30" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+			<Button Name="MoveDown" Content="↓" Grid.Row="3" Width="30" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+		</Grid>
+        <TextBlock Text="RegEx" FontSize="30" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
+        
+		
+		<Grid RowDefinitions="0,*,8,*,8,*" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="4">
+            <Grid ColumnDefinitions="130, 8, *, 30" Grid.Row="1">
+			    <ComboBox 
+				    Name="InputType"
+				    Grid.Column="0"
+				    HorizontalAlignment="Stretch"
+					VerticalAlignment="Center"
+				    />
+			    <Grid 
+				    Name="GridInputFile"
+				    ColumnDefinitions="*,8,48"
+				    Grid.Column="2"
+				    HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch"
+				    IsVisible="True"
+				    >
+				    <TextBox
+                        Name="InputFile"
+                        Watermark="Source file"
+                        Grid.Column="0"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Center"
+				        ToolTip.Tip="The file containing text that needs replacement"
+				        IsVisible="True"
+                            />
+				    <Button 
+					    Name="InputFileButton"
+					    Content="File" 
+					    Grid.Column="2" 
+					    Width="40" 
+					    HorizontalAlignment="Left" 
+					    VerticalAlignment="Center"
+					    />
+			    </Grid>
+			    <Grid
+				    Name="GridInputString"
+				    ColumnDefinitions="*,8"
+				    Grid.Column="2"
+				    HorizontalAlignment="Stretch"
+					IsVisible="False"
+				    >
+				    <TextBox
+                        Name="InputString"
+                        Watermark="Source string"
+                        Grid.Column="0"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Center"
+				        ToolTip.Tip="The string containing text that needs replacement"
+				        IsVisible="True"
+                            />
+					
+			    </Grid>
+
+			    <Button Name="X" Content="X" Grid.Column="5" Width="30" HorizontalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+            </Grid>
+			
+			
+			
+            <Grid ColumnDefinitions="*, 8, 108, 30" Grid.Row="3">
+                <TextBox
+                Name="RegEx"
+                Watermark="Regular Expression"
+                Grid.Column="0"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Center"
+			    ToolTip.Tip="RegEx definition of the pattern to look for"
+                    />
+                <TextBox
+                Name="Replacement"
+                Watermark="Replacement"
+                Grid.Column="2"
+                Grid.ColumnSpan="2"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Center"
+			    ToolTip.Tip="What the pattern will be replaced by"
+                    />
+            </Grid>
+
+			<Grid ColumnDefinitions="130, 8, *" Grid.Row="5">
+				<ComboBox
+					Name="OutputType"
+					Grid.Column="0"
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Center"
+				/>
+				<Grid
+					Name="GridOutputFile"
+					ColumnDefinitions="*,8,40"
+					Grid.Column="2"
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Center"
+					IsVisible="True"
+				>
+					<TextBox
+						Name="OutputFile"
+						Watermark="Output file"
+						Grid.Column="0"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Center"
+						ToolTip.Tip="The result file"
+                        />
+					<Button
+						Name="OutputFileButton"
+						Content="File"
+						Grid.Column="2"
+						Width="40"
+						HorizontalAlignment="Left"
+						VerticalAlignment="Center"
+					/>
+				</Grid>
+				<Grid
+					Name="GridOutputString"
+					ColumnDefinitions="*"
+					Grid.Column="2"
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Center"
+					IsVisible="False"
+				>
+					<TextBox
+						Name="OutputString"
+						Watermark="Output variable name"
+						Grid.Column="0"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Center"
+						ToolTip.Tip="The variable name storing the result of this instruction"
+						IsVisible="True"
+                        />
+
+				</Grid>
+
+			</Grid>
+
+        </Grid>
+    </Grid>
+  </Border>
+</UserControl>

@@ -1,0 +1,281 @@
+using Avalonia;
+using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Markup.Xaml;
+using Avalonia.Media.TextFormatting.Unicode;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using System.Xml.Linq;
+
+namespace YAAL;
+
+public partial class App : Application
+{
+    string launcher = "";
+    string async = "";
+    string slot = "";
+
+    public override void Initialize()
+    {
+        AvaloniaXamlLoader.Load(this);
+    }
+
+    public override void OnFrameworkInitializationCompleted()
+    {
+
+        //TODO : this is debug
+        //ParseBuildErrors();
+        //return;
+
+
+        var args = Environment.GetCommandLineArgs().Skip(1).ToArray();
+
+        //var args = new string[7]{"--restore", "--launcher", "The Legend of Zelda - Oracle of Seasons", "--async", "Debug_CLMaker_Async", "--slot", "Debug_CLMaker_Slot"};
+        //var args = new string[2]{" --error ","D:\\Unity\\Avalonia port\\YAAL\\Logs\\20-07-2025-20-16-55.json"};
+        //var args = new string[2]{"--restore", "--exit" };
+
+        if(args == null || args.Length == 0)
+        {
+            Start();
+            return;
+        }
+
+        string argsString = "";
+
+        foreach (var item in args)
+        {
+            argsString += item + " ";
+        }
+        string[] split;
+        string settingName = "";
+        string settingValue = "";
+
+        foreach (var item in argsString.Split("--"))
+        {
+            if(item == "")
+            {
+                continue;
+            }
+            split = item.Split(" ");
+            int i = 0;
+            while (settingName == "")
+            {
+                settingName = split[i].Trim();
+                ++i;
+            }
+            for (int j = i; j < split.Length; j++)
+            {
+                settingValue += split[j] + " ";
+            }
+            if(!ParseArgs(settingName.Trim(), settingValue.Trim()))
+            {
+                return;
+            }
+            
+            settingName = "";
+            settingValue = "";
+        }
+
+
+        if (launcher != "" && !IOManager.GetLauncherList().Contains(launcher))
+        {
+            ErrorManager.ThrowError(
+                "App - Invalid launcher name",
+                "Launcher " + launcher + " doesn't seem to exists."
+                );
+            Environment.Exit(1);
+        }
+
+        if(async != "")
+        {
+            if(!IOManager.GetAsyncList().Contains(async))
+            {
+                ErrorManager.ThrowError(
+                    "App - Invalid async name",
+                    "Async " + async + " doesn't seem to exist"
+                    );
+                Environment.Exit(1);
+            }
+
+            if(slot == "")
+            {
+                ErrorManager.ThrowError(
+                "App - Empty slot name",
+                "You've picked an async, but no slot, this is not allowed."
+                );
+                Environment.Exit(1);
+            } else
+            {
+                if(!IOManager.GetSlotList(async).Contains(slot))
+                {
+                    ErrorManager.ThrowError(
+                        "App - Invalid slot name",
+                        "Async " + async + " doesn't contain a slot named " + slot
+                        );
+                    Environment.Exit(1);
+                }
+            }
+
+            if(launcher == "")
+            {
+                launcher = IOManager.GetLauncherNameFromSlot(async, slot);
+                if(launcher == null || launcher == "")
+                {
+                    ErrorManager.ThrowError(
+                        "App - Coudldn't automatically get launcher name",
+                        "You set an async and slot, but this slot doesn't have a launcher set. Either set one or use --launcher to manually pick one"
+                        );
+                    Environment.Exit(1);
+                }
+            }
+        }
+
+        if (launcher != "" && async != "" && slot != "")
+        {
+            // for some reason, the instruction are not set to this launcher !?
+            CustomLauncher customLauncher = IOManager.LoadLauncher(launcher);
+            customLauncher.ReadSettings(async, slot);
+            customLauncher.Execute();
+            if (customLauncher.waitingForRestore)
+            {
+                _ = WaitForRestore();
+                base.OnFrameworkInitializationCompleted();
+                return;
+            } else
+            {
+                base.OnFrameworkInitializationCompleted();
+                Environment.Exit(0);
+            }
+        }
+
+        Start();
+    }
+
+    private void ParseBuildErrors()
+    {
+        Dictionary<string, List<string>> warnings = new Dictionary<string, List<string>>();
+        var warningRegex = new Regex(@"(?<file>.+?)\((?<line>\d+),(?<col>\d+)\): warning (?<code>CS\d+): (?<message>.+)", RegexOptions.Compiled);
+
+
+        Dictionary<string, List<string>> warningsByCode = new();
+
+        foreach (string line in File.ReadLines("D:\\Unity\\Avalonia port\\build.log"))
+        {
+            var match = warningRegex.Match(line);
+            if (!match.Success) continue;
+
+            string code = match.Groups["code"].Value;
+            string message = $"{match.Groups["file"]}:{match.Groups["line"]},{match.Groups["col"]} - {match.Groups["message"].Value}";
+
+            if (!warningsByCode.ContainsKey(code))
+                warningsByCode[code] = new List<string>();
+
+            warningsByCode[code].Add(message);
+        }
+
+        // Ensure logs folder exists
+        string logsDir = Path.Combine(Directory.GetCurrentDirectory(), "logs");
+        Directory.CreateDirectory(logsDir);
+
+        foreach (var kvp in warningsByCode)
+        {
+            string path = Path.Combine(logsDir, $"{kvp.Key}.txt");
+            File.WriteAllLines(path, kvp.Value);
+            Console.WriteLine($"Saved {kvp.Value.Count} warnings to {path}");
+        }
+
+        Environment.Exit(0);
+    }
+
+    private void Start()
+    {
+        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            if (launcher != "")
+            {
+                CLMakerWindow clmaker = new CLMakerWindow(launcher);
+                desktop.MainWindow = clmaker;
+            }
+            else
+            {
+                desktop.MainWindow = new CLMakerWindow(true);
+                //desktop.MainWindow = new UpdateWindow();
+            }
+        }
+        base.OnFrameworkInitializationCompleted();
+    }
+
+    private bool ParseArgs(string name, string value)
+    {
+        switch (name)
+        {
+            case "error":
+                if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+                {
+                    ErrorManager.ReadError(value, desktop);
+                }
+                return false;
+            case "launcher":
+                launcher = value;
+                break;
+            case "async":
+                async = value;
+                break;
+            case "slot":
+                slot = value;
+                break;
+            case "restore":
+                Restore();
+                break;
+            case "exit":
+                Environment.Exit(0);
+                break;
+            default:
+                ErrorManager.ThrowError(
+                    "App - Incorrect argument",
+                    "Tried to parse argument of type " + name + " which isn't a valid argument type."
+                    );
+                return false;
+        }
+        return true;
+    }
+
+    private void Restore()
+    {
+        if (!IOManager.RestoreApworlds())
+        {
+            ErrorManager.ThrowError(
+                    "App - Failed to restore apworlds",
+                    "Something went wrong while trying to restore apworlds directly."
+                    );
+        }
+
+        if (!IOManager.RestoreBackups())
+        {
+            ErrorManager.ThrowError(
+                    "App - Failed to restore backups",
+                    "Something went wrong while trying to restore backups directly."
+                    );
+        }
+    }
+
+    static async Task WaitForRestore()
+    {
+        var tcs = new TaskCompletionSource();
+
+        CustomLauncher.DoneRestoring += () =>
+        {
+            tcs.SetResult();
+        };
+
+        await tcs.Task;
+
+        Debug.WriteLine("Done waiting !");
+
+        Environment.Exit(0);
+    }
+}

@@ -1,0 +1,259 @@
+using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Interactivity;
+using Avalonia.Threading;
+using YAAL.Assets.Scripts;
+using Avalonia;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using static System.Diagnostics.Debug;
+using static YAAL.LauncherSettings;
+
+namespace YAAL;
+
+public partial class CLMakerWindow : Window
+{
+    private void SetEvents(bool autoLoad)
+    {
+        ModeSelector.ItemsSource = new List<string> { "Game", "Tool" };
+        ModeSelector.SelectedIndex = 0;
+
+        AvailableVersions.ItemsSource = new List<string> { "None" };
+        AvailableVersions.SelectedIndex = 0;
+
+        GitHubVersions.ItemsSource = new List<string> { "None" };
+        GitHubVersions.SelectedIndex = 0;
+
+        CommandSelector.ItemsSource = Templates.commandNames;
+        CommandSelector.SelectedIndex = 0;
+
+        this.Closing += OnWindowClosed;
+
+        EmptyLauncher.Click += CreateNewLauncher;
+        Duplicate.Click += DuplicateLauncher;
+        Delete.Click += DeleteLauncher;
+        Settings.Click += OpenSettingManager;
+        Download.Click += DownloadVersion;
+        Remove.Click += RemoveVersion;
+        CommandAdder.Click += AddCommand;
+        OpenTestWindow.Click += Test;
+
+        TurnEventsBackOn();
+        ReloadLauncherList(autoLoad);
+    }
+
+    private void OnWindowClosed(object? sender, EventArgs e)
+    {
+        if(settingManager != null)
+        {
+            settingManager.Close();
+        }
+        Save();
+    }
+
+    private void TurnEventsOff()
+    {
+        // When loading a launcher, we need to turn these off while setting everything up
+        // and then turn them back on when we're done
+        LauncherName.TextChanged -= LauncherName_TextChanged;
+        ModeSelector.SelectionChanged -= ModeSelector_ChangedSelection;
+        LauncherSelector.SelectionChanged -= LauncherSelector_ChangedSelection;
+    }
+
+    private void TurnEventsOn()
+    {
+        LauncherName.TextChanged += LauncherName_TextChanged;
+        ModeSelector.SelectionChanged += ModeSelector_ChangedSelection;
+        LauncherSelector.SelectionChanged += LauncherSelector_ChangedSelection;
+    }
+
+    private async void TurnEventsBackOn()
+    {
+        // We can't turn events back on immediately, because the UI is in a different thread
+        // If we did, they'd all trigger on the change we just did, and we don't want that
+        // So instead we tell that particular thread to take care of turning them back on !
+        await Dispatcher.UIThread.InvokeAsync(() => {
+            TurnEventsOn();
+        }, DispatcherPriority.Background);
+    }
+
+
+    // BUTTONS
+
+    private void AddCommand(object? sender, RoutedEventArgs e)
+    {
+        AddCommand(CommandSelector.SelectedItem.ToString());
+    }
+
+    private void Test(object? sender, RoutedEventArgs e)
+    {
+        List<Interface_Instruction> instructions = new List<Interface_Instruction>();
+        foreach (var item in commandList)
+        {
+            instructions.Add(item.GetInstruction());
+        }
+        customLauncher.ResetInstructionList(instructions);
+        Save();
+        string version = GetLatestAvailableVersion();
+
+        TestWindow testWindow = TestWindow.GetTestWindow();
+        testWindow.Setup(customLauncher, AvailableVersions.ItemsSource);
+        testWindow.IsVisible = true;
+    }
+
+    private void Save(object? sender = null, RoutedEventArgs e = null)
+    {
+        ReloadLauncher();
+        customLauncher.Save();
+    }
+
+    public async void DownloadVersion(object? sender, RoutedEventArgs e)
+    {
+        if(await WebManager.DownloadUpdatedApworld(customLauncher, GitHubVersions.SelectedItem.ToString()))
+        {
+            UpdateAvailableVersion();
+        }
+    }
+
+    public void RemoveVersion(object? sender, RoutedEventArgs e)
+    {
+        IOManager.RemoveDownloadedVersion(customLauncher.GetSetting(launcherName), AvailableVersions.SelectedItem.ToString());
+        UpdateAvailableVersion();
+    }
+
+    public void CreateNewLauncher(object? sender, RoutedEventArgs e)
+    {
+        Save();
+        NewLauncher launcher = new NewLauncher(this);
+        launcher.Show();
+    }
+
+    public void CreateEmptyLauncher(object? sender = null, RoutedEventArgs e = null)
+    {
+        if(customLauncher != null)
+        {
+            Save();
+        }
+        
+        TurnEventsOff();
+        customLauncher = new CustomLauncher();
+        LauncherName.Text = IOManager.FindAvailableDirectoryName("NewLauncher");
+        customLauncher.SetSetting(launcherName.ToString(), LauncherName.Text);
+        ModeSelector.SelectedIndex = 0;
+
+        AvailableVersions.ItemsSource = new List<string> { "None" };
+        AvailableVersions.SelectedIndex = 0;
+
+        GitHubVersions.ItemsSource = new List<string> { "None" };
+        GitHubVersions.SelectedIndex = 0;
+
+        CommandSelector.ItemsSource = Templates.commandNames;
+        CommandSelector.SelectedIndex = 0;
+
+        foreach (var item in commandList)
+        {
+            item.DeleteComponent(false);
+        }
+        commandList = new List<Command>();
+        Save();
+        ReloadLauncherList();
+        TurnEventsBackOn();
+    }
+
+    public void DuplicateLauncher(object? sender, RoutedEventArgs e)
+    {
+        Save();
+        TurnEventsOff();
+        LauncherName.Text += " - clone";
+        customLauncher.SetSetting(launcherName.ToString(), LauncherName.Text);
+        Save();
+        TurnEventsBackOn();
+    }
+
+    public void DeleteLauncher(object? sender, RoutedEventArgs e)
+    {
+        TurnEventsOff();
+        IOManager.DeleteLauncher(LauncherName.Text);
+        ReloadLauncherList(true);
+        TurnEventsBackOn();
+    }
+
+    public void OpenSettingManager(object? sender, RoutedEventArgs e)
+    {
+        settingManager = SettingManager.GetSettingsWindow("clmaker", this.customLauncher.selfsettings);
+        settingManager.Show();
+        settingManager.Closing += UpdateSettings;
+    }
+
+    private void UpdateSettings(object? sender, WindowClosingEventArgs e)
+    {
+        Dictionary<string, string> newCustomSettings;
+        Dictionary<LauncherSettings, string> newSettings = settingManager.ParseSetting(out newCustomSettings);
+        if (this.customLauncher.selfsettings[githubURL] != newSettings[githubURL])
+        {
+            this.customLauncher.selfsettings[githubURL] = newSettings[githubURL];
+            UpdateGitVersions();
+        }
+        this.customLauncher.selfsettings = newSettings;
+        this.customLauncher.customSettings = newCustomSettings;
+        Save();
+        
+        settingManager = null;
+    }
+
+
+
+
+
+
+    // TEXT CHANGED
+    private void LauncherName_TextChanged(object? sender, EventArgs e)
+    {
+        Debouncer.Debounce(_LauncherName_TextChanged, 1f);
+    }
+
+    private void _LauncherName_TextChanged()
+    {
+        if(LauncherName.Text == "")
+        {
+            TurnEventsOff();
+            LauncherName.Text = "Temp";
+            TurnEventsBackOn();
+        }
+        if (IOManager.MoveLauncher(customLauncher.GetSetting(launcherName), LauncherName.Text))
+        {
+            customLauncher.SetSetting(launcherName.ToString(), LauncherName.Text);
+            Save();
+            ReloadLauncherList();
+        }
+    }
+
+
+
+
+
+
+
+    // CHANGED SELECTION
+    private void ModeSelector_ChangedSelection(object? sender, SelectionChangedEventArgs e)
+    {
+        customLauncher.isGame = (ModeSelector.SelectedItem.ToString() == "Game");
+        if (customLauncher.isGame)
+        {
+            IOManager.RemoveTool(customLauncher);
+        } else
+        {
+            IOManager.AddTool(customLauncher);
+        }
+    }
+
+    private void LauncherSelector_ChangedSelection(object? sender, SelectionChangedEventArgs e)
+    {
+        if(LauncherSelector.SelectedItem.ToString() == LauncherName.Text)
+        {
+            return;
+        }
+        LoadLauncher(LauncherSelector.SelectedItem.ToString());
+    }
+}

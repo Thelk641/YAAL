@@ -1,0 +1,32 @@
+{
+  "instructions": {
+    "0-Patch": {
+      "mode": "Apply",
+      "target": ""
+    },
+    "1-Open": {
+      "args": "",
+      "processName": "",
+      "path": "\"${bizhawk}\" \"${rom}\""
+    },
+    "2-Apworld": {
+      "apworldTarget": "C:\\ProgramData\\Archipelago\\custom_worlds\\tloz_oos.apworld",
+      "necessaryFile": "True"
+    }
+  },
+  "settings": {
+    "launcherName": "The Legend of Zelda - Oracle of Seasons",
+    "gameName": "The Legend of Zelda - Oracle of Seasons",
+    "githubURL": "https://github.com/Dinopony/ArchipelagoOoS/releases",
+    "filters": ".apworld",
+    "apworld": "",
+    "Debug_AsyncName": "Debug_CLMaker_Async",
+    "Debug_SlotName": "Debug_CLMaker_Slot",
+    "Debug_Patch": "D:\\Unity\\Avalonia port\\YAAL\\Async\\Debug_CLMaker_Async\\Debug_CLMaker_Slot\\AP_52618771567073636237_P43_Masaru_OoS.apoos",
+    "Debug_baseLauncher": ""
+  },
+  "customSettings": {
+    "aplauncher": "C:\\ProgramData\\Archipelago\\ArchipelagoLauncherDebug.exe"
+  },
+  "isGame": true
+}

@@ -1,0 +1,48 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="YAAL.Setting_Fixed"
+             HorizontalAlignment="Stretch"
+             Height="70"
+             >
+	<Border
+	Name="BackgroundColor"
+	BorderBrush="Gray"
+	BorderThickness="1"
+	CornerRadius="4"
+	Margin="8"
+	Padding="8"
+	HorizontalAlignment="Stretch"
+	Background="#FFF"
+        >
+		<Grid RowDefinitions="8,*,8">
+			<Grid ColumnDefinitions="*, 8, 30" Grid.Row="1" VerticalAlignment="Center">
+				<Grid ColumnDefinitions="*, 8, 20, 8, *" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Row="1">
+					<TextBlock
+						Name="SettingName"
+						Grid.Column="0"
+						Text="settingName"
+						HorizontalAlignment="Center"
+						VerticalAlignment="Center"
+						/>
+					<TextBlock
+						Text="=>"
+						Grid.Column="2"
+						HorizontalAlignment="Center"
+						VerticalAlignment="Center"
+						FontSize="25"/>
+					<TextBox
+						Name="Value"
+						Grid.Column="4"
+						VerticalAlignment="Center"
+						ToolTip.Tip="Leave empty to inherit the general setting"/>
+				</Grid>
+			</Grid>
+		</Grid>
+
+	</Border>
+</UserControl>
+
+<!-- SizeToContent="WidthAndHeight" 
+
+Width="800"
+Height="200" -->

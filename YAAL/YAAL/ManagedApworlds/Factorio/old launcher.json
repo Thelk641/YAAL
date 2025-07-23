@@ -1,0 +1,45 @@
+{
+  "instructions": {
+    "0-Apworld": {
+      "apworldTarget": "C:\\ProgramData\\Archipelago\\lib\\worlds\\factorio.apworld",
+      "necessaryFile": "True"
+    },
+    "1-Backup": {
+      "processName": "Client ",
+      "target": "C:\\Users\\Thelk641\\AppData\\Roaming\\Factorio\\saves",
+      "outputToLookFor": "",
+      "timer": "",
+      "modeSelect": "process",
+      "defaultFile": ""
+    },
+    "2-Patch": {
+      "mode": "Copy",
+      "target": "D:\\Factorio Server\\mods",
+      "optimize": ""
+    },
+    "3-Isolate": {
+      "processName": "Client",
+      "outputToLookFor": "Established bridge to Factorio Server. Ready to connect to Archipelago via /connect",
+      "timer": "",
+      "modeSelect": "combined"
+    },
+    "4-Open": {
+      "args": " -- \"Factorio Client\"",
+      "processName": "Client",
+      "path": "${aplauncher}"
+    }
+  },
+  "settings": {
+    "launcherName": "Factorio",
+    "gameName": "Factorio",
+    "githubURL": "",
+    "filters": "",
+    "apworld": "C:\\ProgramData\\Archipelago\\lib\\worlds\\factorio.apworld",
+    "Debug_AsyncName": "PatchTest",
+    "Debug_SlotName": "Slot 2",
+    "Debug_Patch": "D:\\Unity\\Avalonia port\\YAAL\\Async\\PatchTest\\Slot 2\\AP-88872051018193305301-P2-Player2_0.6.1.zip",
+    "Debug_baseLauncher": ""
+  },
+  "customSettings": {},
+  "isGame": true
+}

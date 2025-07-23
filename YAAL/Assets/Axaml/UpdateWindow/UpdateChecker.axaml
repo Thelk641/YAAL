@@ -1,0 +1,149 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="YAAL.UpdateChecker"
+             HorizontalAlignment="Stretch"
+             MinWidth="450"
+             >
+  <Border 
+    Name="BackgroundColor"
+    BorderBrush="Gray"
+    BorderThickness="0"
+    CornerRadius="8"
+    Margin="0"
+    Padding="8"
+    HorizontalAlignment="Stretch"
+    Background="#FFF"
+          >
+	  <Grid ColumnDefinitions="120,8,*">
+		  <TextBlock
+			  Name="launcherName"
+			  Grid.Column="0"
+			  Text="The Legend of Zelda - Oracle of Seasons"
+			  TextWrapping="Wrap"
+			  VerticalAlignment="Center"
+			  HorizontalAlignment="Center"
+			  TextAlignment="Center"
+			  />
+		  <Border
+				Name="WaitingForDownload"
+				BorderBrush="Gray"
+				BorderThickness="1"
+				Grid.Column="2"
+				Height="50"
+				IsVisible="False">
+			  <TextBlock
+				  Text="Currently downloading, please wait"
+				  HorizontalAlignment="Center"
+				  VerticalAlignment="Center"
+				  FontSize="18"
+				  />
+		  </Border>
+
+		  <Grid Name="StandardDisplay" IsVisible="True" Grid.Column="2" ColumnDefinitions="*,8,*,8,90">
+			  <Border
+					  BorderBrush="Gray"
+					  BorderThickness="1"
+					  Grid.Column="0"
+					  Height="50"
+					  >
+				  <Grid RowDefinitions="*,4,*" VerticalAlignment="Center">
+					  <TextBlock
+						  Text="Local"
+						  VerticalAlignment="Center"
+						  HorizontalAlignment="Center"
+						  Grid.Row="0"
+					  />
+					  <TextBlock
+						  Name="Downloaded"
+						  Text="oos.v0.12"
+						  VerticalAlignment="Center"
+						  HorizontalAlignment="Center"
+						  Grid.Row="2"
+					  />
+				  </Grid>
+			  </Border>
+
+			  <Border
+				Name="GitVersion"
+				BorderBrush="Gray"
+				BorderThickness="1"
+				Grid.Column="2"
+				Height="50"
+				IsVisible="False">
+				  <Grid RowDefinitions="*,4,*" VerticalAlignment="Center">
+					  <TextBlock
+						  Text="Github"
+						  VerticalAlignment="Center"
+						  HorizontalAlignment="Center"
+						  Grid.Row="0"
+					  />
+					  <TextBlock
+						  Name="Available"
+						  Text="oos.v0.12"
+						  VerticalAlignment="Center"
+						  HorizontalAlignment="Center"
+						  Grid.Row="2"
+					  />
+				  </Grid>
+			  </Border>
+			  <Border
+				Name="BadLink"
+				BorderBrush="Gray"
+				BorderThickness="1"
+				Grid.Column="2"
+				Height="50"
+				IsVisible="False">
+				  <Grid RowDefinitions="*,4,*" VerticalAlignment="Center">
+					  <TextBlock
+						Text="Empty or invalid"
+						TextWrapping="Wrap"
+						TextAlignment="Center"
+						Grid.Row="0"
+						/>
+					  <TextBlock
+						Text="github link"
+						TextWrapping="Wrap"
+						TextAlignment="Center"
+						Grid.Row="2"
+						/>
+					  </Grid>
+			  </Border>
+
+			  <Border
+				Name="CheckingForUpdates"
+				BorderBrush="Gray"
+				BorderThickness="1"
+				Grid.Column="2"
+				Height="50"
+				IsVisible="True">
+				  <Grid RowDefinitions="*,4,*" VerticalAlignment="Center">
+					  <TextBlock
+						Text="Checking for"
+						TextWrapping="Wrap"
+						TextAlignment="Center"
+						Grid.Row="0"
+						/>
+					  <TextBlock
+						Text="updates"
+						TextWrapping="Wrap"
+						TextAlignment="Center"
+						Grid.Row="2"
+						/>
+				  </Grid>
+			  </Border>
+			  
+			  <Button
+				  Name="Download"
+				  Content="Download"
+				  HorizontalAlignment="Stretch"
+				  HorizontalContentAlignment="Center"
+				  Grid.Column="4"
+				  IsEnabled="False"
+				  />
+			  
+		  </Grid>
+	  
+	  </Grid>
+
+  </Border>
+</UserControl>

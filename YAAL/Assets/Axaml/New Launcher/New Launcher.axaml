@@ -1,0 +1,197 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+		Width="300"
+        Height="393"
+		MinHeight="393"
+		MaxHeight="393"
+        MinWidth="300"
+        x:Class="YAAL.NewLauncher"
+        Title="Create a new launcher">
+	<Border Margin="8" HorizontalAlignment="Stretch">
+		<Grid RowDefinitions="48, 4, 1, 4, 48, 8, 48, 8, 48, 8, 48, 8, 48, 8, 30" HorizontalAlignment="Stretch">
+			
+			<Border 
+				Grid.Row="0" 
+				Name="Background_0" 
+				Background="#AAA"
+				BorderBrush="Gray"
+				BorderThickness="1"
+				CornerRadius="4"
+				Padding="8"
+				HorizontalAlignment="Stretch"
+				>
+				<Grid ColumnDefinitions="*,8,40" Grid.Row="0">
+					<TextBox
+						Name="ApworldPath"
+						Watermark="/path/to/file.apworld"
+						Grid.Column="0"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Center"
+						MinWidth="30"
+						HorizontalContentAlignment="Left"
+						VerticalContentAlignment="Center"
+						ToolTip.Tip="Setting this to a correct apworld should automatically fill the name fields"
+					/>
+					<Button 
+						Name="FilePick"
+						Content="File" 
+						Grid.Column="2" 
+						Height="30"
+						Width="40" 
+						HorizontalAlignment="Left" 
+						VerticalAlignment="Center"
+						/>
+				</Grid>
+			</Border>
+			
+			<Separator Grid.Row="2"/>
+			
+			<Border 				
+				Grid.Row="4" 
+				Name="Background_1" 
+				Background="#AAA"
+				BorderBrush="Gray"
+				BorderThickness="1"
+				CornerRadius="4"
+				Padding="8"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				>
+				<Grid ColumnDefinitions="150, 4, *" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+					<TextBlock
+					  Name="_LauncherName"
+					  Text="This launcher's name :"
+					  Grid.Column="0"
+					  VerticalAlignment="Center"
+					  HorizontalAlignment="Left"
+				  />
+					<TextBox
+					  Name="LauncherName"
+					  Grid.Column="2"
+					  VerticalAlignment="Center"
+					  ToolTip.Tip="This is only used in YAAL, feel free to set it to something meaningfull"
+				  />
+				</Grid>
+			</Border>
+			
+			<Border 				
+				Grid.Row="6" 
+				Name="Background_2" 
+				Background="#AAA"
+				BorderBrush="Gray"
+				BorderThickness="1"
+				CornerRadius="4"
+				Padding="8"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				>
+				<Grid ColumnDefinitions="150, 4, *" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+					<TextBlock
+						Name="_GameName"
+						Text="Game's full name :"
+						Grid.Column="0"
+						VerticalAlignment="Center"
+						/>
+					<TextBox
+						Name="GameName"
+						Grid.Column="2"
+						VerticalAlignment="Center"
+						ToolTip.Tip="This should match the 'game' option in the yaml"
+						/>
+				</Grid>
+			</Border>
+
+			<Border
+				Grid.Row="8"
+				Name="Background_3"
+				Background="#AAA"
+				BorderBrush="Gray"
+				BorderThickness="1"
+				CornerRadius="4"
+				Padding="8"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				>
+				<Grid ColumnDefinitions="150, 4, *" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+					<TextBlock
+						Name="_GitURL"
+						Text="Github link :"
+						Grid.Column="0"
+						VerticalAlignment="Center"
+						/>
+					<TextBox
+						Name="GitURL"
+						Grid.Column="2"
+						VerticalAlignment="Center"
+						ToolTip.Tip="Optional"
+						/>
+				</Grid>
+			</Border>
+
+			<Border 
+				Grid.Row="10"
+				Name="Background_4"
+				Background="#AAA"
+				BorderBrush="Gray"
+				BorderThickness="1"
+				CornerRadius="4"
+				Padding="8"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				>
+				<Grid ColumnDefinitions="150, 4, *" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+					<TextBlock
+						Name="_GitFilters"
+						Text="Github filters :"
+						Grid.Column="0"
+						VerticalAlignment="Center"
+				/>
+					<TextBox
+						Name="GitFilters"
+						Grid.Column="2"
+						VerticalAlignment="Center"
+						ToolTip.Tip="Optional"
+				/>
+				</Grid>
+			</Border>
+
+
+			<Border
+				Grid.Row="12"
+				Name="Background_5"
+				Background="#AAA"
+				BorderBrush="Gray"
+				BorderThickness="1"
+				CornerRadius="4"
+				Padding="8"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				>
+				<Grid ColumnDefinitions="150, 4, *" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+					<TextBlock
+						Name="_VersionName"
+						Text="This version's name :"
+						Grid.Column="0"
+						VerticalAlignment="Center"
+				/>
+					<TextBox
+						Name="VersionName"
+						Grid.Column="2"
+						VerticalAlignment="Center"
+						ToolTip.Tip="Optional"
+				/>
+				</Grid>
+			</Border>
+
+			<Button 
+				Name="Create"
+				Content="Create this launcher"
+				Grid.Row="14"
+				HorizontalAlignment="Center"
+					/>
+		</Grid>
+	</Border>
+</Window>

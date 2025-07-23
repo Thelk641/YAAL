@@ -1,0 +1,106 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="YAAL.Command_Isolate"
+             HorizontalAlignment="Stretch"
+             Height="108"
+             MinWidth="450"
+             >
+  <Border 
+    Name="BackgroundColor"
+    BorderBrush="Gray"
+    BorderThickness="1"
+    CornerRadius="4"
+    Margin="8"
+    Padding="8"
+    HorizontalAlignment="Stretch"
+    Background="#AAA"
+          >
+      <Grid ColumnDefinitions="30, 8, 120, 8, *" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+		  <Grid RowDefinitions="0, *,8,*,0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="0">
+          <Button Name="MoveUp" Content="↑" Grid.Row="1" Width="30" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+          <Button Name="MoveDown" Content="↓" Grid.Row="3" Width="30" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+        </Grid>
+
+		<TextBlock Text="Isolate" FontSize="30" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
+
+
+		  <Grid RowDefinitions="0,*,8,*" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="4">
+			<Grid ColumnDefinitions="0, *, 8, 30" Grid.Row="1" HorizontalAlignment="Stretch">
+			  <ComboBox
+	              Name="ModeSelector"
+	              HorizontalAlignment="Stretch"
+	              Grid.Column="1"
+				 />
+            <Button Name="X" Content="X" Grid.Column="3" Width="30" HorizontalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Top"/>
+          </Grid>
+			<StackPanel Grid.Row="3">
+				<StackPanel Name="Mode_Process" IsVisible="True">
+					<TextBox
+					  Name="ProcessName"
+					  Watermark="Process to look for"
+					  Grid.Column="0"
+					  HorizontalAlignment="Stretch"
+					  VerticalAlignment="Stretch"
+					  ToolTip.Tip="Key used to filter process"
+                  />
+				</StackPanel>
+				<Grid Name="Mode_Output" IsVisible="False" ColumnDefinitions="*, 8, *" >
+					<TextBox
+					  Name="OutputKey"
+					  Watermark="Process to look for"
+					  Grid.Column="0"
+					  HorizontalAlignment="Stretch"
+					  VerticalAlignment="Stretch"
+					  ToolTip.Tip="Key used to filter process"
+                  />
+
+					<TextBox
+					  Name="OutputContains"
+					  Watermark="Output to look for"
+					  Grid.Column="2"
+					  HorizontalAlignment="Stretch"
+					  VerticalAlignment="Stretch"
+					  ToolTip.Tip="Text to search for in process' output"
+					/>
+				</Grid>
+				<Grid Name="Mode_Combined" ColumnDefinitions="*, 8, *" IsVisible="False">
+					<TextBox
+					  Name="CombinedProcess"
+					  Watermark="Process to look for"
+					  Grid.Column="0"
+					  HorizontalAlignment="Stretch"
+					  VerticalAlignment="Stretch"
+					  ToolTip.Tip="Key used to filter process"
+						/>
+					
+					<TextBox
+					  Name="CombinedOutput"
+					  Watermark="Output to look for"
+					  Grid.Column="2"
+					  HorizontalAlignment="Stretch"
+					  VerticalAlignment="Stretch"
+					  ToolTip.Tip="Text to search for in process' output"
+                  />
+
+				</Grid>
+				<StackPanel Name="Mode_Timer" IsVisible="False">
+					<TextBox
+					  Name="Delay"
+					  Watermark="Time to wait for"
+					  Grid.Column="0"
+					  HorizontalAlignment="Stretch"
+					  VerticalAlignment="Stretch"
+					  ToolTip.Tip="Time to wait for before auto-restoring (in seconds)"
+                  />
+				</StackPanel>
+				<StackPanel Name="Mode_Off" IsVisible="False" />
+			</StackPanel>
+        </Grid>
+      </Grid>
+  </Border>
+</UserControl>
+
+<!-- SizeToContent="WidthAndHeight" 
+
+Width="800"
+Height="200" -->

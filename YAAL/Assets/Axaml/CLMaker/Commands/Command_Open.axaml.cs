@@ -1,0 +1,67 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Interactivity;
+using Avalonia.Media;
+using Avalonia.Styling;
+using YAAL.Assets.Scripts;
+using static YAAL.OpenSettings;
+
+namespace YAAL;
+
+public partial class Command_Open : Command
+{
+    public Command_Open()
+    {
+        InitializeComponent();
+        background = BackgroundColor;
+        SetBackground();
+        linkedInstruction = new Open();
+        _up = MoveUp;
+        _down = MoveDown;
+        _delete = X;
+        SetDebouncedEvents();
+        TurnEventsOn();
+
+        File.Click += _FileExplorer;
+        Folder.Click += _FolderExplorer;
+    }
+
+    public override void LoadInstruction(Interface_Instruction newInstruction)
+    {
+        base.LoadInstruction(newInstruction);
+        TurnEventsOff();
+        FilePath.Text = this.linkedInstruction.GetSetting(path.ToString());
+        FileArgs.Text = this.linkedInstruction.GetSetting(args.ToString());
+        VarName.Text = this.linkedInstruction.GetSetting(processName.ToString());
+        TurnEventsBackOn();
+    }
+
+    public override void SetDebouncedEvents()
+    {
+        base.SetDebouncedEvents();
+        debouncedSettings[FilePath] = path.ToString();
+        debouncedSettings[FileArgs] = args.ToString();
+        debouncedSettings[VarName] = processName.ToString();
+
+        explorers[File] = FilePath;
+        explorers[Folder] = FilePath;
+    }
+
+    protected void TurnEventsOff()
+    {
+        FilePath.TextChanged -= _TextChanged;
+        FileArgs.TextChanged -= _TextChanged;
+        VarName.TextChanged -= _TextChanged;
+    }
+
+    protected override void TurnEventsOn()
+    {
+        FilePath.TextChanged += _TextChanged;
+        FileArgs.TextChanged += _TextChanged;
+        VarName.TextChanged += _TextChanged;
+    }
+}

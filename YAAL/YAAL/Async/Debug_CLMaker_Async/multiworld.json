@@ -1,0 +1,22 @@
+{
+  "slots": [
+    {
+      "settings": {
+        "patch": "D:\\Unity\\Avalonia port\\YAAL\\Async\\Debug_CLMaker_Async\\Debug_CLMaker_Slot\\DebugCLMakerAsync.DebugCLMakerSlot.apoos",
+        "slotName": "Debug_CLMaker_Slot",
+        "slotInfo": "${slotName}:${password}@${room}",
+        "rom": "D:\\Unity\\Avalonia port\\YAAL\\Async\\Debug_CLMaker_Async\\Debug_CLMaker_Slot\\DebugCLMakerAsync.DebugCLMakerSlot.gbc",
+        "version": "oos-10.2",
+        "baseLauncher": "The Legend of Zelda - Oracle of Seasons"
+      }
+    }
+  ],
+  "settings": {
+    "asyncName": "Debug_CLMaker_Async",
+    "room": "",
+    "password": "",
+    "roomIP": "",
+    "roomPort": ""
+  },
+  "toolVersions": {}
+}

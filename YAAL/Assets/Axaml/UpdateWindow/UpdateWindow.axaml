@@ -1,0 +1,83 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+		MinWidth="516"
+		Width="516"
+        Height="400"
+        x:Class="YAAL.UpdateWindow"
+        Title="Find Updates">
+	<Border Margin="8" HorizontalAlignment="Stretch">
+		<Grid RowDefinitions="88, 8, *, 8, 50" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+			<!-- First block, warning and check button -->
+			<Border
+				Grid.Row="0"
+				Name="Background_0"
+				Background="#AAA"
+				BorderBrush="Gray"
+				BorderThickness="1"
+				CornerRadius="4"
+				Padding="8"
+				HorizontalAlignment="Stretch"
+				>
+					<Grid RowDefinitions="40,40" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+						<TextBlock
+							Grid.Row="0"
+							Text="Download files ONLY from trusted sources. YAAL is not responsible for the consequence of your downloads."
+							HorizontalAlignment="Stretch"
+							VerticalAlignment="Top"
+							TextWrapping="Wrap"
+							TextAlignment="Center"
+							/>
+						<Button
+							Name="CheckUpdates"
+							Content="Check for Updates"
+							Grid.Row="2"
+							HorizontalAlignment="Stretch"
+							HorizontalContentAlignment="Center"
+							VerticalAlignment="Top"
+							IsEnabled="False"
+							/>
+					</Grid>
+			</Border>
+
+			<!-- Second Block, main content-->
+			<Border
+				Grid.Row="2"
+				Name="Background_1"
+				BorderBrush="Gray"
+				BorderThickness="1"
+				Padding="8"
+				CornerRadius="4"
+				HorizontalAlignment="Stretch"
+				>
+				<ScrollViewer HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+					<StackPanel x:Name="Container" />
+				</ScrollViewer>
+			</Border>
+			
+			<!-- Third block, downloadAll button -->
+			<Border
+				Grid.Row="4"
+				Name="Background_2"
+				Background="#AAA"
+				BorderBrush="Gray"
+				BorderThickness="1"
+				CornerRadius="4"
+				Padding="8"
+				HorizontalAlignment="Stretch"
+				>
+				<Button 
+					Name="DownloadAll"
+					Content="Download all updates"
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch"
+					HorizontalContentAlignment="Center"
+					IsEnabled="False"
+					/>
+			</Border>
+			
+		</Grid>
+	</Border>
+</Window>

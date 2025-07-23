@@ -1,0 +1,22 @@
+{
+  "slots": [
+    {
+      "settings": {
+        "patch": "D:\\Unity\\Avalonia port\\YAAL\\Async\\Test\\Debug_CLMaker_Slot\\P1_Player1_o4AtBzFYSPe3EajXijDHDQ.apblue",
+        "slotName": "Debug_CLMaker_Slot",
+        "slotInfo": "${slotName}:${password}@${room}",
+        "rom": "D:\\Unity\\Avalonia port\\YAAL\\Async\\Test\\Debug_CLMaker_Slot\\P1_Player1_o4AtBzFYSPe3EajXijDHDQ.gb",
+        "version": "",
+        "baseLauncher": ""
+      }
+    }
+  ],
+  "settings": {
+    "asyncName": "Test",
+    "room": "",
+    "password": "",
+    "roomIP": "",
+    "roomPort": ""
+  },
+  "toolVersions": {}
+}

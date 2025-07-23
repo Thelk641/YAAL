@@ -1,0 +1,132 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="YAAL.Command_Backup"
+             HorizontalAlignment="Stretch"
+             Height="180"
+             MinWidth="450"
+             >
+  <Border 
+    Name="BackgroundColor"
+    BorderBrush="Gray"
+    BorderThickness="1"
+    CornerRadius="4"
+    Margin="8"
+    Padding="8"
+    HorizontalAlignment="Stretch"
+    Background="#AAA"
+          >
+      <Grid ColumnDefinitions="30, 8, 120, 8, *" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+		  <Grid RowDefinitions="0, *,8,*,0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="0">
+          <Button Name="MoveUp" Content="↑" Grid.Row="1" Width="30" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+          <Button Name="MoveDown" Content="↓" Grid.Row="3" Width="30" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+        </Grid>
+        <TextBlock Text="Backup" FontSize="30" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
+        <Grid RowDefinitions="0,*,8,*,8,*,8,*,0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="4">
+			<Grid ColumnDefinitions="0, *, 8, 30" Grid.Row="1" HorizontalAlignment="Stretch">
+			  <ComboBox
+	              Name="ModeSelector"
+	              HorizontalAlignment="Stretch"
+	              Grid.Column="1"
+				 />
+            <Button Name="X" Content="X" Grid.Column="3" Width="30" HorizontalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Top"/>
+          </Grid>
+
+			<Grid ColumnDefinitions="*, 108, 8" Grid.Row="3" HorizontalAlignment="Stretch">
+			  <TextBox
+                  Name="BackupTarget"
+                  Watermark="File to Backup"
+                  Grid.Column="0"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch"
+				  ToolTip.Tip="The file or folder to backup"
+                  />
+			  <Grid ColumnDefinitions="48, 60, 8" Width="100" Grid.Column="1" HorizontalAlignment="Right">
+				  <Button Name="BackupFileButton" Content="File" Grid.Column="0" Width="40" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+				  <Button Name="BackupFolderButton" Content="Folder" Grid.Column="1" Width="60" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+			  </Grid>
+          </Grid>
+			<Grid ColumnDefinitions="*, 108, 8" Grid.Row="5" HorizontalAlignment="Stretch">
+				<TextBox
+					Name="DefaultFile"
+					Watermark="Default file"
+					Grid.Column="0"
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch"
+					ToolTip.Tip="Default version of the file or folder, used for a new slot"
+                  />
+				<Grid ColumnDefinitions="48, 60, 8" Width="100" Grid.Column="1" HorizontalAlignment="Right">
+					<Button Name="DefaultFileButton" Content="File" Grid.Column="0" Width="40" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+					<Button Name="DefaultFolderButton" Content="Folder" Grid.Column="1" Width="60" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+				</Grid>
+			</Grid>
+			<StackPanel Grid.Row="7">
+				<StackPanel Name="Mode_Process" IsVisible="True">
+					<TextBox
+					  Name="ProcessName"
+					  Watermark="Process to look for"
+					  Grid.Column="0"
+					  HorizontalAlignment="Stretch"
+					  VerticalAlignment="Stretch"
+					  ToolTip.Tip="Key used to filter process"
+                  />
+				</StackPanel>
+				<Grid Name="Mode_Output" IsVisible="False" ColumnDefinitions="*, 8, *" >
+					<TextBox
+					  Name="OutputKey"
+					  Watermark="Process to look for"
+					  Grid.Column="0"
+					  HorizontalAlignment="Stretch"
+					  VerticalAlignment="Stretch"
+					  ToolTip.Tip="Key used to filter process"
+                  />
+
+					<TextBox
+					  Name="OutputContains"
+					  Watermark="Output to look for"
+					  Grid.Column="2"
+					  HorizontalAlignment="Stretch"
+					  VerticalAlignment="Stretch"
+					  ToolTip.Tip="Text to search for in process' output"
+					/>
+				</Grid>
+				<Grid Name="Mode_Combined" ColumnDefinitions="*, 8, *" IsVisible="False">
+					<TextBox
+					  Name="CombinedProcess"
+					  Watermark="Process to look for"
+					  Grid.Column="0"
+					  HorizontalAlignment="Stretch"
+					  VerticalAlignment="Stretch"
+					  ToolTip.Tip="Key used to filter process"
+						/>
+					
+					<TextBox
+					  Name="CombinedOutput"
+					  Watermark="Output to look for"
+					  Grid.Column="2"
+					  HorizontalAlignment="Stretch"
+					  VerticalAlignment="Stretch"
+					  ToolTip.Tip="Text to search for in process' output"
+                  />
+
+				</Grid>
+				<StackPanel Name="Mode_Timer" IsVisible="False">
+					<TextBox
+					  Name="Delay"
+					  Watermark="Time to wait for"
+					  Grid.Column="0"
+					  HorizontalAlignment="Stretch"
+					  VerticalAlignment="Stretch"
+					  ToolTip.Tip="Time to wait for before auto-restoring (in seconds)"
+                  />
+				</StackPanel>
+				<StackPanel Name="Mode_Off" IsVisible="False" />
+			</StackPanel>
+        </Grid>
+      </Grid>
+  </Border>
+</UserControl>
+
+<!-- SizeToContent="WidthAndHeight" 
+
+Width="800"
+Height="200" -->
