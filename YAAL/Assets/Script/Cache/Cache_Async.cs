@@ -16,7 +16,7 @@ namespace YAAL
         {
             {asyncName, "" },
             {room, ""},
-            {password, "" },
+            {password, "None" },
             {roomIP, "" },
             {roomPort, "" }
         };

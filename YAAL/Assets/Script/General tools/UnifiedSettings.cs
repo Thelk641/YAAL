@@ -43,7 +43,13 @@ namespace YAAL
         {
             if (Enum.TryParse(key, out AsyncSettings asyncSetting))
             {
-                Set(asyncSetting, value);
+                if(asyncSetting == AsyncSettings.password && value == "")
+                {
+                    Set(asyncSetting, "None");
+                } else
+                {
+                    Set(asyncSetting, value);
+                }
                 return;
             }
 

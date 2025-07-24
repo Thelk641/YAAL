@@ -295,53 +295,60 @@ public class CustomLauncher
             text = text.Replace("${base:apworld}", apworldList + "\"");
         }
 
-        // Text might contain things like ${aplauncher}, we're replacing those by their value
-        string[] splitText = text.Split("${");
-
-        if(splitText.Length > 1)
+        int i = 0;
+        while(text.Contains("${") && i < 10)
         {
-            string output = "";
-            string cleaned;
-            bool needsQuote;
-            foreach (var item in splitText)
+            // Text might contain things like ${aplauncher}, we're replacing those by their value
+            string[] splitText = text.Split("${");
+
+            if (splitText.Length > 1)
             {
-                needsQuote = false;
-                if (item == "" || item == "\"" || item == " ")
+                string output = "";
+                string cleaned;
+                bool needsQuote;
+                foreach (var item in splitText)
                 {
-                    continue;
-                }
-
-                cleaned = item;
-
-                if (item.StartsWith("\"") || item.EndsWith("\"")) {
-                    
-                    do
+                    needsQuote = false;
+                    if (item == "" || item == "\"" || item == " ")
                     {
-                        cleaned = cleaned.Trim('\"').Trim();
-                    } while (cleaned.StartsWith("\"") || cleaned.EndsWith("\""));
+                        continue;
+                    }
 
-                    needsQuote = true;
-                    output += "\"";
-                }
+                    cleaned = item;
+
+                    if (item.StartsWith("\"") || item.EndsWith("\""))
+                    {
+
+                        do
+                        {
+                            cleaned = cleaned.Trim('\"').Trim();
+                        } while (cleaned.StartsWith("\"") || cleaned.EndsWith("\""));
+
+                        needsQuote = true;
+                        output += "\"";
+                    }
 
                     string[] split = cleaned.Split('}');
-                if (settings.Has(split[0]))
-                {
-                    output = output + settings[split[0]];
-                }
-                else
-                {
-                    output = output + split[0];
+                    if (settings.Has(split[0]))
+                    {
+                        output = output + settings[split[0]];
+                    }
+                    else
+                    {
+                        output = output + split[0];
+                    }
+
+                    if (needsQuote)
+                    {
+                        output += "\"";
+                    }
+
+                    output = output + split[1] + " ";
                 }
 
-                if (needsQuote) {
-                    output += "\"";
-                }
-
-                output = output + split[1] + " ";
+                text = output.Trim();
+                ++i;
             }
-
-            text = output.Trim();
         }
 
         return text;
