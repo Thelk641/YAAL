@@ -1,4 +1,4 @@
-﻿using YAAL;
+﻿using Avalonia.Controls.ApplicationLifetimes;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -9,6 +9,7 @@ using System.Linq;
 using System.Reflection.Metadata;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
+using YAAL;
 using static YAAL.FileSettings;
 using static YAAL.LauncherSettings;
 
@@ -85,9 +86,20 @@ namespace YAAL
 
         public static void ReadCacheError(string path)
         {
-            string json = File.ReadAllText(path);
-            Cache_ErrorList output = new Cache_ErrorList();
+            string json = "";
+            try
+            {
+                json = File.ReadAllText(path.Replace("\\\\", "\\").Trim('\"'));
+            }
+            catch (Exception e)
+            {
+                ErrorManager.AddNewError(
+                    "Failed to find error file", 
+                    "Trying to display error threw the following exception : " + e.Message);
+                return;
+            }
 
+            Cache_ErrorList output = new Cache_ErrorList();
             var pattern = @"=== ERROR: (?<name>.+?) ===\r?\n\r?\n(?<content>.*?)\r?\n\r?\nStack Trace:\r?\n(?<stack>.*?)\r?\n\r?\n=+";
             var matches = Regex.Matches(json, pattern, RegexOptions.Singleline);
 

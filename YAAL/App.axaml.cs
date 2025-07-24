@@ -32,11 +32,11 @@ public partial class App : Application
         //return;
 
 
-        //var args = Environment.GetCommandLineArgs().Skip(1).ToArray();
+        var args = Environment.GetCommandLineArgs().Skip(1).ToArray();
 
-        var args = new string[2] { "--async PatchTest", "--slot Slot 2" };
+        //var args = new string[2] { "--async PatchTest", "--slot Slot 2" };
         //var args = new string[7]{"--restore", "--launcher", "The Legend of Zelda - Oracle of Seasons", "--async", "Debug_CLMaker_Async", "--slot", "Debug_CLMaker_Slot"};
-        //var args = new string[2]{" --error ","D:\\Unity\\Avalonia port\\YAAL\\Logs\\20-07-2025-20-16-55.json"};
+        //var args = new string[2]{"--error ", "D:\\Unity\\Avalonia port\\YAAL\\Logs\\24-07-2025-15-49-06.json" };
         //var args = new string[2]{"--restore", "--exit" };
 
         if(args == null || args.Length == 0)
@@ -54,10 +54,11 @@ public partial class App : Application
         string[] split;
         string settingName = "";
         string settingValue = "";
+        string[] temp = argsString.Split("--");
 
         foreach (var item in argsString.Split("--"))
         {
-            if(item == "")
+            if(item.Trim() == "")
             {
                 continue;
             }

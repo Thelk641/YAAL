@@ -39,9 +39,9 @@ namespace YAAL
             if (launcherTargets.Count == 0) 
             {
                 ErrorManager.AddNewError(
-                            "Isolate - Empty target list",
-                            "Tried to isolate apworlds, but none were given. Use the Apworld command to define them."
-                            );
+                    "Isolate - Empty target list",
+                    "Tried to isolate apworlds, but none were given. Use the Apworld command to define them."
+                    );
                 return false;
             }
             
@@ -68,11 +68,13 @@ namespace YAAL
             if (targets.Count == 0)
             {
                 ErrorManager.AddNewError(
-                            "Isolate - Empty target list",
-                            "Tried to isolate apworlds, but none were given. Use the Apworld command to define them."
-                            );
+                    "Isolate - Empty target list",
+                    "Tried to isolate apworlds, but none were given. Use the Apworld command to define them."
+                    );
                 return false;
             }
+
+            waitingForRestore = true;
 
             if (!IOManager.IsolateApworlds(settings[aplauncher], targets))
             {
@@ -83,9 +85,11 @@ namespace YAAL
                 }
 
                 ErrorManager.AddNewError(
-                            "Isolate - Failed to isolate",
-                            "Couldn't isolate the following apworlds : " + targetList
-                            );
+                    "Isolate - Failed to isolate",
+                    "Couldn't isolate the following apworlds : " + targetList
+                    );
+                
+                Restore();
                 return false;
             }
 
@@ -99,7 +103,6 @@ namespace YAAL
                         Restore();
                         return false;
                     }
-                    waitingForRestore = true;
                     return true;
                 case "output":
                     if (!customLauncher.AttachToOutput(this, this.InstructionSetting[processName] ?? ""))
@@ -107,7 +110,6 @@ namespace YAAL
                         Restore();
                         return false;
                     }
-                    waitingForRestore = true;
                     return true;
                 case "combined":
                     if (!customLauncher.AttachToClosing(this, this.InstructionSetting[processName] ?? ""))
@@ -120,20 +122,18 @@ namespace YAAL
                         Restore();
                         return false;
                     }
-                    waitingForRestore = true;
                     return true;
                 case "timer":
-                    waitingForRestore = true;
                     customLauncher.NoteBackup(this);
                     time = float.Parse(this.InstructionSetting[timer], CultureInfo.InvariantCulture.NumberFormat) * 0.1f;
                     Debouncer.timer.Tick += Timer;
                     return true;
                 default:
-                        ErrorManager.AddNewError(
-                            "Isolate - Invalid modeSelect",
-                            "Isolate's autorestore condition is set to : " + this.InstructionSetting[modeSelect] + " which isn't valid. Please report this issue."
-                            );
-                        return false;
+                    ErrorManager.AddNewError(
+                        "Isolate - Invalid modeSelect",
+                        "Isolate's autorestore condition is set to : " + this.InstructionSetting[modeSelect] + " which isn't valid. Please report this issue."
+                        );
+                    return false;
             }
         }
 
@@ -177,7 +177,6 @@ namespace YAAL
                     break;
                 case "output":
                     customLauncher.DetachToOutput(this, this.InstructionSetting[processName] ?? "");
-
                     break;
                 case "combined":
                     customLauncher.DetachToClosing(this, this.InstructionSetting[processName] ?? "");

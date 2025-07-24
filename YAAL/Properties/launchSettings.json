@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "YAAL": {
+      "commandName": "Project",
+      "commandLineArgs": "--error \\\"D:\\\\Unity\\\\Avalonia port\\\\YAAL\\\\Logs\\\\24-07-2025-15-56-54.json\\\""
+    }
+  }
+}

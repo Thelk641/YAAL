@@ -42,7 +42,7 @@ namespace YAAL
 
             string path = IOManager.SaveCacheError(cache);
             string args = (" --error " + "\"" + path + "\"");
-            ProcessManager.StartProcess(Environment.ProcessPath, (" --error " + "\"" + path + "\""), true);
+            ProcessManager.StartProcess(Environment.ProcessPath, ("--error " + "\"" + path + "\""), true);
             cache = new Cache_ErrorList();
         }
 
