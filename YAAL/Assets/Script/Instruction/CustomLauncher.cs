@@ -26,7 +26,7 @@ public class CustomLauncher
     public Dictionary<Interface_Instruction, string> instructionAttachedToOutput = new Dictionary<Interface_Instruction, string>();
     public List<string> apworld = new List<string>();
     public bool isGame = true;
-    public CustomLauncher baseLauncher = null;
+    public CustomLauncher _baseLauncher = null;
     public bool waitingForRestore = false;
     private List<Interface_Instruction> instructionWaiting = new List<Interface_Instruction>();
     public static event Action DoneRestoring;
@@ -367,22 +367,24 @@ public class CustomLauncher
 
     public CustomLauncher GetBaseLauncher()
     {
-        if(baseLauncher == null)
+        if(_baseLauncher == null)
         {
             string name = settings[SlotSettings.baseLauncher];
-            if (name == null || name != "")
+            if (name == null || name == "")
             {
                 ErrorManager.AddNewError(
                     "CustomLauncher - Tried to access empty launcher",
                     "A customLauncher tried to access its baseLauncher (the game the tool is for), but this launcher doesn't have a baselauncher. Please report this issue."
                     );
+                return null;
             }
             CustomLauncher output = IOManager.LoadLauncher(settings[SlotSettings.baseLauncher]);
             output.ReadSettings(settings[asyncName], settings[slotName]);
+            _baseLauncher = output;
             return output;
         } else
         {
-            return baseLauncher;
+            return _baseLauncher;
         }
     }
 
@@ -408,9 +410,9 @@ public class CustomLauncher
             }
         }
 
-        if (baseLauncher != null)
+        if (_baseLauncher != null)
         {
-            foreach (var item in baseLauncher.GetApworlds())
+            foreach (var item in _baseLauncher.GetApworlds())
             {
                 if (!output.Contains(item))
                 {
@@ -418,7 +420,30 @@ public class CustomLauncher
                 }
             }
         }
+        List<string> temp = new List<string>();
+        foreach (var item in output)
+        {
+            if (item.Contains(";"))
+            {
+                foreach (var item1 in item.Split(";"))
+                {
+                    temp.Add(item1.Trim());
+                }
+            } else
+            {
+                temp.Add(item.Trim());
+            }
+        }
 
+        output = new List<string>();
+
+        foreach (var item in temp)
+        {
+            if(item.Trim() != "" && item != "${base:apworld}")
+            {
+                output.Add(item);
+            }
+        }
         return output;
     }
 

@@ -26,8 +26,21 @@ namespace YAAL
             if (target.Contains("${base:apworld}"))
             {
                 UnifiedSettings baseSettings = customLauncher.GetBaseLauncher().settings;
-                launchername = baseSettings[launcherName];
-                version = baseSettings[SlotSettings.version];
+                Apworld baseApworld = new Apworld();
+                baseApworld.customLauncher = customLauncher.GetBaseLauncher();
+                foreach (var item in this.InstructionSetting)
+                {
+                    baseApworld.InstructionSetting[item.Key] = item.Value;
+                }
+                baseApworld.settings = this.settings.Clone() as UnifiedSettings;
+                baseApworld.settings[launcherName] = baseSettings[launcherName];
+                baseApworld.settings[SlotSettings.version] = baseSettings[SlotSettings.version];
+                baseApworld.InstructionSetting[apworldTarget] = "${apworld}";
+                target = target.Replace("${base:apworld}", "");
+                if (!baseApworld.Execute())
+                {
+                    return false;
+                }
             }
 
             target = customLauncher.ParseTextWithSettings(target);
@@ -50,7 +63,7 @@ namespace YAAL
             } else
             {
                 bool success = IOManager.UpdateFileToVersion(
-                    this.InstructionSetting[apworldTarget], 
+                    target, 
                     this.settings[launcherName], 
                     this.settings[SlotSettings.version], 
                     this.InstructionSetting[necessaryFile]

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace YAAL
 {
-    public class UnifiedSettings
+    public class UnifiedSettings : ICloneable
     {
         private readonly Dictionary<Type, Dictionary<Enum, string>> enumSettings = new();
         private readonly Dictionary<string, string> customSettings = new();
@@ -153,6 +153,11 @@ namespace YAAL
             }
 
             return false;
+        }
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
         }
     }
 }

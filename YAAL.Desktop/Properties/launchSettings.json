@@ -1,8 +1,7 @@
 {
   "profiles": {
     "YAAL.Desktop": {
-      "commandName": "Project",
-      "commandLineArgs": "--async PatchTest --slot Slot 2"
+      "commandName": "Project"
     }
   }
 }

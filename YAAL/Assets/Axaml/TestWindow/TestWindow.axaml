@@ -4,11 +4,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
 		Width="300"
-        Height="400"
+        Height="460"
         x:Class="YAAL.TestWindow"
         Title="Test a custom launcher">
 	<Border Margin="8" HorizontalAlignment="Stretch">
-		<Grid RowDefinitions="48, 4, 1, 4, 48, 8, 48, 8, 48, 8 48, 8, 48, 4, 1, 4, 30" HorizontalAlignment="Stretch">
+		<Grid RowDefinitions="48, 4, 1, 4, 48, 8, 48, 8, 48, 8 48, 8, 48, 8, 48, 4, 1, 4, 30" HorizontalAlignment="Stretch">
 			
 			<Border 
 				Grid.Row="0" 
@@ -171,9 +171,36 @@
 				</Grid>
 			</Border>
 
-			<Separator Grid.Row="14"/>
+			<Border
+				Grid.Row="14"
+				Name="Background_BaseVersion"
+				Background="#AAA"
+				BorderBrush="Gray"
+				BorderThickness="1"
+				CornerRadius="4"
+				Padding="8"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				>
+				<Grid ColumnDefinitions="110, 4, *" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+					<TextBlock
+						Name="_BaseVersion"
+						Text="Base Version :"
+						Grid.Column="0"
+						VerticalAlignment="Center"
+						/>
+					<ComboBox
+						Name="BaseVersionSelect"
+						Grid.Column="2"
+						VerticalAlignment="Center"
+						HorizontalAlignment="Stretch"
+						/>
+				</Grid>
+			</Border>
 
-			<Grid ColumnDefinitions="*, 8, *" Grid.Row="16" HorizontalAlignment="Stretch">
+			<Separator Grid.Row="16"/>
+
+			<Grid ColumnDefinitions="*, 8, *" Grid.Row="18" HorizontalAlignment="Stretch">
 				<Button
 				Name="Launch"
 				Content="Try to launch"
