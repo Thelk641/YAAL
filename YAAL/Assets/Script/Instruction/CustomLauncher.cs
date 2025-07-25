@@ -351,6 +351,20 @@ public class CustomLauncher
             }
         }
 
+        if(text.Contains(".apworld") && !text.Contains("\\"))
+        {
+            string custom_world = Path.Combine(settings[GeneralSettings.apfolder], "custom_folder", text);
+            string lib_world = Path.Combine(settings[GeneralSettings.apfolder], "lib", "worlds", text);
+
+            if (File.Exists(custom_world))
+            {
+                text = custom_world;
+            } else if (File.Exists(lib_world))
+            {
+                text = lib_world;
+            }
+        }
+
         return text;
     }
 
@@ -441,7 +455,7 @@ public class CustomLauncher
         {
             if(item.Trim() != "" && item != "${base:apworld}")
             {
-                output.Add(item);
+                output.Add(ParseTextWithSettings(item));
             }
         }
         return output;
@@ -661,6 +675,7 @@ public class CustomLauncher
         instructionWaiting.Add(instruction);
         waitingForRestore = true;
     }
+
     public void NoteRestore(Interface_Instruction instruction)
     {
         Debug.WriteLine("Done restoring for instruction of type " + instruction.GetInstructionType());
