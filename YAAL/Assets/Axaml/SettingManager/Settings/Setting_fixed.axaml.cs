@@ -18,4 +18,28 @@ public partial class Setting_Fixed : Setting
         settingName = this.FindControl<TextBlock>("SettingName");
         settingValue = this.FindControl<TextBox>("Value");
     }
+
+    public override void SetBinary()
+    {
+        Binary.ItemsSource = new List<string>()
+        {
+            true.ToString(),
+            false.ToString()
+        };
+        TextBox storage = settingValue as TextBox;
+        if (storage.Text == true.ToString() || storage.Text == false.ToString())
+        {
+            storage.IsVisible = false;
+            Binary.IsVisible = true;
+            if (storage.Text == true.ToString())
+            {
+                Binary.SelectedItem = true.ToString();
+            }
+            else
+            {
+                Binary.SelectedItem = false.ToString();
+            }
+            Binary.SelectionChanged += (sender, args) => { storage.Text = Binary.SelectedItem.ToString(); };
+        }
+    }
 }

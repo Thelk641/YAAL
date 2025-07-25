@@ -31,6 +31,10 @@ public partial class NewLauncher : Window
         Create.Click += _CreateLauncher;
         ApworldPath.TextChanged += _ApworldPathTextChanged;
         clmaker = parent;
+        AutoRename.ItemsSource = new List<string>() {
+            true.ToString(),
+            false.ToString()
+        };
     }
 
     private void _ApworldPathTextChanged(object? sender, TextChangedEventArgs e)
@@ -80,6 +84,7 @@ public partial class NewLauncher : Window
         launcher.settings[LauncherSettings.Debug_SlotName] = "Debug_CLMaker_Slot";
         launcher.settings[LauncherSettings.Debug_Patch] = "";
         launcher.settings[LauncherSettings.Debug_baseLauncher] = "";
+        launcher.settings[LauncherSettings.renamePatch] = AutoRename.SelectedItem.ToString() ?? "True";
         launcher.isGame = true;
 
 
@@ -123,6 +128,7 @@ public partial class NewLauncher : Window
             Background_3.Background = new SolidColorBrush(Color.Parse("#454545"));
             Background_4.Background = new SolidColorBrush(Color.Parse("#454545"));
             Background_5.Background = new SolidColorBrush(Color.Parse("#454545"));
+            Background_6.Background = new SolidColorBrush(Color.Parse("#454545"));
         }
         else
         {
@@ -132,6 +138,7 @@ public partial class NewLauncher : Window
             Background_3.Background = new SolidColorBrush(Color.Parse("#AAA"));
             Background_4.Background = new SolidColorBrush(Color.Parse("#AAA"));
             Background_5.Background = new SolidColorBrush(Color.Parse("#AAA"));
+            Background_6.Background = new SolidColorBrush(Color.Parse("#AAA"));
         }
     }
 }

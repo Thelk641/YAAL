@@ -153,15 +153,16 @@ public partial class SettingManager : Window
     {
         foreach (var item in toParse)
         {
-            if (hiddenSettings.Contains(item.Key.ToString()))
-            {
-                continue;
-            }
-
             Setting toAdd;
             string settingValue;
 
-            if (fixedSettings.ContainsKey(item.Key.ToString()))
+            if (hiddenSettings.Contains(item.Key.ToString()))
+            {
+                // This is a hidden setting (like apworld or Debug_*)
+                // They're completely hidden
+                internalSettings.Add(item.Key.ToString(), item.Value);
+                continue;
+            } else if (fixedSettings.ContainsKey(item.Key.ToString()))
             {
                 // This is an internal setting, the user can't change it
                 // It's only displayed as an easy way to find it without having to
@@ -170,7 +171,9 @@ public partial class SettingManager : Window
                 internalSettings.Add(item.Key.ToString(), item.Value);
                 continue;
 
-            } else if (defaultSettings.Contains(item.Key.ToString())){
+            }
+            else if (defaultSettings.Contains(item.Key.ToString()))
+            {
                 // This is a default setting, the user can change its value
                 // but not its name, as it's used in the code
                 // ex: aplauncher
@@ -185,8 +188,8 @@ public partial class SettingManager : Window
                 toAdd = new Setting_Fixed();
                 FixedSettingContainer.Children.Add(toAdd);
                 settingValue = item.Value;
-
-            } else
+            }
+            else
             {
                 // This is a custom setting the user added
                 // They're free to change its name and its value
@@ -197,6 +200,7 @@ public partial class SettingManager : Window
             toAdd.SetSetting(item.Key.ToString(), settingValue);
             toAdd.manager = this;
             settings.Add(toAdd);
+            toAdd.SetBinary();
         }
         AddAllFixedSettings();
     }

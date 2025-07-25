@@ -35,6 +35,13 @@
 						Grid.Column="4"
 						VerticalAlignment="Center"
 						ToolTip.Tip="Leave empty to inherit the general setting"/>
+					<ComboBox
+						Name="Binary"
+						Grid.Column="4"
+						VerticalAlignment="Center"
+						HorizontalAlignment="Stretch"
+						IsVisible="false"
+						/>
 				</Grid>
 			</Grid>
 		</Grid>

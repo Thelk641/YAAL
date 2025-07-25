@@ -35,7 +35,8 @@ namespace YAAL
             string patch = IOManager.MoveToSlotDirectory(
                 settings[SlotSettings.patch],
                 settings[AsyncSettings.asyncName],
-                settings[slotName]
+                settings[slotName],
+                settings[renamePatch] == true.ToString()
                 );
 
             if (patch == "")

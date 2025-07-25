@@ -1,5 +1,6 @@
 ﻿using Avalonia.Controls.ApplicationLifetimes;
 using Newtonsoft.Json;
+using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -122,7 +123,20 @@ namespace YAAL
 
             string json = File.ReadAllText(savePath);
             Debug.WriteLine("Loading launcher : " + gameName);
-            return JsonConvert.DeserializeObject<Cache_CustomLauncher>(json) ?? new Cache_CustomLauncher();
+            Cache_CustomLauncher output = null;
+            try
+            {
+                output = JsonConvert.DeserializeObject<Cache_CustomLauncher>(json) ?? new Cache_CustomLauncher();
+            }
+            catch (Exception e)
+            {
+                ErrorManager.ThrowError(
+                    "IOManager_Cache - Exception while loading a launcher",
+                    "Trying to load launcher " + gameName + " threw the following exception : " + e.Message
+                    );
+                Environment.Exit(0);
+            }
+            return output;
         }
 
         public static string? GetGameNameFromApworld(string apworldPath)

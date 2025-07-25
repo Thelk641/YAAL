@@ -53,6 +53,7 @@ namespace YAAL
             {"rom", "Per slot" },
             {"version", "Per slot" },
             {"game", "Per slot" },
+            {"apworld", "Set at runtime" }
         };
 
         public static List<string> defaultSettings = new List<string>
@@ -61,6 +62,7 @@ namespace YAAL
             "gameName",
             "githubURL",
             "filters",
+            "renamePatch",
         };
 
         public static List<string> hiddenSettings = new List<string>
@@ -68,7 +70,7 @@ namespace YAAL
             "Debug_AsyncName",
             "Debug_SlotName",
             "Debug_Patch",
-            "Debug_baseLauncher"
+            "Debug_baseLauncher",
         };
 
         public static Type GetInstructionTypeFromKey(string key)

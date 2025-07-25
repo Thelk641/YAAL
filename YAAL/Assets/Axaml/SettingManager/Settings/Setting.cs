@@ -84,5 +84,10 @@ namespace YAAL
             SettingNameText = name;
             SettingValueText = value;
         }
+
+        public virtual void SetBinary()
+        {
+            return;
+        }
     }
 }

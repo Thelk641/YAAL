@@ -44,6 +44,14 @@
 				  Grid.Column="4"
 				  VerticalAlignment="Center"
 				  ToolTip.Tip="What will replace ${name}"/>
+				<ComboBox
+					Name="Binary"
+					Grid.Column="4"
+					VerticalAlignment="Center"
+					HorizontalAlignment="Stretch"
+					ToolTip.Tip="What will replace ${name}"
+					IsVisible="False"
+					/>
 			</Grid>
 		</Grid>
     </Grid>

@@ -218,9 +218,17 @@ namespace YAAL
             }
         }
 
-        public static string MoveToSlotDirectory(string fileToMove, string asyncName, string slotName)
+        public static string MoveToSlotDirectory(string fileToMove, string asyncName, string slotName, bool renameFile)
         {
-            string workingName = (asyncName + "." + slotName + Path.GetExtension(GetFileName(fileToMove))).Replace("_","");
+            string workingName = "";
+
+            if (renameFile)
+            {
+                workingName = (asyncName + "." + slotName + Path.GetExtension(GetFileName(fileToMove))).Replace("_", "");
+            } else
+            {
+                workingName = GetFileName(fileToMove);
+            }
 
 
             string output = Path.Combine(
