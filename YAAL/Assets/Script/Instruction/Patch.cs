@@ -62,6 +62,14 @@ namespace YAAL
             }
             else if (this.InstructionSetting[mode] == "Copy")
             {
+                if (this.InstructionSetting[target] == "")
+                {
+                    ErrorManager.AddNewError(
+                        "Patch - Empty target",
+                        "Patch was asked to copy a patch, but no target was given to it. This is not allowed."
+                        );
+                    return false;
+                }
                 return CopyPatch();
             }
             ErrorManager.AddNewError(
@@ -156,7 +164,26 @@ namespace YAAL
             cache.previousSlot = this.settings[slotName];
             cache.previousVersion = this.settings[version];
 
-            IOManager.UpdatePatch(this.settings[launcherName], this.InstructionSetting[target], cache);
+            string[] splitTarget = this.InstructionSetting[target].Split(";");
+
+            foreach (var item in splitTarget)
+            {
+                string cleaned = item.Trim();
+                if(cleaned == "")
+                {
+                    continue;
+                }
+                if (!IOManager.UpdatePatch(this.settings[launcherName], cleaned, cache))
+                {
+                    ErrorManager.AddNewError(
+                        "Patch - Updating patch failed",
+                        "Something stopped YAAL from updating a patch, please see other errors for more informations."
+                        );
+                    return false;
+                }
+            }
+
+            IOManager.UpdateLastAsync(this.settings[gameName], cache);
 
             return true;
         }

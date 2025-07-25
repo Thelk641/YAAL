@@ -207,7 +207,6 @@ namespace YAAL
 
             if (CopyFile(newSlot.previousPatch, Path.Combine(path, GetFileName(newSlot.previousPatch))))
             {
-                SaveCache<Cache_PreviousSlot>(cachePath, newSlot);
                 return true;
             } else
             {
