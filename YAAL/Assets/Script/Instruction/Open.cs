@@ -27,57 +27,134 @@ public class Open : Instruction<OpenSettings>
             return false;
         }
 
-        string path = "";
-        string args = "";
+        
 
-        SeparateArgsFromPath(out path, out args);
+        string[] splitPath = this.InstructionSetting[OpenSettings.path].Split(";");
+        string[] splitArgs = this.InstructionSetting[OpenSettings.args].Split(";");
+        string[] splitKeys = this.InstructionSetting[OpenSettings.processName].Split(";");
 
-
-        if (!(File.Exists(path) || Directory.Exists(path) || WebManager.IsValidURL(path))) {
+        if (splitKeys.Length > 1 && splitKeys.Length != splitPath.Length) {
             ErrorManager.AddNewError(
-                "Open - Target doesn't exist",
-                "The custom launcher tried to open file or folder " + path + " but it doesn't appear to exist"
+                "Open - Invalid number of keys",
+                "Open was given " + splitKeys.Length + " keys for " + splitPath.Length + " process, this is not allowed. Either pick one key per process, or only one to apply to them all, or none."
                 );
             return false;
         }
 
-        try
-        {
+        Dictionary<string, string> splitInput = new Dictionary<string, string>();
+        
 
-            Cache_Process keyedProcess = ProcessManager.StartKeyedProcess(path, args);
-            if(keyedProcess == null)
+        if(splitArgs.Length == 0)
+        {
+            foreach (var item in splitPath)
+            {
+                splitInput[item] = "";
+            }
+        } else
+        {
+            if(splitPath.Length != splitArgs.Length)
             {
                 ErrorManager.AddNewError(
-                    "Open - Failed to start keyedProcess",
-                    "Something went wrong while starting keyedProcess, see other errors for more informations."
+                    "Open - Number of args doesn't match number of targets",
+                    "Open was asked to open " + splitPath.Length + " programs or URLs, but was provided " + splitArgs.Length + " arguments. This is not allowed, either pass one per target or include the args in the target."
                     );
                 return false;
             }
-
-            keyedProcess.Setup(this.InstructionSetting[processName], customLauncher);
-            keyedProcess.Start();
-            customLauncher.NoteProcess(keyedProcess);
-            return true;
+            for (int i = 0; i < splitPath.Length; i++)
+            {
+                splitInput[splitPath[i].Trim()] = splitArgs[i].Trim();
+            }
         }
-        catch (Exception e)
+
+        string path = "";
+        string args = "";
+        List<string> keys = new List<string>();
         {
-            ErrorManager.AddNewError(
-                "Open - Process threw an exception",
-                "Trying to open " + path + " raised the following exception : " + e.Message
-                );
-            return false;
+            foreach (var item in splitKeys)
+            {
+                string cleanedKey = item.Trim();
+                if(cleanedKey == "")
+                {
+                    continue;
+                }
+                keys.Add(cleanedKey);
+            }
         }
 
+        int j = 0;
 
+        foreach (var item in splitInput)
+        {
+            if(item.Key == "")
+            {
+                continue;
+            }
+            string parsed = customLauncher.ParseTextWithSettings(item.Key);
+            SeparateArgsFromPath(parsed, item.Value, out path, out args);
+            if (!(File.Exists(path) || Directory.Exists(path) || WebManager.IsValidURL(path)))
+            {
+                ErrorManager.AddNewError(
+                    "Open - Target doesn't exist",
+                    "The custom launcher tried to open file or folder " + path + " but it doesn't appear to exist"
+                    );
+                return false;
+            }
+            try
+            {
+
+                Cache_Process keyedProcess = ProcessManager.StartKeyedProcess(path, args);
+                if (keyedProcess == null)
+                {
+                    ErrorManager.AddNewError(
+                        "Open - Failed to start keyedProcess",
+                        "Something went wrong while starting keyedProcess, see other errors for more informations."
+                        );
+                    return false;
+                }
+
+                string key;
+                switch (keys.Count)
+                {
+                    case 0:
+                        key = "";
+                        break;
+                    case 1:
+                        key = keys[0];
+                        break;
+                    default:
+                        key = keys[j];
+                        ++j;
+                        break;
+                }
+
+                keyedProcess.Setup(key, customLauncher);
+                keyedProcess.Start();
+                customLauncher.NoteProcess(keyedProcess);
+            }
+            catch (Exception e)
+            {
+                ErrorManager.AddNewError(
+                    "Open - Process threw an exception",
+                    "Trying to open " + path + " raised the following exception : " + e.Message
+                    );
+                return false;
+            }
+        }
+        return true;
     }
 
-    private void SeparateArgsFromPath(out string path, out string args)
+    private void SeparateArgsFromPath(string settingPath, string settingArgs, out string path, out string args)
     {
-        string settingPath = customLauncher.ParseTextWithSettings(this.InstructionSetting[OpenSettings.path]);
         if (File.Exists(settingPath))
         {
             path = settingPath;
-            args = this.InstructionSetting[OpenSettings.args];
+            if (settingArgs != "\"\"")
+            {
+                args = settingArgs;
+            } else
+            {
+                args = "";
+            }
             return;
         }
 
@@ -125,9 +202,10 @@ public class Open : Instruction<OpenSettings>
             }
         }
 
-
-
-        args += this.InstructionSetting[OpenSettings.args];
+        if(settingArgs != "\"\"")
+        {
+            args += settingArgs;
+        }
         customLauncher.ParseTextWithSettings(args);
         path = path.Trim('"').Trim();
     }
