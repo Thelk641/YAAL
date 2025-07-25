@@ -35,6 +35,7 @@ public partial class NewLauncher : Window
             true.ToString(),
             false.ToString()
         };
+        AutoRename.SelectedItem = false.ToString();
     }
 
     private void _ApworldPathTextChanged(object? sender, TextChangedEventArgs e)

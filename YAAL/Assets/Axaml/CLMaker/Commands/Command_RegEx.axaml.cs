@@ -109,6 +109,8 @@ public partial class Command_RegEx : Command
             GridOutputString.IsVisible = false;
             OutputType.SelectedIndex = 0;
         }
+        _InputTypeChanged(null, null);
+        _OutputTypeChanged(null, null);
         TurnEventsBackOn();
     }
 
