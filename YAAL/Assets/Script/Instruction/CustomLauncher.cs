@@ -22,8 +22,8 @@ public class CustomLauncher
     public List<Interface_Instruction> listOfInstructions = new List<Interface_Instruction>();
     public List<Backup> backups = new List<Backup>();
     public List<Cache_Process> listOfProcess = new List<Cache_Process>();
-    public Dictionary<Interface_Instruction, string> instructionAttachedToClosing = new Dictionary<Interface_Instruction, string>();
-    public Dictionary<Interface_Instruction, string> instructionAttachedToOutput = new Dictionary<Interface_Instruction, string>();
+    public Dictionary<Interface_Instruction, List<string>> instructionAttachedToClosing = new Dictionary<Interface_Instruction, List<string>>();
+    public Dictionary<Interface_Instruction, List<string>> instructionAttachedToOutput = new Dictionary<Interface_Instruction, List<string>>();
     public List<string> apworld = new List<string>();
     public bool isGame = true;
     public CustomLauncher _baseLauncher = null;
@@ -43,8 +43,8 @@ public class CustomLauncher
     public bool Execute()
     {
         listOfProcess = new List<Cache_Process>();
-        instructionAttachedToOutput = new Dictionary<Interface_Instruction, string>();
-        instructionAttachedToClosing = new Dictionary<Interface_Instruction, string>();
+        instructionAttachedToOutput = new Dictionary<Interface_Instruction, List<string>>();
+        instructionAttachedToClosing = new Dictionary<Interface_Instruction, List<string>>();
         if (!isGame)
         {
             GetBaseLauncher();
@@ -454,19 +454,12 @@ public class CustomLauncher
             return true;
         }
 
-        foreach (var item in listOfProcess)
-        {
-            if(item.key == key)
-            {
-                item.GetProcess().Exited += instruction.ParseProcess;
-            }
-        }
+        string[] trueKeys = key.Split(";");
+        string cleaned;
 
         try
         {
-            instructionAttachedToClosing.Add(instruction, key);
-            NoteBackup(instruction);
-            return true;
+            instructionAttachedToClosing.Add(instruction, new List<string>());
         }
         catch (Exception e)
         {
@@ -477,19 +470,67 @@ public class CustomLauncher
             return false;
         }
 
+        foreach (var item in trueKeys)
+        {
+            cleaned = item.Trim();
+            if(cleaned == "")
+            {
+                continue;
+            }
+            foreach (var proc in listOfProcess)
+            {
+                if (proc.key == cleaned)
+                {
+                    proc.GetProcess().Exited += instruction.ParseProcess;
+                }
+            }
 
+            try
+            {
+                instructionAttachedToClosing[instruction].Add(cleaned);
+                NoteBackup(instruction);
+            }
+            catch (Exception e)
+            {
+                ErrorManager.AddNewError(
+                "CustomLauncher - Tried attaching key twice",
+                "Trying to attach an instruction triggered the following exception : " + e.Message
+                );
+                return false;
+            }
+
+        }
+
+        return true;
     }
 
     public void DetachToClosing(Interface_Instruction instruction, string key)
     {
-        foreach (var item in listOfProcess)
+        if (key == "")
         {
-            if (item.key == key)
+            return;
+        }
+
+        string[] trueKeys = key.Split(";");
+        string cleaned;
+
+        foreach (var item in trueKeys)
+        {
+            cleaned = item.Trim();
+            if(cleaned == "")
             {
-                item.GetProcess().Exited -= instruction.ParseProcess;
-                break;
+                continue;
+            }
+            foreach (var proc in listOfProcess)
+            {
+                if (proc.key == cleaned)
+                {
+                    proc.GetProcess().Exited -= instruction.ParseProcess;
+                    break;
+                }
             }
         }
+
         instructionAttachedToClosing.Remove(instruction);
     }
 
@@ -500,40 +541,84 @@ public class CustomLauncher
             return true;
         }
 
-        foreach (var item in listOfProcess)
-        {
-            if (item.key == key)
-            {
-                item.GetProcess().OutputDataReceived += instruction.ParseOutputData;
-            }
-        }
+        string[] trueKeys = key.Split(";");
+        string cleaned;
+
         try
         {
-            instructionAttachedToOutput.Add(instruction, key);
-            NoteBackup(instruction);
-            return true;
+            instructionAttachedToOutput.Add(instruction, new List<string>());
         }
-        catch (Exception)
+        catch (Exception e)
         {
             ErrorManager.AddNewError(
                 "CustomLauncher - Tried attaching instruction twice",
-                "Something tried to attach an instruction twice. This shouldn't ever happen. Please report this issue."
+                "Trying to attach an instruction triggered the following exception : " + e.Message
                 );
             return false;
         }
-        
+
+        foreach (var item in trueKeys)
+        {
+            cleaned = item.Trim();
+            if (cleaned == "")
+            {
+                continue;
+            }
+            foreach (var proc in listOfProcess)
+            {
+                if (proc.key == cleaned)
+                {
+                    proc.GetProcess().OutputDataReceived += instruction.ParseOutputData;
+                }
+            }
+
+            try
+            {
+                instructionAttachedToOutput[instruction].Add(cleaned);
+                NoteBackup(instruction);
+            }
+            catch (Exception e)
+            {
+                ErrorManager.AddNewError(
+                "CustomLauncher - Tried attaching key twice",
+                "Trying to attach an instruction triggered the following exception : " + e.Message
+                );
+                return false;
+            }
+
+        }
+
+        return true;
     }
 
     public void DetachToOutput(Interface_Instruction instruction, string key)
     {
-        foreach (var item in listOfProcess)
+        if (key == "")
         {
-            if (item.key == key)
+            return;
+        }
+
+        string[] trueKeys = key.Split(";");
+        string cleaned;
+
+        foreach (var item in trueKeys)
+        {
+            cleaned = item.Trim();
+            if (cleaned == "")
             {
-                item.GetProcess().OutputDataReceived -= instruction.ParseOutputData;
+                continue;
+            }
+            foreach (var proc in listOfProcess)
+            {
+                if (proc.key == cleaned)
+                {
+                    proc.GetProcess().OutputDataReceived -= instruction.ParseOutputData;
+                    break;
+                }
             }
         }
-        instructionAttachedToClosing.Remove(instruction);
+
+        instructionAttachedToOutput.Remove(instruction);
     }
 
     public void NoteProcess(Cache_Process cache)
@@ -546,19 +631,25 @@ public class CustomLauncher
 
         foreach (var item in instructionAttachedToClosing)
         {
-            Debug.WriteLine("Checking key.");
-            if(item.Value == cache.key)
+            foreach (var keys in item.Value)
             {
-                Debug.WriteLine("Key is correct, subscribing " + item.Key.GetInstructionType() + " to key " + cache.key);
-                cache.GetProcess().Exited += item.Key.ParseProcess;
+                if(keys == cache.key.Trim())
+                {
+                    Debug.WriteLine("Key is correct, subscribing " + item.Key.GetInstructionType() + " to key " + cache.key);
+                    cache.GetProcess().Exited += item.Key.ParseProcess;
+                }
             }
         }
 
         foreach (var item in instructionAttachedToOutput)
         {
-            if (item.Value == cache.key)
+            foreach (var keys in item.Value)
             {
-                cache.GetProcess().OutputDataReceived += item.Key.ParseOutputData;
+                if (keys == cache.key.Trim())
+                {
+                    Debug.WriteLine("Key is correct, subscribing " + item.Key.GetInstructionType() + " to key " + cache.key);
+                    cache.GetProcess().OutputDataReceived += item.Key.ParseOutputData;
+                }
             }
         }
 

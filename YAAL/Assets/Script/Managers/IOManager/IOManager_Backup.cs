@@ -28,7 +28,6 @@ namespace YAAL
 
         public static bool Backup(string path, string defaultFile, string asyncName, string slotName, bool noteIt)
         {
-            Debug.WriteLine("FileCore, trying to backup : " + path);
             if (IsAlreadyBackedUp(path))
             {
                 ErrorManager.AddNewError(

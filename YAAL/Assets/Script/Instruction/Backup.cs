@@ -21,6 +21,7 @@ namespace YAAL
     // - Timer : when timer expires (in seconds)
     public class Backup : Instruction<BackupSettings>
     {
+        private List<string> backedUpFile = new List<string>();
         public bool waitingForRestore = false;
         private float time;
 
@@ -31,85 +32,124 @@ namespace YAAL
 
         public override bool Execute()
         {
-            string target = customLauncher.ParseTextWithSettings(this.InstructionSetting[BackupSettings.target]);
-            Debug.WriteLine(System.IO.File.Exists(target));
+            List<string> splitTarget = IOManager.SplitPathList(customLauncher.ParseTextWithSettings(this.InstructionSetting[target]));
+            List<string> splitDefault = IOManager.SplitPathList(customLauncher.ParseTextWithSettings(this.InstructionSetting[defaultFile]));
+            Dictionary<string, string> BackupAndDefault = new Dictionary<string, string>();
 
-            if (this.InstructionSetting[defaultFile] != "")
+            if(splitTarget.Count == 0)
             {
-                string newDefault;
-                if(!IOManager.CopyToDefault(customLauncher.GetSetting(launcherName), this.InstructionSetting[defaultFile], out newDefault))
+                ErrorManager.AddNewError(
+                    "Backup - No target",
+                    "Backup is missing targets. If you did set some and you're getting this error, please report it."
+                    );
+                return false;
+            }
+
+            if(splitDefault.Count > 0)
+            {
+                if(splitTarget.Count != splitDefault.Count)
                 {
                     ErrorManager.AddNewError(
-                        "Backup - Failed to copy defaults",
-                        "Something went wrong while trying to copy new default : " + this.InstructionSetting[defaultFile]);
+                        "Backup - Invalid number of default file",
+                        "Backup was asked to backup " + splitTarget.Count + " files or folders, but was only given only " + splitDefault.Count + " default files. Either provide one (and only one) default for each file / folder, or provide none."
+                        );
                     return false;
                 }
-                InstructionSetting[defaultFile] = newDefault;
-            }
+                List<string> trueDefaults = new List<string>();
+                string newDefault;
+                string newSetting = "";
 
-            Debug.WriteLine("Trying to backup " + target);
-
-
-            if (IOManager.Backup(
-                target,
-                this.InstructionSetting[defaultFile],
-                settings["asyncName"],
-                settings["slotName"],
-                (this.InstructionSetting[modeSelect] != "off")
-                ))
-            {
-                switch (this.InstructionSetting[modeSelect])
+                foreach (var item in splitDefault)
                 {
-                    case "off":
-                        return true;
-                    case "process":
-                        if(!customLauncher.AttachToClosing(this, this.InstructionSetting[processName] ?? ""))
-                        {
-                            Restore();
-                            return false;
-                        }
-                        waitingForRestore = true;
-                        return true;
-                    case "output":
-                        if (!customLauncher.AttachToOutput(this, this.InstructionSetting[processName] ?? ""))
-                        {
-                            Restore();
-                            return false;
-                        }
-                        waitingForRestore = true;
-                        return true;
-                    case "combined":
-                        if (!customLauncher.AttachToClosing(this, this.InstructionSetting[processName] ?? ""))
-                        {
-                            Restore();
-                            return false;
-                        }
-                        if (!customLauncher.AttachToOutput(this, this.InstructionSetting[processName] ?? ""))
-                        {
-                            Restore();
-                            return false;
-                        }
-                        waitingForRestore = true;
-                        return true;
-                    case "timer":
-                        waitingForRestore = true;
-                        time = float.Parse(this.InstructionSetting[timer], CultureInfo.InvariantCulture.NumberFormat) * 0.1f;
-                        Debouncer.timer.Tick += Timer;
-                        customLauncher.NoteBackup(this);
-                        return true;
-                    default:
+                    if (!IOManager.CopyToDefault(customLauncher.GetSetting(launcherName), item, out newDefault))
+                    {
                         ErrorManager.AddNewError(
-                            "Backup - Invalid modeSelect",
-                            "Backup's autorestore condition is set to : " + this.InstructionSetting[modeSelect] + " which isn't valid. Please report this issue."
-                            );
+                            "Backup - Failed to copy defaults",
+                            "Something went wrong while trying to copy new default : " + this.InstructionSetting[defaultFile]);
                         return false;
+                    }
+                    trueDefaults.Add(newDefault);
+                    newSetting += newDefault + "; ";
+                }
+
+                this.InstructionSetting[defaultFile] = newSetting.Trim().Trim(';');
+                customLauncher.Save();
+
+                for (int i = 0; i < splitTarget.Count; i++)
+                {
+                    BackupAndDefault[splitTarget[i]] = trueDefaults[i];
+                }
+            } else
+            {
+                foreach (var item in splitTarget)
+                {
+                    BackupAndDefault[item] = "";
                 }
             }
-            ErrorManager.AddNewError(
+
+
+            foreach (var item in BackupAndDefault)
+            {
+                if(IOManager.Backup(
+                item.Key,
+                item.Value,
+                settings["asyncName"],
+                settings["slotName"],
+                (this.InstructionSetting[modeSelect] != "off")))
+                {
+                    backedUpFile.Add(item.Key);
+                } else
+                {
+                    ErrorManager.AddNewError(
                             "Backup - Failed to backup",
-                            "Failed to backup: " + target
+                            "Failed to backup: " + item.Key
                             );
-            return false;
+                    return false;
+                }
+            }
+
+            switch (this.InstructionSetting[modeSelect])
+            {
+                case "off":
+                    return true;
+                case "process":
+                    if (!customLauncher.AttachToClosing(this, this.InstructionSetting[processName] ?? ""))
+                    {
+                        Restore();
+                        return false;
+                    }
+                    return true;
+                case "output":
+                    if (!customLauncher.AttachToOutput(this, this.InstructionSetting[processName] ?? ""))
+                    {
+                        Restore();
+                        return false;
+                    }
+                    return true;
+                case "combined":
+                    if (!customLauncher.AttachToClosing(this, this.InstructionSetting[processName] ?? ""))
+                    {
+                        Restore();
+                        return false;
+                    }
+                    if (!customLauncher.AttachToOutput(this, this.InstructionSetting[processName] ?? ""))
+                    {
+                        Restore();
+                        return false;
+                    }
+                    return true;
+                case "timer":
+                    time = float.Parse(this.InstructionSetting[timer], CultureInfo.InvariantCulture.NumberFormat) * 0.1f;
+                    Debouncer.timer.Tick += Timer;
+                    customLauncher.NoteBackup(this);
+                    return true;
+                default:
+                    ErrorManager.AddNewError(
+                        "Backup - Invalid modeSelect",
+                        "Backup's autorestore condition is set to : " + this.InstructionSetting[modeSelect] + " which isn't valid. Please report this issue."
+                        );
+                    return false;
+            }
         }
 
         private void Timer(object? sender, EventArgs e)
@@ -139,15 +179,13 @@ namespace YAAL
 
         public bool Restore()
         {
-            if (!waitingForRestore)
+            if (backedUpFile.Count == 0)
             {
                 // something is asking us to Restore(), but we've not backed up anything yet
                 // so we've got nothing else to do
                 return true;
             }
 
-
-            waitingForRestore = false;
             if(this.InstructionSetting[modeSelect] == "timer")
             {
                 Debouncer.timer.Tick -= Timer;
@@ -173,27 +211,31 @@ namespace YAAL
                     break;
             }
 
-            string target = customLauncher.ParseTextWithSettings(this.InstructionSetting[BackupSettings.target]);
+            //string target = customLauncher.ParseTextWithSettings(this.InstructionSetting[BackupSettings.target]);
 
-            try
+            foreach (var item in backedUpFile)
             {
-                if (IOManager.Restore(
-                    target,
+                try
+                {
+                    if(!IOManager.Restore(
+                    item,
                     settings[AsyncSettings.asyncName],
                     settings[SlotSettings.slotName]))
-                {
-                    customLauncher.NoteRestore(this);
-                    return true;
+                    {
+                        return false;
+                    }
                 }
-                return false;
-            }
-            catch (Exception e)
-            {
-                ErrorManager.AddNewError(
+                catch (Exception e)
+                {
+                    ErrorManager.AddNewError(
                         "Backup - Restore threw an exception",
                         "The restore process threw the following exception : " + e.Message);
-                return false;
+                    return false;
+                }
             }
+
+            customLauncher.NoteRestore(this);
+            return true;
         }
     }
 }
