@@ -36,6 +36,14 @@ namespace YAAL
             List<string> launcherTargets = customLauncher.GetApworlds();
             targets = new List<string>();
 
+            if (!customLauncher.isGame)
+            {
+                foreach (var item in customLauncher.GetBaseLauncher().GetApworlds())
+                {
+                    launcherTargets.Add(item);
+                }
+            }
+
             if (launcherTargets.Count == 0) 
             {
                 ErrorManager.AddNewError(
