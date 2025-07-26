@@ -29,8 +29,8 @@ These are all used somewhere in YAAL's code, and therefore can't be erased or re
 - asyncName
 - password : default to None, which works if no password was set
 - room
-- roomIP : set when room is changed (if it's "archipelago.gg:12345", it'll be "archipelago.gg")
-- roomPort : set when room is changed (if it's "archipelago.gg:12345", it'll be "12345")
+- roomIP : set when room is changed (if the room is "archipelago.gg:12345", this will be "archipelago.gg")
+- roomPort : set when room is changed (if the room is "archipelago.gg:12345", this will be "12345")
 
 ### Slot Settings
 
@@ -43,7 +43,7 @@ These are all used somewhere in YAAL's code, and therefore can't be erased or re
 
 ### Launcher Settings
 
-- apworld : set by going through all the Apworld instructions, it is a list but the code can handle it
+- apworld : set by going through all the Apworld instructions (plus YAAL.apworld, if you have a Patch instruction), this is a list, see the Custom Launcher documentation for more info on that
 - filters
 - gameName
 - githubURL
