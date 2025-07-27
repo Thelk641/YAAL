@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DynamicData;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -15,7 +16,8 @@ namespace YAAL
     public class RegEx : Instruction<RegExSettings>
     {
         // default regex : localhost|archipelago\.gg:\d+
-        private bool alreadyOutputedVar = false;
+        private List<string> alreadyOutputedVar = new List<string>();
+        private List<string> alreadyOutputedFile = new List<string>();
         public RegEx() 
         {
             instructionType = "RegEx";
@@ -40,29 +42,8 @@ namespace YAAL
                 return false;
             }
 
-            string[] splitPattern = this.InstructionSetting[regex].Split("/;");
-            string[] splitReplacement = this.InstructionSetting[replacement].Split("/;");
-
-            List<string> cleanedPattern = new List<string>();
-            List<string> cleanedReplacement = new List<string>();
-
-            foreach (var item in splitPattern)
-            {
-                if(item == "")
-                {
-                    continue;
-                }
-                cleanedPattern.Add(item.Trim());
-            }
-
-            foreach (var item in splitReplacement)
-            {
-                if (item == "")
-                {
-                    continue;
-                }
-                cleanedReplacement.Add(item.Trim());
-            }
+            List<string> splitPattern = customLauncher.SplitString(this.InstructionSetting[regex]);
+            List<string> splitReplacement = customLauncher.SplitString(this.InstructionSetting[replacement]);
 
             if (this.InstructionSetting[modeInput] == "File")
             {
@@ -74,7 +55,7 @@ namespace YAAL
                         );
                     return false;
                 }
-                if (!ApplyRegex(customLauncher.ParseTextWithSettings(this.InstructionSetting[targetFile]), cleanedPattern, cleanedReplacement))
+                if (!ApplyRegex(customLauncher.ParseTextWithSettings(this.InstructionSetting[targetFile]), splitPattern, splitReplacement))
                 {
                     return false;
                 }
@@ -88,7 +69,7 @@ namespace YAAL
                         );
                     return false;
                 }
-                if (!ApplyRegex(customLauncher.ParseTextWithSettings(this.InstructionSetting[targetString]), cleanedPattern, cleanedReplacement))
+                if (!ApplyRegex(this.InstructionSetting[targetString], splitPattern, splitReplacement))
                 {
                     return false;
                 }
@@ -99,27 +80,17 @@ namespace YAAL
 
         private bool ApplyRegex(string rawTarget, List<string> cleanedPattern, List<string> cleanedReplacement)
         {
-            string[] splitInput = rawTarget.Split("/;");
-            List<string> cleanedInput = new List<string>();
-
-            foreach (var item in splitInput)
-            {
-                if (item == "")
-                {
-                    continue;
-                }
-                cleanedInput.Add(item.Trim());
-            }
+            List<string> splitInput = customLauncher.SplitAndParse(rawTarget);
 
             if (
-            !(cleanedPattern.Count == 1 || cleanedPattern.Count == cleanedInput.Count)
-            || !(cleanedReplacement.Count == 1 || cleanedPattern.Count == cleanedInput.Count)
-            || cleanedPattern.Count > cleanedInput.Count
-            || cleanedReplacement.Count > cleanedInput.Count)
+            !(cleanedPattern.Count == 1 || cleanedPattern.Count == splitInput.Count)
+            || !(cleanedReplacement.Count == 1 || cleanedPattern.Count == splitInput.Count)
+            || cleanedPattern.Count > splitInput.Count
+            || cleanedReplacement.Count > splitInput.Count)
             {
                 ErrorManager.AddNewError(
                     "RegEx - Invalid number of pattern and replacement",
-                    "RegEx was given " + cleanedPattern.Count + " patterns and " + cleanedReplacement.Count + " replacement. These two need to either be one or match the number of input files (" + cleanedInput.Count + ")."
+                    "RegEx was given " + cleanedPattern.Count + " patterns and " + cleanedReplacement.Count + " replacement. These two need to either be one or match the number of input files (" + splitInput.Count + ")."
                     );
                 return false;
             }
@@ -129,9 +100,9 @@ namespace YAAL
             string replacement;
             string output;
 
-            for (int i = 0; i < cleanedInput.Count; i++)
+            for (int i = 0; i < splitInput.Count; i++)
             {
-                target = cleanedInput[i];
+                target = splitInput[i];
 
                 if (cleanedPattern.Count == 1)
                 {
@@ -187,18 +158,18 @@ namespace YAAL
         {
             if (this.InstructionSetting[modeOutput] == "File")
             {
-                string[] splitOutputFile = this.InstructionSetting[outputFile].Split("/;");
-                List<string> cleanedOutputFile = new List<string>();
-                foreach (var item in splitOutputFile)
+                bool success = false;
+                List<string> splitOutputFile = customLauncher.SplitString(this.InstructionSetting[outputFile]);
+                if (splitOutputFile.Count < i)
                 {
-                    if (item == "")
-                    {
-                        continue;
-                    }
-                    cleanedOutputFile.Add(item.Trim());
+                    ErrorManager.AddNewError(
+                        "RegEx - Not enough output file set",
+                        "If you set multiple output file, you need to set one per input file. You set " + splitOutputFile.Count + " outputs, but this tried to apply RegEx to input number " + i
+                        );
+                    return false;
                 }
 
-                switch (cleanedOutputFile.Count)
+                switch (splitOutputFile.Count)
                 {
                     case 0:
                         ErrorManager.AddNewError(
@@ -207,33 +178,35 @@ namespace YAAL
                             );
                         return false;
                     case 1:
-                        return IOManager.SaveFile(cleanedOutputFile[0], result);
-                    default:
-                        if (cleanedOutputFile.Count < i)
-                        {
-                            ErrorManager.AddNewError(
-                                "RegEx - Not enough output file set",
-                                "If you set multiple output file, you need to set one per input file. You set " + cleanedOutputFile.Count + " outputs, but this tried to apply RegEx to input number " + i
-                                );
-                            return false;
-                        }
-                        return IOManager.SaveFile(cleanedOutputFile[i], result);
+                        i = 0;
+                        break;
                 }
+
+                if (alreadyOutputedFile.Contains(splitOutputFile[i]))
+                {
+                    string toSave = IOManager.LoadFile(splitOutputFile[i]) + "; " + result;
+                    success = IOManager.SaveFile(splitOutputFile[i], toSave);
+                }
+                else
+                {
+                    success = IOManager.SaveFile(splitOutputFile[i], result);
+                    alreadyOutputedFile.Add(splitOutputFile[i]);
+                }
+                return success;
             }
             else
             {
-                string[] splitOutputVar = this.InstructionSetting[outputVar].Split("/;");
-                List<string> cleanedOutputVar = new List<string>();
-                foreach (var item in splitOutputVar)
+                List<string> splitOutputVar = customLauncher.SplitString(this.InstructionSetting[outputVar]);
+                if (splitOutputVar.Count < i)
                 {
-                    if (item == "")
-                    {
-                        continue;
-                    }
-                    cleanedOutputVar.Add(item.Trim());
+                    ErrorManager.AddNewError(
+                        "RegEx - Not enough output var set",
+                        "If you set multiple output var, you need to set one per input var. You set " + splitOutputVar.Count + " outputs, but this tried to apply RegEx to input number " + i
+                        );
+                    return false;
                 }
 
-                switch (cleanedOutputVar.Count)
+                switch (splitOutputVar.Count)
                 {
                     case 0:
                         ErrorManager.AddNewError(
@@ -242,28 +215,27 @@ namespace YAAL
                             );
                         return false;
                     case 1:
-                        if (alreadyOutputedVar)
-                        {
-                            customLauncher.settings[cleanedOutputVar[0]] += ";" + result;
-                        }
-                        else
-                        {
-                            customLauncher.settings[cleanedOutputVar[0]] = result;
-                            alreadyOutputedVar = true;
-                        }
-                        return true;
-                    default:
-                        if (cleanedOutputVar.Count < i)
-                        {
-                            ErrorManager.AddNewError(
-                                "RegEx - Not enough output var set",
-                                "If you set multiple output var, you need to set one per input file. You set " + cleanedOutputVar.Count + " var, but this tried to apply RegEx to input number " + i
-                                );
-                            return false;
-                        }
-                        customLauncher.settings[cleanedOutputVar[i]] = result;
-                        return true;
+                        i = 0;
+                        break;
                 }
+
+                if (alreadyOutputedVar.Contains(splitOutputVar[i]))
+                {
+                    if (customLauncher.settings.Has(splitOutputVar[i]))
+                    {
+                        customLauncher.settings[splitOutputVar[i]] = customLauncher.settings[splitOutputVar[i]] + "; " + result;
+                    }
+                    else
+                    {
+                        customLauncher.settings[splitOutputVar[i]] = result;
+                    }
+                }
+                else
+                {
+                    customLauncher.settings[splitOutputVar[i]] = result;
+                    alreadyOutputedVar.Add(splitOutputVar[i]);
+                }
+                return true;
             }
         }
     }

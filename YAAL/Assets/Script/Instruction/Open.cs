@@ -29,14 +29,14 @@ public class Open : Instruction<OpenSettings>
 
         
 
-        string[] splitPath = this.InstructionSetting[OpenSettings.path].Split(";");
-        string[] splitArgs = this.InstructionSetting[OpenSettings.args].Split(";");
-        string[] splitKeys = this.InstructionSetting[OpenSettings.processName].Split(";");
+        List<string> splitPath = customLauncher.SplitAndParse(this.InstructionSetting[OpenSettings.path]);
+        List<string> splitArgs = customLauncher.SplitAndParse(this.InstructionSetting[OpenSettings.args]);
+        List<string> splitKeys = customLauncher.SplitAndParse(this.InstructionSetting[OpenSettings.processName]);
 
-        if (splitKeys.Length > 1 && splitKeys.Length != splitPath.Length) {
+        if (splitKeys.Count > 1 && splitKeys.Count != splitPath.Count) {
             ErrorManager.AddNewError(
                 "Open - Invalid number of keys",
-                "Open was given " + splitKeys.Length + " keys for " + splitPath.Length + " process, this is not allowed. Either pick one key per process, or only one to apply to them all, or none."
+                "Open was given " + splitKeys.Count + " keys for " + splitPath.Count + " process, this is not allowed. Either pick one key per process, or only one to apply to them all, or none."
                 );
             return false;
         }
@@ -44,7 +44,7 @@ public class Open : Instruction<OpenSettings>
         Dictionary<string, string> splitInput = new Dictionary<string, string>();
         
 
-        if(splitArgs.Length == 0)
+        if(splitArgs.Count == 0)
         {
             foreach (var item in splitPath)
             {
@@ -52,15 +52,15 @@ public class Open : Instruction<OpenSettings>
             }
         } else
         {
-            if(splitPath.Length != splitArgs.Length)
+            if(splitPath.Count != splitArgs.Count)
             {
                 ErrorManager.AddNewError(
                     "Open - Number of args doesn't match number of targets",
-                    "Open was asked to open " + splitPath.Length + " programs or URLs, but was provided " + splitArgs.Length + " arguments. This is not allowed, either pass one per target or include the args in the target."
+                    "Open was asked to open " + splitPath.Count + " programs or URLs, but was provided " + splitArgs.Count + " arguments. This is not allowed, either pass one per target or include the args in the target."
                     );
                 return false;
             }
-            for (int i = 0; i < splitPath.Length; i++)
+            for (int i = 0; i < splitPath.Count; i++)
             {
                 splitInput[splitPath[i].Trim()] = splitArgs[i].Trim();
             }
@@ -68,18 +68,6 @@ public class Open : Instruction<OpenSettings>
 
         string path = "";
         string args = "";
-        List<string> keys = new List<string>();
-        {
-            foreach (var item in splitKeys)
-            {
-                string cleanedKey = item.Trim();
-                if(cleanedKey == "")
-                {
-                    continue;
-                }
-                keys.Add(cleanedKey);
-            }
-        }
 
         int j = 0;
 
@@ -113,16 +101,16 @@ public class Open : Instruction<OpenSettings>
                 }
 
                 string key;
-                switch (keys.Count)
+                switch (splitKeys.Count)
                 {
                     case 0:
                         key = "";
                         break;
                     case 1:
-                        key = keys[0];
+                        key = splitKeys[0];
                         break;
                     default:
-                        key = keys[j];
+                        key = splitKeys[j];
                         ++j;
                         break;
                 }

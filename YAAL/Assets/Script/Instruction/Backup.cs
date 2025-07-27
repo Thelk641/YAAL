@@ -32,8 +32,8 @@ namespace YAAL
 
         public override bool Execute()
         {
-            List<string> splitTarget = IOManager.SplitPathList(customLauncher.ParseTextWithSettings(this.InstructionSetting[target]));
-            List<string> splitDefault = IOManager.SplitPathList(customLauncher.ParseTextWithSettings(this.InstructionSetting[defaultFile]));
+            List<string> splitTarget = customLauncher.SplitAndParse(this.InstructionSetting[target]);
+            List<string> splitDefault = customLauncher.SplitAndParse(this.InstructionSetting[defaultFile]);
             Dictionary<string, string> BackupAndDefault = new Dictionary<string, string>();
 
             if(splitTarget.Count == 0)
@@ -61,6 +61,12 @@ namespace YAAL
 
                 foreach (var item in splitDefault)
                 {
+                    if(item == "")
+                    {
+                        trueDefaults.Add("");
+                        newSetting += "\" \"";
+                        continue;
+                    }
                     if (!IOManager.CopyToDefault(customLauncher.GetSetting(launcherName), item, out newDefault))
                     {
                         ErrorManager.AddNewError(
@@ -69,7 +75,7 @@ namespace YAAL
                         return false;
                     }
                     trueDefaults.Add(newDefault);
-                    newSetting += newDefault + "; ";
+                    newSetting += "\"" + newDefault + "\"; ";
                 }
 
                 this.InstructionSetting[defaultFile] = newSetting.Trim().Trim(';');

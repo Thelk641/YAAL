@@ -165,16 +165,16 @@ namespace YAAL
             cache.previousSlot = this.settings[slotName];
             cache.previousVersion = this.settings[version];
 
-            string[] splitTarget = this.InstructionSetting[target].Split(";");
+            List<string> splitTarget = customLauncher.SplitString(this.InstructionSetting[target]);
 
             foreach (var item in splitTarget)
             {
-                string cleaned = item.Trim();
-                if(cleaned == "")
+                if(item == "")
                 {
                     continue;
                 }
-                if (!IOManager.UpdatePatch(this.settings[launcherName], cleaned, cache))
+
+                if (!IOManager.UpdatePatch(this.settings[launcherName], item, cache))
                 {
                     ErrorManager.AddNewError(
                         "Patch - Updating patch failed",

@@ -43,39 +43,54 @@ namespace YAAL
                 }
             }
 
-            target = customLauncher.ParseTextWithSettings(target);
+            //target = customLauncher.ParseTextWithSettings(target);
+            List<string> apworlds = customLauncher.SplitAndParse(target);
 
-            if (target.Contains(";"))
+            switch (apworlds.Count)
             {
-                foreach (var item in IOManager.SplitPathList(target))
-                {
-                    if (!IOManager.UpdateFileToVersion(item, launchername, version, this.InstructionSetting[necessaryFile]))
+                case 0:
+                    if (this.InstructionSetting[necessaryFile] == true.ToString())
                     {
                         ErrorManager.AddNewError(
-                        "Apworld - Failed to update a file from a list",
-                        "Couldn't update all the necessary files in a given list, had to abort."
+                        "Apworld - Didn't provide an apworld",
+                        "An Apworld instruction was set to be necessary, yet no files were listed in it. This is not allowed."
                         );
                         return false;
                     }
-                }
-
-                return true;
-            } else
-            {
-                bool success = IOManager.UpdateFileToVersion(
-                    target, 
-                    this.settings[launcherName], 
-                    this.settings[SlotSettings.version], 
+                    return true;
+                case 1:
+                    bool success = IOManager.UpdateFileToVersion(
+                    target,
+                    this.settings[launcherName],
+                    this.settings[SlotSettings.version],
                     this.InstructionSetting[necessaryFile]
                     );
-                if(!success)
-                {
-                    ErrorManager.AddNewError(
-                        "Apworld - Failed to update file",
-                        "Couldn't update all the necessary files and had to abort."
-                        );
-                }
-                return success;
+                    if (!success)
+                    {
+                        ErrorManager.AddNewError(
+                            "Apworld - Failed to update file",
+                            "Couldn't update all the necessary files and had to abort."
+                            );
+                    }
+                    return success;
+                default:
+                    foreach (var item in apworlds)
+                    {
+                        if(item == "")
+                        {
+                            continue;
+                        }
+                        if (!IOManager.UpdateFileToVersion(item, launchername, version, this.InstructionSetting[necessaryFile]))
+                        {
+                            ErrorManager.AddNewError(
+                            "Apworld - Failed to update a file from a list",
+                            "Couldn't update all the necessary files in a given list, had to abort."
+                            );
+                            return false;
+                        }
+                    }
+
+                    return true;
             }
         }
 

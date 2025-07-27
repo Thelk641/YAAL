@@ -16,6 +16,7 @@ using static YAAL.AsyncSettings;
 using static YAAL.LauncherSettings;
 using static YAAL.PreviousAsyncSettings;
 using static YAAL.SlotSettings;
+using System.Text;
 
 public class CustomLauncher
 {
@@ -265,6 +266,16 @@ public class CustomLauncher
         return selfsettings[key];
     }
 
+    public List<string> ParseTextWithSettings(List<string> input)
+    {
+        List<string> output = new List<string>();
+        foreach (var item in input)
+        {
+            output.Add(ParseTextWithSettings(item));
+        }
+        return output;
+    }
+    
     public string ParseTextWithSettings(string text)
     {
         CustomLauncher baseLauncher = null;
@@ -353,7 +364,7 @@ public class CustomLauncher
 
         if(text.Contains(".apworld") && !text.Contains("\\"))
         {
-            string custom_world = Path.Combine(settings[GeneralSettings.apfolder], "custom_folder", text);
+            string custom_world = Path.Combine(settings[GeneralSettings.apfolder], "custom_worlds", text);
             string lib_world = Path.Combine(settings[GeneralSettings.apfolder], "lib", "worlds", text);
 
             if (File.Exists(custom_world))
@@ -366,6 +377,55 @@ public class CustomLauncher
         }
 
         return text;
+    }
+
+    public List<string> SplitAndParse(string input)
+    {
+        return ParseTextWithSettings(SplitString(input));
+    }
+
+    public List<string> SplitString(string input)
+    {
+        List<string> output = new List<string>();
+        bool inQuotes = false;
+        StringBuilder current = new StringBuilder();
+
+        if(input.Contains("Factorio Client"))
+        {
+            int z = 10;
+        }
+
+        foreach (char c in input)
+        {
+            if (c == '"')
+            {
+                inQuotes = !inQuotes;
+                current.Append(c);
+            }
+            else if (c == ';' && !inQuotes)
+            {
+                if (current.ToString().EndsWith("\"\""))
+                {
+                    output.Add(current.ToString().Trim().Trim('\"').Trim() + "\"");
+                } else
+                {
+                    output.Add(current.ToString().Trim().Trim('\"').Trim());
+                }
+                    
+                current.Clear();
+            }
+            else
+            {
+                current.Append(c);
+            }
+        }
+
+        if (current.Length > 0)
+        {
+            output.Add(current.ToString().Trim().Trim('\"').Trim());
+        }
+
+        return output;
     }
 
     public void SetSlotSetting(SlotSettings key, string value)
@@ -404,14 +464,14 @@ public class CustomLauncher
 
     public List<string> GetApworlds()
     {
-        List<string> output = new List<string>();
+        List<string> temp = new List<string>();
         bool hasAddedOwnApworld = false;
         foreach (var item in listOfInstructions)
         {
             Apworld apworld = item as Apworld;
             if(apworld != null)
             {
-                output.Add(apworld.GetTarget());
+                temp.Add(apworld.GetTarget());
             }
 
             if (!hasAddedOwnApworld)
@@ -419,7 +479,7 @@ public class CustomLauncher
                 Patch patch = item as Patch;
                 if(patch != null)
                 {
-                    output.Add(Path.Combine(settings[GeneralSettings.apfolder], "custom_worlds", "YAAL.apworld"));
+                    temp.Add(Path.Combine(settings[GeneralSettings.apfolder], "custom_worlds", "YAAL.apworld"));
                 }
             }
         }
@@ -428,36 +488,25 @@ public class CustomLauncher
         {
             foreach (var item in _baseLauncher.GetApworlds())
             {
-                if (!output.Contains(item))
+                if (!temp.Contains(item))
                 {
-                    output.Add(item);
+                    temp.Add(item);
                 }
             }
         }
-        List<string> temp = new List<string>();
-        foreach (var item in output)
-        {
-            if (item.Contains(";"))
-            {
-                foreach (var item1 in item.Split(";"))
-                {
-                    temp.Add(item1.Trim());
-                }
-            } else
-            {
-                temp.Add(item.Trim());
-            }
-        }
-
-        output = new List<string>();
-
+        List<string> output = new List<string>();
         foreach (var item in temp)
         {
-            if(item.Trim() != "" && item != "${base:apworld}")
+            foreach (var trueItem in SplitString(item))
             {
-                output.Add(ParseTextWithSettings(item));
+                string cleaned = trueItem.Trim();
+                if (cleaned != "" && cleaned != "${base:apworld}")
+                {
+                    output.Add(ParseTextWithSettings(cleaned));
+                }
             }
         }
+
         return output;
     }
 
