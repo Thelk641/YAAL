@@ -13,9 +13,7 @@ Finally, remember that, while having these features in another software is *(in 
 ## Now that you're ready, how do you use YAAL ?
 
 Here's a few docs to teach you everything this software can do :
-- Command line arguments :
-- Custom Launchers :
-- Settings :
-- Tools : 
-
-
+- [Command line arguments](https://github.com/Thelk641/YAAL/blob/master/Docs/Command%20line%20arguments.md)
+- [Custom Launchers](https://github.com/Thelk641/YAAL/blob/master/Docs/Custom%20Launcher.md)
+- [Settings](https://github.com/Thelk641/YAAL/blob/master/Docs/Settings.md)
+- [Tools](https://github.com/Thelk641/YAAL/blob/master/Docs/Tools.md)
