@@ -14,11 +14,7 @@ You can also set custom variable. Do note that, if you set a variable to "True" 
 
 # Game or tool ?
 
-At the bottom left of the CLMaker window is a setting to note if a launcher is a game or a tool. Each slot is meant to have only one game, called its base launcher (ex : Minecraft, Factorio etc.), while tools are meant as things that can be openned on any slot (ex : Text Client, Universal Tracker etc.). For versionning, games' version are set per-slot, tools' version are set per-async.
-
-If you're making a tool, there are a few more settings you can use :
-- ${base:apworlds} will be replaced with the base launcher's apworld list
-- ${baseSetting:settingName} will be replaced by the value of settingName in the base launcher's settings, you do not need to put ${} around setting name, YAAL does it for you
+At the bottom left of the CLMaker window is a setting to note if a launcher is a game or a tool. Each slot is meant to have only one game, called its base launcher (ex : Minecraft, Factorio etc.), while tools are meant as things that can be openned on any slot (ex : Text Client, Universal Tracker etc.). For more information on tools, see Tools.md.
 
 # Instructions
 
