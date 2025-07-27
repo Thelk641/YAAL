@@ -35,6 +35,8 @@ public partial class Command_RegEx : Command
 
         InputFileButton.Click += _FileExplorer;
         OutputFileButton.Click += _FileExplorer;
+        _InputTypeChanged(null, null);
+        _OutputTypeChanged(null, null);
 
         TurnEventsOn();
     }

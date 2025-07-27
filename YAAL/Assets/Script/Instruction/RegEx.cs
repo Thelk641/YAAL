@@ -55,7 +55,7 @@ namespace YAAL
                         );
                     return false;
                 }
-                if (!ApplyRegex(customLauncher.ParseTextWithSettings(this.InstructionSetting[targetFile]), splitPattern, splitReplacement))
+                if (!ApplyRegex(this.InstructionSetting[targetFile], splitPattern, splitReplacement))
                 {
                     return false;
                 }
@@ -160,14 +160,6 @@ namespace YAAL
             {
                 bool success = false;
                 List<string> splitOutputFile = customLauncher.SplitString(this.InstructionSetting[outputFile]);
-                if (splitOutputFile.Count < i)
-                {
-                    ErrorManager.AddNewError(
-                        "RegEx - Not enough output file set",
-                        "If you set multiple output file, you need to set one per input file. You set " + splitOutputFile.Count + " outputs, but this tried to apply RegEx to input number " + i
-                        );
-                    return false;
-                }
 
                 switch (splitOutputFile.Count)
                 {
@@ -180,6 +172,15 @@ namespace YAAL
                     case 1:
                         i = 0;
                         break;
+                }
+
+                if (splitOutputFile.Count < i)
+                {
+                    ErrorManager.AddNewError(
+                        "RegEx - Not enough output file set",
+                        "If you set multiple output file, you need to set one per input file. You set " + splitOutputFile.Count + " outputs, but this tried to apply RegEx to input number " + i
+                        );
+                    return false;
                 }
 
                 if (alreadyOutputedFile.Contains(splitOutputFile[i]))
@@ -197,14 +198,6 @@ namespace YAAL
             else
             {
                 List<string> splitOutputVar = customLauncher.SplitString(this.InstructionSetting[outputVar]);
-                if (splitOutputVar.Count < i)
-                {
-                    ErrorManager.AddNewError(
-                        "RegEx - Not enough output var set",
-                        "If you set multiple output var, you need to set one per input var. You set " + splitOutputVar.Count + " outputs, but this tried to apply RegEx to input number " + i
-                        );
-                    return false;
-                }
 
                 switch (splitOutputVar.Count)
                 {
@@ -217,6 +210,15 @@ namespace YAAL
                     case 1:
                         i = 0;
                         break;
+                }
+
+                if (splitOutputVar.Count < i)
+                {
+                    ErrorManager.AddNewError(
+                        "RegEx - Not enough output var set",
+                        "If you set multiple output var, you need to set one per input var. You set " + splitOutputVar.Count + " outputs, but this tried to apply RegEx to input number " + i
+                        );
+                    return false;
                 }
 
                 if (alreadyOutputedVar.Contains(splitOutputVar[i]))

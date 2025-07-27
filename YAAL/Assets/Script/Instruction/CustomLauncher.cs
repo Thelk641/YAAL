@@ -173,6 +173,7 @@ public class CustomLauncher
 
     public void ReadCache(Cache_CustomLauncher cache)
     {
+        this.settings[LauncherSettings.apworld] = "";
         this.selfsettings = cache.settings;
         this.customSettings = cache.customSettings;
         listOfInstructions = new List<Interface_Instruction>();
@@ -195,12 +196,12 @@ public class CustomLauncher
                 {
                     foreach (var value in IOManager.SplitPathList(target))
                     {
-                        apworld.Add(value);
+                        this.settings[LauncherSettings.apworld] += "\"" + value + "\";"; 
                     }
                 }
                 else
                 {
-                    apworld.Add(target);
+                    this.settings[LauncherSettings.apworld] += "\"" + target + "\";";
                 }
             }
         }
@@ -286,24 +287,50 @@ public class CustomLauncher
 
         string tempString = text;
 
-        foreach (Match m in Regex.Matches(text, @"\$\{baseSetting:(?<key>[^}]+)\}"))
+        if (text.Contains("${baseSetting:"))
         {
-            string key = m.Groups["key"].Value;
-            string pattern = "${baseSetting:" + key + "}";
+            if (isGame)
+            {
+                ErrorManager.ThrowError(
+                    "CustomLauncher - Tried to use tool-specific settings in non-tool launcher",
+                    "YAAL was asked to parse a baseSetting in a game. This is not allowed. BaseSettings are only there for tools."
+                    );
+                return "";
+            }
+            foreach (Match m in Regex.Matches(text, @"\$\{baseSetting:(?<key>[^}]+)\}"))
+            {
 
-            tempString = tempString.Replace(pattern, baseLauncher.ParseTextWithSettings("${" + key + "}"));
+                string key = m.Groups["key"].Value;
+                string pattern = "${baseSetting:" + key + "}";
+
+                tempString = tempString.Replace(pattern, baseLauncher.ParseTextWithSettings("${" + key + "}"));
+            }
         }
 
         text = tempString;
 
         if(text.Contains("${base:apworld}"))
         {
-            string apworldList = "\"";
-            foreach (var item in baseLauncher.apworld)
+            if (isGame)
             {
-                apworldList += item + ";";
+                ErrorManager.ThrowError(
+                    "CustomLauncher - Tried to use tool-specific settings in non-tool launcher",
+                    "YAAL was asked to parse base:apworld in a game. This is not allowed. 'Base' options are only there for tools."
+                    );
+                return "";
             }
-            text = text.Replace("${base:apworld}", apworldList + "\"");
+            text = text.Replace("${base:apworld}", baseLauncher.settings[LauncherSettings.apworld]);
+        }
+
+        if (text.Contains("${apworld}"))
+        {
+            string apworldList = "";
+            foreach (var item in GetApworlds())
+            {
+                apworldList += "\"" + item + "\";";
+            }
+
+            text = text.Replace("${apworld}", apworldList);
         }
 
         int i = 0;
@@ -349,7 +376,7 @@ public class CustomLauncher
                         output = output + split[0];
                     }
 
-                    if (needsQuote)
+                    if (needsQuote && !split[1].StartsWith("\";"))
                     {
                         output += "\"";
                     }
@@ -381,7 +408,7 @@ public class CustomLauncher
 
     public List<string> SplitAndParse(string input)
     {
-        return ParseTextWithSettings(SplitString(input));
+        return ParseTextWithSettings(SplitString(ParseTextWithSettings(input)));
     }
 
     public List<string> SplitString(string input)
@@ -389,11 +416,6 @@ public class CustomLauncher
         List<string> output = new List<string>();
         bool inQuotes = false;
         StringBuilder current = new StringBuilder();
-
-        if(input.Contains("Factorio Client"))
-        {
-            int z = 10;
-        }
 
         foreach (char c in input)
         {
