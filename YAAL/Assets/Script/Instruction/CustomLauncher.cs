@@ -539,9 +539,6 @@ public class CustomLauncher
             return true;
         }
 
-        string[] trueKeys = key.Split(";");
-        string cleaned;
-
         try
         {
             instructionAttachedToClosing.Add(instruction, new List<string>());
@@ -555,7 +552,9 @@ public class CustomLauncher
             return false;
         }
 
-        foreach (var item in trueKeys)
+        string cleaned;
+
+        foreach (var item in SplitString(key))
         {
             cleaned = item.Trim();
             if(cleaned == "")
@@ -626,9 +625,6 @@ public class CustomLauncher
             return true;
         }
 
-        string[] trueKeys = key.Split(";");
-        string cleaned;
-
         try
         {
             instructionAttachedToOutput.Add(instruction, new List<string>());
@@ -642,7 +638,9 @@ public class CustomLauncher
             return false;
         }
 
-        foreach (var item in trueKeys)
+        string cleaned;
+
+        foreach (var item in SplitString(key))
         {
             cleaned = item.Trim();
             if (cleaned == "")

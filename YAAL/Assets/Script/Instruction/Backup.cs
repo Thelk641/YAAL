@@ -22,6 +22,7 @@ namespace YAAL
     public class Backup : Instruction<BackupSettings>
     {
         private List<string> backedUpFile = new List<string>();
+        private List<string> outputToLookFor = new List<string>();
         public bool waitingForRestore = false;
         private float time;
 
@@ -131,6 +132,7 @@ namespace YAAL
                         Restore();
                         return false;
                     }
+                    outputToLookFor = customLauncher.SplitString(this.InstructionSetting[BackupSettings.outputToLookFor]);
                     return true;
                 case "combined":
                     if (!customLauncher.AttachToClosing(this, this.InstructionSetting[processName] ?? ""))
@@ -143,6 +145,7 @@ namespace YAAL
                         Restore();
                         return false;
                     }
+                    outputToLookFor = customLauncher.SplitString(this.InstructionSetting[BackupSettings.outputToLookFor]);
                     return true;
                 case "timer":
                     time = float.Parse(this.InstructionSetting[timer], CultureInfo.InvariantCulture.NumberFormat) * 0.1f;
@@ -176,10 +179,16 @@ namespace YAAL
 
         public override void ParseOutputData(object sender, DataReceivedEventArgs e)
         {
-            if (e.Data != null && e.Data.Contains(this.InstructionSetting[outputToLookFor]))
+            if(e.Data != null)
             {
-                Debug.WriteLine("Pattern found in output, starting restore. Output : " + e.Data);
-                Restore();
+                foreach (var item in outputToLookFor)
+                {
+                    if (e.Data.Contains(item))
+                    {
+                        Debug.WriteLine("Pattern found in output, starting restore. Output : " + e.Data);
+                        Restore();
+                    }
+                }
             }
         }
 
