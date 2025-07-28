@@ -23,6 +23,8 @@ public partial class Command_Apworld : Command
         linkedInstruction = new Apworld();
         TurnEventsOn();
         IsNecessary.IsChecked = true;
+        FileTarget.Click += _FileExplorer;
+        FolderTarget.Click += _FolderExplorer;
     }
 
     protected override void TurnEventsOn()

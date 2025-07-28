@@ -76,13 +76,27 @@ namespace YAAL
         protected async void _FileExplorer(object? sender, RoutedEventArgs e)
         {
             Button button = sender as Button;
-            explorers[button].Text = await IOManager.PickFile(clMaker);
+            if (explorers[button].Text == "")
+            {
+                explorers[button].Text = "\"" + await IOManager.PickFile(clMaker) + "\";";
+            } else
+            {
+                explorers[button].Text += "\"" + await IOManager.PickFile(clMaker) + "\";";
+            }
+            
         }
 
         protected async void _FolderExplorer(object? sender, RoutedEventArgs e)
         {
             Button button = sender as Button;
-            explorers[button].Text = await IOManager.PickFolder(clMaker);
+            if (explorers[button].Text == "")
+            {
+                explorers[button].Text = "\"" + await IOManager.PickFolder(clMaker) + "\";";
+            }
+            else
+            {
+                explorers[button].Text += "\"" + await IOManager.PickFolder(clMaker) + "\";";
+            }
         }
 
         protected void _TextChangedCustom(object? sender, TextChangedEventArgs e)

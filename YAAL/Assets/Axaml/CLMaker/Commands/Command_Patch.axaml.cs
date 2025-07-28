@@ -31,7 +31,7 @@ public partial class Command_Patch : Command
         Mode.ItemsSource = modes;
         Mode.SelectedIndex = 0;
 
-        TargetFolder.Click += _FileExplorer;
+        TargetFolder.Click += _FolderExplorer;
         
     }
 
