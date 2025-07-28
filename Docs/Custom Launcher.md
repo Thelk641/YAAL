@@ -21,8 +21,10 @@ At the bottom left of the CLMaker window is a setting to note if a launcher is a
 If an instruction has a text field, it can take multiple input separated by a semicolon (";"). The only exception is RegEx, as you might want to replace those, so this one uses "/;" as separator instead, meaning it can't use ${apworld}.
 
 ## - Apworld
-###  Defines and apply versionning to a file (including but not limited to .apworld)
+### Function
+Defines and apply versionning to a file (including but not limited to .apworld)
 
+### Options and notes
 The "Stricly necessary" tickbox is only relevant if the file can't be found. If ticked, the launcher will error out, if not, it'll ignore this file and move on.
 
 Do note that, when replacing a file to the Slot's version, it will delete the file that was there before. This is the only instruction allowed to do that, and it will only do that to replace a file, it won't ever delete a file it can't immediately replace.
@@ -31,8 +33,10 @@ Do note that, when replacing a file to the Slot's version, it will delete the fi
 None.
 
 ## - Backup
-###  Create per-slot versions of files or folders, making per-slot safe environments
+### Function
+Create per-slot versions of files or folders, making per-slot safe environments
 
+### Options and notes
 The files or folders that you target, if they exist when launching, will be saved on the side and be auto-restored once the auto-restore condition triggers, letting you create per-slot files or folders. No more switching mods around if you've got two different slots with different mods.
 
 For the auto-restore, this provides four options (see Open to learn more about keyed process) :
@@ -52,16 +56,20 @@ Every text field of this instruction can accept multiple input, with one limitat
 
 ## - Isolate
 
-### Backup and restore custom_worlds and lib/worlds, leaving behind only the bare minimum and this launcher's apworlds, launching Archipelago as fast as possible
+### Function
+Backup and restore custom_worlds and lib/worlds, leaving behind only the bare minimum and this launcher's apworlds, launching Archipelago as fast as possible
 
+### Options and notes
 The options are the same as Backup, see above for more informations.
 
 ### List limitations
 None.
 
 ## - Open
-### Launchs a software, opens a file or URL
+### Function
+Launchs a software, opens a file or URL
 
+### Options and notes
 While this has two fields, one for the file and one for arguments, you can put the arguments after the file in the same text field if you want to, it'll take care of splitting them automatically. You cannot do it the other way around.
 
 The "Variable name" field lets you create a keyed process. These process can be followed by Backup and Isolate instructions to trigger their respective auto-restore. For this, the order of instructions doesn't matter, Backup and Isolate check if any existing keyed process matches their key and Open checks if any instruction is looking for its key.
@@ -75,7 +83,10 @@ If you provide more than one key, you must provide one key per file to open.
 
 ## - Patch
 
-### Apply or copys patch files
+### Function
+Apply or copys patch files
+
+### Options and notes
 Applying the patch uses the YAAL.apworld, which you must put in custom_worlds for this to work (it will error out if you don't). The "Isolate apworlds" tickbox does the same thing as the Isolate instruction does, it auto-restores as soon as the patching is done.
 
 Auto-rename is off by default, as some game (ex : Factorio) don't tolerate patch renaming. It is there for Bizhawk : if you wanted to backup your rom game save (just in case they got corrupted at some point), you'd need to get the name of the save, but annoyingly Bizhawk saves names are not always one-to-one with rom names (in particular, it replaces underscores with spaces). Using RegEx to solve this is a solution, but then you'll need to apply it only to the filename and then use another RegEx to put them back together, instead, YAAL lets you automatically renames them to AsyncName.SlotName, which, as long as you don't use underscore in either of those, should be consistent with Bizhawk's saves names.
@@ -86,8 +97,11 @@ CopyPatch will first check if a patch exists in the target folder(s), and delete
 None.
 
 ## - RegEx
-### Lets you edit strings or files using Regular Expressions
-Not much to say, Regular Expressions are very powerful, but also pretty complicated, be sure that you know what you're doing with them.
+### Function
+Lets you edit strings or files using Regular Expressions
+
+### Options and notes
+Not much to say, Regular Expressions are very powerful, but they're also pretty complicated, be sure that you know what you're doing with them.
 
 ### List limitations
 This currently doesn't use the standard semicolon (";") as divider, instead using "/;" as the input, replacement and output might contain semicolons themselves.

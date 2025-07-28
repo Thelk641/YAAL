@@ -1,6 +1,6 @@
 # Settings are variable
 
-From a code point of view this is obvious, but it's also true from a user point of view. In an instruction, if you write ${settingName} and settingName does exists, it will be replaced by its value when the launcher is executed. This is done recursively, so you can have settings containing other settings and in fact, one of the default one already is setup that way.
+From a code point of view this is obvious, but it's also true from a user point of view. In an instruction, if you write ${settingName} and settingName does exists, it will be replaced by its value when the launcher is executed. This is done recursively, so you can have settings containing other settings and in fact, one of the default one is already setup that way.
 
 # Type of Settings and read order
 
@@ -17,7 +17,7 @@ If you create a new setting in the general settings manager, it'll be treated as
 
 # Default settings name
 
-These are all used somewhere in YAAL's code, and therefore can't be erased or renamed. Some are automatically filled for you, to help you while you set your launchers. You can find the list in YAAL by opening the Setting Manager from a CLMaker window, but here it is anyway :
+These are all used somewhere in YAAL's code, and therefore can't be erased or renamed. Some are automatically filled for you, to help you while you set your launchers. You can find the list in YAAL by opening the Setting Manager from a CLMaker window.
 
 ### General Settings
 
