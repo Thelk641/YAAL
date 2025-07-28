@@ -29,8 +29,8 @@ These are all used somewhere in YAAL's code, and therefore can't be erased or re
 - asyncName
 - password : default to None, which works if no password was set
 - room
-- roomIP : set when room is changed (if the room is "archipelago.gg:12345", this will be "archipelago.gg")
-- roomPort : set when room is changed (if the room is "archipelago.gg:12345", this will be "12345")
+- roomIP : set when room setting is changed (if the room is "archipelago.gg:12345", this will be "archipelago.gg")
+- roomPort : set when room setting is changed (if the room is "archipelago.gg:12345", this will be "12345")
 
 ### Slot Settings
 
@@ -38,7 +38,7 @@ These are all used somewhere in YAAL's code, and therefore can't be erased or re
 - patch
 - rom : set by the Patch instruction
 - slotName
-- slotInfo : always set to "${slotName}:${password}@${room}"
+- slotInfo : defaults to "${slotName}:${password}@${room}"
 - version
 
 ### Launcher Settings
