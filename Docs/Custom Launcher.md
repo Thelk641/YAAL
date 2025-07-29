@@ -90,11 +90,13 @@ If you provide more than one key, you must provide one key per file to open.
 Apply or copys patch files
 
 ### Options and notes
-Applying the patch uses the YAAL.apworld, which you must put in custom_worlds for this to work (it will error out if you don't). The "Isolate apworlds" tickbox does the same thing as the Isolate instruction does, it auto-restores as soon as the patching is done.
+This instruction has two modes :
 
-Auto-rename is off by default, as some game (ex : Factorio) don't tolerate patch renaming. It is there for Bizhawk : if you wanted to backup your rom game save (just in case they got corrupted at some point), you'd need to get the name of the save, but annoyingly Bizhawk saves names are not always one-to-one with rom names (in particular, it replaces underscores with spaces). Using RegEx to solve this is a solution, but then you'll need to apply it only to the filename and then use another RegEx to put them back together, instead, YAAL lets you automatically renames them to AsyncName.SlotName, which, as long as you don't use underscore in either of those, should be consistent with Bizhawk's saves names.
+- Applying the patch uses the YAAL.apworld, which you must put in custom_worlds for this to work (it will error out if you don't). The "Isolate apworlds" tickbox does the same thing as the Isolate instruction does, except if you tik it, it'll auto-restore as soon as the patching is done, doesn't matter if it is successfull or not.
 
-CopyPatch will first check if a patch exists in the target folder(s), and delete them if they do, ensuring that you only ever have one patch copies there. The information of "what is the name of the last patch copied to X ?" will be saved and transmitted to every other Custom Launcher that share this launcher's gameName.
+- CopyPatch will first check if a patch exists in the target folder(s), and delete them if they do, ensuring that you only ever have one patch copies there. The information of "what is the last patch copied to X ?" will be saved and transmitted to every other Custom Launcher that share this launcher's gameName, so if you have multiple launchers for the same game, they won't bug each other out.
+
+The option to rename the patch is there for Bizhawk : if you wanted to backup your rom game save (just in case they got corrupted at some point), you'd need to get the name of the save, but annoyingly Bizhawk saves names are not always one-to-one with rom names (in particular, it replaces dashes with spaces). Using RegEx to solve this is a solution, but then you'll need to apply it only to the filename and then use another RegEx to put them back together, instead, YAAL lets you automatically renames them. Sadly, some game don't tolerate you renaming the patch, so for this, just leave it empty and it won't rename them.
 
 ### List limitations
 None.
@@ -104,7 +106,9 @@ None.
 Lets you edit variable or files using Regular Expressions
 
 ### Options and notes
-Pretty explicit, and nothing much to add.
+Pretty explicit. Here are two useful patterns to get you started :
+- "^.*\\([^\\]+)\.gbc$" => will find and extract the fileName before the .gbc extension, set replacement to $1.SaveRAM to get bizhawk's save name, or add the full path to bizhawk's save folder before that and you'll get the full path, ready to be used with Backup to ensure a corrupted save doesn't force you to do it all again
+- "localhost|archipelago\.gg:\d+" => will find the room IP, be it "localhost" or "archipelago.gg:12345", in case you need to find and replace this in a mod file
 
 ### List limitations
 You are allowed to :
