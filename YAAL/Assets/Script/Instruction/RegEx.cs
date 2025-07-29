@@ -100,6 +100,9 @@ namespace YAAL
             string replacement;
             string output;
 
+            alreadyOutputedFile = new List<string>();
+            alreadyOutputedVar = new List<string>();
+
             for (int i = 0; i < splitInput.Count; i++)
             {
                 target = splitInput[i];

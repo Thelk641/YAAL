@@ -154,17 +154,20 @@ public class Open : Instruction<OpenSettings>
             path = cutPath[0] + cutPath[1];
             args = "";
 
-            for (int i = 2; i < cutPath.Length; i++)
-            {
-                args += cutPath[i] + " ";
+            if(cutPath.Length > 2) {
+                if (cutPath[2] == " ")
+                {
+                    args += "\"";
+                }
+                for (int i = 3; i < cutPath.Length; i++)
+                {
+                    args += cutPath[i] + " ";
+                }
             }
+
+            
 
             args = args.Trim();
-
-            if (cutPath[2].Trim() == "")
-            {
-                args = "\"" + args;
-            }
 
             if (cutPath[cutPath.Length - 1] == "")
             {
@@ -173,7 +176,7 @@ public class Open : Instruction<OpenSettings>
         } else
         {
             cutPath = settingPath.Trim('"').Split(" ");
-            path = cutPath[0];
+            path = cutPath[0].Trim('\"');
             args = "";
             for (int i = 1; i < cutPath.Length; i++)
             {

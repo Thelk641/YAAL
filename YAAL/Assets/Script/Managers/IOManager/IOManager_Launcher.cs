@@ -1,14 +1,15 @@
-﻿using Newtonsoft.Json;
+﻿using Avalonia.Platform.Storage;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Diagnostics;
-using YAAL;
+using System.IO;
 using System.Xml.Linq;
-using Avalonia.Platform.Storage;
+using YAAL;
 using YAAL.Assets.Script.Cache;
-using static YAAL.FileSettings;
+using static System.Net.Mime.MediaTypeNames;
 using static YAAL.AsyncSettings;
+using static YAAL.FileSettings;
 
 namespace YAAL
 {
@@ -198,6 +199,23 @@ namespace YAAL
                 return LoadCache<Cache_PreviousSlot>(path);
             }
             return new Cache_PreviousSlot();
+        }
+
+        public static string FindApworld(string apfolder, string fileName)
+        {
+            string custom_world = Path.Combine(apfolder, "custom_worlds", fileName);
+            string lib_world = Path.Combine(apfolder, "lib", "worlds", fileName);
+
+            if (File.Exists(custom_world))
+            {
+                return custom_world;
+            }
+            else if (File.Exists(lib_world))
+            {
+                return lib_world;
+            }
+
+            return fileName;
         }
     }
 }

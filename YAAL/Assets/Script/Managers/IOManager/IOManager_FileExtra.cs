@@ -189,7 +189,9 @@ namespace YAAL
             string cachePath = Path.Combine(GetSaveLocation(ManagedApworlds), launcherName, previous_async.GetFileName());
             Cache_PreviousSlot oldSlot = LoadCache<Cache_PreviousSlot>(cachePath);
 
-            if (oldSlot.previousAsync == newSlot.previousAsync && oldSlot.previousSlot == newSlot.previousSlot)
+            if (oldSlot.previousAsync == newSlot.previousAsync 
+                && oldSlot.previousSlot == newSlot.previousSlot 
+                && oldSlot.previousPatch == newSlot.previousPatch)
             {
                 // We've started the same slot as last time, nothing else to do
                 return true;
@@ -218,16 +220,17 @@ namespace YAAL
             }
         }
 
-        public static string MoveToSlotDirectory(string fileToMove, string asyncName, string slotName, bool renameFile)
+        public static string MoveToSlotDirectory(string fileToMove, string asyncName, string slotName, string newName)
         {
             string workingName = "";
 
-            if (renameFile)
-            {
-                workingName = (asyncName + "." + slotName + Path.GetExtension(GetFileName(fileToMove))).Replace("_", "");
-            } else
+            if (newName == "")
             {
                 workingName = GetFileName(fileToMove);
+                
+            } else
+            {
+                workingName = newName + Path.GetExtension(GetFileName(fileToMove));
             }
 
 

@@ -62,7 +62,6 @@ namespace YAAL
             "gameName",
             "githubURL",
             "filters",
-            "renamePatch",
         };
 
         public static List<string> hiddenSettings = new List<string>

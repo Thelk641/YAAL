@@ -66,6 +66,12 @@ namespace YAAL
                     if (File.Exists(custom_world) || File.Exists(worlds))
                     {
                         targets.Add(item);
+                    } else
+                    {
+                        ErrorManager.AddNewError(
+                            "Isolate - Couldn't find an apworld",
+                            "Apworld " + item + " doesn't seem to exist. This error can be ignored if that apworld isn't necessary."
+                            );
                     }
                 }
                 catch (Exception)

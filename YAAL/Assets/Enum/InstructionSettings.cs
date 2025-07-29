@@ -41,7 +41,8 @@ namespace YAAL
     {
         mode,
         target,
-        optimize
+        optimize,
+        rename
     }
 
     public enum RegExSettings

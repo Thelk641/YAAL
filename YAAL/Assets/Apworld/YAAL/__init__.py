@@ -5,7 +5,7 @@ def launch_client(*args):
     if not gui_enabled:
         print(args)
         launch(args)
-    launch_subprocess(launch, name="YAAL" args=args)
+    launch_subprocess(launch, name="YAAL", args=args)
 
 def launch(args):
     import os

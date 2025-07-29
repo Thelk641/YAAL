@@ -12,7 +12,6 @@ using static YAAL.SlotSettings;
 
 namespace YAAL
 {
-
     // C:\ProgramData\Archipelago\ArchipelagoLauncherDebug.exe -- "YAAL Patcher" "D:\Unity\Avalonia port\P1_Player1_o4AtBzFYSPe3EajXijDHDQ.apblue"
     public class Patch : Instruction<PatchSettings>
     {
@@ -32,11 +31,26 @@ namespace YAAL
                 return false;
             }
 
+            string newFileName = this.InstructionSetting[rename];
+
+            if (newFileName != "")
+            {
+                newFileName = customLauncher.ParseTextWithSettings(newFileName);
+                if(newFileName == "")
+                {
+                    ErrorManager.AddNewError(
+                        "Patch - Couldn't parse the new file name", 
+                        "Something went wrong when parsing the new file name for your patch. Please check other errors for more informations."
+                        );
+                    return false;
+                }
+            }
+
             string patch = IOManager.MoveToSlotDirectory(
                 settings[SlotSettings.patch],
                 settings[AsyncSettings.asyncName],
                 settings[slotName],
-                settings[renamePatch] == true.ToString()
+                newFileName
                 );
 
             if (patch == "")
@@ -98,8 +112,17 @@ namespace YAAL
 
             if (this.InstructionSetting[optimize] == true.ToString())
             {
-                List<string> apworlds = customLauncher.apworld;
-                if (!apworlds.Contains("YAAL.apworld"))
+                List<string> apworlds = customLauncher.SplitAndParse("${apworld}");
+                bool addedYAAL = false;
+                foreach (var item in apworlds)
+                {
+                    if (item.Contains("YAAL.apworld"))
+                    {
+                        addedYAAL = true;
+                        break;
+                    }
+                }
+                if (!addedYAAL)
                 {
                     apworlds.Add("YAAL.apworld");
                 }

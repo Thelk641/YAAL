@@ -17,6 +17,7 @@ using static YAAL.LauncherSettings;
 using static YAAL.PreviousAsyncSettings;
 using static YAAL.SlotSettings;
 using System.Text;
+using Avalonia.Input;
 
 public class CustomLauncher
 {
@@ -279,6 +280,25 @@ public class CustomLauncher
     
     public string ParseTextWithSettings(string text)
     {
+        if(text == null)
+        {
+            ErrorManager.AddNewError(
+                "CustomLauncher - Tried to parse null",
+                "Something asked the Custom Launcher to parse a null text. This shouldn't ever happen. Please report this issue."
+                );
+            return "";
+        }
+
+        if (!text.Contains("${"))
+        {
+            if (text.Contains(".apworld") && !text.Contains("\\"))
+            {
+                return IOManager.FindApworld(this.settings[GeneralSettings.apfolder], text);
+            }
+            return text;
+        }
+
+
         CustomLauncher baseLauncher = null;
         if(settings[SlotSettings.baseLauncher] != this.selfsettings[launcherName])
         {
@@ -338,6 +358,16 @@ public class CustomLauncher
         {
             // Text might contain things like ${aplauncher}, we're replacing those by their value
             string[] splitText = text.Split("${");
+            bool needsSpace = false;
+            int index = text.IndexOf('}');
+
+            if (index != -1 &&
+                ((index + 1 < text.Length && text[index + 1] == ' ') ||
+                (index + 2 < text.Length && text[index + 2] == ' '))
+                )
+            {
+                needsSpace = true;
+            }
 
             if (splitText.Length > 1)
             {
@@ -369,7 +399,7 @@ public class CustomLauncher
                     string[] split = cleaned.Split('}');
                     if (settings.Has(split[0]))
                     {
-                        output = output + settings[split[0]];
+                        output = output + settings[split[0]].Trim();
                     }
                     else
                     {
@@ -381,25 +411,16 @@ public class CustomLauncher
                         output += "\"";
                     }
 
-                    output = output + split[1] + " ";
+                    output = output + split[1];
+
+                    if (needsSpace)
+                    {
+                        output += " ";
+                    }
                 }
 
                 text = output.Trim();
                 ++i;
-            }
-        }
-
-        if(text.Contains(".apworld") && !text.Contains("\\"))
-        {
-            string custom_world = Path.Combine(settings[GeneralSettings.apfolder], "custom_worlds", text);
-            string lib_world = Path.Combine(settings[GeneralSettings.apfolder], "lib", "worlds", text);
-
-            if (File.Exists(custom_world))
-            {
-                text = custom_world;
-            } else if (File.Exists(lib_world))
-            {
-                text = lib_world;
             }
         }
 
@@ -408,12 +429,40 @@ public class CustomLauncher
 
     public List<string> SplitAndParse(string input)
     {
-        return ParseTextWithSettings(SplitString(ParseTextWithSettings(input)));
+        string parsed = ParseTextWithSettings(input);
+        if (parsed.Contains(";"))
+        {
+            List<string> parsedSplit = SplitString(parsed);
+            foreach (var item in parsedSplit)
+            {
+                if (item.Contains("${"))
+                {
+                    return ParseTextWithSettings(parsedSplit);
+                }
+            }
+            return parsedSplit;
+        }
+
+        List<string> output = new List<string>();
+        if(parsed == "\" \"")
+        {
+            output.Add("");
+        } else
+        {
+            output.Add(parsed);
+        }
+        return output;
     }
 
     public List<string> SplitString(string input)
     {
         List<string> output = new List<string>();
+        if (!input.Contains(";"))
+        {
+            output.Add(input);
+            return output;
+        }
+
         bool inQuotes = false;
         StringBuilder current = new StringBuilder();
 
@@ -444,7 +493,14 @@ public class CustomLauncher
 
         if (current.Length > 0)
         {
-            output.Add(current.ToString().Trim().Trim('\"').Trim());
+            string toAdd = current.ToString().Trim();
+            if(toAdd.Trim('\"').Trim() == "")
+            {
+                output.Add("");
+            } else
+            {
+                output.Add(current.ToString());
+            }
         }
 
         return output;
@@ -501,7 +557,8 @@ public class CustomLauncher
                 Patch patch = item as Patch;
                 if(patch != null)
                 {
-                    temp.Add(Path.Combine(settings[GeneralSettings.apfolder], "custom_worlds", "YAAL.apworld"));
+                    temp.Add("YAAL.apworld");
+                    hasAddedOwnApworld = true;
                 }
             }
         }

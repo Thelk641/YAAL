@@ -4,14 +4,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
 		Width="300"
-        Height="444"
-		MinHeight="444"
-		MaxHeight="444"
+        Height="388"
+		MinHeight="388"
+		MaxHeight="388"
         MinWidth="300"
         x:Class="YAAL.NewLauncher"
         Title="Create a new launcher">
 	<Border Margin="8" HorizontalAlignment="Stretch">
-		<Grid RowDefinitions="48, 4, 1, 4, 48, 8, 48, 8, 48, 8, 48, 8, 48, 8, 48, 8, 30" HorizontalAlignment="Stretch">
+		<Grid RowDefinitions="48, 4, 1, 4, 48, 8, 48, 8, 48, 8, 48, 8, 48, 8, 30" HorizontalAlignment="Stretch">
 			
 			<Border 
 				Grid.Row="0" 
@@ -183,34 +183,6 @@
 						VerticalAlignment="Center"
 						ToolTip.Tip="Optional"
 				/>
-				</Grid>
-			</Border>
-
-			<Border
-				Grid.Row="14"
-				Name="Background_6"
-				Background="#AAA"
-				BorderBrush="Gray"
-				BorderThickness="1"
-				CornerRadius="4"
-				Padding="8"
-				HorizontalAlignment="Stretch"
-				VerticalAlignment="Stretch"
-				>
-				<Grid ColumnDefinitions="150, 4, *" VerticalAlignment="Center" HorizontalAlignment="Stretch">
-					<TextBlock
-						Name="_AutoRename"
-						Text="Rename patch :"
-						Grid.Column="0"
-						VerticalAlignment="Center"				
-				/>
-					<ComboBox 
-						Name="AutoRename"
-						Grid.Column="2"
-						VerticalAlignment="Center"
-						HorizontalAlignment="Stretch"
-						ToolTip.Tip="If true, it allows you to do things like use RegEx to backup Bizhawk saves (see docs), but some game (like Factorio) will refuse patch that have been renamed."
-						/>
 				</Grid>
 			</Border>
 

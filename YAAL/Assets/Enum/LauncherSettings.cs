@@ -13,7 +13,6 @@ namespace YAAL
         githubURL,
         filters,
         apworld,
-        renamePatch,
         Debug_AsyncName,
         Debug_SlotName,
         Debug_Patch,

@@ -39,6 +39,7 @@ public partial class Command_Patch : Command
     {
         base.SetDebouncedEvents();
         debouncedSettings[Target] = target.ToString();
+        debouncedSettings[NewName] = rename.ToString();
 
         explorers[TargetFolder] = Target;
     }
@@ -48,6 +49,7 @@ public partial class Command_Patch : Command
         TurnEventsOff();
         linkedInstruction = newInstruction;
         Target.Text = linkedInstruction.GetSetting(target.ToString());
+        NewName.Text = linkedInstruction.GetSetting(rename.ToString());
 
         if(linkedInstruction.GetSetting(mode.ToString()) == "Copy")
         {
@@ -62,6 +64,7 @@ public partial class Command_Patch : Command
     {
         Mode.SelectionChanged += _ModeChanged;
         Target.TextChanged += _TextChanged;
+        NewName.TextChanged += _TextChanged;
         Optimize.IsCheckedChanged += _OptimizeChanged;
     }
 
@@ -69,6 +72,7 @@ public partial class Command_Patch : Command
     {
         Mode.SelectionChanged -= _ModeChanged;
         Target.TextChanged -= _TextChanged;
+        NewName.TextChanged -= _TextChanged;
         Optimize.IsCheckedChanged -= _OptimizeChanged;
     }
 
