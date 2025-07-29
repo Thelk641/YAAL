@@ -18,7 +18,7 @@ At the bottom left of the CLMaker window is a setting to note if a launcher is a
 
 # Instructions
 
-If an instruction has a text field, it can take multiple input separated by a semicolon (";"). The only exception is RegEx, as you might want to replace those, so this one uses "/;" as separator instead, meaning it can't use ${apworld}.
+If an instruction has a text field, it can take multiple inputs, written as "item1";"item2" and so on. You can add space in-between them, it'll clear them out. If you want to add an empty input, add a space in-between the quotes, " ", or it might bug out (the space will be removed during during run time).
 
 ## - Apworld
 ### Function
@@ -46,18 +46,21 @@ For the auto-restore, this provides four options (see Open to learn more about k
 - Timer : auto-restore after X seconds have passed
 - Off : please not that this will turn off most of the safeties !
 
-You can also set a "default file", this is your "vanilla" version of the file, the one that will be used on a slot that doesn't have its own version of the backup target yet.
+You can also set a "default file", this is your "vanilla" version of the file, the one that will be used on a slot that doesn't have its own version of the backup target yet. It will be copied into YAAL/ManagedApworlds/LauncherName/Default first before being used, to have it be safely kept on the side and be easier to cleanup.
 
 Because of how dangerous moving and renaming file can be, this comes with a few safeties (EXCEPT IF YOU SET AUTO-RESTORE TO OFF). In YAAL/ManagedApworlds, you'll find a backupList.json file which will tell you which file is currently being backedup, and if anything goes wrong while executing a custom launcher, it will try to auto-restore immediately to ensure that no file gets left behind. If it still happens for some reason, you can launch YAAL with the command lines "--restore --exit" to try again to auto-restore. If you need to access old backups, for example if a save got corrupted and you want to get back the one from your previous play session, they're not deleted, just moved to YAAL/Async/AsyncName/SlotName/Backup.old, this does make it take a ton of space if you're backing up heavy files, but I feel like this safety is worth the disk space.
 
 ### List limitations
-
-Every text field of this instruction can accept multiple input, with one limitation : if you set more than one default file, you must set one for each of your backup target. Do note that process output will be split using semicolons (";") as the divider between multiple inputs, so make sure it's not in the output you're setting if you only want to auto-restore on all of it being found.
+You are allowed to :
+- Give as many inputs (files or folders to backup) as you want
+- Set no default file, 1 default file/folder to use for every input, or one per input, no more, no less
+- Set as many keys to look for as you want, it will attach to all process with each of the selected key
+- Set as many outputs to look for as you want, the first one to be found will trigger the auto-restore
 
 ## - Isolate
 
 ### Function
-Backup and restore custom_worlds and lib/worlds, leaving behind only the bare minimum and this launcher's apworlds, launching Archipelago as fast as possible
+Backup and restore custom_worlds and lib/worlds, leaving behind only the bare minimum plus this launcher's apworlds (or this launcher's and the base launcher's if used on a Tool, see Tool.md for more information)), letting you only load relevant apworlds and getting faster load time.
 
 ### Options and notes
 The options are the same as Backup, see above for more informations.
@@ -75,7 +78,7 @@ While this has two fields, one for the file and one for arguments, you can put t
 The "Variable name" field lets you create a keyed process. These process can be followed by Backup and Isolate instructions to trigger their respective auto-restore. For this, the order of instructions doesn't matter, Backup and Isolate check if any existing keyed process matches their key and Open checks if any instruction is looking for its key.
 
 This comes with a few limitations :
-- While you can use Open to open a URL (and it will open it in your default browser), you cannot key a URL, for technical reasons (YAAL needs the OS to take care of opening a URL, which means it can't read the process output, and tracking the process' exit would be awkward)
+- if you're trying to open a URL, you can just give it in the first field, without any args, and it'll open. Be aware that, while this will work, it requires the OS to resolve it, which means you can't read its output, and I'm not sure you can look for process exit either, so just to be safe, I've added an error if you try to do so. **This can fail silently**, so, if you want to open a URL and use it as a keyed process to trigger auto-restores, give it the path to a browser and give the URL as an argument instead
 - .lnk files are allowed only on Windows, these files are Windows-only anyway, but they're a pain to work with on non-Windows OS so for now, the only solution I've found is to ban you from opening them with YAAL, one day I plan on solving this, but it'll have to wait
 
 ### List limitations
@@ -98,17 +101,17 @@ None.
 
 ## - RegEx
 ### Function
-Lets you edit strings or files using Regular Expressions
+Lets you edit variable or files using Regular Expressions
 
 ### Options and notes
-Not much to say, Regular Expressions are very powerful, but they're also pretty complicated, be sure that you know what you're doing with them.
+Pretty explicit, and nothing much to add.
 
 ### List limitations
-This currently doesn't use the standard semicolon (";") as divider, instead using "/;" as the input, replacement and output might contain semicolons themselves.
-
 You are allowed to :
 - Give as many source input or source strings as you want
 - Give 1 pattern to look for in each source, or one pattern per source, no more, no less
 - Give 1 replacement to use for each source, or one replacement per source, no more, no less
-- Give 1 output file (everything will be concatenated in it), or at least one per source (if you give more than that, they'll be ignored)
-- Give 1 output variable (everything will be concatenated in it), or at least one per source (if you give more than that, they'll be ignored)
+- Give 1 output file, or at least one per source (if you give more than that, they'll be ignored)
+- Give 1 output variable, or at least one per source (if you give more than that, they'll be ignored)
+
+If you give more than one input and either a single output, or repeat the output multiple time, they'll be simply concatenated with a semicolon (";") in-between each result. Do note that this doesn't automatically adds quotes ("") around results, so if you want to chain them and need them to stay split (for example, reading two different files, making the same edit twice, then making a difference edit on each of them and saving them separatly) you must output to different variable as the concatenated result won't match the criteria for automatic split.
