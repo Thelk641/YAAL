@@ -204,14 +204,12 @@ public static class WebManager
         return output;
     }
 
-    public static async Task GetVersions(string url, ComboBox target){
-        target.IsEnabled = false;
-
+    public static async Task GetVersions(string url, CLMakerWindow clMaker){
         List<string> options = await GetVersions(url);
-
-        target.ItemsSource = options;
-        target.SelectedIndex = 0;
-        target.IsEnabled = true;
+        await Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            clMaker.SetGitVersions(options);
+        });
     }
 
     public static bool IsValidURL(string url)

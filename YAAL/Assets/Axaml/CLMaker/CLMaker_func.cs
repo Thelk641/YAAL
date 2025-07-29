@@ -5,6 +5,7 @@ using Avalonia.Threading;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using static System.Diagnostics.Debug;
 using static YAAL.LauncherSettings;
@@ -162,6 +163,7 @@ public partial class CLMakerWindow : Window
         if (gitlink == null || gitlink == "")
         {
             GitHubVersions.ItemsSource = new List<string> { "None" };
+            GitHubVersions.SelectedItem = "None";
             GitHubVersions.IsEnabled = false;
         } else
         {
@@ -208,6 +210,7 @@ public partial class CLMakerWindow : Window
         if (newLink == "") 
         {
             GitHubVersions.ItemsSource = new List<string> { "None" };
+            GitHubVersions.SelectedItem = "None";
             GitHubVersions.IsEnabled = false;
             return;
         }
@@ -217,7 +220,29 @@ public partial class CLMakerWindow : Window
             //probably triggered while the user was typing, or there's a typo, either way, better ignore it
             return;
         }
+
+        GitHubVersions.ItemsSource = new List<string> { "Loading..." };
+        GitHubVersions.SelectedItem = "Loading...";
+
         // This might take a few seconds, so let's just fire it and let it do its thing
-        _ = WebManager.GetVersions(newLink, GitHubVersions);
+        GitHubVersions.IsEnabled = false;
+        _ = Task.Run(async () =>
+        {
+            var versions = await WebManager.GetVersions(newLink);
+
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                GitHubVersions.ItemsSource = versions ?? new List<string> { "None" };
+                GitHubVersions.SelectedIndex = 0;
+                GitHubVersions.IsEnabled = versions?.Any() == true;
+            });
+        });
+    }
+
+    public void SetGitVersions(IEnumerable<string> newList)
+    {
+        GitHubVersions.ItemsSource = newList;
+        GitHubVersions.SelectedIndex = 0;
+        GitHubVersions.IsEnabled = true;
     }
 }
