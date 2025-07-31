@@ -17,12 +17,8 @@ public partial class Command_Open : Command
     public Command_Open()
     {
         InitializeComponent();
-        background = BackgroundColor;
-        SetBackground();
+        BackgroundSetter.SetBackground(BackgroundColor);
         linkedInstruction = new Open();
-        _up = MoveUp;
-        _down = MoveDown;
-        _delete = X;
         SetDebouncedEvents();
         TurnEventsOn();
 

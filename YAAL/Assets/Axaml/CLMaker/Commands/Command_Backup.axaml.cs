@@ -22,11 +22,7 @@ public partial class Command_Backup : Command
     public Command_Backup()
     {
         InitializeComponent();
-        background = BackgroundColor;
-        _up = MoveUp; 
-        _down = MoveDown;
-        _delete = X;
-        SetBackground();
+        BackgroundSetter.SetBackground(BackgroundColor);
         linkedInstruction = new Backup();
         SetDebouncedEvents();
         TurnEventsOn();

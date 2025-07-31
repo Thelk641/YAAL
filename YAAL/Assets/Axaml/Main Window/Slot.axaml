@@ -1,0 +1,143 @@
+<UserControl
+   xmlns="https://github.com/avaloniaui"
+   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="YAAL.Slot"
+             HorizontalAlignment="Stretch"
+             Height="0"
+             >
+	<Border
+	 Name="BackgroundColor"
+	 BorderBrush="Gray"
+	 BorderThickness="1"
+	 CornerRadius="4"
+	 Margin="8"
+	 Padding="8"
+	 HorizontalAlignment="Stretch"
+	 Background="#FFF"
+          >
+		<StackPanel>
+			<StackPanel Name="PlayMode" IsVisible="True">
+				<Grid ColumnDefinitions="*,8,*">
+					<Grid ColumnDefinitions="45,8,*">
+						<Button
+							Content="Play"
+							Name="RealPlay"
+							VerticalAlignment="Stretch"
+							VerticalContentAlignment="Center"
+							Grid.Column="0"
+							ToolTip.Tip="Launchs the selected game"
+							/>
+						<Border
+							BorderThickness="1"
+							BorderBrush="Gray"
+							Grid.Column="2"
+							Padding="8"
+							>
+							<TextBlock
+							Name="_SlotName"
+							Text="This is a slot name"
+							VerticalAlignment="Center"
+							HorizontalAlignment="Stretch"
+							Grid.Column="2"
+							ToolTip.Tip="The slot name"
+								/>
+						</Border>
+					</Grid>
+
+					<Grid ColumnDefinitions="*,8,85,8,45" Grid.Column="2">
+						<ComboBox 
+							Name="ToolSelect"
+							HorizontalAlignment="Stretch"
+							VerticalAlignment="Stretch"
+							HorizontalContentAlignment="Left"
+							VerticalContentAlignment="Center"
+							Grid.Column="0"
+							/>
+						<Button 
+							Name="StartTool"
+							Content="Start Tool"
+							VerticalAlignment="Stretch"
+							VerticalContentAlignment="Center"
+							Grid.Column="2"
+							/>
+						<Button
+							Name="Edit"
+							Content="Edit"
+							VerticalAlignment="Stretch"
+							VerticalContentAlignment="Center"
+							Grid.Column="4"
+							/>
+					</Grid>
+				</Grid>
+			</StackPanel>
+			
+			
+			
+			<StackPanel Name="EditMode" IsVisible="False" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+				<Grid RowDefinitions="*,8,*" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+					<Grid Grid.Row="0" ColumnDefinitions="*,8,*" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+						<Grid Grid.Column="0" ColumnDefinitions="45,8,*">
+							<Button
+								Content="Play"
+								Name="FakePlay"
+								VerticalAlignment="Center"
+								Grid.Column="0"
+								ToolTip.Tip="Launchs the selected game"
+								IsEnabled="False"
+								/>
+							<TextBox
+								Name="SlotName"
+								VerticalContentAlignment="Center"
+								VerticalAlignment="Center"
+								HorizontalAlignment="Stretch"
+								Grid.Column="2"
+								ToolTip.Tip="The slot name"
+								Watermark="Slot name"
+								/>
+						</Grid>
+						<Grid Grid.Column="2" ColumnDefinitions="*,8,40,8,50" HorizontalAlignment="Stretch">
+							<TextBox
+								Name="Patch"
+								Grid.Column="0"
+								VerticalContentAlignment="Center"
+								VerticalAlignment="Center"
+								HorizontalAlignment="Stretch"
+								ToolTip.Tip="The patch file"
+								Watermark="/path/to/patch"
+								/>
+							<Button
+								Name="PatchSelect"
+								Content="File"
+								Grid.Column="2"
+								/>
+							<Button
+								Name="DoneEditing"
+								Content="Save"
+								Grid.Column="4"
+						/>
+						</Grid>
+					</Grid>
+					<Grid Grid.Row="2" ColumnDefinitions="*,8,*" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+						<ComboBox
+							Name="SelectedLauncher"
+							Grid.Column="0"
+							HorizontalAlignment="Stretch"
+							VerticalAlignment="Center"
+					/>
+						<ComboBox
+							Name="SelectedVersion"
+							Grid.Column="2"
+							HorizontalAlignment="Stretch"
+							VerticalAlignment="Center"
+					/>
+
+					</Grid>
+				</Grid>
+			</StackPanel>
+		</StackPanel>
+		
+		
+		
+		
+	</Border>
+</UserControl>

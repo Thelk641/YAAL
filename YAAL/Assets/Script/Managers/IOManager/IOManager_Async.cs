@@ -144,5 +144,21 @@ namespace YAAL
             }
             return output;
         }
+
+        public static void SaveAsync(Cache_Async toSave)
+        {
+            SaveCache<Cache_Async>(Path.Combine(GetSaveLocation(Async), toSave.settings[asyncName], FileSettings.Async.GetFileName()), toSave);
+        }
+
+        public static void SaveSlot(string async, Cache_Slot toSave)
+        {
+            Cache_Async cache = GetAsync(async);
+            if (cache.slots.Contains(toSave))
+            {
+                cache.slots.Remove(toSave);
+            }
+            cache.slots.Add(toSave);
+            SaveAsync(cache);
+        }
     }
 }

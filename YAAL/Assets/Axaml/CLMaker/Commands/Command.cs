@@ -19,34 +19,16 @@ namespace YAAL
     {
         public Interface_Instruction linkedInstruction;
         public CLMakerWindow clMaker;
-        protected Border background;
-        protected Button _up;
-        protected Button _down;
-        protected Button _delete;
 
         protected Dictionary<string, Action> debouncedEvents = new();
         protected Dictionary<TextBox, string> debouncedSettings = new();
         protected Dictionary<Button, TextBox> explorers = new();
 
-        public void SetBackground()
-        {
-            var theme = Application.Current.ActualThemeVariant;
-            if (theme == ThemeVariant.Dark)
-            {
-                background.Background = new SolidColorBrush(Color.Parse("#454545"));
-            }
-            else
-            {
-                background.Background = new SolidColorBrush(Color.Parse("#AAA"));
-
-            }
-        }
-
         public virtual void SetDebouncedEvents()
         {
-            _up.Click += MoveUp;
-            _down.Click += MoveDown;
-            _delete.Click += DeleteComponent;
+            this.FindControl<Button>("MoveUp").Click += MoveUp;
+            this.FindControl<Button>("MoveDown").Click += MoveDown;
+            this.FindControl<Button>("X").Click += DeleteComponent;
         }
 
         public void Trigger(TextBox box)

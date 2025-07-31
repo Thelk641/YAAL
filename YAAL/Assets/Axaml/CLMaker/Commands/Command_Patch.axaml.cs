@@ -17,14 +17,10 @@ public partial class Command_Patch : Command
     public Command_Patch()
     {
         InitializeComponent();
-        _up = MoveUp;
-        _down = MoveDown;
-        _delete = X;
         SetDebouncedEvents();
         Optimize.IsChecked = true;
         linkedInstruction = new Patch();
-        background = BackgroundColor;
-        SetBackground();
+        BackgroundSetter.SetBackground(BackgroundColor);
         Target.Text = "";
         TurnEventsOn();
 

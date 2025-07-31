@@ -14,11 +14,7 @@ public partial class Command_Apworld : Command
     public Command_Apworld()
     {
         InitializeComponent();
-        background = BackgroundColor;
-        _up = MoveUp;
-        _down = MoveDown;
-        _delete = X;
-        SetBackground();
+        BackgroundSetter.SetBackground(BackgroundColor);
         SetDebouncedEvents();
         linkedInstruction = new Apworld();
         TurnEventsOn();

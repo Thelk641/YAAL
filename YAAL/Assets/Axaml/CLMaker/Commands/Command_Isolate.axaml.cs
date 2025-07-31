@@ -21,11 +21,7 @@ public partial class Command_Isolate : Command
     public Command_Isolate()
     {
         InitializeComponent();
-        background = BackgroundColor;
-        _up = MoveUp; 
-        _down = MoveDown;
-        _delete = X;
-        SetBackground();
+        BackgroundSetter.SetBackground(BackgroundColor);
         linkedInstruction = new Isolate();
         SetDebouncedEvents();
         TurnEventsOn();
