@@ -20,6 +20,7 @@ public partial class Slot : UserControl
     public Slot()
     {
         InitializeComponent();
+        BackgroundSetter.SetBackground(BackgroundColor);
     }
 
     public Slot (Cache_Async async, Cache_Slot slot)
@@ -123,7 +124,7 @@ public partial class Slot : UserControl
         {
             PlayMode.IsVisible = true;
             EditMode.IsVisible = false;
-            this.Height = 0;
+            this.Height = 70;
         }
     }
 

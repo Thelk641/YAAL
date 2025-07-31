@@ -3,7 +3,8 @@
    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="YAAL.Slot"
              HorizontalAlignment="Stretch"
-             Height="0"
+             Height="70"
+			 MinWidth="600"
              >
 	<Border
 	 Name="BackgroundColor"
@@ -14,6 +15,7 @@
 	 Padding="8"
 	 HorizontalAlignment="Stretch"
 	 Background="#FFF"
+	 IsVisible="True"
           >
 		<StackPanel>
 			<StackPanel Name="PlayMode" IsVisible="True">
