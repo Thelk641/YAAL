@@ -1,0 +1,117 @@
+<UserControl
+   xmlns="https://github.com/avaloniaui"
+   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="YAAL.AsyncHolder"
+             HorizontalAlignment="Stretch"
+             Height="100"
+			 MinWidth="600"
+             >
+	<Border
+	 Name="BackgroundColor"
+	 BorderBrush="Gray"
+	 BorderThickness="1"
+	 CornerRadius="4"
+	 Margin="8"
+	 Padding="8"
+	 HorizontalAlignment="Stretch"
+	 VerticalAlignment="Stretch"
+	 Background="#FFF"
+	 IsVisible="True"
+          >
+		<Grid RowDefinitions="50, 8, *" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+
+			<Border
+				BorderThickness="1"
+				BorderBrush="Gray"
+				CornerRadius="8"
+				Padding="8"
+				VerticalAlignment="Center"
+				Grid.Row="0"
+				>
+				<StackPanel VerticalAlignment="Center" HorizontalAlignment="Stretch">
+					
+					<StackPanel Name="PlayMode" IsVisible="True" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+						<Grid ColumnDefinitions="*,8,80,8,110,8,50" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+							<TextBlock
+								Name="_AsyncNameBox"
+								Text="This async's name"
+								VerticalAlignment="Center"
+								/>
+							<Button 
+								Name="NewSlot"
+								Content="New Slot"
+								Grid.Column="2"
+								HorizontalAlignment="Stretch"
+								HorizontalContentAlignment="Center"
+								VerticalAlignment="Stretch"
+								/>
+							<Button
+								Name="ToolVersions"
+								Content="Tool versions"
+								Grid.Column="4"
+								HorizontalAlignment="Stretch"
+								HorizontalContentAlignment="Center"
+								VerticalAlignment="Stretch"
+								/>
+							<Button 
+								Name="Edit"
+								Content="Edit"
+								Grid.Column="6"
+								HorizontalAlignment="Stretch"
+								HorizontalContentAlignment="Center"
+								VerticalAlignment="Stretch"
+								/>
+						</Grid>
+					</StackPanel>
+
+					<StackPanel Name="EditMode" IsVisible="False" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+						<Grid ColumnDefinitions="*,8,*,8,*,8,50" HorizontalAlignment="Stretch">
+							<TextBox 
+								Name="AsyncNameBox"
+								Watermark="Async name"
+								Grid.Column="0"
+								ToolTip.Tip="The async's name"
+								HorizontalAlignment="Stretch"
+								/>
+							<TextBox
+								Name="RoomBox"
+								Watermark="archipelago.gg:12345"
+								Grid.Column="2"
+								ToolTip.Tip="This async's room"
+								HorizontalAlignment="Stretch"
+								/>
+							<TextBox
+								Name="PasswordBox"
+								Text="None"
+								Watermark="Password"
+								Grid.Column="4"
+								ToolTip.Tip="This async's password"
+								HorizontalAlignment="Stretch"
+								/>
+							<Button 
+								Content="Save"
+								Grid.Column="6"
+								VerticalAlignment="Stretch"
+								HorizontalContentAlignment="Center"
+								HorizontalAlignment="Stretch"
+								/>
+						</Grid>
+					</StackPanel>
+				</StackPanel>
+			</Border>
+
+			<Border
+				BorderThickness="1"
+				BorderBrush="Gray"
+				CornerRadius="8"
+				Padding="8"
+				VerticalAlignment="Stretch"
+				Grid.Row="2">
+				<StackPanel
+					Name="SlotsContainer">
+				</StackPanel>
+				
+			</Border>
+		</Grid>
+	</Border>
+</UserControl>

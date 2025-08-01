@@ -19,8 +19,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Assets\Axaml\Main Window\Slot.axaml.cs">
-      <DependentUpon>Slot.axaml</DependentUpon>
+    <Compile Update="Assets\Axaml\ConfirmationWindow\ConfirmationWindow.axaml.cs">
+      <DependentUpon>ConfirmationWindow.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Assets\Axaml\Main Window\AsyncHolder.axaml.cs">
+      <DependentUpon>AsyncHolder.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Assets\Axaml\Main Window\SlotHolder.axaml.cs">
+      <DependentUpon>SlotHolder.axaml</DependentUpon>
     </Compile>
     <Compile Update="Assets\Axaml\Main Window\MainWindow.axaml.cs">
       <DependentUpon>MainWindow.axaml</DependentUpon>

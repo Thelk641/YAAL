@@ -34,13 +34,8 @@ public partial class SettingManager : Window
         hiddenSettings = Templates.hiddenSettings;
     }
 
-    public SettingManager(Dictionary<LauncherSettings,string> toParse)
+    public SettingManager(Dictionary<LauncherSettings,string> toParse) : this()
     {
-        InitializeComponent();
-        addSetting.Click += AddSetting;
-        fixedSettings = Templates.fixedSettings;
-        defaultSettings = Templates.defaultSettings;
-        hiddenSettings = Templates.hiddenSettings;
         ReadSetting(toParse);
     }
 

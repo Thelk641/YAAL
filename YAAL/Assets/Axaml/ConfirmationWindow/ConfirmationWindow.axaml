@@ -1,0 +1,45 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+		Width="300"
+        Height="120"
+        x:Class="YAAL.ConfirmationWindow"
+        Title="Confirmation window">
+	<Border Margin="8" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+		<Grid RowDefinitions="*,8,*,8,*">
+			<TextBlock
+				Text="Are you sure you want to remove this :"
+				Grid.Row="0"
+				HorizontalAlignment="Center"
+				VerticalAlignment="Center"
+				/>
+			<Border Grid.Row="2" BorderThickness="1" BorderBrush="Gray">
+				<TextBlock
+					Name="TargetName"
+					Text="Thingy's name ! You don't see that do you ?"
+					VerticalAlignment="Center"
+					HorizontalAlignment="Center"
+					/>
+			</Border>
+
+			<Grid ColumnDefinitions="50,50,*,50,50" Grid.Row="4">
+				<Button 
+					Name="Yes"
+					Content="Yes"
+					Grid.Column="1"
+					HorizontalAlignment="Stretch"
+					HorizontalContentAlignment="Center"
+					/>
+				<Button
+					Name="No"
+					Content="No"
+					Grid.Column="3"
+					HorizontalAlignment="Stretch"
+					HorizontalContentAlignment="Center"
+					/>
+			</Grid>
+		</Grid>
+	</Border>
+</Window>

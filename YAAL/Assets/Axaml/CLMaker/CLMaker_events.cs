@@ -118,8 +118,17 @@ public partial class CLMakerWindow : Window
 
     public void RemoveVersion(object? sender, RoutedEventArgs e)
     {
-        IOManager.RemoveDownloadedVersion(customLauncher.GetSetting(launcherName), AvailableVersions.SelectedItem.ToString());
-        UpdateAvailableVersion();
+        ConfirmationWindow confirm = new ConfirmationWindow(customLauncher.GetSetting(launcherName) + " - " + AvailableVersions.SelectedItem.ToString());
+        confirm.IsVisible = true;
+
+        confirm.Closing += (source, args) =>
+        {
+            if (confirm.confirmed)
+            {
+                IOManager.RemoveDownloadedVersion(customLauncher.GetSetting(launcherName), AvailableVersions.SelectedItem.ToString());
+                UpdateAvailableVersion();
+            }
+        };
     }
 
     public void CreateNewLauncher(object? sender, RoutedEventArgs e)
@@ -173,10 +182,18 @@ public partial class CLMakerWindow : Window
 
     public void DeleteLauncher(object? sender, RoutedEventArgs e)
     {
-        TurnEventsOff();
-        IOManager.DeleteLauncher(LauncherName.Text);
-        ReloadLauncherList(true);
-        TurnEventsBackOn();
+        ConfirmationWindow confirm = new ConfirmationWindow(LauncherName.Text);
+        confirm.IsVisible = true;
+        confirm.Closed += (source, args) =>
+        {
+            if (confirm.confirmed)
+            {
+                TurnEventsOff();
+                IOManager.DeleteLauncher(LauncherName.Text);
+                ReloadLauncherList(true);
+                TurnEventsBackOn();
+            }
+        };
     }
 
     public void OpenSettingManager(object? sender, RoutedEventArgs e)

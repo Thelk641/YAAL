@@ -147,17 +147,19 @@ namespace YAAL
 
         public static void SaveAsync(Cache_Async toSave)
         {
+            // This is wrong, should move the folder, erase the old json and save the new one
             SaveCache<Cache_Async>(Path.Combine(GetSaveLocation(Async), toSave.settings[asyncName], FileSettings.Async.GetFileName()), toSave);
         }
 
-        public static void SaveSlot(string async, Cache_Slot toSave)
+        public static void SaveSlot(string async, Cache_Slot newSlot, Cache_Slot oldSlot)
         {
             Cache_Async cache = GetAsync(async);
-            if (cache.slots.Contains(toSave))
+
+            if (cache.slots.Contains(oldSlot))
             {
-                cache.slots.Remove(toSave);
+                cache.slots.Remove(oldSlot);
             }
-            cache.slots.Add(toSave);
+            cache.slots.Add(newSlot);
             SaveAsync(cache);
         }
     }

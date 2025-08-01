@@ -13,17 +13,17 @@ using static YAAL.AsyncSettings;
 
 namespace YAAL;
 
-public partial class Slot : UserControl
+public partial class SlotHolder : UserControl
 {
     private string asyncName;
     private Cache_Slot thisSlot;
-    public Slot()
+    public SlotHolder()
     {
         InitializeComponent();
         BackgroundSetter.SetBackground(BackgroundColor);
     }
 
-    public Slot (Cache_Async async, Cache_Slot slot)
+    public SlotHolder (Cache_Async async, Cache_Slot slot)
     {
         asyncName = async.settings[AsyncSettings.asyncName];
         thisSlot = slot;
@@ -130,11 +130,14 @@ public partial class Slot : UserControl
 
     public void Save()
     {
-        thisSlot.settings[baseLauncher] = SelectedLauncher.SelectedItem.ToString();
-        thisSlot.settings[version] = SelectedVersion.SelectedItem.ToString();
-        thisSlot.settings[patch] = Patch.Text;
-        thisSlot.settings[slotName] = SlotName.Text;
-        IOManager.SaveSlot(asyncName, thisSlot);
+        Cache_Slot newSlot = new Cache_Slot();
+        newSlot.settings[baseLauncher] = SelectedLauncher.SelectedItem.ToString();
+        newSlot.settings[version] = SelectedVersion.SelectedItem.ToString();
+        newSlot.settings[patch] = Patch.Text;
+        newSlot.settings[slotName] = SlotName.Text;
+        IOManager.SaveSlot(asyncName, newSlot, thisSlot);
+
+        thisSlot = newSlot;
     }
 
     private void _ChangedLauncher(object? sender, SelectionChangedEventArgs e)
