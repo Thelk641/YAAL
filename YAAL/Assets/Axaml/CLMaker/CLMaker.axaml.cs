@@ -12,6 +12,7 @@ namespace YAAL;
 
 public partial class CLMakerWindow : Window
 {
+    private static CLMakerWindow? _clMakerWindow;
     public CLMakerWindow()
     {
         InitializeComponent();
@@ -47,5 +48,18 @@ public partial class CLMakerWindow : Window
         {
             this.Close();
         });
+    }
+
+    public static CLMakerWindow GetCLMakerWindow()
+    {
+        if(_clMakerWindow != null)
+        {
+            _clMakerWindow.Activate();
+            _clMakerWindow.Topmost = true;
+            _clMakerWindow.Topmost = false;
+            return _clMakerWindow;
+        }
+        _clMakerWindow = new CLMakerWindow(true);
+        return _clMakerWindow;
     }
 }

@@ -30,8 +30,6 @@ namespace YAAL
 
         public void ParseRoomInfo()
         {
-            // default port : 38281
-
             string room = settings[AsyncSettings.room].Trim();
 
             var match = Regex.Match(room, @"^(?<host>.+):(?<port>\d{5})\s*$");
@@ -45,6 +43,12 @@ namespace YAAL
             {
                 settings[roomIP] = room;
                 settings[roomPort] = "";
+            }
+
+            if (settings[roomIP] == "localhost")
+            {
+                // this is the default port
+                settings[roomPort] = "38281";
             }
         }
     }

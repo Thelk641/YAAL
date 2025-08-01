@@ -160,4 +160,9 @@ public partial class SlotHolder : UserControl
             SelectedVersion.SelectedIndex = 0;
         }
     }
+
+    public Cache_Slot GetCache()
+    {
+        return thisSlot;
+    }
 }

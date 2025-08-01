@@ -14,8 +14,8 @@ namespace YAAL;
 
 public partial class CLMakerWindow : Window
 {
-    public CustomLauncher customLauncher;
-    public SettingManager settingManager;
+    public CustomLauncher? customLauncher;
+    public SettingManager? settingManager;
     public List<Command> commandList = new List<Command>();
 
     public Command AddCommand(string type, bool addToCustomLauncher = true)

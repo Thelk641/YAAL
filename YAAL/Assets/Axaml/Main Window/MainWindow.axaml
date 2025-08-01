@@ -12,18 +12,35 @@
 	<Border Padding="8">
 		<Grid RowDefinitions="40,8,*">
 			<!-- First line, buttons -->
-			<Grid ColumnDefinitions="180,*,130" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+			<Grid ColumnDefinitions="180,*,95,8,130" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Stretch">
 				<Button
 					Grid.Column="0"
 					Name="CLMakerButton"
 					Content="Custom Launcher editor"
-				/>
-				<Button
+					HorizontalAlignment="Stretch"
+					HorizontalContentAlignment="Center"
+					/>
+				<Button 
 					Grid.Column="2"
+					Name="AddNewAsync"
+					Content="New async"
+					HorizontalAlignment="Stretch"
+					HorizontalContentAlignment="Center"
+					/>
+				<Button
+					Grid.Column="4"
 					Name="SettingsButton"
 					Content="General settings"
-				/>
+					HorizontalAlignment="Stretch"
+					HorizontalContentAlignment="Center"
+					/>
 			</Grid>
+
+			<Border BorderBrush="Gray" BorderThickness="1" Grid.Row="2">
+				<ScrollViewer HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+					<StackPanel Name="AsyncContainer" />
+				</ScrollViewer>
+			</Border>
 		</Grid>
 	</Border>
 </Window>

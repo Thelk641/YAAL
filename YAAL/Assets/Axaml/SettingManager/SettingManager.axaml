@@ -13,6 +13,7 @@
 		<Border Margin="8">
 			<Grid RowDefinitions="*, 30">
 				<StackPanel Name="SettingContainer">
+					<StackPanel Name="GeneralSettingContainer" />
 					<StackPanel Name="FixedSettingContainer" />
 					<StackPanel Name="CustomSettingContainer" />
 					<StackPanel Name="InternalSettingContainer" />

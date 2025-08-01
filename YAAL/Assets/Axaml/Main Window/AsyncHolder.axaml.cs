@@ -32,6 +32,11 @@ public partial class AsyncHolder : UserControl
 
         SetupPlayMode();
         SetupEditMode();
+
+        foreach (var item in thisAsync.slots)
+        {
+            AddNewSlot(item);
+        }
     }
 
     public void SetupPlayMode()
@@ -75,7 +80,7 @@ public partial class AsyncHolder : UserControl
             {
                 if (confirm.confirmed)
                 {
-                    IOManager.DeleteAsync(oldAsync.settings[asyncName]);
+                    IOManager.DeleteAsync(thisAsync.settings[asyncName]);
                     RequestRemoval?.Invoke();
                 }
             };
@@ -111,9 +116,22 @@ public partial class AsyncHolder : UserControl
 
     public void Save()
     {
-        Cache_Async newAsync = IOManager.SaveAsync(oldAsync, thisAsync);
-        oldAsync = newAsync;
-        thisAsync = (Cache_Async)newAsync.Clone();
+        Cache_Async toSave = new Cache_Async();
+        toSave.settings[asyncName] = AsyncNameBox.Text;
+        toSave.settings[room] = RoomBox.Text;
+        toSave.settings[password] = PasswordBox.Text;
+
+        toSave.ParseRoomInfo();
+
+        foreach (var item in SlotsContainer.Children)
+        {
+            if(item is SlotHolder slotHolder)
+            {
+                toSave.slots.Add(slotHolder.GetCache());
+            }
+        }
+
+        thisAsync = IOManager.SaveAsync(thisAsync, toSave);
         _AsyncNameBox.Text = thisAsync.settings[asyncName];
         AsyncNameBox.Text = thisAsync.settings[asyncName];
     }
