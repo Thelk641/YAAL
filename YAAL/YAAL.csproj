@@ -31,6 +31,9 @@
     <Compile Update="Assets\Axaml\Main Window\MainWindow.axaml.cs">
       <DependentUpon>MainWindow.axaml</DependentUpon>
     </Compile>
+    <Compile Update="Assets\Axaml\SettingManager\Settings\Setting_Tool.axaml.cs">
+      <DependentUpon>Setting_Tool.axaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 
 </Project>

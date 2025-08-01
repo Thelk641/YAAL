@@ -7,7 +7,7 @@ using static YAAL.SlotSettings;
 
 namespace YAAL
 {
-    public class Cache_Slot
+    public class Cache_Slot : ICloneable
     {
         public Dictionary<SlotSettings, string> settings = new Dictionary<SlotSettings, string>()
         {
@@ -18,5 +18,10 @@ namespace YAAL
             {version, "" },
             {baseLauncher, "" }
         };
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
     }
 }

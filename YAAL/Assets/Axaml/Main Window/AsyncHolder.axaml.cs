@@ -16,55 +16,83 @@ namespace YAAL;
 
 public partial class AsyncHolder : UserControl
 {
-    private Cache_Async thisAsync;
+    private Cache_Async? thisAsync;
+    private Cache_Async? oldAsync;
+    public event Action? RequestRemoval;
     public AsyncHolder()
     {
         InitializeComponent();
+        BackgroundSetter.SetBackground(BackgroundColor);
     }
 
-    public AsyncHolder(Cache_Async async)
+    public AsyncHolder(Cache_Async async) : this()
     {
-        thisAsync = async;
+        oldAsync = async;
+        thisAsync = async.Clone() as Cache_Async;
+
         SetupPlayMode();
         SetupEditMode();
-        
-        _ = TurnEventsOn();
     }
 
     public void SetupPlayMode()
     {
         _AsyncNameBox.Text = thisAsync.settings[asyncName];
-        NewSlot.Click += (source, args) =>
+        NewSlot.Click += (_, _) =>
         {
             SlotHolder newSlot = AddNewSlot(IOManager.CreateNewSlot(thisAsync, "New"));
             newSlot.SwitchMode();
         };
 
-        ToolVersions.Click += (source, args) =>
+        ToolVersions.Click += (_, _) =>
         {
-            // Need to add it the option to just recieve dict<string,string>
-            // And then on exit save its settings
-            SettingManager settingManager = new SettingManager();
+            SettingManager settingManager = SettingManager.GetSettingsWindow(thisAsync.toolVersions);
+            settingManager.OnClosing += () =>
+            {
+                thisAsync.toolVersions = settingManager.ParseSetting();
+                Save();
+            };
         };
     }
 
     public void SetupEditMode()
     {
-        
+        AsyncNameBox.Text = thisAsync.settings[asyncName];
+        RoomBox.Text = thisAsync.settings[room];
+        PasswordBox.Text = thisAsync.settings[password];
+        SaveButton.Click += (_, _) =>
+        {
+            thisAsync.settings[asyncName] = AsyncNameBox.Text;
+            thisAsync.settings[room] = RoomBox.Text;
+            thisAsync.settings[password] = PasswordBox.Text;
+            Save();
+            SwitchMode();
+        };
+
+        DeleteButton.Click += (_, _) =>
+        {
+            ConfirmationWindow confirm = new ConfirmationWindow(thisAsync.settings[asyncName]);
+            confirm.Closed += (_, _) =>
+            {
+                if (confirm.confirmed)
+                {
+                    IOManager.DeleteAsync(oldAsync.settings[asyncName]);
+                    RequestRemoval?.Invoke();
+                }
+            };
+        };
     }
 
     public SlotHolder AddNewSlot(Cache_Slot newSlot)
     {
         SlotHolder toAdd = new SlotHolder(thisAsync, newSlot);
         SlotsContainer.Children.Add(toAdd);
+        toAdd.RequestRemoval += () => 
+        { 
+            SlotsContainer.Children.Remove(toAdd);
+            this.Height -= 78;
+        };
+        this.Height += 78;
         return toAdd;
-    }
-
-    public async Task TurnEventsOn()
-    {
-        await Dispatcher.UIThread.InvokeAsync(() => {
-            
-        }, DispatcherPriority.Background);
     }
 
    
@@ -83,6 +111,10 @@ public partial class AsyncHolder : UserControl
 
     public void Save()
     {
-        
+        Cache_Async newAsync = IOManager.SaveAsync(oldAsync, thisAsync);
+        oldAsync = newAsync;
+        thisAsync = (Cache_Async)newAsync.Clone();
+        _AsyncNameBox.Text = thisAsync.settings[asyncName];
+        AsyncNameBox.Text = thisAsync.settings[asyncName];
     }
 }

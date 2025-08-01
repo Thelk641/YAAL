@@ -145,22 +145,66 @@ namespace YAAL
             return output;
         }
 
-        public static void SaveAsync(Cache_Async toSave)
+        public static Cache_Async SaveAsync(Cache_Async oldAsync, Cache_Async newAsync)
         {
-            // This is wrong, should move the folder, erase the old json and save the new one
-            SaveCache<Cache_Async>(Path.Combine(GetSaveLocation(Async), toSave.settings[asyncName], FileSettings.Async.GetFileName()), toSave);
+            if (oldAsync.settings[asyncName] != newAsync.settings[asyncName])
+            {
+                string dir = Path.Combine(GetSaveLocation(Async), newAsync.settings[asyncName]);
+                string emptydir = Path.Combine(GetSaveLocation(Async), newAsync.settings[asyncName]);
+                int i = 0;
+                if (Directory.Exists(emptydir))
+                {
+                    while (Directory.Exists(emptydir))
+                    {
+                        emptydir = dir + " - " + i;
+                        ++i;
+                    }
+                    newAsync.settings[asyncName] += " - " + i;
+                }
+                
+                string oldDir = Path.Combine(GetSaveLocation(Async), oldAsync.settings[asyncName]);
+                MoveFile(oldDir, emptydir);
+            }
+            SaveCache<Cache_Async>(Path.Combine(GetSaveLocation(Async), newAsync.settings[asyncName], FileSettings.Async.GetFileName()), newAsync);
+            return newAsync;
         }
 
         public static void SaveSlot(string async, Cache_Slot newSlot, Cache_Slot oldSlot)
         {
             Cache_Async cache = GetAsync(async);
+            Cache_Async newCache = (Cache_Async)cache.Clone();
 
-            if (cache.slots.Contains(oldSlot))
+            if (newCache.slots.Contains(oldSlot))
             {
-                cache.slots.Remove(oldSlot);
+                newCache.slots.Remove(oldSlot);
             }
-            cache.slots.Add(newSlot);
-            SaveAsync(cache);
+            newCache.slots.Add(newSlot);
+            SaveAsync(cache, newCache);
+        }
+
+        public static void DeleteAsync(string asyncName)
+        {
+            SoftDeleteFile(Path.Combine(GetSaveLocation(Async), asyncName));
+        }
+
+        public static void DeleteSlot(string asyncName, string slotName)
+        {
+            Cache_Async cache = GetAsync(asyncName);
+            Cache_Slot slot = null;
+            foreach (var item in cache.slots)
+            {
+                if (item.settings[SlotSettings.slotName] == slotName)
+                {
+                    slot = item;
+                    break;
+                }
+            }
+
+            if(slot != null)
+            {
+                cache.slots.Remove(slot);
+                SaveCache<Cache_Async>(Path.Combine(GetSaveLocation(Async), cache.settings[AsyncSettings.asyncName], FileSettings.Async.GetFileName()), cache);
+            }
         }
     }
 }

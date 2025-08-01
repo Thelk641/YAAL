@@ -7,7 +7,6 @@
 			 MinWidth="600"
              >
 	<Border
-	 Name="BackgroundColor"
 	 BorderBrush="Gray"
 	 BorderThickness="1"
 	 CornerRadius="4"
@@ -21,6 +20,7 @@
 		<Grid RowDefinitions="50, 8, *" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
 
 			<Border
+				Name="BackgroundColor"
 				BorderThickness="1"
 				BorderBrush="Gray"
 				CornerRadius="8"
@@ -65,7 +65,7 @@
 					</StackPanel>
 
 					<StackPanel Name="EditMode" IsVisible="False" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-						<Grid ColumnDefinitions="*,8,*,8,*,8,50" HorizontalAlignment="Stretch">
+						<Grid ColumnDefinitions="*,8,*,8,*,8,60,8,50" HorizontalAlignment="Stretch">
 							<TextBox 
 								Name="AsyncNameBox"
 								Watermark="Async name"
@@ -88,9 +88,18 @@
 								ToolTip.Tip="This async's password"
 								HorizontalAlignment="Stretch"
 								/>
-							<Button 
-								Content="Save"
+							<Button
+								Name="DeleteButton"
+								Content="Delete"
 								Grid.Column="6"
+								VerticalAlignment="Stretch"
+								HorizontalContentAlignment="Center"
+								HorizontalAlignment="Stretch"
+								/>
+							<Button 
+								Name="SaveButton"
+								Content="Save"
+								Grid.Column="8"
 								VerticalAlignment="Stretch"
 								HorizontalContentAlignment="Center"
 								HorizontalAlignment="Stretch"

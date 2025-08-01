@@ -126,12 +126,22 @@
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Center"
 					/>
-						<ComboBox
-							Name="SelectedVersion"
-							Grid.Column="2"
-							HorizontalAlignment="Stretch"
-							VerticalAlignment="Center"
-					/>
+						<Grid ColumnDefinitions="*,8,60" Grid.Column="2">
+							<ComboBox
+								Name="SelectedVersion"
+								Grid.Column="0"
+								HorizontalAlignment="Stretch"
+								VerticalAlignment="Center"
+								/>
+							<Button 
+								Name="DeleteSlot"
+								Grid.Column="2"
+								Content="Delete"
+								HorizontalAlignment="Stretch"
+								VerticalAlignment="Stretch"
+								/>
+						</Grid>
+						
 
 					</Grid>
 				</Grid>

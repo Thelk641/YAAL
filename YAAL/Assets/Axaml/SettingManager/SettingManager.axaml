@@ -12,10 +12,11 @@
 	<ScrollViewer HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 		<Border Margin="8">
 			<Grid RowDefinitions="*, 30">
-				<StackPanel x:Name="SettingContainer">
-					<StackPanel x:Name="FixedSettingContainer" />
-					<StackPanel x:Name="CustomSettingContainer" />
-					<StackPanel x:Name="InternalSettingContainer" />
+				<StackPanel Name="SettingContainer">
+					<StackPanel Name="FixedSettingContainer" />
+					<StackPanel Name="CustomSettingContainer" />
+					<StackPanel Name="InternalSettingContainer" />
+					<StackPanel Name="ToolSettingContainer" />
 				</StackPanel>
 				<Button
 					Name="addSetting"

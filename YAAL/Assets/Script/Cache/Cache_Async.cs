@@ -8,7 +8,7 @@ using static YAAL.AsyncSettings;
 
 namespace YAAL
 {
-    public class Cache_Async
+    public class Cache_Async : ICloneable
     {
         public List<Cache_Slot> slots = new List<Cache_Slot>();
 
@@ -22,6 +22,11 @@ namespace YAAL
         };
 
         public Dictionary<string, string> toolVersions = new Dictionary<string, string>();
+
+        public Object Clone()
+        {
+            return this.MemberwiseClone();
+        }
 
         public void ParseRoomInfo()
         {

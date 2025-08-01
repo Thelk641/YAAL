@@ -17,6 +17,7 @@ public partial class SlotHolder : UserControl
 {
     private string asyncName;
     private Cache_Slot thisSlot;
+    public event Action RequestRemoval;
     public SlotHolder()
     {
         InitializeComponent();
@@ -39,7 +40,7 @@ public partial class SlotHolder : UserControl
         _SlotName.Text = thisSlot.settings[slotName];
         ToolSelect.ItemsSource = IOManager.GetToolList();
 
-        RealPlay.Click += (source, args) =>
+        RealPlay.Click += (_, _) =>
         {
             if (_SlotName.Text == "")
             {
@@ -51,7 +52,7 @@ public partial class SlotHolder : UserControl
                 true);
         };
 
-        StartTool.Click += (source, args) =>
+        StartTool.Click += (_, _) =>
         {
             if (ToolSelect.SelectedItem == null || ToolSelect.SelectedItem.ToString() == "")
             {
@@ -88,15 +89,21 @@ public partial class SlotHolder : UserControl
 
         _ChangedLauncher(null, null);
 
-        PatchSelect.Click += async (source, args) =>
+        PatchSelect.Click += async (_, _) =>
         {
             Patch.Text = await IOManager.PickFile(this.VisualRoot as Window);
         };
 
-        DoneEditing.Click += (source, args) =>
+        DoneEditing.Click += (_, _) =>
         {
             Save();
             SwitchMode();
+        };
+
+        DeleteSlot.Click += (_, _) =>
+        {
+            IOManager.DeleteSlot(asyncName, thisSlot.settings[slotName]);
+            RequestRemoval?.Invoke();
         };
     }
 
@@ -105,7 +112,7 @@ public partial class SlotHolder : UserControl
     {
         await Dispatcher.UIThread.InvokeAsync(() => {
             SelectedLauncher.SelectionChanged += _ChangedLauncher;
-            SlotName.TextChanged += (source, args) =>
+            SlotName.TextChanged += (_, _) =>
             {
                 _SlotName.Text = SlotName.Text;
             };

@@ -24,6 +24,9 @@ public partial class SettingManager : Window
 
     private static SettingManager _general;
     private static SettingManager _clmaker;
+    private static SettingManager _tools;
+
+    public Action? OnClosing;
 
     public SettingManager()
     {
@@ -39,6 +42,26 @@ public partial class SettingManager : Window
         ReadSetting(toParse);
     }
 
+    public SettingManager(Dictionary<string, string> toParse)
+    {
+        if(_tools != null)
+        {
+            _tools.Close();
+        }
+        InitializeComponent();
+        addSetting.IsVisible = false;
+        fixedSettings = Templates.fixedSettings;
+        defaultSettings = Templates.defaultSettings;
+        hiddenSettings = Templates.hiddenSettings;
+        ReadSetting(toParse);
+        _tools = this;
+        this.Closing += (_, _) =>
+        {
+            OnClosing?.Invoke();
+            _tools = null;
+        };
+    }
+
     public static SettingManager GetSettingsWindow(string origin, Dictionary<LauncherSettings, string> toParse)
     {
         if(origin == "clmaker")
@@ -52,7 +75,7 @@ public partial class SettingManager : Window
                 _clmaker.Activate();
                 _clmaker.Topmost = true;
                 _clmaker.Topmost = false;
-                _clmaker.Closing += (object? sender, WindowClosingEventArgs e) => { _clmaker = null; };
+                _clmaker.Closing += (_, _) => { _clmaker = null; };
                 return _clmaker;
             }
         } else
@@ -66,10 +89,23 @@ public partial class SettingManager : Window
                 _general.Activate();
                 _general.Topmost = true;
                 _general.Topmost = false;
-                _general.Closing += (object? sender, WindowClosingEventArgs e) => { _general = null; };
+                _general.Closing += (_, _) => { _general = null; };
                 return _general;
             }
         }
+    }
+
+    public static SettingManager GetSettingsWindow(Dictionary<string, string> toParse)
+    {
+        if(_tools != null)
+        {
+            _tools.OnClosing?.Invoke();
+            _tools.ToolSettingContainer.Children.Clear();
+            _tools.ReadSetting(toParse);
+            return _tools;
+        }
+
+        return new SettingManager(toParse);
     }
 
     private void AddSetting(object? sender, RoutedEventArgs e)
@@ -142,6 +178,37 @@ public partial class SettingManager : Window
             customOutput[item.SettingNameText] = item.SettingValueText;
         }
         return output;
+    }
+
+    public Dictionary<string, string> ParseSetting()
+    {
+        Dictionary<string, string> output = new Dictionary<string, string>();
+
+        foreach (var item in ToolSettingContainer.Children)
+        {
+            Setting_Tool setting = item as Setting_Tool;
+            output[setting.SettingName.Text] = setting.Versions.SelectedItem.ToString(); 
+        }
+
+        return output;
+    }
+
+    private void ReadSetting(Dictionary<string, string> toParse)
+    {
+        List<string> Tools = IOManager.GetToolList();
+        foreach (var tool in Tools) {
+            Setting_Tool toAdd = new Setting_Tool();
+            ToolSettingContainer.Children.Add(toAdd);
+            toAdd.SettingName.Text = tool;
+            List<string> versions = IOManager.GetDownloadedVersions(tool);
+            toAdd.Versions.ItemsSource = versions;
+            if (toParse.ContainsKey(tool) && versions.Contains(toParse[tool])){
+                toAdd.Versions.SelectedItem = toParse[tool];
+            } else
+            {
+                toAdd.Versions.SelectedIndex = 0;
+            }
+        }
     }
 
     private void ReadSetting(Dictionary<LauncherSettings, string> toParse)
