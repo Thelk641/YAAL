@@ -204,7 +204,7 @@ public partial class App : Application
             }
             else
             {
-                desktop.MainWindow = new CLMakerWindow(true);
+                desktop.MainWindow = new MainWindow();
                 //desktop.MainWindow = new UpdateWindow();
             }
         }

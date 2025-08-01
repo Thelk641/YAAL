@@ -24,11 +24,10 @@ public partial class SlotHolder : UserControl
         BackgroundSetter.SetBackground(BackgroundColor);
     }
 
-    public SlotHolder (Cache_Async async, Cache_Slot slot)
+    public SlotHolder (Cache_Async async, Cache_Slot slot) : this()
     {
         asyncName = async.settings[AsyncSettings.asyncName];
         thisSlot = slot;
-        BackgroundSetter.SetBackground(BackgroundColor);
         SetupPlayMode();
         SetupEditMode();
         
@@ -39,6 +38,7 @@ public partial class SlotHolder : UserControl
     {
         _SlotName.Text = thisSlot.settings[slotName];
         ToolSelect.ItemsSource = IOManager.GetToolList();
+        ToolSelect.SelectedIndex = 0;
 
         RealPlay.Click += (_, _) =>
         {

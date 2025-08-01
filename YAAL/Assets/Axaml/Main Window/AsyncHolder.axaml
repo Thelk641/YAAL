@@ -14,7 +14,6 @@
 	 Padding="8"
 	 HorizontalAlignment="Stretch"
 	 VerticalAlignment="Stretch"
-	 Background="#FFF"
 	 IsVisible="True"
           >
 		<Grid RowDefinitions="50, 8, *" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
