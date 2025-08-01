@@ -22,10 +22,10 @@
     <Compile Update="Assets\Axaml\ConfirmationWindow\ConfirmationWindow.axaml.cs">
       <DependentUpon>ConfirmationWindow.axaml</DependentUpon>
     </Compile>
-    <Compile Update="Assets\Axaml\Main Window\AsyncHolder.axaml.cs">
+    <Compile Update="Assets\Axaml\Main Window\Components\AsyncHolder.axaml.cs">
       <DependentUpon>AsyncHolder.axaml</DependentUpon>
     </Compile>
-    <Compile Update="Assets\Axaml\Main Window\SlotHolder.axaml.cs">
+    <Compile Update="Assets\Axaml\Main Window\Components\SlotHolder.axaml.cs">
       <DependentUpon>SlotHolder.axaml</DependentUpon>
     </Compile>
     <Compile Update="Assets\Axaml\Main Window\MainWindow.axaml.cs">

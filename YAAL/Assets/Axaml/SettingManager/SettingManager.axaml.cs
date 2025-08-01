@@ -37,41 +37,11 @@ public partial class SettingManager : Window
         hiddenSettings = Templates.hiddenSettings;
     }
 
-    public SettingManager(Dictionary<LauncherSettings,string> launcherSettings, Dictionary<string, string> customSettings) : this()
-    {
-        ReadSetting(launcherSettings, customSettings);
-    }
-
-    public SettingManager(Dictionary<GeneralSettings, string> generalSettings, Dictionary<string, string> customSettings) : this()
-    {
-        ReadSetting(generalSettings, customSettings);
-    }
-
-    public SettingManager(Dictionary<string, string> toParse)
-    {
-        if(_tools != null)
-        {
-            _tools.Close();
-        }
-        InitializeComponent();
-        addSetting.IsVisible = false;
-        fixedSettings = Templates.fixedSettings;
-        defaultSettings = Templates.defaultSettings;
-        hiddenSettings = Templates.hiddenSettings;
-        ReadSetting(toParse);
-        _tools = this;
-        this.Closing += (_, _) =>
-        {
-            OnClosing?.Invoke();
-            _tools = null;
-        };
-    }
-
     public static SettingManager GetSettingsWindow(Dictionary<LauncherSettings, string> launcherSettings, Dictionary<string, string> customSettings)
     {
         if (_clmaker == null)
         {
-            _clmaker = new SettingManager(launcherSettings, customSettings);
+            _clmaker = new SettingManager();
             _clmaker.Closing += (_, _) => { _clmaker = null; };
         }
         else
@@ -98,7 +68,7 @@ public partial class SettingManager : Window
     {
         if (_general == null)
         {
-            _general = new SettingManager(generalSettings, customSettings);
+            _general = new SettingManager();
             _general.Closing += (_, _) => { _general = null; };
         }
         else
@@ -111,7 +81,7 @@ public partial class SettingManager : Window
         }
 
         _general.hasAddedACustom = false;
-        _clmaker.hasAddedAFixed = false;
+        _general.hasAddedAFixed = false;
         _general.settings = new List<Setting>();
         _general.ReadSetting(generalSettings, customSettings);
         return _general;
@@ -122,8 +92,14 @@ public partial class SettingManager : Window
     {
         if(_tools == null)
         {
-            _tools = new SettingManager(toParse);
+            _tools = new SettingManager();
             _tools.Closing += (_, _) => { _general = null; };
+            _tools.addSetting.IsVisible = false;
+            _tools.Closing += (_, _) =>
+             {
+                 _tools.OnClosing?.Invoke();
+                 _tools = null;
+             };
         } else
         {
             _tools.OnClosing?.Invoke();

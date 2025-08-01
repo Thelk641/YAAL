@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Controls.Shapes;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
@@ -90,17 +91,41 @@ public partial class AsyncHolder : UserControl
     public SlotHolder AddNewSlot(Cache_Slot newSlot)
     {
         SlotHolder toAdd = new SlotHolder(thisAsync, newSlot);
+
+        if(SlotsContainer.Children.Count > 0)
+        {
+            Rectangle rect = new Rectangle();
+            rect.Height = 8;
+            SlotsContainer.Children.Add(rect);
+        }
+
         SlotsContainer.Children.Add(toAdd);
+
         toAdd.RequestRemoval += () => 
         { 
             SlotsContainer.Children.Remove(toAdd);
-            this.Height -= 78;
+            this.Height -= toAdd.Height;
         };
-        this.Height += 78;
+
+        toAdd.SwitchedToBigger += () =>
+        {
+            this.Height += toAdd.heightDifference;
+        };
+
+        toAdd.SwitchedToSmaller += () =>
+        {
+            this.Height -= toAdd.heightDifference;
+        };
+
+        this.Height += toAdd.Height + 8;
         return toAdd;
     }
 
-   
+    private void ToAdd_SwitchedToSmaller()
+    {
+        throw new NotImplementedException();
+    }
+
     public void SwitchMode()
     {
         if (PlayMode.IsVisible)

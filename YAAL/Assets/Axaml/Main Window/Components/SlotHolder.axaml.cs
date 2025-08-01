@@ -18,6 +18,10 @@ public partial class SlotHolder : UserControl
     private string asyncName;
     private Cache_Slot thisSlot;
     public event Action RequestRemoval;
+    public event Action SwitchedToBigger;
+    public event Action SwitchedToSmaller;
+    public int baseHeight = 52;
+    public int heightDifference = 38;
     public SlotHolder()
     {
         InitializeComponent();
@@ -126,12 +130,14 @@ public partial class SlotHolder : UserControl
         {
             PlayMode.IsVisible = false;
             EditMode.IsVisible = true;
-            this.Height = 108;
+            this.Height = baseHeight + heightDifference;
+            SwitchedToBigger?.Invoke();
         } else
         {
             PlayMode.IsVisible = true;
             EditMode.IsVisible = false;
-            this.Height = 70;
+            this.Height = baseHeight;
+            SwitchedToSmaller?.Invoke();
         }
     }
 

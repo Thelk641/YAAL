@@ -39,7 +39,8 @@ namespace YAAL
 
         public static void SaveCacheLauncher(Cache_CustomLauncher toSave)
         {
-            if (toSave.settings[launcherName] == null || toSave.settings[launcherName] == ""){
+            if (toSave.settings[launcherName] == null || toSave.settings[launcherName] == "")
+            {
                 ErrorManager.ThrowError(
                     "IOManager_Cache - Tried to save empty launcher",
                     "For some reason, SaveCacheLauncher() was asked to save a launcher without a name. This is not allowed."
@@ -95,7 +96,7 @@ namespace YAAL
             catch (Exception e)
             {
                 ErrorManager.AddNewError(
-                    "Failed to find error file", 
+                    "Failed to find error file",
                     "Trying to display error threw the following exception : " + e.Message);
                 return;
             }
@@ -198,6 +199,40 @@ namespace YAAL
                 }
             }
             return "";
+        }
+
+        public static Dictionary<GeneralSettings, string> GetUserSettings(out Dictionary<string, string> customSettings)
+        {
+            Dictionary<GeneralSettings, string> output = new Dictionary<GeneralSettings, string>();
+            customSettings = new Dictionary<string, string>();
+            foreach (var item in settings.generalSettings)
+            {
+                output[item.Key] = item.Value;
+            }
+
+            foreach (var item in settings.customSettings)
+            {
+                customSettings[item.Key] = item.Value;
+            }
+
+            return output;
+        }
+
+        public static void SetUserSettings(Dictionary<GeneralSettings, string> newGeneral, Dictionary<string, string> newCustom)
+        {
+            foreach (var item in newGeneral)
+            {
+                settings.generalSettings[item.Key] = item.Value;
+            }
+
+            settings.customSettings = new Dictionary<string, string>();
+
+            foreach (var item in newCustom)
+            {
+                settings.customSettings[item.Key] = item.Value;
+            }
+
+            SaveCache<Cache_UserSettings>(Path.Combine(AppContext.BaseDirectory, userSettings.GetFileName()), settings);
         }
     }
 }
