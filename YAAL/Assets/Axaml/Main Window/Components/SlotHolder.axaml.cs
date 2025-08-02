@@ -34,14 +34,18 @@ public partial class SlotHolder : UserControl
         thisSlot = slot;
         SetupPlayMode();
         SetupEditMode();
-        
-        _ = TurnEventsOn();
     }
 
     public void SetupPlayMode()
     {
         _SlotName.Text = thisSlot.settings[slotName];
-        ToolSelect.ItemsSource = IOManager.GetToolList();
+
+        List<string> toolList = IOManager.GetToolList();
+        if(toolList.Count == 0)
+        {
+            toolList.Add("None");
+        }
+        ToolSelect.ItemsSource = toolList;
         ToolSelect.SelectedIndex = 0;
 
         RealPlay.Click += (_, _) =>
@@ -52,19 +56,19 @@ public partial class SlotHolder : UserControl
             }
             ProcessManager.StartProcess(
                 Environment.ProcessPath,
-                ("--async " + "\"" + asyncName + "\"" + " --slot" + "\"" + _SlotName.Text + "\""),
+                ("--async " + "\"" + asyncName + "\"" + " --slot " + "\"" + _SlotName.Text + "\""),
                 true);
         };
 
         StartTool.Click += (_, _) =>
         {
-            if (ToolSelect.SelectedItem == null || ToolSelect.SelectedItem.ToString() == "")
+            if (ToolSelect.SelectedItem == "None")
             {
                 return;
             }
             ProcessManager.StartProcess(
                 Environment.ProcessPath,
-                ("--async " + "\"" + asyncName + "\"" + " --slot" + "\"" + _SlotName.Text + "\"" + " --launcher" + "\"" + ToolSelect.SelectedItem.ToString() + "\""),
+                ("--async " + "\"" + asyncName + "\"" + " --slot " + "\"" + _SlotName.Text + "\"" + " --launcher " + "\"" + ToolSelect.SelectedItem.ToString() + "\""),
                 true);
         };
 
@@ -80,18 +84,37 @@ public partial class SlotHolder : UserControl
         Patch.Text = thisSlot.settings[patch];
 
         List<string> launcherList = IOManager.GetLauncherList();
-        SelectedLauncher.ItemsSource = launcherList;
 
-        if (launcherList.Contains(thisSlot.settings[baseLauncher]))
+        if (launcherList.Count > 0)
         {
-            SelectedLauncher.SelectedItem = thisSlot.settings[baseLauncher];
+            SelectedLauncher.ItemsSource = launcherList;
+
+            if (launcherList.Contains(thisSlot.settings[baseLauncher]))
+            {
+                SelectedLauncher.SelectedItem = thisSlot.settings[baseLauncher];
+            }
+            else
+            {
+                SelectedLauncher.SelectedIndex = 0;
+            }
+
+            _ChangedLauncher(null, null);
         }
         else
         {
-            SelectedLauncher.SelectedIndex = 0;
-        }
+            SelectedLauncher.ItemsSource = new List<string>()
+            {
+                "None"
+            };
 
-        _ChangedLauncher(null, null);
+            SelectedVersion.ItemsSource = new List<string>()
+            {
+                "None"
+            };
+
+            SelectedLauncher.SelectedItem = "None";
+            SelectedVersion.SelectedItem = "None";
+        }
 
         PatchSelect.Click += async (_, _) =>
         {
@@ -106,21 +129,23 @@ public partial class SlotHolder : UserControl
 
         DeleteSlot.Click += (_, _) =>
         {
-            IOManager.DeleteSlot(asyncName, thisSlot.settings[slotName]);
-            RequestRemoval?.Invoke();
-        };
-    }
-
-
-    public async Task TurnEventsOn()
-    {
-        await Dispatcher.UIThread.InvokeAsync(() => {
-            SelectedLauncher.SelectionChanged += _ChangedLauncher;
-            SlotName.TextChanged += (_, _) =>
+            ConfirmationWindow confirm = new ConfirmationWindow(thisSlot.settings[slotName]);
+            confirm.Closing += (_, _) =>
             {
-                _SlotName.Text = SlotName.Text;
+                if (confirm.confirmed)
+                {
+                    IOManager.DeleteSlot(asyncName, thisSlot.settings[slotName]);
+                    RequestRemoval?.Invoke();
+                }
             };
-        }, DispatcherPriority.Background);
+        };
+
+        SelectedLauncher.SelectionChanged += _ChangedLauncher;
+
+        SlotName.TextChanged += (_, _) =>
+        {
+            _SlotName.Text = SlotName.Text;
+        };
     }
 
    
@@ -156,6 +181,7 @@ public partial class SlotHolder : UserControl
     private void _ChangedLauncher(object? sender, SelectionChangedEventArgs e)
     {
         List<string> versions = IOManager.GetDownloadedVersions(SelectedLauncher.SelectedItem.ToString());
+        SelectedVersion.ItemsSource = versions;
 
         if (versions.Contains(thisSlot.settings[version]))
         {

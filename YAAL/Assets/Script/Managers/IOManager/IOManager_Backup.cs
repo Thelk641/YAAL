@@ -53,7 +53,7 @@ namespace YAAL
             }
             if (Directory.Exists(tempBackedupFile))
             {
-                tempBackedupFile = FindAvailableDirectoryName(tempBackupDir, pathName);
+                tempBackedupFile = Path.Combine(tempBackupDir, FindAvailableDirectoryName(tempBackupDir, pathName));
             }
 
             // putting file or folder at "path" away in the Temporary Backup folder

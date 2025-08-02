@@ -35,5 +35,6 @@ public partial class ConfirmationWindow : Window
     public ConfirmationWindow(string toDisplay) : this()
     {
         TargetName.Text = toDisplay;
+        this.IsVisible = true;
     }
 }

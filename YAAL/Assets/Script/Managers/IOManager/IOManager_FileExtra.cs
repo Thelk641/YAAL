@@ -45,8 +45,8 @@ namespace YAAL
             do
             {
                 ++i;
-                output = Path.Combine(origin, (baseName + "(" + i + ")"));
-            } while (Directory.Exists(output));
+                output = baseName + "(" + i + ")";
+            } while (Directory.Exists(Path.Combine(origin,output)));
 
             return output;
         }
@@ -158,6 +158,12 @@ namespace YAAL
             } else
             {
                 fileName = Path.GetFileName(path);
+            }
+
+            if(fileName == "YAAL.apworld")
+            {
+                // This is a meta apworld, it's not supposed to be in this ManagedApworlds folder
+                return true;
             }
 
             string versionFile = Path.Combine(GetSaveLocation(ManagedApworlds), launcherName, version, fileName);

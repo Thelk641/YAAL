@@ -36,6 +36,7 @@ namespace YAAL
             List<string> splitTarget = customLauncher.SplitAndParse(this.InstructionSetting[target]);
             List<string> splitDefault = customLauncher.SplitAndParse(this.InstructionSetting[defaultFile]);
             Dictionary<string, string> BackupAndDefault = new Dictionary<string, string>();
+            backedUpFile = new List<string>();
 
             if(splitTarget.Count == 0)
             {
@@ -226,7 +227,7 @@ namespace YAAL
                     break;
             }
 
-            //string target = customLauncher.ParseTextWithSettings(this.InstructionSetting[BackupSettings.target]);
+            bool success = true;
 
             foreach (var item in backedUpFile)
             {
@@ -237,7 +238,7 @@ namespace YAAL
                     settings[AsyncSettings.asyncName],
                     settings[SlotSettings.slotName]))
                     {
-                        return false;
+                        success = false;
                     }
                 }
                 catch (Exception e)
@@ -245,12 +246,12 @@ namespace YAAL
                     ErrorManager.AddNewError(
                         "Backup - Restore threw an exception",
                         "The restore process threw the following exception : " + e.Message);
-                    return false;
+                    success = false;
                 }
             }
 
             customLauncher.NoteRestore(this);
-            return true;
+            return success;
         }
     }
 }

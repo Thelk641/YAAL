@@ -57,6 +57,12 @@ public partial class AsyncHolder : UserControl
                 thisAsync.toolVersions = settingManager.ParseSetting();
                 Save();
             };
+            settingManager.IsVisible = true;
+        };
+
+        Edit.Click += (_, _) =>
+        {
+            SwitchMode();
         };
     }
 
@@ -119,11 +125,6 @@ public partial class AsyncHolder : UserControl
 
         this.Height += toAdd.Height + 8;
         return toAdd;
-    }
-
-    private void ToAdd_SwitchedToSmaller()
-    {
-        throw new NotImplementedException();
     }
 
     public void SwitchMode()

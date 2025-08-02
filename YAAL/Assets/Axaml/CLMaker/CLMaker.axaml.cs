@@ -18,14 +18,15 @@ public partial class CLMakerWindow : Window
         InitializeComponent();
         this.Closing += (_, e) =>
         {
-            if (Debouncer.isDone) {
+            if (customLauncher.ReadyToClose()) {
+                _clMakerWindow = null;
                 return;
-            } 
+            }
 
             e.Cancel = true;
             this.Hide(); 
 
-            Debouncer.DebounceCompleted += ActualClose;
+            customLauncher.DoneRestoring += ActualClose;
         };
     }
 
@@ -43,7 +44,8 @@ public partial class CLMakerWindow : Window
 
     private void ActualClose()
     {
-        Debouncer.DebounceCompleted -= ActualClose;
+        //Debouncer.DebounceCompleted -= ActualClose;
+        _clMakerWindow = null;
         Avalonia.Threading.Dispatcher.UIThread.Post(() =>
         {
             this.Close();

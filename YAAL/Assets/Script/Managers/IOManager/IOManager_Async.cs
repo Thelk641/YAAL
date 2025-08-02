@@ -17,6 +17,7 @@ namespace YAAL
     {
         public static Cache_Async CreateNewAsync(string name)
         {
+            name = FindAvailableDirectoryName(GetSaveLocation(Async), name);
             Cache_Async newAsync = new Cache_Async();
             newAsync.settings[asyncName] = name;
             string folderPath = Path.Combine(GetSaveLocation(Async), name);
@@ -29,6 +30,7 @@ namespace YAAL
         {
             Cache_Slot newSlot = new Cache_Slot();
             string asyncPath = Path.Combine(GetSaveLocation(Async), async.settings[asyncName]);
+            name = FindAvailableDirectoryName(asyncPath, name);
             Directory.CreateDirectory(Path.Combine(asyncPath, name));
             async.slots.Add(newSlot);
             newSlot.settings[slotName] = name;
@@ -97,7 +99,7 @@ namespace YAAL
             {
                 cache_Async.ParseRoomInfo();
             }
-            SaveCache<Cache_Async>(Path.Combine(GetSaveLocation(Async), async, FileSettings.Async.GetFileName()), cache_Async);
+            SaveCache<Cache_Async>(Path.Combine(GetSaveLocation(Async), async, multiworld.GetFileName()), cache_Async);
         }
 
         public static void SetSlotSetting(string async, string slot, SlotSettings key, string value)
@@ -165,7 +167,7 @@ namespace YAAL
                 string oldDir = Path.Combine(GetSaveLocation(Async), oldAsync.settings[asyncName]);
                 MoveFile(oldDir, emptydir);
             }
-            SaveCache<Cache_Async>(Path.Combine(GetSaveLocation(Async), newAsync.settings[asyncName], FileSettings.Async.GetFileName()), newAsync);
+            SaveCache<Cache_Async>(Path.Combine(GetSaveLocation(Async), newAsync.settings[asyncName], multiworld.GetFileName()), newAsync);
             return newAsync;
         }
 
@@ -203,7 +205,8 @@ namespace YAAL
             if(slot != null)
             {
                 cache.slots.Remove(slot);
-                SaveCache<Cache_Async>(Path.Combine(GetSaveLocation(Async), cache.settings[AsyncSettings.asyncName], FileSettings.Async.GetFileName()), cache);
+                SaveCache<Cache_Async>(Path.Combine(GetSaveLocation(Async), cache.settings[AsyncSettings.asyncName], multiworld.GetFileName()), cache);
+                SoftDeleteFile(Path.Combine(GetSaveLocation(Async), cache.settings[AsyncSettings.asyncName], slotName));
             }
         }
     }

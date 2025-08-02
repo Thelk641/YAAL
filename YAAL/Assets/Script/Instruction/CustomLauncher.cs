@@ -31,7 +31,7 @@ public class CustomLauncher
     public CustomLauncher _baseLauncher = null;
     public bool waitingForRestore = false;
     private List<Interface_Instruction> instructionWaiting = new List<Interface_Instruction>();
-    public static event Action DoneRestoring;
+    public event Action DoneRestoring;
 
     // Permanent settings, saved in launcher.json
     // Defaults set in New Launcher.axaml.cs
@@ -831,5 +831,10 @@ public class CustomLauncher
         {
             return downloadables[0];
         }
+    }
+
+    public bool ReadyToClose()
+    {
+        return instructionWaiting.Count == 0;
     }
 }

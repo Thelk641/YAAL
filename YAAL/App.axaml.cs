@@ -18,6 +18,7 @@ public partial class App : Application
     string launcher = "";
     string async = "";
     string slot = "";
+    bool hasErroredOut = false;
 
     public override void Initialize()
     {
@@ -36,10 +37,11 @@ public partial class App : Application
 
         //var args = new string[2] { "--async PatchTest", "--slot Slot 2" };
         //var args = new string[7]{"--restore", "--launcher", "The Legend of Zelda - Oracle of Seasons", "--async", "Debug_CLMaker_Async", "--slot", "Debug_CLMaker_Slot"};
-        //var args = new string[2]{"--error ", "D:\\Unity\\Avalonia port\\YAAL\\Logs\\24-07-2025-15-49-06.json" };
+        //var args = new string[2]{"--error ", "D:\\Unity\\Avalonia port\\YAAL\\Logs\\31-07-2025-22-27-27.json" };
         //var args = new string[2]{"--restore", "--exit" };
+        //var args = new string[4] { "--async", "\"Debug_CLMaker_Async\"", "--slot\"Debug_CLMaker_Slot\"", "--launcher\"Universal Tracker\"" };
 
-        if(args == null || args.Length == 0)
+        if (args == null || args.Length == 0)
         {
             Start();
             return;
@@ -80,6 +82,12 @@ public partial class App : Application
             
             settingName = "";
             settingValue = "";
+        }
+
+        if (hasErroredOut)
+        {
+            ErrorManager.ThrowError();
+            Environment.Exit(1);
         }
 
 
@@ -144,7 +152,7 @@ public partial class App : Application
             customLauncher.Execute();
             if (customLauncher.waitingForRestore)
             {
-                _ = WaitForRestore();
+                _ = WaitForRestore(customLauncher);
                 base.OnFrameworkInitializationCompleted();
                 return;
             } else
@@ -237,11 +245,11 @@ public partial class App : Application
                 Environment.Exit(0);
                 break;
             default:
-                ErrorManager.ThrowError(
+                ErrorManager.AddNewError(
                     "App - Incorrect argument",
                     "Tried to parse argument of type " + name + " which isn't a valid argument type."
                     );
-                return false;
+                break;
         }
         return true;
     }
@@ -265,11 +273,11 @@ public partial class App : Application
         }
     }
 
-    static async Task WaitForRestore()
+    static async Task WaitForRestore(CustomLauncher launcher)
     {
         var tcs = new TaskCompletionSource();
 
-        CustomLauncher.DoneRestoring += () =>
+        launcher.DoneRestoring += () =>
         {
             tcs.SetResult();
         };

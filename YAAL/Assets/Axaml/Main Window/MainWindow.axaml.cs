@@ -67,11 +67,24 @@ public partial class MainWindow : Window
     private void AddAsync()
     {
         Cache_Async cache = IOManager.CreateNewAsync("New async");
-        AsyncContainer.Children.Add(new AsyncHolder(cache));
+        AsyncHolder holder = AddAsync(cache);
+        holder.SwitchMode();
     }
 
     private void AddAsync(string asyncName)
     {
-        AsyncContainer.Children.Add(new AsyncHolder(IOManager.GetAsync(asyncName)));
+        Cache_Async cache = IOManager.GetAsync(asyncName);
+        AddAsync(cache);
+    }
+
+    private AsyncHolder AddAsync(Cache_Async cache)
+    {
+        AsyncHolder holder = new AsyncHolder(cache);
+        AsyncContainer.Children.Add(holder);
+        holder.RequestRemoval += () =>
+        {
+            AsyncContainer.Children.Remove(holder);
+        };
+        return holder;
     }
 }
