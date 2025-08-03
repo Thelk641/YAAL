@@ -182,6 +182,14 @@ public partial class SlotHolder : UserControl
         thisSlot = newSlot;
     }
 
+    public void ClosingSave()
+    {
+        if (!PlayMode.IsVisible)
+        {
+            Save();
+        }
+    }
+
     private void _ChangedLauncher(object? sender, SelectionChangedEventArgs e)
     {
         List<string> versions = IOManager.GetDownloadedVersions(SelectedLauncher.SelectedItem.ToString());

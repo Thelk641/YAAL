@@ -57,6 +57,17 @@ public partial class MainWindow : Window
         {
             AddAsync(item);
         }
+
+        this.Closing += (_, _) =>
+        {
+            foreach (var item in AsyncContainer.Children)
+            {
+                if(item is AsyncHolder holder)
+                {
+                    holder.ClosingSave();
+                }
+            }
+        };
     }
 
     private void Window_Closing(object? sender, WindowClosingEventArgs e)

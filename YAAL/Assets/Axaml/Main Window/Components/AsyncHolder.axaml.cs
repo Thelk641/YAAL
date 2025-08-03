@@ -158,4 +158,19 @@ public partial class AsyncHolder : UserControl
         _AsyncNameBox.Text = thisAsync.settings[asyncName];
         AsyncNameBox.Text = thisAsync.settings[asyncName];
     }
+
+    public void ClosingSave()
+    {
+        foreach (var item in SlotsContainer.Children)
+        {
+            if(item is SlotHolder slot)
+            {
+                slot.ClosingSave();
+            }
+        }
+        if (!PlayMode.IsVisible)
+        {
+            Save();
+        }
+    }
 }
