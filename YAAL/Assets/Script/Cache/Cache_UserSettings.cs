@@ -49,6 +49,11 @@ namespace YAAL
             
 
             IOManager.SaveCache<Cache_UserSettings>(saveLocation[userSettings], this);
+
+            Directory.CreateDirectory(saveLocation[ManagedApworlds]);
+            Directory.CreateDirectory(saveLocation[Async]);
+            Directory.CreateDirectory(saveLocation[Trash]);
+            Directory.CreateDirectory(saveLocation[Logs]);
         }
 
         public string? this[string key]
