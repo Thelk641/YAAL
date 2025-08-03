@@ -154,25 +154,38 @@ public class Open : Instruction<OpenSettings>
             path = cutPath[0] + cutPath[1];
             args = "";
 
+            int extraQuote = 0;
+            if (settingPath.EndsWith("\""))
+            {
+                extraQuote = 1;
+            }
+
             if(cutPath.Length > 2) {
                 if (cutPath[2] == " ")
                 {
                     args += "\"";
                 }
-                for (int i = 3; i < cutPath.Length; i++)
+
+                List<string> toAdd = new List<string>();
+                for (int i = 3; i < cutPath.Length - extraQuote; i++)
                 {
-                    args += cutPath[i] + " ";
+                    toAdd.Add(cutPath[i]);
+                }
+
+
+                for (int i = 0; i < toAdd.Count; i++)
+                {
+                    if (i + 1 < toAdd.Count && toAdd[i + 1].StartsWith(" "))
+                    {
+                        args += toAdd[i] + "\" \"";
+                    } else
+                    {
+                        args += toAdd[i].TrimStart() + "\"";
+                    }
                 }
             }
 
-            
-
             args = args.Trim();
-
-            if (cutPath[cutPath.Length - 1] == "")
-            {
-                args += "\"";
-            }
         } else
         {
             cutPath = settingPath.Trim('"').Split(" ");
@@ -193,7 +206,7 @@ public class Open : Instruction<OpenSettings>
             }
         }
 
-        if(settingArgs != "\"\"")
+        if(settingArgs != "\"\"" && settingArgs != "")
         {
             args += settingArgs;
         }

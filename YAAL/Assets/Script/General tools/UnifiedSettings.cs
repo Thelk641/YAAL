@@ -73,6 +73,16 @@ namespace YAAL
                     {
                         string folder = Path.GetDirectoryName(value);
                         Set(GeneralSettings.apfolder, folder);
+                        Set(GeneralSettings.lua_adventure, ("--lua=\"" + Path.Combine(folder, "data", "lua", "connector_adventure.lua") + "\""));
+                        Set(GeneralSettings.lua_bizhawk, ("--lua=\"" + Path.Combine(folder, "data", "lua", "connector_bizhawk_generic.lua") + "\""));
+                        Set(GeneralSettings.lua_ff1, ("--lua=\"" + Path.Combine(folder, "data", "lua", "connector_ff1.lua") + "\""));
+                        Set(GeneralSettings.lua_ladx, ("--lua=\"" + Path.Combine(folder, "data", "lua", "connector_ladx_bizhawk.lua") + "\""));
+                        Set(GeneralSettings.lua_mmbn3, ("--lua=\"" + Path.Combine(folder, "data", "lua", "connector_mmbn3.lua") + "\""));
+                        Set(GeneralSettings.lua_oot, ("--lua=\"" + Path.Combine(folder, "data", "lua", "connector_oot.lua") + "\""));
+                        Set(GeneralSettings.lua_tolz, ("--lua=\"" + Path.Combine(folder, "data", "lua", "connector_tloz.lua") + "\""));
+
+
+
                     }
                     catch { }
                 }

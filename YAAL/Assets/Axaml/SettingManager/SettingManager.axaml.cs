@@ -6,6 +6,8 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using static YAAL.GeneralSettings;
 
 namespace YAAL;
 
@@ -197,6 +199,19 @@ public partial class SettingManager : Window
                 }
             }
         }
+
+        try
+        {
+            output[apfolder] = Path.GetDirectoryName(output[aplauncher]).Trim();
+            output[lua_adventure] = "--lua=\"" + Path.Combine(output[apfolder], "data", "lua", "connector_adventure.lua") + "\"";
+            output[lua_bizhawk] = "--lua=\"" + Path.Combine(output[apfolder], "data", "lua", "connector_bizhawk_generic.lua") + "\"";
+            output[lua_ff1] = "--lua=\"" + Path.Combine(output[apfolder], "data", "lua", "connector_ff1.lua") + "\"";
+            output[lua_ladx] = "--lua=\"" + Path.Combine(output[apfolder], "data", "lua", "connector_ladx_bizhawk.lua") + "\"";
+            output[lua_mmbn3] = "--lua=\"" + Path.Combine(output[apfolder], "data", "lua", "connector_mmbn3.lua") + "\"";
+            output[lua_oot] = "--lua=\"" + Path.Combine(output[apfolder], "data", "lua", "connector_oot.lua") + "\"";
+            output[lua_tolz] = "--lua=\"" + Path.Combine(output[apfolder], "data", "lua", "connector_tloz.lua") + "\"";
+        }
+        catch { }
 
         foreach (var item in CustomSettingContainer.Children)
         {

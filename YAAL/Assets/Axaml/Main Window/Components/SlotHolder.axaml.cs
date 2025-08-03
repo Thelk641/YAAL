@@ -173,7 +173,11 @@ public partial class SlotHolder : UserControl
         newSlot.settings[version] = SelectedVersion.SelectedItem.ToString();
         newSlot.settings[patch] = Patch.Text;
         newSlot.settings[slotName] = SlotName.Text;
-        IOManager.SaveSlot(asyncName, newSlot, thisSlot);
+        string newName = IOManager.SaveSlot(asyncName, newSlot, thisSlot);
+
+        newSlot.settings[slotName] = newName;
+        SlotName.Text = newName;
+        _SlotName.Text = newName;
 
         thisSlot = newSlot;
     }

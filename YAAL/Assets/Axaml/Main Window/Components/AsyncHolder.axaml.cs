@@ -73,9 +73,6 @@ public partial class AsyncHolder : UserControl
         PasswordBox.Text = thisAsync.settings[password];
         SaveButton.Click += (_, _) =>
         {
-            thisAsync.settings[asyncName] = AsyncNameBox.Text;
-            thisAsync.settings[room] = RoomBox.Text;
-            thisAsync.settings[password] = PasswordBox.Text;
             Save();
             SwitchMode();
         };

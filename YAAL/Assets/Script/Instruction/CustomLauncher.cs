@@ -397,26 +397,33 @@ public class CustomLauncher
                     }
 
                     string[] split = cleaned.Split('}');
-                    if (settings.Has(split[0]))
+                    if(split.Length > 1)
                     {
-                        output = output + settings[split[0]].Trim();
-                    }
-                    else
+                        if (settings.Has(split[0]))
+                        {
+                            output = output + settings[split[0]].Trim();
+                        }
+                        else
+                        {
+                            output = output + split[0];
+                        }
+
+                        if (needsQuote && !split[1].StartsWith("\";"))
+                        {
+                            output += "\"";
+                        }
+
+                        output = output + split[1];
+
+                        if (needsSpace)
+                        {
+                            output += " ";
+                        }
+                    } else
                     {
                         output = output + split[0];
                     }
-
-                    if (needsQuote && !split[1].StartsWith("\";"))
-                    {
-                        output += "\"";
-                    }
-
-                    output = output + split[1];
-
-                    if (needsSpace)
-                    {
-                        output += " ";
-                    }
+                    
                 }
 
                 text = output.Trim();

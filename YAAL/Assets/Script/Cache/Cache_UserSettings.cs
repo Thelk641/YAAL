@@ -68,21 +68,15 @@ namespace YAAL
             if(Enum.TryParse(key, out GeneralSettings setting))
             {
                 Set(setting, value);
-            }
-            customSettings[key] = value;
+            } else
+            {
+                customSettings[key] = value;
+            } 
         }
 
         public void Set(GeneralSettings key, string value)
         {
             generalSettings[key] = value;
-            if (key == aplauncher)
-            {
-                try
-                {
-                    generalSettings[apfolder] = Path.GetDirectoryName(value);
-                }
-                catch { }
-            }
         }
 
         public string Get(string key)
