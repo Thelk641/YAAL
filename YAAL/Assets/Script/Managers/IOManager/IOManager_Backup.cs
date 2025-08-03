@@ -119,21 +119,22 @@ namespace YAAL
                         "Trying to copy " + defaultFile + " to " + path + " failed."
                         );
                     return false;
-                }
-                if (Directory.Exists(defaultFile))
+                } else if (Directory.Exists(defaultFile))
                 {
                     if (CopyFolder(defaultFile, path))
                     {
-                        NoteBackup(backupToTarget);
-                        return true;
+                        
                     }
                     ErrorManager.AddNewError(
                         "IOManager_FileCore - Copying default folder failed",
                         "Trying to copy " + defaultFile + " to " + path + " failed."
                         );
                     return false;
+                } else
+                {
+                    NoteBackup(backupToTarget);
+                    return true;
                 }
-                return true;
             }
 
             // Either MoveFile or CopyFile failed
@@ -147,14 +148,6 @@ namespace YAAL
         public static bool Restore(string path, string asyncName, string slotName)
         {
             Debug.WriteLine("FileCore, trying to restore : " + path);
-            if (!IsAlreadyBackedUp(path))
-            {
-                ErrorManager.AddNewError(
-                    "IOManager_FileCore - Restore without backup",
-                    "The Restore function was called on " + path + " but this file isn't backedup currently. This shouldn't ever happen. Please report this issue."
-                    );
-                return false;
-            }
 
             string slotDir = Path.Combine(GetSaveLocation(Async), asyncName, slotName);
             string tempBackupDir = Path.Combine(slotDir, "Temporary Backup");
@@ -166,7 +159,13 @@ namespace YAAL
             string backedupFile = Path.Combine(backupDir, pathName);
             string tempBackedupFile = GetTemporaryFilePath(path);
 
-            Debug.WriteLine(File.Exists(path) || Directory.Exists(path));
+            if(IsAlreadyBackedUp(path) && !File.Exists(tempBackedupFile))
+            {
+                ErrorManager.AddNewError(
+                    "IOManager_FileCore - Backedup file doesn't appear to exists",
+                    "File " + path + " has been backed up to " + tempBackedupFile + " but it doesn't appear to exist anymore. If you've not done that yourself, please report this issue."
+                    );
+            }
 
             // putting file or folder at target into Backup for the next time we open this slot
             if (File.Exists(path) || Directory.Exists(path))
@@ -195,7 +194,6 @@ namespace YAAL
                     }
                 }
 
-                // /!\ this does override previous backup file
                 if (!MoveFile(path, backedupFile))
                 {
                     ErrorManager.AddNewError(
@@ -205,6 +203,13 @@ namespace YAAL
                     return false;
                 }
                 NoteRestore(pathToBackup);
+            }
+
+            if (!File.Exists(tempBackedupFile))
+            {
+                // If we don't use a default file and don't have a pre-existing file,
+                // we only need to restore our own slot's backup, and then we're done
+                return true;
             }
 
 

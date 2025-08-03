@@ -158,6 +158,7 @@ public partial class App : Application
             } else
             {
                 base.OnFrameworkInitializationCompleted();
+                ErrorManager.ThrowError();
                 Environment.Exit(0);
             }
         }
@@ -284,8 +285,7 @@ public partial class App : Application
 
         await tcs.Task;
 
-        Debug.WriteLine("Done waiting !");
-
+        ErrorManager.ThrowError();
         Environment.Exit(0);
     }
 }

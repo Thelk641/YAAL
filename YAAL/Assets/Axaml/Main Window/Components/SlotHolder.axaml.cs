@@ -36,6 +36,11 @@ public partial class SlotHolder : UserControl
         SetupEditMode();
     }
 
+    public void SetAsyncName(string newName)
+    {
+        asyncName = newName;
+    }
+
     public void SetupPlayMode()
     {
         _SlotName.Text = thisSlot.settings[slotName];

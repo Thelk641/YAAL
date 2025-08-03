@@ -157,6 +157,14 @@ public partial class AsyncHolder : UserControl
         thisAsync = IOManager.SaveAsync(thisAsync, toSave);
         _AsyncNameBox.Text = thisAsync.settings[asyncName];
         AsyncNameBox.Text = thisAsync.settings[asyncName];
+
+        foreach (var item in SlotsContainer.Children)
+        {
+            if (item is SlotHolder slotHolder)
+            {
+                slotHolder.SetAsyncName(thisAsync.settings[asyncName]);
+            }
+        }
     }
 
     public void ClosingSave()
