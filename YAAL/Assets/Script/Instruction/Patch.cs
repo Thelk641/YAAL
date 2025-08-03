@@ -110,9 +110,11 @@ namespace YAAL
                 return false;
             }
 
+            List<string> apworlds = null;
+
             if (this.InstructionSetting[optimize] == true.ToString())
             {
-                List<string> apworlds = customLauncher.SplitAndParse("${apworld}");
+                apworlds = customLauncher.SplitAndParse("${apworld}");
                 bool addedYAAL = false;
                 foreach (var item in apworlds)
                 {
@@ -132,7 +134,7 @@ namespace YAAL
                         "Patch - Failed to isolate apworlds",
                         "Patch's optimization threw an error. Most likely, you tried to isolate twice without first restoring, this is not allowed."
                         );
-                    IOManager.RestoreApworlds(apLauncher);
+                    IOManager.RestoreApworlds(apLauncher, apworlds);
                     return false;
                 }
             }
@@ -160,7 +162,7 @@ namespace YAAL
 
             if (this.InstructionSetting[optimize] == true.ToString())
             {
-                IOManager.RestoreApworlds(apLauncher);
+                IOManager.RestoreApworlds(apLauncher, apworlds);
             }
 
             if (output.Contains("Patch created at"))

@@ -215,7 +215,7 @@ namespace YAAL
 
             try
             {
-                if(IOManager.RestoreApworlds(settings[aplauncher]))
+                if(IOManager.RestoreApworlds(settings[aplauncher], targets))
                 {
                     customLauncher.NoteRestore(this);
                     return true;

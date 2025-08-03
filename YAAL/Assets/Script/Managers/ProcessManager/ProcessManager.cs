@@ -152,5 +152,11 @@ namespace YAAL
                 return false;
             }
         }
+
+        public static string GetProcessUniqueId()
+        {
+            var process = Process.GetCurrentProcess();
+            return $"{process.Id}-{process.StartTime.ToFileTimeUtc()}";
+        }
     }
 }

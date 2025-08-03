@@ -1,11 +1,12 @@
-﻿using YAAL.Assets.Script.Cache;
-using Avalonia.Platform.Storage;
+﻿using Avalonia.Platform.Storage;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using ShellLink.Structures;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using YAAL.Assets.Script.Cache;
 using static YAAL.FileSettings;
 using static YAAL.GeneralSettings;
 
@@ -262,6 +263,48 @@ namespace YAAL
             return true;
         }
 
+        private static bool StartIsolating(string archipelagoFolder, string customWorlds, string old_customWorlds, string worlds, string old_worlds, out Cache_BackupList cache)
+        {
+            cache = LoadCache<Cache_BackupList>(GetSaveLocation(FileSettings.backupList));
+            if (cache.apworldList.ContainsKey(archipelagoFolder))
+            {
+                return true;
+            }
+
+            cache.apworldList[archipelagoFolder] = new List<string>();
+
+            if (!SetUpMinimumWorlds())
+            {
+                return false;
+            }
+
+            if (!Directory.Exists(customWorlds) || !Directory.Exists(worlds))
+            {
+                ErrorManager.AddNewError(
+                    "IOManager_FileExtra - IsolateApworlds failed to create directories",
+                    "While trying to isolate the relevant apworlds, IOManager somehow failed to create customWorlds and/or lib/worlds. Please report this issue, you also should clean up the folder yourself (the old, pre-isolate folders are just renamed as old.name)"
+                    );
+                return false;
+            }
+
+            if (Directory.Exists(old_customWorlds) || Directory.Exists(old_worlds))
+            {
+                ErrorManager.AddNewError(
+                    "IOManager_FileExtra - IsolateApworlds already running",
+                    "Another launcher is waiting to automatically restore the apworld directories. This is not allowed. Please wait for the auto-restore, or if this is caused by another bug, restore them manually."
+                    );
+                return false;
+            }
+
+            MoveFile(customWorlds, old_customWorlds);
+            MoveFile(worlds, old_worlds);
+
+            Directory.CreateDirectory(customWorlds);
+
+            CopyFolder(Path.Combine(GetSaveLocation(ManagedApworlds), MinimumWorlds.GetFolderName()), worlds);
+            return true;
+        }
+
         public static bool IsolateApworlds(string archipelago, List<string> apworlds)
         {
             string ArchipelagoFolder;
@@ -288,60 +331,50 @@ namespace YAAL
                 return false;
             }
 
-            if (!SetUpMinimumWorlds())
-            {
-                return false;
-            }
+            Cache_BackupList cache;
+            StartIsolating(ArchipelagoFolder, customWorlds, old_customWorlds, worlds, old_worlds, out cache);
 
-            if (!Directory.Exists(customWorlds) || !Directory.Exists(worlds)) 
-            {
-                ErrorManager.AddNewError(
-                    "IOManager_FileExtra - IsolateApworlds failed to create directories",
-                    "While trying to isolate the relevant apworlds, IOManager somehow failed to create customWorlds and/or lib/worlds. Please report this issue, you also should clean up the folder yourself (the old, pre-isolate folders are just renamed as old.name)"
-                    );
-                return false;
-            }
-
-            if(Directory.Exists(old_customWorlds) || Directory.Exists(old_worlds)) 
-            {
-                ErrorManager.AddNewError(
-                    "IOManager_FileExtra - IsolateApworlds already running",
-                    "Another launcher is waiting to automatically restore the apworld directories. This is not allowed. Please wait for the auto-restore, or if this is caused by another bug, restore them manually."
-                    );
-                return false;
-            }
-
-            MoveFile(customWorlds, old_customWorlds);
-            MoveFile(worlds, old_worlds);
-
-            Directory.CreateDirectory(customWorlds);
-
-            CopyFolder(Path.Combine(GetSaveLocation(ManagedApworlds), MinimumWorlds.GetFolderName()), worlds);
-
+            string ID = ProcessManager.GetProcessUniqueId();
+            cache.launcherToApworldList[ID] = new List<string>();
             foreach (var item in apworlds)
             {
+                if (!cache.launcherToApworldList[ID].Contains(item))
+                {
+                    cache.launcherToApworldList[ID].Add(item);
+                }
+                
                 string fileName = Path.GetFileName(item);
+                if (cache.apworldList[ArchipelagoFolder].Contains(item))
+                {
+                    continue;
+                }
+
+
                 if(File.Exists(Path.Combine(old_customWorlds, fileName)))
                 {
                     CopyFile(Path.Combine(old_customWorlds, fileName), Path.Combine(customWorlds, fileName));
+                    cache.apworldList[ArchipelagoFolder].Add(item);
                     continue;
                 }
 
                 if (File.Exists(Path.Combine(old_worlds, fileName)))
                 {
                     CopyFile(Path.Combine(old_worlds, fileName), Path.Combine(worlds, fileName));
+                    cache.apworldList[ArchipelagoFolder].Add(item);
                     continue;
                 }
 
                 if (Directory.Exists(Path.Combine(old_customWorlds, fileName)))
                 {
                     CopyFolder(Path.Combine(old_customWorlds, fileName), Path.Combine(customWorlds, fileName));
+                    cache.apworldList[ArchipelagoFolder].Add(item);
                     continue;
                 }
 
                 if (Directory.Exists(Path.Combine(old_worlds, fileName)))
                 {
                     CopyFolder(Path.Combine(old_worlds, fileName), Path.Combine(worlds, fileName));
+                    cache.apworldList[ArchipelagoFolder].Add(item);
                     continue;
                 }
 
@@ -349,40 +382,84 @@ namespace YAAL
                     "IOManager_FileExtra - Apworld not found",
                     "You've asked this launcher to isolate " + fileName + " but this file doesn't appear to exist in either customWorlds or lib/world"
                     );
+                SaveCache<Cache_BackupList>(GetSaveLocation(FileSettings.backupList), cache);
                 return false;
             }
-
+            SaveCache<Cache_BackupList>(GetSaveLocation(FileSettings.backupList), cache);
             return true;
         }
 
         public static bool RestoreApworlds()
         {
-            string apfolder = settings[GeneralSettings.apfolder];
-            string oldCustom = Path.Combine(apfolder, "custom_worlds_old");
+            Cache_BackupList cache = LoadCache<Cache_BackupList>(GetSaveLocation(FileSettings.backupList));
 
-            if (Directory.Exists(oldCustom))
+            foreach (var item in cache.apworldList)
             {
-                return RestoreApworlds(settings[aplauncher]);
+                if (!RestoreApworlds(item.Key))
+                {
+                    return false;
+                }
             }
+
             return true;
         }
 
-        public static bool RestoreApworlds(string archipelago)
+        public static bool RestoreApworlds(string archipelago, List<string> apworlds)
         {
-            string ArchipelagoFolder;
+            Cache_BackupList cache = LoadCache<Cache_BackupList>(GetSaveLocation(FileSettings.backupList));
+            string archipelagoFolder = Path.GetDirectoryName(archipelago);
+            if (!cache.apworldList.ContainsKey(archipelagoFolder))
+            {
+                ErrorManager.AddNewError(
+                    "IOManager_Backup - Tried to restore apworlds in an instant that hasn't isolated them",
+                    "Some Isolate command tried to restore apworlds for the archipelago instance at " + archipelago + " but the list of apworlds backed up for this installation is null. This shouldn't ever happen, please report this."
+                    );
+                return false;
+            }
+            string ID = ProcessManager.GetProcessUniqueId();
+
+            foreach (var item in apworlds)
+            {
+                bool canBeRemoved = true;
+                foreach (var list in cache.launcherToApworldList)
+                {
+                    if (list.Key != ID && list.Value.Contains(item))
+                    {
+                        canBeRemoved = false;
+                        break;
+                    }
+                }
+                if (canBeRemoved)
+                {
+                    cache.apworldList[archipelagoFolder].Remove(item);
+                }
+            }
+
+            cache.launcherToApworldList.Remove(ID);
+            SaveCache<Cache_BackupList>(GetSaveLocation(FileSettings.backupList), cache);
+
+            if (cache.apworldList[archipelagoFolder].Count == 0)
+            {
+                return RestoreApworlds(archipelagoFolder);
+            }
+
+            return true;
+        }
+
+        public static bool RestoreApworlds(string archipelagoFolder)
+        {
+            Cache_BackupList cache = LoadCache<Cache_BackupList>(GetSaveLocation(FileSettings.backupList));
             string customWorlds;
             string old_customWorlds;
             string worlds;
             string old_worlds;
             try
             {
-                ArchipelagoFolder = settings[apfolder];
+                customWorlds = Path.Combine(archipelagoFolder, "custom_worlds");
+                old_customWorlds = Path.Combine(archipelagoFolder, "custom_worlds_old");
 
-                customWorlds = Path.Combine(ArchipelagoFolder, "custom_worlds");
-                old_customWorlds = Path.Combine(ArchipelagoFolder, "custom_worlds_old");
-
-                worlds = Path.Combine(ArchipelagoFolder, "lib", "worlds");
-                old_worlds = Path.Combine(ArchipelagoFolder, "lib", "worlds_old");
+                worlds = Path.Combine(archipelagoFolder, "lib", "worlds");
+                old_worlds = Path.Combine(archipelagoFolder, "lib", "worlds_old");
             }
             catch (System.Exception e)
             {
@@ -430,6 +507,8 @@ namespace YAAL
                 // both temporary folders have been taken out, we can now restore the old ones
                 if(MoveFile(old_worlds, worlds) && MoveFile(old_customWorlds, customWorlds))
                 {
+                    cache.apworldList.Remove(archipelagoFolder);
+                    SaveCache<Cache_BackupList>(GetSaveLocation(FileSettings.backupList), cache);
                     return true;
                 }
             }

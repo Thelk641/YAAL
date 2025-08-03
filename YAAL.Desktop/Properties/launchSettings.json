@@ -1,8 +1,7 @@
 {
   "profiles": {
     "YAAL.Desktop": {
-      "commandName": "Project",
-      "commandLineArgs": "--async Another attempt --slot Gnya"
+      "commandName": "Project"
     }
   }
 }
