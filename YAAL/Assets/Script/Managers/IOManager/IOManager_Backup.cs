@@ -352,28 +352,40 @@ namespace YAAL
 
                 if(File.Exists(Path.Combine(old_customWorlds, fileName)))
                 {
-                    CopyFile(Path.Combine(old_customWorlds, fileName), Path.Combine(customWorlds, fileName));
+                    if(!File.Exists(Path.Combine(customWorlds, fileName)))
+                    {
+                        CopyFile(Path.Combine(old_customWorlds, fileName), Path.Combine(customWorlds, fileName));
+                    }
                     cache.apworldList[ArchipelagoFolder].Add(item);
                     continue;
                 }
 
                 if (File.Exists(Path.Combine(old_worlds, fileName)))
                 {
-                    CopyFile(Path.Combine(old_worlds, fileName), Path.Combine(worlds, fileName));
+                    if (!File.Exists(Path.Combine(worlds, fileName)))
+                    {
+                        CopyFile(Path.Combine(old_worlds, fileName), Path.Combine(worlds, fileName));
+                    }
                     cache.apworldList[ArchipelagoFolder].Add(item);
                     continue;
                 }
 
                 if (Directory.Exists(Path.Combine(old_customWorlds, fileName)))
                 {
-                    CopyFolder(Path.Combine(old_customWorlds, fileName), Path.Combine(customWorlds, fileName));
+                    if (!Directory.Exists(Path.Combine(customWorlds, fileName)))
+                    {
+                        CopyFolder(Path.Combine(old_customWorlds, fileName), Path.Combine(customWorlds, fileName));
+                    }
                     cache.apworldList[ArchipelagoFolder].Add(item);
                     continue;
                 }
 
                 if (Directory.Exists(Path.Combine(old_worlds, fileName)))
                 {
-                    CopyFolder(Path.Combine(old_worlds, fileName), Path.Combine(worlds, fileName));
+                    if (!Directory.Exists(Path.Combine(worlds, fileName)))
+                    {
+                        CopyFolder(Path.Combine(old_worlds, fileName), Path.Combine(worlds, fileName));
+                    }
                     cache.apworldList[ArchipelagoFolder].Add(item);
                     continue;
                 }

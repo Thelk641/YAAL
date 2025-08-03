@@ -63,7 +63,7 @@ namespace YAAL
                     string custom_world = Path.Combine(dir.Parent.Parent.FullName, "ArchipelagoLauncher.exe");
                     string worlds = Path.Combine(dir.Parent.Parent.Parent.FullName, "ArchipelagoLauncher.exe");
 
-                    if (File.Exists(custom_world) || File.Exists(worlds))
+                    if (!targets.Contains(item) && (File.Exists(custom_world) || File.Exists(worlds)))
                     {
                         targets.Add(item);
                     } else
