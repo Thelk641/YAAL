@@ -18,7 +18,6 @@ namespace YAAL;
 public partial class AsyncHolder : UserControl
 {
     private Cache_Async? thisAsync;
-    private Cache_Async? oldAsync;
     public event Action? RequestRemoval;
     public AsyncHolder()
     {
@@ -28,8 +27,7 @@ public partial class AsyncHolder : UserControl
 
     public AsyncHolder(Cache_Async async) : this()
     {
-        oldAsync = async;
-        thisAsync = async.Clone() as Cache_Async;
+        thisAsync = async;
 
         SetupPlayMode();
         SetupEditMode();
