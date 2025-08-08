@@ -20,6 +20,7 @@ namespace YAAL
             Debug.WriteLine("Saving launcher : " + toSave.selfsettings[LauncherSettings.launcherName]);
             Cache_CustomLauncher cache = toSave.WriteCache();
             SaveCacheLauncher(cache);
+            UpdateLauncherList();
         }
 
         public static CustomLauncher LoadLauncher(string gameName)
@@ -59,6 +60,71 @@ namespace YAAL
             }
 
             return output;
+        }
+
+        public static List<string> GetGameList()
+        {
+            if(games.Count == 0)
+            {
+                ReadGameList();
+            }
+
+            return games;
+        }
+
+        public static string GetFirstLauncherForGame(string toFind)
+        {
+            foreach (var item in launchers)
+            {
+                string gameName = item.selfsettings[LauncherSettings.gameName];
+                if (gameName == toFind)
+                {
+                    return item.selfsettings[LauncherSettings.launcherName];
+                }
+            }
+
+            return "";
+        }
+
+        public static List<string> GetLaunchersForGame(string toFind)
+        {
+            List<string> output = new List<string>();
+
+            foreach (var item in launchers)
+            {
+                string gameName = item.selfsettings[LauncherSettings.gameName];
+                if (gameName == toFind)
+                {
+                    output.Add(item.selfsettings[LauncherSettings.launcherName]);
+                }
+            }
+
+            return output;
+        }
+
+        public static void ReadGameList()
+        {
+            games = new List<string>();
+
+            foreach (var launcher in launchers)
+            {
+                string gameName = launcher.selfsettings[LauncherSettings.gameName];
+                if (!games.Contains(gameName))
+                {
+                    games.Add(gameName);
+                }
+            }
+        }
+
+        public static void UpdateLauncherList()
+        {
+            launchers = new List<CustomLauncher>();
+            foreach (var item in GetLauncherList())
+            {
+                CustomLauncher toAdd = LoadLauncher(item);
+                launchers.Add(toAdd);
+            }
+            ReadGameList();
         }
 
         public static string GetLauncherNameFromSlot(string async, string slot)

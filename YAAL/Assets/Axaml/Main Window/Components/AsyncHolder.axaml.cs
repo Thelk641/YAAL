@@ -17,8 +17,10 @@ namespace YAAL;
 
 public partial class AsyncHolder : UserControl
 {
-    private Cache_Async? thisAsync;
+    public bool isParsingUrl = false;
+    private Cache_Async thisAsync = new Cache_Async();
     public event Action? RequestRemoval;
+    public event Action? DoneClosing;
     public AsyncHolder()
     {
         InitializeComponent();
@@ -36,6 +38,8 @@ public partial class AsyncHolder : UserControl
         {
             AddNewSlot(item);
         }
+
+        UpdatePort();
     }
 
     public void SetupPlayMode()
@@ -50,10 +54,10 @@ public partial class AsyncHolder : UserControl
         ToolVersions.Click += (_, _) =>
         {
             SettingManager settingManager = SettingManager.GetSettingsWindow(thisAsync.toolVersions);
-            settingManager.OnClosing += () =>
+            settingManager.OnClosing += async () =>
             {
                 thisAsync.toolVersions = settingManager.ParseSetting();
-                Save();
+                await Save();
             };
             settingManager.IsVisible = true;
         };
@@ -67,7 +71,7 @@ public partial class AsyncHolder : UserControl
     public void SetupEditMode()
     {
         AsyncNameBox.Text = thisAsync.settings[asyncName];
-        RoomBox.Text = thisAsync.settings[room];
+        RoomBox.Text = thisAsync.settings[roomURL];
         PasswordBox.Text = thisAsync.settings[password];
         SaveButton.Click += (_, _) =>
         {
@@ -87,6 +91,45 @@ public partial class AsyncHolder : UserControl
                 }
             };
         };
+
+        RoomBox.TextChanged += (_, _) =>
+        {
+            Debouncer.Debounce(UpdateSlotsRoom, 1);
+            
+        };
+    }
+
+    public async void UpdatePort()
+    {
+        thisAsync.room = await WebManager.GetRoomPort(thisAsync.room);
+        thisAsync.settings[roomIP] = thisAsync.room.IP;
+        thisAsync.settings[roomPort] = thisAsync.room.port;
+        Save();
+    }
+    
+    public async void UpdateSlotsRoom()
+    {
+        if(RoomBox.Text == thisAsync.room.URL)
+        {
+            return;
+        }
+
+        if (RoomBox.Text.Contains("archipelago.gg/room/"))
+        {
+            thisAsync.room = await WebManager.ParseRoomURL(RoomBox.Text);
+        }
+
+        UpdatePort();
+
+        foreach (var item in SlotsContainer.Children)
+        {
+            if (item is SlotHolder slotHolder)
+            {
+                slotHolder.SetRoom(thisAsync.room);
+            }
+        }
+
+        Save();
     }
 
     public SlotHolder AddNewSlot(Cache_Slot newSlot)
@@ -119,6 +162,13 @@ public partial class AsyncHolder : UserControl
         };
 
         this.Height += toAdd.Height + 8;
+
+        if(thisAsync.room.slots.Count > 0)
+        {
+            toAdd.SetRoom(thisAsync.room);
+        }
+
+        
         return toAdd;
     }
 
@@ -135,14 +185,16 @@ public partial class AsyncHolder : UserControl
         }
     }
 
-    public void Save()
+    public async Task Save()
     {
+        Edit.IsEnabled = false;
         Cache_Async toSave = new Cache_Async();
         toSave.settings[asyncName] = AsyncNameBox.Text;
-        toSave.settings[room] = RoomBox.Text;
+        toSave.settings[roomURL] = RoomBox.Text;
         toSave.settings[password] = PasswordBox.Text;
-
-        toSave.ParseRoomInfo();
+        toSave.settings[roomIP] = thisAsync.settings[roomIP];
+        toSave.settings[roomPort] = thisAsync.settings[roomPort];
+        toSave.room = thisAsync.room;
 
         foreach (var item in SlotsContainer.Children)
         {
@@ -152,20 +204,25 @@ public partial class AsyncHolder : UserControl
             }
         }
 
-        thisAsync = IOManager.SaveAsync(thisAsync, toSave);
-        _AsyncNameBox.Text = thisAsync.settings[asyncName];
-        AsyncNameBox.Text = thisAsync.settings[asyncName];
-
         foreach (var item in SlotsContainer.Children)
         {
             if (item is SlotHolder slotHolder)
             {
-                slotHolder.SetAsyncName(thisAsync.settings[asyncName]);
+                slotHolder.SetAsyncName(toSave.settings[asyncName]);
+                slotHolder.SetRoom(toSave.room);
             }
         }
+
+        thisAsync = IOManager.SaveAsync(thisAsync, toSave);
+        _AsyncNameBox.Text = thisAsync.settings[asyncName];
+        AsyncNameBox.Text = thisAsync.settings[asyncName];
+        thisAsync.room = toSave.room;
+        thisAsync.settings[roomURL] = toSave.room.URL;
+
+        Edit.IsEnabled = true;
     }
 
-    public void ClosingSave()
+    public async void ClosingSave()
     {
         foreach (var item in SlotsContainer.Children)
         {
@@ -176,7 +233,8 @@ public partial class AsyncHolder : UserControl
         }
         if (!PlayMode.IsVisible)
         {
-            Save();
+            await Save();
         }
+        DoneClosing?.Invoke();
     }
 }

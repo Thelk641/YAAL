@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -43,8 +44,7 @@ public static partial class WebManager
 
         try
         {
-            HttpResponseMessage response = client.SendAsync(request).Result;
-            Debug.WriteLine(response.IsSuccessStatusCode);
+            HttpResponseMessage response = await client.SendAsync(request);
             string html = await response.Content.ReadAsStringAsync();
             string[] lines = html.Split('\n');
             int slotNumber = 1;
@@ -124,17 +124,17 @@ public static partial class WebManager
     {
         string cleaned = line.Replace("</a></td>", "");
         string[] split = cleaned.Split('>');
-        return split.Last<string>();
+        return WebUtility.HtmlDecode(split.Last<string>());
     }
 
     private static string ParseGameNameLine(string line)
     {
-        return line.Replace("<td>", "").Replace("</td>", "").Trim();
+        return WebUtility.HtmlDecode(line.Replace("<td>", "").Replace("</td>", "").Trim());
     }
 
     private static string ParseTrackerLine(string line)
     {
-        return ParseLine(line, "/tracker/");
+        return WebUtility.HtmlDecode(ParseLine(line, "/tracker/"));
     }
 
     private static string ParsePatchLine(string line)
@@ -144,7 +144,7 @@ public static partial class WebManager
             return "";
         }
 
-        return ParseLine(line, "/dl_patch");
+        return WebUtility.HtmlDecode(ParseLine(line, "/dl_patch"));
     }
 
     private static string ParseLine(string line, string pattern)
@@ -222,7 +222,7 @@ public static partial class WebManager
         {
             HttpResponseMessage response = client.SendAsync(request).Result;
 
-            if (!response.IsSuccessStatusCode)
+            if (response.IsSuccessStatusCode)
             {
                 string jsonString = await response.Content.ReadAsStringAsync();
                 Cache_RoomStatus status = JsonSerializer.Deserialize<Cache_RoomStatus>(jsonString);
@@ -235,5 +235,64 @@ public static partial class WebManager
         }
 
         return output;
+    }
+
+    public static async Task<string> DownloadPatch(string asyncName, string slotName, string URL, bool replace = false)
+    {
+        string dir = IOManager.GetSlotDirectory(asyncName, slotName);
+
+        HttpRequestMessage request = new HttpRequestMessage()
+        {
+            RequestUri = new Uri(URL),
+            Method = HttpMethod.Get,
+        };
+
+        request.Headers.Add("User-Agent", "YAAL");
+
+
+        try
+        {
+            HttpResponseMessage response = await client.SendAsync(request);
+            if (response.IsSuccessStatusCode) {
+                string fullName = response.Content.Headers.ContentDisposition.ToString();
+                if (!fullName.Contains("filename="))
+                {
+                    ErrorManager.ThrowError(
+                        "WebManager_Room - Failed to parse patch name",
+                        "When trying to get the patch name, the headers contained this : " + response.Content.Headers.ContentDisposition.ToString() + " which doesn't contain filename= as expected."
+                        );
+                    return "";
+                }
+                string[] split = fullName.Split("filename=");
+                string fullPath = Path.Combine(dir, split.Last<string>());
+
+                var downloadStream = await client.GetStreamAsync(URL);
+                FileStream fileStream;
+                if (replace)
+                {
+                    fileStream = new FileStream(fullPath, FileMode.Create, FileAccess.ReadWrite);
+                } else
+                {
+                    fileStream = new FileStream(fullPath, FileMode.CreateNew, FileAccess.ReadWrite);
+                }
+                await downloadStream.CopyToAsync(fileStream);
+                fileStream.Close();
+                return fullPath;
+            } else
+            {
+                ErrorManager.ThrowError(
+                    "WebManager_Room - Couldn't reach URL",
+                    "Failed to reach URL " + URL
+                    );
+            }
+        } catch (Exception e)
+        {
+            ErrorManager.AddNewError(
+                "WebManager_Room - Downloading patch raised an exception",
+                "While trying to download patch from " + URL + " the following exception was raised : " + e.Message
+                );
+        }
+
+        return "";
     }
 }

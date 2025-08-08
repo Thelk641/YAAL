@@ -17,6 +17,9 @@ namespace YAAL;
 
 public partial class MainWindow : Window
 {
+    List<AsyncHolder> waitingToClose = new List<AsyncHolder>();
+    private bool readyToClose = false;
+
     public MainWindow()
     {
         InitializeComponent();
@@ -58,14 +61,38 @@ public partial class MainWindow : Window
             AddAsync(item);
         }
 
-        this.Closing += (_, _) =>
+        this.Closing += (_, e) =>
         {
+            if (readyToClose || AsyncContainer.Children.Count == 0)
+            {
+                return;
+            }
+
+            this.IsVisible = false;
             foreach (var item in AsyncContainer.Children)
             {
                 if(item is AsyncHolder holder)
                 {
                     holder.ClosingSave();
+                    if (holder.isParsingUrl)
+                    {
+                        waitingToClose.Add(holder);
+                        holder.DoneClosing += () =>
+                        {
+                            waitingToClose.Remove(holder);
+                            if (waitingToClose.Count == 0)
+                            {
+                                readyToClose = true;
+                                this.Close();
+                            }
+                        };
+                    }
                 }
+            }
+
+            if (waitingToClose.Count > 0)
+            {
+                e.Cancel = true;
             }
         };
     }

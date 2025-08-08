@@ -10,6 +10,6 @@ namespace YAAL
 {
     public class Cache_RoomStatus
     {
-        public int last_port;
+        public int last_port { get; set; }
     }
 }

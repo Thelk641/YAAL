@@ -10,18 +10,20 @@ namespace YAAL
 {
     public class Cache_Async : ICloneable
     {
-        public List<Cache_Slot> slots = new List<Cache_Slot>();
-
         public Dictionary<AsyncSettings, string> settings = new Dictionary<AsyncSettings, string>()
         {
             {asyncName, "" },
-            {room, ""},
+            {roomURL, ""},
             {password, "None" },
             {roomIP, "" },
             {roomPort, "" }
         };
 
         public Dictionary<string, string> toolVersions = new Dictionary<string, string>();
+
+        public List<Cache_Slot> slots = new List<Cache_Slot>();
+
+        public Cache_Room room = new Cache_Room();
 
         public Object Clone()
         {
@@ -30,7 +32,7 @@ namespace YAAL
 
         public void ParseRoomInfo()
         {
-            string room = settings[AsyncSettings.room].Trim();
+            string room = settings[AsyncSettings.roomURL].Trim();
 
             var match = Regex.Match(room, @"^(?<host>.+):(?<port>\d{5})\s*$");
 

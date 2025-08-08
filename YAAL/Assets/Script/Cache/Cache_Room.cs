@@ -10,21 +10,11 @@ namespace YAAL
 {
     public class Cache_Room
     {
-        public string URL;
-        public string IP;
-        public string port;
-        public string cheeseTrackerURL;
-        public string trackerPageURL;
+        public string URL = "";
+        public string IP = "";
+        public string port = "";
+        public string cheeseTrackerURL = "";
+        public string trackerPageURL = "";
         public Dictionary<string, Cache_RoomSlot> slots = new Dictionary<string, Cache_RoomSlot>();
-
-        public void UpdatePort()
-        {
-
-        }
-
-        public void SetURLs(string newURL)
-        {
-            URL = newURL;
-        }
     }
 }

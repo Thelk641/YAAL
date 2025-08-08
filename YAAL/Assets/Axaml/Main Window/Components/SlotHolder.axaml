@@ -1,11 +1,17 @@
 <UserControl
    xmlns="https://github.com/avaloniaui"
    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+   xmlns:conv="clr-namespace:YAAL"
              x:Class="YAAL.SlotHolder"
              HorizontalAlignment="Stretch"
-             Height="52"
+             Height="90"
 			 MinWidth="600"
              >
+	<UserControl.Resources>
+		<conv:BoolInvert x:Key="BoolInvert"/>
+	</UserControl.Resources>
+	<!-- Height="52"-->
+	<!-- Height="90"-->
 	<Border
 	 Name="BackgroundColor"
 	 BorderBrush="Gray"
@@ -17,14 +23,16 @@
 	 IsVisible="True"
           >
 		<StackPanel>
-			<StackPanel Name="PlayMode" IsVisible="True">
+			<StackPanel Name="PlayMode" IsVisible="False">
 				<Grid ColumnDefinitions="*,8,*">
-					<Grid ColumnDefinitions="45,8,*">
+					<Grid ColumnDefinitions="60,8,*">
 						<Button
 							Content="Play"
 							Name="RealPlay"
 							VerticalAlignment="Stretch"
 							VerticalContentAlignment="Center"
+							HorizontalAlignment="Stretch"
+							HorizontalContentAlignment="Center"
 							Grid.Column="0"
 							ToolTip.Tip="Launchs the selected game"
 							/>
@@ -45,7 +53,7 @@
 						</Border>
 					</Grid>
 
-					<Grid ColumnDefinitions="*,8,85,8,45" Grid.Column="2">
+					<Grid ColumnDefinitions="*,8,85,8,60" Grid.Column="2">
 						<ComboBox 
 							Name="ToolSelect"
 							HorizontalAlignment="Stretch"
@@ -66,6 +74,8 @@
 							Content="Edit"
 							VerticalAlignment="Stretch"
 							VerticalContentAlignment="Center"
+							HorizontalAlignment="Stretch"
+							HorizontalContentAlignment="Center"
 							Grid.Column="4"
 							/>
 					</Grid>
@@ -74,7 +84,7 @@
 			
 			
 			
-			<StackPanel Name="EditMode" IsVisible="False" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+			<StackPanel Name="EditMode" IsVisible="True" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
 				<Grid RowDefinitions="*,8,*" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 					<Grid Grid.Row="0" ColumnDefinitions="*,8,*" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
 						<Grid Grid.Column="0" ColumnDefinitions="45,8,*">
@@ -94,10 +104,38 @@
 								Grid.Column="2"
 								ToolTip.Tip="The slot name"
 								Watermark="Slot name"
+								IsVisible="False"
 								/>
+							<ComboBox
+								Name="SlotSelector"
+								VerticalAlignment="Center"
+								HorizontalAlignment="Stretch"
+								Grid.Column="2"
+								IsVisible="True"
+								ItemsSource="{Binding Cache_DisplaySlot}"
+								SelectedItem="{Binding selectedSlot}"
+								>
+								<ComboBox.Styles>
+									<Style Selector="ComboBoxItem">
+										<Setter Property="IsEnabled"
+												Value="{Binding isHeader, Converter={StaticResource BoolInvert}}" />
+										<Setter Property="IsHitTestVisible"
+												Value="{Binding isHeader, Converter={StaticResource BoolInvert}}" />
+									</Style>
+								</ComboBox.Styles>
+								<ComboBox.ItemTemplate>
+									<DataTemplate>
+										<TextBlock 
+											Text="{Binding slotName}"
+										/>
+									</DataTemplate>
+								</ComboBox.ItemTemplate>
+							</ComboBox>
 						</Grid>
-						<Grid Grid.Column="2" ColumnDefinitions="*,8,40,8,50" HorizontalAlignment="Stretch">
-							<TextBox
+						<Grid Grid.Column="2" ColumnDefinitions="*,8,60" HorizontalAlignment="Stretch">
+							
+							<Grid Name="ManualPatch" IsVisible="False" ColumnDefinitions="*,8,40" Grid.Column="0">
+								<TextBox
 								Name="Patch"
 								Grid.Column="0"
 								VerticalContentAlignment="Center"
@@ -106,16 +144,40 @@
 								ToolTip.Tip="The patch file"
 								Watermark="/path/to/patch"
 								/>
-							<Button
+								<Button
 								Name="PatchSelect"
 								Content="File"
 								Grid.Column="2"
 								/>
+							</Grid>
+
+							<Grid Name="AutomaticPatch">
+								<Button
+									Name="DownloadPatch"
+									Content="Download patch"
+									HorizontalAlignment="Stretch"
+									VerticalAlignment="Center"
+									HorizontalContentAlignment="Center"
+									Grid.Column="0"
+									/>
+								<Button
+									Name="ReDownloadPatch"
+									Content="Download patch again"
+									HorizontalAlignment="Stretch"
+									VerticalAlignment="Center"
+									HorizontalContentAlignment="Center"
+									Grid.Column="0"
+									IsVisible="false"
+									/>
+							</Grid>
+
 							<Button
 								Name="DoneEditing"
 								Content="Save"
 								Grid.Column="4"
-						/>
+								HorizontalAlignment="Stretch"
+								HorizontalContentAlignment="Center"
+								/>
 						</Grid>
 					</Grid>
 					<Grid Grid.Row="2" ColumnDefinitions="*,8,*" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
@@ -124,7 +186,7 @@
 							Grid.Column="0"
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Center"
-					/>
+							/>
 						<Grid ColumnDefinitions="*,8,60" Grid.Column="2">
 							<ComboBox
 								Name="SelectedVersion"
@@ -140,15 +202,9 @@
 								VerticalAlignment="Stretch"
 								/>
 						</Grid>
-						
-
 					</Grid>
 				</Grid>
 			</StackPanel>
 		</StackPanel>
-		
-		
-		
-		
 	</Border>
 </UserControl>

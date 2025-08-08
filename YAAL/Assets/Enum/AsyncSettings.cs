@@ -9,7 +9,7 @@ namespace YAAL
     public enum AsyncSettings
     {
         asyncName,
-        room,
+        roomURL,
         password,
         roomIP,
         roomPort

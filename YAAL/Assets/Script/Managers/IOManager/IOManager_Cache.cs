@@ -28,7 +28,22 @@ namespace YAAL
             }
 
             string json = File.ReadAllText(path);
-            return JsonConvert.DeserializeObject<T>(json) ?? new T();
+            try
+            {
+                return JsonConvert.DeserializeObject<T>(json) ?? new T();
+            }
+            catch (Exception e)
+            {
+                ErrorManager.AddNewError(
+                    "IOManager_Cache - Failed to Load Cache",
+                    "Trying to load cache " + path + " lead to the following exception : " + e.Message
+                    );
+                ErrorManager.ThrowError();
+                Environment.Exit(1);
+            }
+
+            return new T();
+            
         }
 
         public static void SaveCache<T>(string path, T cache)

@@ -15,6 +15,13 @@ namespace YAAL
 
     public static partial class IOManager
     {
+        public static string GetSlotDirectory(string async, string slot)
+        {
+            string output = Path.Combine(GetSaveLocation(Async), async, slot);
+            Directory.CreateDirectory(output);
+            return output;
+        }
+
         public static Cache_Async CreateNewAsync(string name)
         {
             name = FindAvailableDirectoryName(GetSaveLocation(Async), name);
@@ -173,6 +180,20 @@ namespace YAAL
 
         public static string SaveSlot(string async, Cache_Slot newSlot, Cache_Slot oldSlot)
         {
+            bool needSaving = false;
+            foreach (var item in newSlot.settings)
+            {
+                if (item.Value != oldSlot.settings[item.Key])
+                {
+                    needSaving = true;
+                    break;
+                }
+            }
+
+            if (!needSaving)
+            {
+                return newSlot.settings[slotName];
+            }
             Cache_Async cache = GetAsync(async);
             Cache_Async newCache = (Cache_Async)cache.Clone();
 

@@ -16,6 +16,7 @@ namespace YAAL
         lua_ladx,
         lua_mmbn3,
         lua_oot,
-        lua_tolz
+        lua_tolz,
+        slotNameFilter
     };
 }

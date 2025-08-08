@@ -17,6 +17,8 @@ namespace YAAL
     public static partial class IOManager
     {
         public static Cache_UserSettings settings;
+        public static List<string> games;
+        public static List<CustomLauncher> launchers;
 
         static IOManager()
         {
@@ -24,6 +26,7 @@ namespace YAAL
             string file = Path.Combine(AppContext.BaseDirectory, userSettings.GetFileName());
             settings = LoadCache<Cache_UserSettings>(Path.Combine(AppContext.BaseDirectory, userSettings.GetFileName()));
             settings.SetDefaultPath();
+            UpdateLauncherList();
         }
 
         public static string GetSaveLocation(FileSettings key)
@@ -106,6 +109,15 @@ namespace YAAL
                 }
             }
             return output;
+        }
+
+        public static string GetSetting(GeneralSettings name)
+        {
+            if (settings.generalSettings.ContainsKey(name))
+            {
+                return settings[name];
+            }
+            return "";
         }
     }
 }
