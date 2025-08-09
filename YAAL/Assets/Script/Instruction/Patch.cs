@@ -199,7 +199,7 @@ namespace YAAL
                     continue;
                 }
 
-                if (!IOManager.UpdatePatch(this.settings[launcherName], item, cache))
+                if (!IOManager.UpdatePatch(this.settings[launcherName], item.Trim().Trim('\"'), cache))
                 {
                     ErrorManager.AddNewError(
                         "Patch - Updating patch failed",

@@ -79,6 +79,9 @@ public class Open : Instruction<OpenSettings>
             }
             string parsed = customLauncher.ParseTextWithSettings(item.Key);
             SeparateArgsFromPath(parsed, item.Value, out path, out args);
+            Debug.WriteLine("File : " + File.Exists(path));
+            Debug.WriteLine("Dir : " + Directory.Exists(path));
+            Debug.WriteLine("URL : " + WebManager.IsValidURL(path));
             if (!(File.Exists(path) || Directory.Exists(path) || WebManager.IsValidURL(path)))
             {
                 ErrorManager.AddNewError(

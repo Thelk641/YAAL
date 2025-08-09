@@ -59,13 +59,14 @@ namespace YAAL
             {
                 try
                 {
-                    DirectoryInfo dir = new DirectoryInfo(item);
+                    string clean = customLauncher.ParseTextWithSettings(item.Trim('\"'));
+                    DirectoryInfo dir = new DirectoryInfo(clean);
                     string custom_world = Path.Combine(dir.Parent.Parent.FullName, "ArchipelagoLauncher.exe");
                     string worlds = Path.Combine(dir.Parent.Parent.Parent.FullName, "ArchipelagoLauncher.exe");
 
-                    if (!targets.Contains(item) && (File.Exists(custom_world) || File.Exists(worlds)))
+                    if (!targets.Contains(clean) && (File.Exists(custom_world) || File.Exists(worlds)))
                     {
-                        targets.Add(item);
+                        targets.Add(clean);
                     } else
                     {
                         ErrorManager.AddNewError(

@@ -263,6 +263,12 @@ namespace YAAL
             return true;
         }
 
+        public static void ResetBackupList()
+        {
+            Cache_BackupList cache = new Cache_BackupList();
+            SaveCache<Cache_BackupList>(GetSaveLocation(FileSettings.backupList), cache);
+        }
+
         private static bool StartIsolating(string archipelagoFolder, string customWorlds, string old_customWorlds, string worlds, string old_worlds, out Cache_BackupList cache)
         {
             cache = LoadCache<Cache_BackupList>(GetSaveLocation(FileSettings.backupList));

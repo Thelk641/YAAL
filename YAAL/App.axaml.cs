@@ -263,6 +263,7 @@ public partial class App : Application
                     "App - Failed to restore apworlds",
                     "Something went wrong while trying to restore apworlds directly."
                     );
+            return;
         }
 
         if (!IOManager.RestoreBackups())
@@ -271,7 +272,10 @@ public partial class App : Application
                     "App - Failed to restore backups",
                     "Something went wrong while trying to restore backups directly."
                     );
+            return;
         }
+
+        IOManager.ResetBackupList();
     }
 
     static async Task WaitForRestore(CustomLauncher launcher)

@@ -18,6 +18,7 @@ using static YAAL.PreviousAsyncSettings;
 using static YAAL.SlotSettings;
 using System.Text;
 using Avalonia.Input;
+using Avalonia.Utilities;
 
 public class CustomLauncher
 {
@@ -289,6 +290,11 @@ public class CustomLauncher
             return "";
         }
 
+        if (text.EndsWith(";"))
+        {
+            text = text.TrimEnd(';');
+        }
+
         if (!text.Contains("${"))
         {
             if (text.Contains(".apworld") && !text.Contains("\\"))
@@ -437,6 +443,7 @@ public class CustomLauncher
     public List<string> SplitAndParse(string input)
     {
         string parsed = ParseTextWithSettings(input);
+
         if (parsed.Contains(";"))
         {
             List<string> parsedSplit = SplitString(parsed);
@@ -805,6 +812,10 @@ public class CustomLauncher
 
     public void NoteBackup(Interface_Instruction instruction)
     {
+        if (instructionWaiting.Contains(instruction))
+        {
+            return;
+        }
         instructionWaiting.Add(instruction);
         waitingForRestore = true;
     }
