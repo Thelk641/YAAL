@@ -17,6 +17,7 @@ public partial class Setting_Custom : Setting
         SetBackground();
         settingName = this.FindControl<TextBox>("SettingName");
         settingValue = this.FindControl<TextBox>("Value");
+        removeComponent.Click += (_,_) => { RequestRemoval?.Invoke(); };
     }
 
     public override void SetBinary()

@@ -310,16 +310,17 @@ public partial class SlotHolder : UserControl
 
         DownloadPatch.Click += async (_, _) => 
         {
-            thisSlot.settings[patch] = await WebManager.DownloadPatch(asyncName, thisSlot.settings[slotName], selectedSlot.cache.patchURL);
+            Patch.Text = await WebManager.DownloadPatch(asyncName, thisSlot.settings[slotName], selectedSlot.cache.patchURL);
             DownloadPatch.IsVisible = false;
             ReDownloadPatch.IsVisible = true;
-            Patch.Text = thisSlot.settings[patch];
+            Save();
         };
 
         ReDownloadPatch.Click += async (_, _) =>
         {
-            thisSlot.settings[patch] = await WebManager.DownloadPatch(asyncName, thisSlot.settings[slotName], selectedSlot.cache.patchURL, true);
-            Patch.Text = thisSlot.settings[patch];
+            Patch.Text = await WebManager.DownloadPatch(asyncName, thisSlot.settings[slotName], selectedSlot.cache.patchURL, true);
+            IOManager.SetSlotSetting(asyncName, thisSlot.settings[slotName], rom, "");
+            Save();
         };
 
         if (thisSlot.settings[patch] != "")
@@ -368,6 +369,7 @@ public partial class SlotHolder : UserControl
         newSlot.settings[version] = SelectedVersion.SelectedItem.ToString();
         newSlot.settings[patch] = Patch.Text;
         newSlot.settings[slotName] = SlotName.Text;
+        newSlot.settings[rom] = thisSlot.settings[rom];
         string newName = IOManager.SaveSlot(asyncName, newSlot, thisSlot);
 
         newSlot.settings[slotName] = newName;

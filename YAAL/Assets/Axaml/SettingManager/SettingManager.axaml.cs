@@ -357,6 +357,14 @@ public partial class SettingManager : Window
         }
         Setting_Custom toAdd = new Setting_Custom();
         CustomSettingContainer.Children.Add(toAdd);
+        toAdd.RequestRemoval += () =>
+        {
+            if (settings.Contains(toAdd))
+            {
+                settings.Remove(toAdd);
+            }
+            CustomSettingContainer.Children.Remove(toAdd);
+        };
         return toAdd;
     }
 

@@ -13,7 +13,7 @@ namespace YAAL
         {
             {patch, ""},
             {slotName, ""},
-            {slotInfo, "${slotName}:${password}@${room}"},
+            {slotInfo, "${slotName}:${password}@${roomIP}:${roomPort}"},
             {rom, "" },
             {version, "" },
             {baseLauncher, "" }

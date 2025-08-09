@@ -15,6 +15,7 @@ namespace YAAL
     {
         public SettingManager manager;
         protected Border background;
+        public Action RequestRemoval;
 
         protected object? settingName;
         public string SettingNameText
