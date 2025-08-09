@@ -109,7 +109,7 @@ public partial class AsyncHolder : UserControl
     
     public async void UpdateSlotsRoom()
     {
-        if(RoomBox.Text == thisAsync.room.URL)
+        if(RoomBox.Text == "" || RoomBox.Text == thisAsync.room.URL)
         {
             return;
         }
@@ -119,7 +119,7 @@ public partial class AsyncHolder : UserControl
             thisAsync.room = await WebManager.ParseRoomURL(RoomBox.Text);
         }
 
-        UpdatePort();
+        //UpdatePort();
 
         foreach (var item in SlotsContainer.Children)
         {

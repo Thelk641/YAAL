@@ -301,11 +301,8 @@ public partial class SlotHolder : UserControl
         SlotName.TextChanged += (_, _) =>
         {
             _SlotName.Text = SlotName.Text;
-            if(room == null || room.slots.Count == 0)
-            {
-                isEditing = true;
-                Debouncer.Debounce(DebouncedFinishedEditing, 3);
-            }
+            isEditing = true;
+            Debouncer.Debounce(DebouncedFinishedEditing, 1);
         };
 
         DownloadPatch.Click += async (_, _) => 
