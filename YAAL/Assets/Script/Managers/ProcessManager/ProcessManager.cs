@@ -65,15 +65,6 @@ namespace YAAL
 
         public static Cache_Process StartKeyedProcess(string path, string args)
         {
-            if (WebManager.IsValidURL(path))
-            {
-                ErrorManager.AddNewError(
-                    "ProcessManager - Tried to key a URL",
-                    "URL needs to be processed by the OS to be openned directly. If you want to key them, you need to provide a browser's executable and give it the URL as an argument instead."
-                    );
-                return null;
-            }
-
             Cache_Process process = new Cache_Process(StartProcess(path, args, false));
             if(process == null)
             {

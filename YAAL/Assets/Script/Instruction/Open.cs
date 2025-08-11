@@ -33,6 +33,11 @@ public class Open : Instruction<OpenSettings>
         List<string> splitArgs = customLauncher.SplitAndParse(this.InstructionSetting[OpenSettings.args]);
         List<string> splitKeys = customLauncher.SplitAndParse(this.InstructionSetting[OpenSettings.processName]);
 
+        if(splitKeys.Count == 1 && splitKeys[0] == "")
+        {
+            splitKeys = new List<string>();
+        }
+
         if (splitKeys.Count > 1 && splitKeys.Count != splitPath.Count) {
             ErrorManager.AddNewError(
                 "Open - Invalid number of keys",
@@ -118,9 +123,21 @@ public class Open : Instruction<OpenSettings>
                         break;
                 }
 
-                keyedProcess.Setup(key, customLauncher);
                 keyedProcess.Start();
-                customLauncher.NoteProcess(keyedProcess);
+
+                if(key != "")
+                {
+                    if (WebManager.IsValidURL(path))
+                    {
+                        ErrorManager.AddNewError(
+                            "Open - Tried to key a URL",
+                            "If you use a URL directly, the OS is responsible for handling it and therefore YALL can't access the process output or its exiting event, " +
+                            "so you can't use it for auto-restore. Pass it as an argument to a browser to be able to use it as a keyed process."
+                            );
+                    }
+                    keyedProcess.Setup(key, customLauncher);
+                    customLauncher.NoteProcess(keyedProcess);
+                }
             }
             catch (Exception e)
             {

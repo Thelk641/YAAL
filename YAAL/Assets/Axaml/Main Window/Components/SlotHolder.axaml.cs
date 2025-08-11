@@ -47,6 +47,8 @@ public partial class SlotHolder : UserControl
         if (room.slots.Count > 0) {
             UpdateAvailableSlot();
         }
+
+        _ChangedSlot(null, null);
     }
 
     public void SetAsyncName(string newName)
@@ -81,20 +83,7 @@ public partial class SlotHolder : UserControl
         UpdateAvailableSlot();
         if (room.slots.Count > 0) 
         {
-            if (room == null || room.slots.Count == 0)
-            {
-                AutomaticPatch.IsVisible = false;
-                SlotSelector.IsVisible = false;
-                SlotName.IsVisible = true;
-                ManualPatch.IsVisible = true;
-            }
-            else
-            {
-                AutomaticPatch.IsVisible = true;
-                SlotSelector.IsVisible = true;
-                SlotName.IsVisible = false;
-                ManualPatch.IsVisible = false;
-            }
+            SwitchPatchMode();
         }
     }
 
@@ -201,11 +190,15 @@ public partial class SlotHolder : UserControl
         ToolSelect.ItemsSource = toolList;
         ToolSelect.SelectedIndex = 0;
 
-        RealPlay.Click += (_, _) =>
+        RealPlay.Click += async (_, _) =>
         {
             if (_SlotName.Text == "")
             {
                 return;
+            }
+            if (thisSlot.settings[SlotSettings.patch] == "" && selectedSlot.cache.patchURL != "" && AutomaticPatch.IsVisible)
+            {
+                await AutoDownload();
             }
             ProcessManager.StartProcess(
                 Environment.ProcessPath,
@@ -307,10 +300,7 @@ public partial class SlotHolder : UserControl
 
         DownloadPatch.Click += async (_, _) => 
         {
-            Patch.Text = await WebManager.DownloadPatch(asyncName, thisSlot.settings[slotName], selectedSlot.cache.patchURL);
-            DownloadPatch.IsVisible = false;
-            ReDownloadPatch.IsVisible = true;
-            Save();
+            AutoDownload();
         };
 
         ReDownloadPatch.Click += async (_, _) =>
@@ -326,19 +316,28 @@ public partial class SlotHolder : UserControl
             ReDownloadPatch.IsVisible = true;
         }
 
+        AutomaticPatchButton.Click += (_, _) =>
+        {
+            SwitchPatchMode();
+        };
+
+        ManualPatchButton.Click += (_, _) =>
+        {
+            SwitchPatchMode();
+        };
+
         if (room == null || room.slots.Count == 0)
         {
-            AutomaticPatch.IsVisible = false;
-            SlotSelector.IsVisible = false;
-            SlotName.IsVisible = true;
-            ManualPatch.IsVisible = true;
-        } else
-        {
-            AutomaticPatch.IsVisible = true;
-            SlotSelector.IsVisible = true;
-            SlotName.IsVisible = false;
-            ManualPatch.IsVisible = false;
+            SwitchPatchMode();
         }
+    }
+
+    public async Task AutoDownload()
+    {
+        Patch.Text = await WebManager.DownloadPatch(asyncName, thisSlot.settings[slotName], selectedSlot.cache.patchURL);
+        DownloadPatch.IsVisible = false;
+        ReDownloadPatch.IsVisible = true;
+        Save();
     }
 
    
@@ -356,6 +355,28 @@ public partial class SlotHolder : UserControl
             EditMode.IsVisible = false;
             this.Height = baseHeight;
             SwitchedToSmaller?.Invoke();
+        }
+    }
+
+    public void SwitchPatchMode()
+    {
+        if (AutomaticPatch.IsVisible)
+        {
+            AutomaticPatch.IsVisible = false;
+            SlotSelector.IsVisible = false;
+            SlotName.IsVisible = true;
+            ManualPatch.IsVisible = true;
+            AutomaticPatchButton.IsVisible = true;
+            ManualPatchButton.IsVisible = false;
+        }
+        else
+        {
+            AutomaticPatch.IsVisible = true;
+            SlotSelector.IsVisible = true;
+            SlotName.IsVisible = false;
+            ManualPatch.IsVisible = false;
+            AutomaticPatchButton.IsVisible = false;
+            ManualPatchButton.IsVisible = true;
         }
     }
 
