@@ -11,6 +11,7 @@ using static YAAL.ApworldSettings;
 using static YAAL.SlotSettings;
 using static YAAL.AsyncSettings;
 using System.Linq;
+using System.Collections.ObjectModel;
 
 namespace YAAL;
 
@@ -28,6 +29,7 @@ public partial class SlotHolder : UserControl
     public int baseHeight = 52;
     public int heightDifference = 38;
     public bool isEditing = false;
+    private ObservableCollection<string> toolList = new ObservableCollection<string>();
     
     public SlotHolder()
     {
@@ -85,6 +87,23 @@ public partial class SlotHolder : UserControl
         {
             SwitchPatchMode();
         }
+
+        if (room.cheeseTrackerURL != "")
+        {
+            if (!toolList.Contains("Cheesetracker"))
+            {
+                ListSorter.AddSorted(toolList, "Cheesetracker");
+            }
+        }
+        else
+        {
+            if (toolList.Contains("Cheesetracker"))
+            {
+                toolList.Remove("Cheesetracker");
+            }
+        }
+
+        ToolSelect.SelectedIndex = 0;
     }
 
     public void UpdateAvailableSlot()
@@ -182,13 +201,18 @@ public partial class SlotHolder : UserControl
     {
         _SlotName.Text = thisSlot.settings[slotName];
 
-        List<string> toolList = IOManager.GetToolList();
+        foreach (var item in IOManager.GetToolList())
+        {
+            toolList.Add(item);
+        }
+
         if(toolList.Count == 0)
         {
             toolList.Add("None");
         }
+
         ToolSelect.ItemsSource = toolList;
-        ToolSelect.SelectedIndex = 0;
+        
 
         RealPlay.Click += async (_, _) =>
         {
@@ -212,10 +236,30 @@ public partial class SlotHolder : UserControl
             {
                 return;
             }
-            ProcessManager.StartProcess(
-                Environment.ProcessPath,
-                ("--async " + "\"" + asyncName + "\"" + " --slot " + "\"" + _SlotName.Text + "\"" + " --launcher " + "\"" + ToolSelect.SelectedItem.ToString() + "\""),
-                true);
+
+            switch (ToolSelect.SelectedItem.ToString())
+            {
+                case "None":
+                    return;
+                case "Tracker":
+                    if (selectedSlot.cache.trackerURL != "")
+                    {
+                        ProcessManager.StartProcess(selectedSlot.cache.trackerURL, "", true);
+                    }
+                    break;
+                case "Cheesetracker":
+                    if(room.cheeseTrackerURL != "")
+                    {
+                        ProcessManager.StartProcess(room.cheeseTrackerURL, "", true);
+                    }
+                    break;
+                default:
+                    ProcessManager.StartProcess(
+                        Environment.ProcessPath,
+                        ("--async " + "\"" + asyncName + "\"" + " --slot " + "\"" + _SlotName.Text + "\"" + " --launcher " + "\"" + ToolSelect.SelectedItem.ToString() + "\""),
+                        true);
+                    break;
+            } 
         };
 
         Edit.Click += (source, args) =>
@@ -425,6 +469,24 @@ public partial class SlotHolder : UserControl
 
         SelectedLauncher.ItemsSource = IOManager.GetLaunchersForGame(selectedSlot.cache.gameName);
         SelectedLauncher.SelectedIndex = 0;
+
+        if (selectedSlot.cache.trackerURL != "")
+        {
+            if (!toolList.Contains("Tracker"))
+            {
+                ListSorter.AddSorted(toolList, "Tracker");
+            }
+        } else
+        {
+            if (toolList.Contains("Tracker"))
+            {
+                toolList.Remove("Tracker");
+            }
+        }
+
+        
+
+        ToolSelect.SelectedIndex = 0;
     }
 
     private void _ChangedLauncher(object? sender, SelectionChangedEventArgs e)

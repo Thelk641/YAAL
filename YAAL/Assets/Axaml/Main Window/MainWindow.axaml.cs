@@ -112,7 +112,10 @@ public partial class MainWindow : Window
     private void AddAsync(string asyncName)
     {
         Cache_Async cache = IOManager.GetAsync(asyncName);
-        AddAsync(cache);
+        if (cache.settings[AsyncSettings.isHidden] != true.ToString())
+        {
+            AddAsync(cache);
+        }
     }
 
     private AsyncHolder AddAsync(Cache_Async cache)

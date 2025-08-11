@@ -16,7 +16,8 @@ namespace YAAL
             {roomURL, ""},
             {password, "None" },
             {roomIP, "" },
-            {roomPort, "" }
+            {roomPort, "" },
+            {isHidden, false.ToString() }
         };
 
         public Dictionary<string, string> toolVersions = new Dictionary<string, string>();

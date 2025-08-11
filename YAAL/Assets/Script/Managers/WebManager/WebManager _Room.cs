@@ -164,7 +164,7 @@ public static partial class WebManager
     public static async Task<Cache_Room> GetCheeseTrackerURL(Cache_Room output)
     {
         string trackerURL = output.trackerPageURL;
-        string baseCheese = "https://cheesetrackers.theincrediblewheelofchee.se/api/tracker";
+        string baseCheese = "https://cheesetrackers.theincrediblewheelofchee.se/tracker/";
 
         var payload = new
         {

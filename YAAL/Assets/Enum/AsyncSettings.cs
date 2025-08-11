@@ -12,6 +12,7 @@ namespace YAAL
         roomURL,
         password,
         roomIP,
-        roomPort
+        roomPort,
+        isHidden
     };
 }
