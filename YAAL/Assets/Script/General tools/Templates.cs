@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using static YAAL.HardcodedSettings;
 
 namespace YAAL
 {
@@ -54,6 +55,32 @@ namespace YAAL
             {"version", "Per slot" },
             {"game", "Per slot" },
             {"apworld", "Set at runtime" }
+        };
+
+        public static Dictionary<HardcodedSettings, string> hardcodedSettings = new Dictionary<HardcodedSettings, string>
+        {
+            {previous_async, "Per game" },
+            {previous_slot, "Per game" },
+            {launcherName, "Per launcher" },
+            {apworld, "Set at runtime" },
+            {asyncName, "Per async" },
+            {room, "Per async" },
+            {roomIP, "Per async" },
+            {roomPort, "Per async" },
+            {password, "Per async" },
+            {slotName, "Per slot"},
+            {slotInfo, "slotName:password@room"},
+            {patch, "Per slot" },
+            {rom, "Per slot" },
+            {version, "Per slot" },
+            {apfolder, "Set automatically" },
+            {lua_adventure, "Set automatically" },
+            {lua_bizhawk, "Set automatically" },
+            {lua_ff1, "Set automatically" },
+            {lua_ladx, "Set automatically" },
+            {lua_mmbn3, "Set automatically" },
+            {lua_oot, "Set automatically" },
+            {lua_tolz, "Set automatically" },
         };
 
         public static List<string> defaultSettings = new List<string>

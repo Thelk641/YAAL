@@ -1,0 +1,53 @@
+<Window xmlns="https://github.com/avaloniaui"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		x:Class="YAAL.ColorSelector"
+		HorizontalAlignment="Stretch"
+		Title="Color selector"
+		Height="400"
+		Width="400"
+        >
+  <Border 
+    Name="BackgroundColor"
+    BorderBrush="Gray"
+    BorderThickness="1"
+    CornerRadius="4"
+    Margin="8"
+    Padding="8"
+    HorizontalAlignment="Stretch"
+    Background="#FFF"
+          >
+	  <Grid RowDefinitions="*, 8, 30">
+		  <ColorView
+			  Name="View"
+			  Color="{Binding selectedColor, Mode=TwoWay}"
+			  Grid.Row="0"
+			  />
+
+		  <Grid ColumnDefinitions="*,100,8,100,*" Grid.Row="2">
+			  <Button
+				  Name="OK"
+				  Grid.Column="1"
+				  HorizontalAlignment="Stretch"
+				  VerticalAlignment="Stretch"
+				  HorizontalContentAlignment="Center"
+				  VerticalContentAlignment="Center"
+				  Content="OK"
+				  />
+			  <Button
+				  Name="Cancel"
+				  Grid.Column="3"
+				  HorizontalAlignment="Stretch"
+				  VerticalAlignment="Stretch"
+				  HorizontalContentAlignment="Center"
+				  VerticalContentAlignment="Center"
+				  Content="Cancel"
+				  />
+		  </Grid>
+	  </Grid>
+  </Border>
+</Window>
+
+<!-- SizeToContent="WidthAndHeight" 
+
+Width="800"
+Height="200" -->

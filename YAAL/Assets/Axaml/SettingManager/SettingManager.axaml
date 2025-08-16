@@ -13,19 +13,97 @@
 		<Border Margin="8">
 			<Grid RowDefinitions="*, 30">
 				<StackPanel Name="SettingContainer">
-					<StackPanel Name="GeneralSettingContainer" />
-					<StackPanel Name="FixedSettingContainer" />
-					<StackPanel Name="CustomSettingContainer" />
-					<StackPanel Name="InternalSettingContainer" />
-					<StackPanel Name="ToolSettingContainer" />
+					<Border 
+						Name="GeneralSettings"
+						BorderBrush="Gray"
+						BorderThickness="1"
+						CornerRadius="4"
+						Margin="8"
+						Padding="8"
+						HorizontalAlignment="Stretch"
+						>
+						<StackPanel>
+							<TextBlock
+							Text="General Settings"
+							HorizontalAlignment="Center"
+							FontSize="17"
+							/>
+							<StackPanel Name="GeneralSettingContainer"/>
+						</StackPanel>
+					</Border>
+
+					<Border
+						Name="LauncherSettings"
+						BorderBrush="Gray"
+						BorderThickness="1"
+						CornerRadius="4"
+						Margin="8"
+						Padding="8"
+						HorizontalAlignment="Stretch"
+						>
+						<StackPanel>
+							<TextBlock
+							Text="Launcher Settings"
+							HorizontalAlignment="Center"
+							FontSize="17"
+							/>
+							<StackPanel Name="LauncherSettingContainer"/>
+						</StackPanel>
+					</Border>
+
+					<Border
+						Name="CustomSettings"
+						BorderBrush="Gray"
+						BorderThickness="1"
+						CornerRadius="4"
+						Margin="8"
+						Padding="8"
+						HorizontalAlignment="Stretch"
+						>
+						<StackPanel>
+							<TextBlock
+								Name="CustomSettingsTag"
+								Text="Custom Settings"
+								HorizontalAlignment="Center"
+								FontSize="17"
+								/>
+							<StackPanel Name="CustomSettingContainer"/>
+							<Rectangle Height="4"/>
+							<Separator />
+							<Rectangle Height="8"/>
+							<Button
+								Name="addSetting"
+								Grid.Row="1"
+								Content="Add a custom setting"
+								HorizontalAlignment="Stretch"
+								HorizontalContentAlignment="Center"
+								/>
+						</StackPanel>
+					</Border>
+
+					<Border
+						Name="OtherSettings"
+						BorderBrush="Gray"
+						BorderThickness="1"
+						CornerRadius="4"
+						Margin="8"
+						Padding="8"
+						HorizontalAlignment="Stretch"
+						>
+						<StackPanel>
+							<TextBlock
+							Text="Other settings"
+							HorizontalAlignment="Center"
+							FontSize="17"
+							/>
+							<StackPanel Name="OtherSettingContainer"/>
+							<StackPanel Name="TemporaryContainer"/>
+						</StackPanel>
+					</Border>
+					
+					
 				</StackPanel>
-				<Button
-					Name="addSetting"
-					Grid.Row="1"
-					Content="Add a custom setting"
-					HorizontalAlignment="Stretch"
-					HorizontalContentAlignment="Center"
-				/>
+				
 			</Grid>
 		</Border>
 	</ScrollViewer>

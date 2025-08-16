@@ -299,7 +299,7 @@ public class CustomLauncher
         {
             if (text.Contains(".apworld") && !text.Contains("\\"))
             {
-                return IOManager.FindApworld(this.settings[GeneralSettings.apfolder], text);
+                return IOManager.FindApworld(this.settings[LauncherSettings.apfolder], text);
             }
             return text;
         }

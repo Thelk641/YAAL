@@ -198,6 +198,9 @@ public partial class CLMakerWindow : Window
 
     public void OpenSettingManager(object? sender, RoutedEventArgs e)
     {
+        /*settingManager = SettingManager.GetSettingsWindow(this.customLauncher.selfsettings, this.customLauncher.customSettings);
+        settingManager.Show();
+        settingManager.Closing += UpdateSettings;*/
         settingManager = SettingManager.GetSettingsWindow(this.customLauncher.selfsettings, this.customLauncher.customSettings);
         settingManager.Show();
         settingManager.Closing += UpdateSettings;
@@ -206,7 +209,7 @@ public partial class CLMakerWindow : Window
     private void UpdateSettings(object? sender, WindowClosingEventArgs e)
     {
         Dictionary<string, string> newCustomSettings;
-        Dictionary<LauncherSettings, string> newSettings = settingManager.ParseSetting(out newCustomSettings);
+        Dictionary<LauncherSettings, string> newSettings = settingManager.OutputLauncherSettings(out newCustomSettings);
         if (this.customLauncher.selfsettings[githubURL] != newSettings[githubURL])
         {
             this.customLauncher.selfsettings[githubURL] = newSettings[githubURL];

@@ -109,7 +109,7 @@ namespace YAAL
             string output = "";
             if (File.Exists(settings[aplauncher]))
             {
-                string manifestPath = Path.Combine(settings[apfolder], "manifest.json");
+                string manifestPath = Path.Combine(GetApFolder(), "manifest.json");
                 //open manifest.json, grab the version, put it in output
 
                 if (File.Exists(manifestPath))

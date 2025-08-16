@@ -56,7 +56,7 @@ public partial class AsyncHolder : UserControl
             SettingManager settingManager = SettingManager.GetSettingsWindow(thisAsync.toolVersions);
             settingManager.OnClosing += async () =>
             {
-                thisAsync.toolVersions = settingManager.ParseSetting();
+                thisAsync.toolVersions = settingManager.OutputSettings("Tools");
                 await Save();
             };
             settingManager.IsVisible = true;

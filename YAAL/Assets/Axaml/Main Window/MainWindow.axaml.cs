@@ -43,11 +43,21 @@ public partial class MainWindow : Window
         {
             Dictionary<string, string> customSetting;
             Dictionary<GeneralSettings, string> generalSettings = IOManager.GetUserSettings(out customSetting);
-            SettingManager manager = SettingManager.GetSettingsWindow(generalSettings, customSetting);
+            /*SettingManager manager = SettingManager.GetSettingsWindow(generalSettings, customSetting);
             manager.Closing += (_, _) =>
             {
                 Dictionary<string, string> newCustomSetting;
                 Dictionary<GeneralSettings, string> newGeneralSettings = manager.ParseSettings(out newCustomSetting);
+                IOManager.SetUserSettings(newGeneralSettings, newCustomSetting);
+                this.Topmost = true;
+                this.Topmost = false;
+            };
+            manager.IsVisible = true;*/
+            SettingManager manager = SettingManager.GetSettingsWindow(generalSettings, customSetting);
+            manager.Closing += (_, _) =>
+            {
+                Dictionary<string, string> newCustomSetting;
+                Dictionary<GeneralSettings, string> newGeneralSettings = manager.OutputGeneralSettings(out newCustomSetting);
                 IOManager.SetUserSettings(newGeneralSettings, newCustomSetting);
                 this.Topmost = true;
                 this.Topmost = false;

@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace YAAL
 {
-    public enum GeneralSettings
+    public enum HiddenSettings
     {
-        aplauncher,
-        slotNameFilter,
-        color1,
-        color2
+        Debug_AsyncName,
+        Debug_SlotName,
+        Debug_Patch,
+        Debug_baseLauncher,
+        Debug_rom
     };
 }

@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Xml.Linq;
 
-namespace YAAL.Assets.Scripts
+namespace YAAL
 {
     public static class BackgroundSetter
     {
@@ -35,6 +35,11 @@ namespace YAAL.Assets.Scripts
             }
         }
 
+        public static void SetBackground(Border toSet, GeneralSettings group)
+        {
+            //TODO : make this function
+        }
+
         public static void SetBackground(Border toSet)
         {
             var theme = Application.Current.ActualThemeVariant;
@@ -47,6 +52,11 @@ namespace YAAL.Assets.Scripts
             {
                 toSet.Background = new SolidColorBrush(Color.Parse("#AAA"));
             }
+        }
+
+        public static void UpdateBackground(GeneralSettings group, string newHex)
+        {
+            //TODO : make this function
         }
     }
 }

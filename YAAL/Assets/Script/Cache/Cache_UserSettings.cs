@@ -18,6 +18,17 @@ namespace YAAL
         public Dictionary<GeneralSettings, string> generalSettings = new Dictionary<GeneralSettings, string>();
         public Dictionary<string, string> customSettings = new Dictionary<string, string>();
 
+        public void SetDefaultSettings()
+        {
+            if (generalSettings.ContainsKey(GeneralSettings.color1))
+            {
+                return;
+            }
+
+            generalSettings[GeneralSettings.color1] = "#000000";
+            generalSettings[GeneralSettings.color2] = "#454545";
+        }
+
         public void SetDefaultPath()
         {
             

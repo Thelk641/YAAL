@@ -28,9 +28,10 @@ namespace YAAL
             }
 
             string json = File.ReadAllText(path);
+            T output = new T();
             try
             {
-                return JsonConvert.DeserializeObject<T>(json) ?? new T();
+                output = JsonConvert.DeserializeObject<T>(json) ?? new T();
             }
             catch (Exception e)
             {
@@ -42,8 +43,7 @@ namespace YAAL
                 Environment.Exit(1);
             }
 
-            return new T();
-            
+            return output;
         }
 
         public static void SaveCache<T>(string path, T cache)

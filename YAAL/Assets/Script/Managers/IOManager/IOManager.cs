@@ -24,8 +24,10 @@ namespace YAAL
         {
             string baseDirectory = AppContext.BaseDirectory;
             string file = Path.Combine(AppContext.BaseDirectory, userSettings.GetFileName());
+            settings = new Cache_UserSettings();
             settings = LoadCache<Cache_UserSettings>(Path.Combine(AppContext.BaseDirectory, userSettings.GetFileName()));
             settings.SetDefaultPath();
+            settings.SetDefaultSettings();
             UpdateLauncherList();
         }
 
@@ -46,6 +48,11 @@ namespace YAAL
             return path;
         }
 
+        public static string GetApFolder()
+        {
+            return Path.GetDirectoryName(settings[aplauncher]);
+        }
+
         public static bool SetUpMinimumWorlds()
         {
             string targetFolder = Path.Combine(GetSaveLocation(ManagedApworlds), MinimumWorlds.GetFolderName());
@@ -56,7 +63,7 @@ namespace YAAL
 
             Directory.CreateDirectory(targetFolder);
 
-            string archipelagoFolder = settings[apfolder];
+            string archipelagoFolder = GetApFolder();
 
             if (!Directory.Exists(archipelagoFolder))
             {

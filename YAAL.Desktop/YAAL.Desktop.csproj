@@ -16,10 +16,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Avalonia.Desktop" Version="11.3.2" />
+    <PackageReference Include="Avalonia.Controls.ColorPicker" Version="11.3.3" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.3.3" />
     <PackageReference Include="Mono.Posix.NETStandard" Version="1.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="securifybv.ShellLink" Version="0.1.0" />
+    <PackageReference Include="Svg.Controls.Skia.Avalonia" Version="11.3.0.3" />
   </ItemGroup>
 
   <ItemGroup>

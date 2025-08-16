@@ -17,5 +17,13 @@ namespace YAAL
         Debug_SlotName,
         Debug_Patch,
         Debug_baseLauncher,
+        apfolder,
+        lua_adventure,
+        lua_bizhawk,
+        lua_ff1,
+        lua_ladx,
+        lua_mmbn3,
+        lua_oot,
+        lua_tolz,
     };
 }

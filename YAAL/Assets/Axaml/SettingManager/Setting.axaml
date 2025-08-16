@@ -1,0 +1,105 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:svg="using:Svg.Controls.Skia.Avalonia"
+             x:Class="YAAL.Setting"
+             HorizontalAlignment="Stretch"
+             MinHeight="30"
+			 MinWidth="270"
+             >
+	<Border Margin="8,4,8,4">
+	  <StackPanel>
+		  <Separator Name="Separator"/>
+		  <Rectangle Height="8"/>
+		<Grid ColumnDefinitions="*, 8, 20, 8, *" VerticalAlignment="Center" HorizontalAlignment="Stretch" Height="30" Grid.Column="0">
+			<TextBox
+				IsVisible="False"
+				Name="CustomName"
+				Grid.Column="0"
+				VerticalAlignment="Center"
+				HorizontalAlignment="Stretch"
+				HorizontalContentAlignment="Center"
+				ToolTip.Tip="The name is used to use settings as shortcuts via ${name}"
+				/>
+			<TextBlock 
+				IsVisible="True"
+				Text="A setting name"
+				Name="SetName"
+				Grid.Column="0"
+				VerticalAlignment="Center"
+				HorizontalAlignment="Center"
+				ToolTip.Tip="The name is used to use settings as shortcuts via ${name}"
+				/>
+			<TextBlock
+				Text="=>"
+				Grid.Column="2"
+				HorizontalAlignment="Center"
+				VerticalAlignment="Center"
+				FontSize="25"
+				/>
+			<Grid ColumnDefinitions="*,8,30" Name="ValueGrid" Grid.Column="4">
+				<TextBlock
+					IsVisible="False"
+					Name="SetValue"
+					Text="A setting value"
+					Grid.Column="0"
+					VerticalAlignment="Center"
+					HorizontalAlignment="Center"
+					ToolTip.Tip="What will replace ${name}"
+					Grid.ColumnSpan="3"
+					/>
+				<Grid Grid.ColumnSpan="3" Grid.Column="0" ColumnDefinitions="*,8,40" IsVisible="True" Name="CustomValueContainer">
+					<TextBox
+					Name="CustomValue"
+					Grid.Column="0"
+					VerticalAlignment="Center"
+					HorizontalAlignment="Stretch"
+					HorizontalContentAlignment="Center"
+					ToolTip.Tip="What will replace ${name}"
+					/>
+					<Button Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+						<Svg Path="avares://YAAL/YAAL/Assets/Icons/file.svg" Width="16" Height="16"/>
+					</Button>
+				</Grid>
+
+				<ComboBox
+					IsVisible="False"
+					Name="BinaryValue"
+					Grid.Column="0"
+					VerticalAlignment="Center"
+					HorizontalAlignment="Stretch"
+					HorizontalContentAlignment="Center"
+					ToolTip.Tip="What will replace ${name}"
+					Grid.ColumnSpan="3"
+					/>
+				<Button
+					IsVisible="False"
+					Name="ColorValue"
+					Grid.Column="0"
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch"
+					Background="Black"
+					Grid.ColumnSpan="3"
+					/>
+
+				<Button
+					Name="removeComponent"
+					Content="—"
+					Grid.Column="2"
+					HorizontalContentAlignment="Center"
+					VerticalContentAlignment="Center"
+					HorizontalAlignment="Center"
+					VerticalAlignment="Center"
+					Height="30"
+					IsVisible="False"
+					IsEnabled="False"
+					/>
+			</Grid>
+		</Grid>
+	  </StackPanel>
+	</Border>
+</UserControl>
+
+<!-- SizeToContent="WidthAndHeight" 
+
+Width="800"
+Height="200" -->
