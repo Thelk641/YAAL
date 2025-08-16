@@ -47,7 +47,15 @@
 					ToolTip.Tip="What will replace ${name}"
 					Grid.ColumnSpan="3"
 					/>
-				<Grid Grid.ColumnSpan="3" Grid.Column="0" ColumnDefinitions="*,8,40" IsVisible="True" Name="CustomValueContainer">
+				<Grid 
+					Grid.ColumnSpan="3" 
+					Grid.Column="0" 
+					ColumnDefinitions="*,8,30" 
+					IsVisible="True" 
+					Name="CustomValueContainer"
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch"
+					>
 					<TextBox
 					Name="CustomValue"
 					Grid.Column="0"
@@ -56,8 +64,18 @@
 					HorizontalContentAlignment="Center"
 					ToolTip.Tip="What will replace ${name}"
 					/>
-					<Button Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-						<Svg Path="avares://YAAL/YAAL/Assets/Icons/file.svg" Width="16" Height="16"/>
+					<Button 
+						Name="File"
+						Grid.Column="2" 
+						HorizontalAlignment="Stretch" 
+						VerticalAlignment="Stretch"
+						>
+						<Svg Path="avares://YAAL/Assets/Icons/file_dark.svg"
+							VerticalAlignment="Center"
+							HorizontalAlignment="Center"
+							Width="30"
+							Name="FileIcon"
+							/>
 					</Button>
 				</Grid>
 

@@ -42,6 +42,12 @@ public partial class Setting : UserControl
         Setup(name, value);
         SetValue.Text = displayedText;
         realValue = value;
+
+        File.Click += async (_, _) =>
+        {
+            CustomValue.Text = await IOManager.PickFile(this.FindAncestorOfType<Window>());
+        };
+        FileIcon.Path = "avares://YAAL/Assets/Icons/file_white.svg";
     }
 
     private void Setup(string name, string value)
@@ -88,8 +94,8 @@ public partial class Setting : UserControl
             SetValue.Text = CustomValue.Text;
         };
         displayedValue.IsVisible = false;
-        CustomValue.IsVisible = true;
-        displayedValue = CustomValue;
+        CustomValueContainer.IsVisible = true;
+        displayedValue = CustomValueContainer;
     }
 
     private void SetupCustomSetting()
@@ -132,8 +138,8 @@ public partial class Setting : UserControl
             if(BinaryValue.SelectedItem.ToString() == "Manual")
             {
                 BinaryValue.IsVisible = false;
-                CustomValue.IsVisible = true;
-                displayedValue = CustomValue;
+                CustomValueContainer.IsVisible = true;
+                displayedValue = CustomValueContainer;
             }
         };
     }
