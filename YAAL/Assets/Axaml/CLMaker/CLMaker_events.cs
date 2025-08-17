@@ -201,7 +201,7 @@ public partial class CLMakerWindow : Window
         /*settingManager = SettingManager.GetSettingsWindow(this.customLauncher.selfsettings, this.customLauncher.customSettings);
         settingManager.Show();
         settingManager.Closing += UpdateSettings;*/
-        settingManager = SettingManager.GetSettingsWindow(this.customLauncher.selfsettings, this.customLauncher.customSettings);
+        settingManager = SettingManager.GetSettingsWindow(this, this.customLauncher.selfsettings, this.customLauncher.customSettings);
         settingManager.Show();
         settingManager.Closing += UpdateSettings;
     }

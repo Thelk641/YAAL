@@ -10,7 +10,7 @@ namespace YAAL
     {
         aplauncher,
         slotNameFilter,
-        color1,
-        color2
+        backgroundColor,
+        foregroundColor
     };
 }

@@ -129,16 +129,16 @@ namespace YAAL
             }
         }
 
-        public static Cache_CustomLauncher LoadCacheLauncher(string gameName)
+        public static Cache_CustomLauncher LoadCacheLauncher(string launcherName)
         {
-            string savePath = Path.Combine(GetSaveLocation(ManagedApworlds), gameName, "launcher.json");
+            string savePath = Path.Combine(GetSaveLocation(ManagedApworlds), launcherName, "launcher.json");
             if (!File.Exists(savePath))
             {
                 return new Cache_CustomLauncher();
             }
 
             string json = File.ReadAllText(savePath);
-            Debug.WriteLine("Loading launcher : " + gameName);
+            Debug.WriteLine("Loading launcher : " + launcherName);
             Cache_CustomLauncher output = null;
             try
             {
@@ -148,7 +148,7 @@ namespace YAAL
             {
                 ErrorManager.ThrowError(
                     "IOManager_Cache - Exception while loading a launcher",
-                    "Trying to load launcher " + gameName + " threw the following exception : " + e.Message
+                    "Trying to load launcher " + launcherName + " threw the following exception : " + e.Message
                     );
                 Environment.Exit(0);
             }

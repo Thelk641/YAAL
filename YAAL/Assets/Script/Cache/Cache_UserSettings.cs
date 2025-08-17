@@ -20,13 +20,13 @@ namespace YAAL
 
         public void SetDefaultSettings()
         {
-            if (generalSettings.ContainsKey(GeneralSettings.color1))
+            if (generalSettings.ContainsKey(GeneralSettings.backgroundColor))
             {
                 return;
             }
 
-            generalSettings[GeneralSettings.color1] = "#000000";
-            generalSettings[GeneralSettings.color2] = "#454545";
+            generalSettings[GeneralSettings.backgroundColor] = "#000000";
+            generalSettings[GeneralSettings.foregroundColor] = "#454545";
         }
 
         public void SetDefaultPath()

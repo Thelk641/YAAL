@@ -53,7 +53,7 @@ public partial class MainWindow : Window
                 this.Topmost = false;
             };
             manager.IsVisible = true;*/
-            SettingManager manager = SettingManager.GetSettingsWindow(generalSettings, customSetting);
+            SettingManager manager = SettingManager.GetSettingsWindow(this, generalSettings, customSetting);
             manager.Closing += (_, _) =>
             {
                 Dictionary<string, string> newCustomSetting;

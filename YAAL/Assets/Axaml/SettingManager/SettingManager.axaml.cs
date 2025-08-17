@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Avalonia.VisualTree;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -28,13 +29,13 @@ public partial class SettingManager : Window
     {
         InitializeComponent();
         //Test();
-        BackgroundSetter.SetBackground(GeneralSettings);
-        BackgroundSetter.SetBackground(LauncherSettings);
-        BackgroundSetter.SetBackground(CustomSettings);
-        BackgroundSetter.SetBackground(OtherSettings);
+        BackgroundSetter.SetBackground(GeneralSettings, foregroundColor);
+        BackgroundSetter.SetBackground(LauncherSettings, foregroundColor);
+        BackgroundSetter.SetBackground(CustomSettings, foregroundColor);
+        BackgroundSetter.SetBackground(OtherSettings, foregroundColor);
     }
 
-    public static SettingManager GetSettingsWindow(Dictionary<GeneralSettings, string> generalSettings, Dictionary<string, string> customSettings)
+    public static SettingManager GetSettingsWindow(Window window, Dictionary<GeneralSettings, string> generalSettings, Dictionary<string, string> customSettings)
     {
         if(_general == null)
         {
@@ -42,6 +43,9 @@ public partial class SettingManager : Window
             _general.Closing += (_,_) =>
             {
                 _general = null;
+                window.Activate();
+                window.Topmost = true;
+                window.Topmost = false;
             };
         } else
         {
@@ -56,7 +60,7 @@ public partial class SettingManager : Window
         return _general; 
     }
 
-    public static SettingManager GetSettingsWindow(Dictionary<LauncherSettings, string> launcherSettings, Dictionary<string, string> customSettings)
+    public static SettingManager GetSettingsWindow(Window window, Dictionary<LauncherSettings, string> launcherSettings, Dictionary<string, string> customSettings)
     {
         if (_clmaker == null)
         {
@@ -64,6 +68,9 @@ public partial class SettingManager : Window
             _clmaker.Closing += (_, _) =>
             {
                 _clmaker = null;
+                window.Activate();
+                window.Topmost = true;
+                window.Topmost = false;
             };
         }
         else
@@ -79,7 +86,7 @@ public partial class SettingManager : Window
         return _clmaker;
     }
 
-    public static SettingManager GetSettingsWindow(Dictionary<string, string> customSettings)
+    public static SettingManager GetSettingsWindow(Window window, Dictionary<string, string> customSettings)
     {
         if (_tools == null)
         {
@@ -88,6 +95,9 @@ public partial class SettingManager : Window
             _tools.Closing += (_, _) =>
             {
                 _tools = null;
+                window.Activate();
+                window.Topmost = true;
+                window.Topmost = false;
             };
         }
         else
@@ -378,5 +388,20 @@ public partial class SettingManager : Window
         }
 
         return output;
+    }
+
+    public void ChangedColor(Setting origin, string name, string value)
+    {
+        if(origin.FindAncestorOfType<SettingManager>() != _general)
+        {
+            return;
+        }
+        if (Enum.TryParse<GeneralSettings>(name, out GeneralSettings setting))
+        {
+            if (setting == backgroundColor || setting == foregroundColor)
+            {
+                BackgroundSetter.UpdateBackground(setting, value);
+            }
+        }
     }
 }

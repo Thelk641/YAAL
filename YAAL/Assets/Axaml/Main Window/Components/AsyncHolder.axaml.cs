@@ -24,7 +24,7 @@ public partial class AsyncHolder : UserControl
     public AsyncHolder()
     {
         InitializeComponent();
-        BackgroundSetter.SetBackground(BackgroundColor);
+        BackgroundSetter.SetBackground(BackgroundColor, GeneralSettings.foregroundColor);
     }
 
     public AsyncHolder(Cache_Async async) : this()
@@ -53,7 +53,7 @@ public partial class AsyncHolder : UserControl
 
         ToolVersions.Click += (_, _) =>
         {
-            SettingManager settingManager = SettingManager.GetSettingsWindow(thisAsync.toolVersions);
+            SettingManager settingManager = SettingManager.GetSettingsWindow(this.FindAncestorOfType<Window>(), thisAsync.toolVersions);
             settingManager.OnClosing += async () =>
             {
                 thisAsync.toolVersions = settingManager.OutputSettings("Tools");

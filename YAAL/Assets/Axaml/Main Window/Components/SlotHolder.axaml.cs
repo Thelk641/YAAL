@@ -34,7 +34,6 @@ public partial class SlotHolder : UserControl
     public SlotHolder()
     {
         InitializeComponent();
-        BackgroundSetter.SetBackground(BackgroundColor);
     }
 
     public SlotHolder (Cache_Async async, Cache_Slot slot) : this()
@@ -455,6 +454,23 @@ public partial class SlotHolder : UserControl
         FinishedEditing?.Invoke();
     }
 
+    private void SetColor()
+    {
+        Cache_CustomLauncher cache = IOManager.LoadCacheLauncher(thisSlot.settings[SlotSettings.baseLauncher]);
+        if (cache.customSettings.ContainsKey(GeneralSettings.backgroundColor.ToString()))
+        {
+            BackgroundSetter.SetBackground(BackgroundColor, cache.customSettings[GeneralSettings.backgroundColor.ToString()]);
+            return;
+        } else if (cache.customSettings.ContainsKey(GeneralSettings.foregroundColor.ToString()))
+        {
+            BackgroundSetter.SetBackground(BackgroundColor, cache.customSettings[GeneralSettings.foregroundColor.ToString()]);
+            return;
+        } else
+        {
+            BackgroundSetter.SetBackground(BackgroundColor, GeneralSettings.foregroundColor);
+        }
+    }
+    
     private void _ChangedSlot(object? sender, SelectionChangedEventArgs e)
     {
         if (SlotSelector.SelectedItem == null)
@@ -507,6 +523,7 @@ public partial class SlotHolder : UserControl
             SelectedVersion.SelectedIndex = 0;
         }
         Save();
+        SetColor();
     }
 
     public Cache_Slot GetCache()

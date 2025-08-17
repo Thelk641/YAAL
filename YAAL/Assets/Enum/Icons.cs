@@ -1,0 +1,29 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace YAAL
+{
+    public enum Icons
+    {
+        file,
+        folder,
+        play,
+    };
+
+    public static class IconsExtension
+    {
+        public static string Dark(this Icons icon)
+        {
+            return "avares://YAAL/Assets/Icons/" + icon.ToString() + "_dark";
+        }
+
+        public static string White(this Icons icon)
+        {
+            return "avares://YAAL/Assets/Icons/" + icon.ToString() + "_white";
+        }
+    }
+}

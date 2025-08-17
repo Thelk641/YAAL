@@ -38,7 +38,7 @@
 				/>
 			<Grid ColumnDefinitions="*,8,30" Name="ValueGrid" Grid.Column="4">
 				<TextBlock
-					IsVisible="False"
+					IsVisible="True"
 					Name="SetValue"
 					Text="A setting value"
 					Grid.Column="0"
@@ -51,7 +51,7 @@
 					Grid.ColumnSpan="3" 
 					Grid.Column="0" 
 					ColumnDefinitions="*,8,30" 
-					IsVisible="True" 
+					IsVisible="False" 
 					Name="CustomValueContainer"
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
@@ -70,7 +70,7 @@
 						HorizontalAlignment="Stretch" 
 						VerticalAlignment="Stretch"
 						>
-						<Svg Path="avares://YAAL/Assets/Icons/file_dark.svg"
+						<Svg Path="avares://YAAL/Assets/Icons/File_dark.svg"
 							VerticalAlignment="Center"
 							HorizontalAlignment="Center"
 							Width="30"
@@ -89,15 +89,26 @@
 					ToolTip.Tip="What will replace ${name}"
 					Grid.ColumnSpan="3"
 					/>
-				<Button
-					IsVisible="False"
-					Name="ColorValue"
-					Grid.Column="0"
+				<Border
+					Name="ColorContainer"
+					Height="30"
+					Padding="4"
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
-					Background="Black"
+					Grid.Column="0" 
 					Grid.ColumnSpan="3"
-					/>
+					Background="Black"
+					IsVisible="False"
+					>
+					<Button
+						Name="ColorValue"
+						Grid.Column="0"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						Background="Blue"
+						/>
+				</Border>
+
 
 				<Button
 					Name="removeComponent"
