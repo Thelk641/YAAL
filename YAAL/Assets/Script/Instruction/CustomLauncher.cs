@@ -42,6 +42,11 @@ public class CustomLauncher
     // Temporary settings, not saved, used when executing
     public UnifiedSettings settings = new UnifiedSettings();
 
+    public CustomLauncher()
+    {
+        settings[useCustomColor] = false.ToString();
+    }
+
 
     public bool Execute()
     {
