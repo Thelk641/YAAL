@@ -47,9 +47,8 @@ public partial class Setting : UserControl
         {
             CustomValue.Text = await IOManager.PickFile(this.FindAncestorOfType<Window>());
         };
-        FileIcon.Path = "avares://YAAL/Assets/Icons/file_white.svg";
-        BackgroundSetter.SetBackground(null, GeneralSettings.foregroundColor, FileIcon, Icons.file);
-        BackgroundSetter.SetBackground(ColorContainer, GeneralSettings.backgroundColor);
+        BackgroundSetter.Set(File);
+        BackgroundSetter.Set(ColorContainer, GeneralSettings.backgroundColor);
     }
 
     private void Setup(string name, string value)
@@ -69,6 +68,12 @@ public partial class Setting : UserControl
         {
             SwitchToColor();
         }
+
+        File.Click += async (_, _) =>
+        {
+            CustomValue.Text = await IOManager.PickFile(this.FindAncestorOfType<Window>());
+        };
+        BackgroundSetter.Set(File);
     }
 
     public string GetValue(out string value)
@@ -152,7 +157,7 @@ public partial class Setting : UserControl
         ColorContainer.IsVisible = true;
         displayedValue = ColorContainer;
 
-        ColorValue.Background = new SolidColorBrush(ColorSelector.HexToColor(SetValue.Text));
+        ColorValue.Background = new SolidColorBrush(AutoColor.HexToColor(SetValue.Text));
 
         ColorValue.Click += async (_, _) =>
         {
@@ -161,7 +166,7 @@ public partial class Setting : UserControl
             if (output != null)
             {
                 SetValue.Text = output;
-                ColorValue.Background = new SolidColorBrush(ColorSelector.HexToColor(SetValue.Text));
+                ColorValue.Background = new SolidColorBrush(AutoColor.HexToColor(SetValue.Text));
                 this.FindAncestorOfType<SettingManager>().ChangedColor(this, SetName.Text, SetValue.Text);
             }
 

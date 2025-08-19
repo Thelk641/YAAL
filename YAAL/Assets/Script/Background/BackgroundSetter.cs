@@ -17,143 +17,145 @@ namespace YAAL
 {
     public static class BackgroundSetter
     {
-        static Dictionary<Border, Cache_Background> backgrounds = new Dictionary<Border, Cache_Background>();
-        static List<Window> windows = new List<Window>();
+        static Dictionary<GeneralSettings, Dictionary<int, Visual>> backgrounds = new Dictionary<GeneralSettings, Dictionary<int, Visual>>();
+        static Dictionary<string, Dictionary<GeneralSettings, Dictionary<int, Visual>>> custom = new Dictionary<string, Dictionary<GeneralSettings, Dictionary<int, Visual>>>();
 
         public static void UpdateBackground(GeneralSettings group, string newHex)
         {
-            Color color = ColorSelector.HexToColor(newHex);
+            Color color = AutoCol   .HexToColor(newHex);
 
-            foreach (var item in backgrounds)
+            if (!backgrounds.ContainsKey(group))
             {
-                if(item.Value.group == group)
-                {
-                    SetBackground(item.Key, color, item.Value.icons);
-                }
+                return;
             }
 
-            if (group == GeneralSettings.backgroundColor)
+
+            foreach (var item in backgrounds[group])
             {
-                foreach (var item in windows)
-                {
-                    SetWindowBackground(item, color);
-                }
-            }
-
-            
-        }
-
-        public static void SetBackground(Border toSet, Color color, Dictionary<Avalonia.Svg.Skia.Svg, Icons> svgs)
-        {
-            if(toSet != null)
-            {
-                if (!backgrounds.ContainsKey(toSet))
-                {
-                    backgrounds[toSet] = new Cache_Background();
-                }
-
-                toSet.Background = new SolidColorBrush(color);
+                Set(item.Value, color);
             }
         }
 
-        public static void SetBackground(Border toSet, GeneralSettings group, Dictionary<Avalonia.Svg.Skia.Svg, Icons> svgs)
+        public static void UpdateBackground(string launcherName, GeneralSettings group, string newHex)
         {
-            if (toSet!= null && !backgrounds.ContainsKey(toSet))
+            Color color = AutoColor.HexToColor(newHex);
+
+            if (!custom.ContainsKey(launcherName) || !custom[launcherName].ContainsKey(group))
             {
-                backgrounds[toSet] = new Cache_Background();
-                backgrounds[toSet].group = group;
+                return;
             }
 
-            string setting = IOManager.GetSetting(group);
-            Color backgroundColor = ColorSelector.HexToColor(setting);
-
-            SetBackground(toSet, backgroundColor, svgs);
-        }
-
-        public static void SetBackground(Border toSet, GeneralSettings group, Avalonia.Svg.Skia.Svg svg, Icons icon)
-        {
-            Dictionary<Avalonia.Svg.Skia.Svg, Icons> dic = new Dictionary<Avalonia.Svg.Skia.Svg, Icons> { { svg, icon } };
-            SetBackground(toSet, group, dic);
-        }
-
-        public static void SetBackground(Border toSet, Color color, Avalonia.Svg.Skia.Svg svg, Icons icon)
-        {
-            Dictionary<Avalonia.Svg.Skia.Svg, Icons> dic = new Dictionary<Avalonia.Svg.Skia.Svg, Icons> { { svg, icon } };
-            SetBackground(toSet, color, dic);
-        }
-
-        public static void SetBackground(Border toSet, GeneralSettings group)
-        {
-            SetBackground(toSet, group, new Dictionary<Avalonia.Svg.Skia.Svg, Icons>());
-        }
-
-        public static void SetBackground(Border toSet, string setting)
-        {
-            if(Color.TryParse(setting, out Color color))
+            foreach (var item in custom[launcherName][group])
             {
-                SetBackground(toSet, color, new Dictionary<Avalonia.Svg.Skia.Svg, Icons>());
+                Set(item.Value, color);
+            }
+        }
+
+        public static void Set(Visual visual, GeneralSettings group)
+        {
+            int hash = visual.GetHashCode();
+            backgrounds[group][hash] = visual;
+            Color color = AutoColor.HexToColor(IOManager.GetSetting(group));
+            Set(visual, color);
+        }
+
+        public static void Set(Visual visual, Color color)
+        {
+            switch (visual)
+            {
+                case Border border:
+                    border.Background = new SolidColorBrush(color);
+                    break;
+                case Window window:
+                    window.Background = new SolidColorBrush(color);
+                    break;
+                case ComboBox box:
+                    box.Background = new SolidColorBrush(color);
+                    break;
+                case Button button:
+                    button.Background = new SolidColorBrush(color);
+                    break;
+            }
+        }
+
+        public static void Set(Visual visual, string setting)
+        {
+            Set(visual, AutoColor.HexToColor(setting));
+        }
+
+        public static void Set(Visual visual)
+        {
+            switch (visual)
+            {
+                case Border border:
+                    Set(visual, GeneralSettings.foregroundColor);
+                    break;
+                case Window window:
+                    Set(visual, GeneralSettings.backgroundColor);
+                    break;
+                case ComboBox box:
+                    Set(visual, GeneralSettings.dropdownColor);
+                    break;
+                case Button button:
+                    Set(visual, GeneralSettings.buttonColor);
+                    break;
+            }
+        }
+
+        public static void SetCustom(Visual visual, string launcherName)
+        {
+            int hash = visual.GetHashCode();
+            CustomLauncher cache = IOManager.LoadLauncher(launcherName);
+            GeneralSettings group = GeneralSettings.foregroundColor;
+            switch (visual)
+            {
+                case ComboBox box:
+                    group = GeneralSettings.dropdownColor;
+                    break;
+                case Button button:
+                    group = GeneralSettings.buttonColor;
+                    break;
+            }
+
+            Color color;
+
+            if (cache.selfsettings[LauncherSettings.useCustomColor] == true.ToString() && cache.customSettings.ContainsKey(group.ToString()))
+            {
+                color = AutoColor.HexToColor(cache.customSettings[group.ToString()]);
             } else
             {
-                SetBackground(toSet, GeneralSettings.foregroundColor);
+                color = AutoColor.HexToColor(IOManager.GetSetting(group));
             }
-        }
 
-        public static void SetWindowBackground(Window toSet)
-        {
-            SetWindowBackground(toSet, ColorSelector.HexToColor(IOManager.GetSetting(GeneralSettings.backgroundColor)));
-            if (!windows.Contains(toSet))
+            Set(visual, color);
+
+            foreach (var launcher in custom)
             {
-                windows.Add(toSet);
+                foreach (var settingGroup in launcher.Value)
+                {
+                    if (settingGroup.Value.ContainsKey(hash))
+                    {
+                        settingGroup.Value.Remove(hash);
+                    }
+                }
             }
-        }
 
-        public static void SetWindowBackground(Window toSet, Color color)
-        {
-            toSet.Background = new SolidColorBrush(color);
-        }
-
-        public static void SetIcon(GeneralSettings group, Dictionary<Avalonia.Svg.Skia.Svg, Icons> svgs)
-        {
-            string setting = IOManager.GetSetting(group);
-            Color backgroundColor = ColorSelector.HexToColor(setting);
-            SetIcon(backgroundColor, svgs);
-        }
-
-        public static void SetIcon(GeneralSettings group, Avalonia.Svg.Skia.Svg icon, Icons toUse)
-        {
-            string setting = IOManager.GetSetting(group);
-            Color backgroundColor = ColorSelector.HexToColor(setting);
-            SetIcon(backgroundColor, icon, toUse);
-        }
-
-        public static void SetIcon(Color color, Dictionary<Avalonia.Svg.Skia.Svg, Icons> svgs)
-        {
-            foreach (var item in svgs)
+            if (!custom.ContainsKey(launcherName))
             {
-                SetIcon(color, item.Key, item.Value);
-            }
-        }
-
-        public static void SetIcon(Color color, Avalonia.Svg.Skia.Svg icon, Icons toUse)
-        {
-            if (NeedsWhite(color))
-            {
-                icon.Path = toUse.White();
+                custom[launcherName] = new Dictionary<GeneralSettings, Dictionary<int, Visual>>();
+                custom[launcherName][group] = new Dictionary<int, Visual>();
+                custom[launcherName][group][hash] = visual;
             } else
             {
-                icon.Path = toUse.Dark();
+                if (custom[launcherName].ContainsKey(group))
+                {
+                    custom[launcherName][group][hash] = visual;
+                } else
+                {
+                    custom[launcherName][group] = new Dictionary<int, Visual>();
+                    custom[launcherName][group][hash] = visual;
+                }
             }
-        }
-
-        public static bool NeedsWhite(Color color)
-        {
-            double R = color.R / 255.0;
-            double G = color.G / 255.0;
-            double B = color.B / 255.0;
-
-            double luminance = 0.299 * R + 0.587 * G + 0.114 * B;
-
-            return luminance < 0.5;
         }
     }
 }

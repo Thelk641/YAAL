@@ -18,14 +18,14 @@ public partial class ColorSelector : Window
     public ColorSelector()
     {
         InitializeComponent();
-        BackgroundSetter.SetBackground(BackgroundColor, GeneralSettings.foregroundColor);
+        BackgroundSetter.Set(BackgroundColor, GeneralSettings.foregroundColor);
     }
 
     public ColorSelector(string hex)
     {
         
         InitializeComponent();
-        BackgroundSetter.SetBackground(BackgroundColor, GeneralSettings.foregroundColor);
+        BackgroundSetter.Set(BackgroundColor, GeneralSettings.foregroundColor);
         SetColor(hex);
         OK.Click += (_, _) =>
         {
@@ -39,7 +39,7 @@ public partial class ColorSelector : Window
 
     public void SetColor(string hex)
     {
-        View.Color = HexToColor(hex);
+        View.Color = AutoColor.HexToColor(hex);
     }
 
     public static async Task<string?> PickColor(Window owner, string hex)
@@ -48,19 +48,8 @@ public partial class ColorSelector : Window
         bool? result = await selector.ShowDialog<bool?>(owner);
         if (result != null && (bool)result)
         {
-            return ColorToHex(selector.View.Color);
+            return AutoColor.ColorToHex(selector.View.Color);
         }
         return null;
-    }
-
-
-    public static Color HexToColor(string hex)
-    {
-        return Color.Parse(hex);
-    }
-
-    public static string ColorToHex(Color color)
-    {
-        return $"#{color.A:X2}{color.R:X2}{color.G:X2}{color.B:X2}";
     }
 }

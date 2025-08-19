@@ -29,11 +29,22 @@ public partial class SettingManager : Window
     {
         InitializeComponent();
         //Test();
-        BackgroundSetter.SetBackground(GeneralSettings, foregroundColor);
-        BackgroundSetter.SetBackground(LauncherSettings, foregroundColor);
-        BackgroundSetter.SetBackground(CustomSettings, foregroundColor);
-        BackgroundSetter.SetBackground(OtherSettings, foregroundColor);
-        BackgroundSetter.SetWindowBackground(Window);
+        BackgroundSetter.Set(GeneralSettings, foregroundColor);
+        BackgroundSetter.Set(LauncherSettings, foregroundColor);
+        BackgroundSetter.Set(CustomSettings, foregroundColor);
+        BackgroundSetter.Set(OtherSettings, foregroundColor);
+        BackgroundSetter.Set(Window);
+
+        addSetting.Click += (_, _) =>
+        {
+            Setting newSetting = new Setting("", "", true);
+            CustomSettingContainer.Children.Add(newSetting);
+
+            if (!CustomSettings.IsVisible)
+            {
+                CustomSettings.IsVisible = true;
+            }
+        };
     }
 
     public static SettingManager GetSettingsWindow(Window window, Dictionary<GeneralSettings, string> generalSettings, Dictionary<string, string> customSettings)
@@ -399,7 +410,7 @@ public partial class SettingManager : Window
         }
         if (Enum.TryParse<GeneralSettings>(name, out GeneralSettings setting))
         {
-            if (setting == backgroundColor || setting == foregroundColor)
+            if (setting == backgroundColor || setting == foregroundColor || setting == dropdownColor || setting == buttonColor)
             {
                 BackgroundSetter.UpdateBackground(setting, value);
             }

@@ -11,6 +11,8 @@ namespace YAAL
         aplauncher,
         slotNameFilter,
         backgroundColor,
-        foregroundColor
+        foregroundColor,
+        dropdownColor,
+        buttonColor,
     };
 }

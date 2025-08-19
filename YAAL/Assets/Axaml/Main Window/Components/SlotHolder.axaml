@@ -4,7 +4,7 @@
    xmlns:conv="clr-namespace:YAAL"
              x:Class="YAAL.SlotHolder"
              HorizontalAlignment="Stretch"
-             Height="90"
+             Height="52"
 			 MinWidth="600"
              >
 	<UserControl.Resources>
@@ -23,7 +23,7 @@
 	 IsVisible="True"
           >
 		<StackPanel>
-			<StackPanel Name="PlayMode" IsVisible="False">
+			<StackPanel Name="PlayMode" IsVisible="True">
 				<Grid ColumnDefinitions="*,8,*">
 					<Grid ColumnDefinitions="60,8,*">
 						<Button
@@ -84,7 +84,7 @@
 			
 			
 			
-			<StackPanel Name="EditMode" IsVisible="True" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+			<StackPanel Name="EditMode" IsVisible="False" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
 				<Grid RowDefinitions="*,8,*" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 					<Grid Grid.Row="0" ColumnDefinitions="*,8,*" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
 						<Grid Grid.Column="0" ColumnDefinitions="45,8,*">

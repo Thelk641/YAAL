@@ -22,10 +22,8 @@
 						Margin="8"
 						Padding="8"
 						HorizontalAlignment="Stretch"
+						Background="Black"
 						>
-						<Border.Background>
-							<SolidColorBrush Color="Black"/>
-						</Border.Background>
 						<StackPanel>
 							<TextBlock
 							Text="General Settings"

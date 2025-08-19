@@ -453,18 +453,6 @@ public partial class SlotHolder : UserControl
         isEditing = false;
         FinishedEditing?.Invoke();
     }
-
-    private void SetColor()
-    {
-        Cache_CustomLauncher cache = IOManager.LoadCacheLauncher(thisSlot.settings[SlotSettings.baseLauncher]);
-        if (cache.settings.ContainsKey(LauncherSettings.useCustomColor) && cache.settings[LauncherSettings.useCustomColor] == true.ToString())
-        {
-            BackgroundSetter.SetBackground(BackgroundColor, cache.settings[LauncherSettings.customColor]);
-        } else
-        {
-            BackgroundSetter.SetBackground(BackgroundColor, GeneralSettings.foregroundColor);
-        }
-    }
     
     private void _ChangedSlot(object? sender, SelectionChangedEventArgs e)
     {
@@ -518,7 +506,7 @@ public partial class SlotHolder : UserControl
             SelectedVersion.SelectedIndex = 0;
         }
         Save();
-        SetColor();
+        BackgroundSetter.SetCustom(BackgroundColor, thisSlot.settings[SlotSettings.baseLauncher]);
     }
 
     public Cache_Slot GetCache()

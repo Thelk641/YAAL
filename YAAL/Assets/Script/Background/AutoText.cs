@@ -50,12 +50,14 @@ namespace YAAL
 
         private static void EnableAutoText(Control ctrl)
         {
-            if (ctrl is TextBlock text && text.Text != null && text.Text == "General Settings")
-            {
-                Debug.Write("Gnya");
-            }
+           
 
             var backgroundColor = FindNearestBackground(ctrl, out IBrush brush);
+
+            if (ctrl is TextBlock text && text.Text != null && text.Text == "aplauncher")
+            {
+                //Debug.Write("For the text, the background is on : " + backgroundColor);
+            }
 
             if (backgroundColor == null)
             {
@@ -68,6 +70,11 @@ namespace YAAL
 
         private static void EvaluateBackground(Control ctrl, IBrush backgroundColor)
         {
+            if(backgroundColor == null)
+            {
+                return;
+            }
+
             int hash = ctrl.GetHashCode();
 
             if(previousValue.ContainsKey(hash) && previousValue[hash] == (backgroundColor as ISolidColorBrush).Color)
@@ -81,7 +88,7 @@ namespace YAAL
 
             if (backgroundColor is ISolidColorBrush solid)
             {
-                darkMode = !BackgroundSetter.NeedsWhite(solid.Color);
+                darkMode = !NeedsWhite(solid.Color);
             }
 
             if (ctrl is TextBlock textblock)

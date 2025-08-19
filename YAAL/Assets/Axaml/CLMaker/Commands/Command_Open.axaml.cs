@@ -17,7 +17,7 @@ public partial class Command_Open : Command
     public Command_Open()
     {
         InitializeComponent();
-        BackgroundSetter.SetBackground(BackgroundColor, GeneralSettings.foregroundColor);
+        BackgroundSetter.Set(BackgroundColor, GeneralSettings.foregroundColor);
         linkedInstruction = new Open();
         SetDebouncedEvents();
         TurnEventsOn();

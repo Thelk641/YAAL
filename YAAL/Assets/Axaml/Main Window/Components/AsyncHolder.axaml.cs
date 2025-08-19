@@ -24,7 +24,7 @@ public partial class AsyncHolder : UserControl
     public AsyncHolder()
     {
         InitializeComponent();
-        BackgroundSetter.SetBackground(BackgroundColor, GeneralSettings.foregroundColor);
+        BackgroundSetter.Set(BackgroundColor, GeneralSettings.foregroundColor);
     }
 
     public AsyncHolder(Cache_Async async) : this()

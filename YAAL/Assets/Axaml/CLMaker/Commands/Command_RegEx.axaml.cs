@@ -12,7 +12,7 @@ public partial class Command_RegEx : Command
     public Command_RegEx()
     {
         InitializeComponent();
-        BackgroundSetter.SetBackground(BackgroundColor, GeneralSettings.foregroundColor);
+        BackgroundSetter.Set(BackgroundColor, GeneralSettings.foregroundColor);
         SetDebouncedEvents();
         RegEx.Text = "localhost|archipelago\\.gg:\\d+";
         linkedInstruction = new RegEx();

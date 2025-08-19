@@ -22,7 +22,7 @@ public partial class MainWindow : Window
 
     public MainWindow()
     {
-        BackgroundSetter.SetWindowBackground(this);
+        BackgroundSetter.Set(this);
         InitializeComponent();
         CLMakerButton.Click += (_, _) =>
         {

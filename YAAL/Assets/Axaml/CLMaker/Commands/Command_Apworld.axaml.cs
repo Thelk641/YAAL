@@ -14,7 +14,7 @@ public partial class Command_Apworld : Command
     public Command_Apworld()
     {
         InitializeComponent();
-        BackgroundSetter.SetBackground(BackgroundColor, GeneralSettings.foregroundColor);
+        BackgroundSetter.Set(BackgroundColor, GeneralSettings.foregroundColor);
         SetDebouncedEvents();
         linkedInstruction = new Apworld();
         TurnEventsOn();

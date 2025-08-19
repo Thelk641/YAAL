@@ -29,6 +29,11 @@ namespace YAAL
 
             while(current != null)
             {
+                if (ctrl is TextBlock text && text.Text != null && text.Text == "aplauncher")
+                {
+                    //Debug.WriteLine(current);
+                }
+
                 brush = GetBrush(current);
                 if(brush != null)
                 {
@@ -61,6 +66,34 @@ namespace YAAL
                     return border.Background;
             }
             return null;
+        }
+
+        public static bool NeedsWhite(Color color)
+        {
+            double R = color.R / 255.0;
+            double G = color.G / 255.0;
+            double B = color.B / 255.0;
+
+            double luminance = 0.299 * R + 0.587 * G + 0.114 * B;
+
+            return luminance < 0.5;
+        }
+
+        public static Color HexToColor(string hex)
+        {
+            if (Color.TryParse(hex, out Color color))
+            {
+                return color;
+            }
+            else
+            {
+                return Color.FromRgb(0, 0, 0);
+            }
+        }
+
+        public static string ColorToHex(Color color)
+        {
+            return $"#{color.A:X2}{color.R:X2}{color.G:X2}{color.B:X2}";
         }
     }
 }

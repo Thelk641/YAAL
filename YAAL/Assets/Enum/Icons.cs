@@ -12,6 +12,7 @@ namespace YAAL
         file,
         folder,
         play,
+        None,
     };
 
     public static class IconsExtension
