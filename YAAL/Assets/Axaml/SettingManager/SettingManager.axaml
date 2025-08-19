@@ -8,7 +8,8 @@
         MinHeight="300"
         MinWidth="300"
         x:Class="YAAL.SettingManager"
-        Title="YAAL settings manager">
+        Title="YAAL settings manager"
+		Name="Window">
 	<ScrollViewer HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 		<Border Margin="8">
 			<Grid RowDefinitions="*, 30">
@@ -22,6 +23,9 @@
 						Padding="8"
 						HorizontalAlignment="Stretch"
 						>
+						<Border.Background>
+							<SolidColorBrush Color="Black"/>
+						</Border.Background>
 						<StackPanel>
 							<TextBlock
 							Text="General Settings"
@@ -40,7 +44,11 @@
 						Margin="8"
 						Padding="8"
 						HorizontalAlignment="Stretch"
+						Background="Black"
 						>
+						<Border.Background>
+							<SolidColorBrush Color="Black"/>
+						</Border.Background>
 						<StackPanel>
 							<TextBlock
 							Text="Launcher Settings"
@@ -59,6 +67,7 @@
 						Margin="8"
 						Padding="8"
 						HorizontalAlignment="Stretch"
+						Background="Black"
 						>
 						<StackPanel>
 							<TextBlock
@@ -89,6 +98,7 @@
 						Margin="8"
 						Padding="8"
 						HorizontalAlignment="Stretch"
+						Background="Black"
 						>
 						<StackPanel>
 							<TextBlock

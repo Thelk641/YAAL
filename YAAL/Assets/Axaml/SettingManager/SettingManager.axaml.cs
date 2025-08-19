@@ -33,6 +33,7 @@ public partial class SettingManager : Window
         BackgroundSetter.SetBackground(LauncherSettings, foregroundColor);
         BackgroundSetter.SetBackground(CustomSettings, foregroundColor);
         BackgroundSetter.SetBackground(OtherSettings, foregroundColor);
+        BackgroundSetter.SetWindowBackground(Window);
     }
 
     public static SettingManager GetSettingsWindow(Window window, Dictionary<GeneralSettings, string> generalSettings, Dictionary<string, string> customSettings)

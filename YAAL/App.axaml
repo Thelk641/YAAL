@@ -1,5 +1,6 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:local="clr-namespace:YAAL"
              x:Class="YAAL.App"
              RequestedThemeVariant="Default">
              <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
@@ -9,5 +10,13 @@
 
 		<!-- ColorPicker Fluent theme -->
 		<StyleInclude Source="avares://Avalonia.Controls.ColorPicker/Themes/Fluent/Fluent.xaml" />
+
+		<Style Selector="TextBlock">
+			<Setter Property="local:AutoText.AutoText" Value="True"/>
+		</Style>
+
+		<Style Selector="Button">
+			<Setter Property="local:AutoText.AutoText" Value="True"/>
+		</Style>
     </Application.Styles>
 </Application>

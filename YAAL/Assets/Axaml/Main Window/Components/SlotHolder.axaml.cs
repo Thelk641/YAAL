@@ -457,7 +457,7 @@ public partial class SlotHolder : UserControl
     private void SetColor()
     {
         Cache_CustomLauncher cache = IOManager.LoadCacheLauncher(thisSlot.settings[SlotSettings.baseLauncher]);
-        if (cache.settings[LauncherSettings.useCustomColor] == true.ToString())
+        if (cache.settings.ContainsKey(LauncherSettings.useCustomColor) && cache.settings[LauncherSettings.useCustomColor] == true.ToString())
         {
             BackgroundSetter.SetBackground(BackgroundColor, cache.settings[LauncherSettings.customColor]);
         } else

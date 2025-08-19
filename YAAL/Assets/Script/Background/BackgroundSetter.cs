@@ -18,6 +18,7 @@ namespace YAAL
     public static class BackgroundSetter
     {
         static Dictionary<Border, Cache_Background> backgrounds = new Dictionary<Border, Cache_Background>();
+        static List<Window> windows = new List<Window>();
 
         public static void UpdateBackground(GeneralSettings group, string newHex)
         {
@@ -30,6 +31,16 @@ namespace YAAL
                     SetBackground(item.Key, color, item.Value.icons);
                 }
             }
+
+            if (group == GeneralSettings.backgroundColor)
+            {
+                foreach (var item in windows)
+                {
+                    SetWindowBackground(item, color);
+                }
+            }
+
+            
         }
 
         public static void SetBackground(Border toSet, Color color, Dictionary<Avalonia.Svg.Skia.Svg, Icons> svgs)
@@ -42,16 +53,6 @@ namespace YAAL
                 }
 
                 toSet.Background = new SolidColorBrush(color);
-            }
-            
-
-            foreach (var item in svgs)
-            {
-                if (!backgrounds[toSet].icons.ContainsKey(item.Key))
-                {
-                    backgrounds[toSet].icons[item.Key] = item.Value;
-                }
-                SetIcon(color, item.Key, item.Value);
             }
         }
 
@@ -97,6 +98,20 @@ namespace YAAL
             }
         }
 
+        public static void SetWindowBackground(Window toSet)
+        {
+            SetWindowBackground(toSet, ColorSelector.HexToColor(IOManager.GetSetting(GeneralSettings.backgroundColor)));
+            if (!windows.Contains(toSet))
+            {
+                windows.Add(toSet);
+            }
+        }
+
+        public static void SetWindowBackground(Window toSet, Color color)
+        {
+            toSet.Background = new SolidColorBrush(color);
+        }
+
         public static void SetIcon(GeneralSettings group, Dictionary<Avalonia.Svg.Skia.Svg, Icons> svgs)
         {
             string setting = IOManager.GetSetting(group);
@@ -130,11 +145,11 @@ namespace YAAL
             }
         }
 
-        private static bool NeedsWhite(Color color)
+        public static bool NeedsWhite(Color color)
         {
-            double R = color.R / 255;
-            double G = color.G / 255;
-            double B = color.B / 255;
+            double R = color.R / 255.0;
+            double G = color.G / 255.0;
+            double B = color.B / 255.0;
 
             double luminance = 0.299 * R + 0.587 * G + 0.114 * B;
 

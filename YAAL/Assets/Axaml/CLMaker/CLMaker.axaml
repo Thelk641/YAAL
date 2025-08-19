@@ -10,7 +10,7 @@
         Name="mainWindow"
         >
 
-  <Grid RowDefinitions="83, 16, *, 70, 8, 30, 8">
+  <Grid RowDefinitions="83, 16, *, 70, 8, 30, 8" Name="TrueBackground">
     
     <!-- Top of the Window, most of the controls -->
     <Grid RowDefinitions="8, 30, 8, 45" VerticalAlignment="Top" Grid.Row="0">
