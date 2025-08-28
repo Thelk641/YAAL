@@ -111,6 +111,63 @@
 						/>
 				</Border>
 
+				<Grid
+					ColumnDefinitions="*,8,30"
+					Name="SliderContainer"
+					Grid.Column="0" 
+					Grid.ColumnSpan="3"
+					IsVisible="False"
+					>
+					<Grid
+					RowDefinitions="*,*"
+					Grid.Column="0"
+					VerticalAlignment="Stretch"
+					HorizontalAlignment="Stretch"
+					>
+
+						<Grid ColumnDefinitions="15,*,20,*,15">
+							<TextBlock
+								Text="{Binding #slider.Minimum}"
+								Grid.Column="0"
+								/>
+							<TextBlock
+								Text="{Binding #slider.Value}"
+								Grid.Column="2"
+								/>
+							<TextBlock
+								Text="{Binding #slider.Maximum}"
+								Grid.Column="4"
+								/>
+						</Grid>
+						<Slider
+							x:Name="slider"
+							HorizontalAlignment="Stretch"
+							VerticalAlignment="Center"
+							Grid.Row="1"
+							Minimum="0.1"
+							Maximum="2"
+							Height="50"
+						/>
+					</Grid>
+
+					<Button
+						Name="SliderModeOff"
+						Grid.Column="2"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						>
+						<Svg Path="avares://YAAL/Assets/Icons/Settings_dark.svg"
+							VerticalAlignment="Center"
+							HorizontalAlignment="Center"
+							Width="30"
+							Name="SliderModeIcon"
+							/>
+					</Button>
+						
+						
+				</Grid>
+
+
 
 				<Button
 					Name="removeComponent"

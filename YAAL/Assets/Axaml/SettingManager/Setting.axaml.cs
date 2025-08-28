@@ -7,6 +7,7 @@ using Avalonia.Styling;
 using Avalonia.VisualTree;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Xml.Linq;
@@ -67,6 +68,15 @@ public partial class Setting : UserControl
         else if (Color.TryParse(value, out Color color))
         {
             SwitchToColor();
+        } else
+        {
+            string pattern = @"^\[(.*?)\]\[(.*?)\]\[(.*?)\]$";
+            var match = Regex.Match(value, pattern);
+
+            if (match.Success)
+            {
+                SwitchToSlider(match.Groups[1].Value, match.Groups[2].Value, match.Groups[3].Value);
+            }
         }
 
         File.Click += async (_, _) =>
@@ -171,5 +181,66 @@ public partial class Setting : UserControl
             }
 
         };
+    }
+
+    private void SwitchToSlider(string minimum, string value, string maximum)
+    {
+        if(
+            !double.TryParse(minimum, out double trueMinimum) ||
+            !double.TryParse(value, out double trueValue) ||
+            !double.TryParse(maximum, out double trueMaximum)){
+            return;
+        }
+
+        slider.Minimum = trueMaximum;
+        slider.Value = trueValue;
+        slider.Maximum = trueMaximum;
+
+        displayedValue.IsVisible = false;
+        SliderContainer.IsVisible = true;
+        displayedValue = SliderContainer;
+
+        slider.ValueChanged += (_, _) =>
+        {
+            Debouncer.Debounce(
+                () => {
+                    CustomValue.Text = Math.Round(slider.Value, 2).ToString(); 
+                },
+                2);
+        };
+
+        SliderModeOff.Click += (_, _) =>
+        {
+            SliderContainer.IsVisible = false;
+            CustomValue.IsVisible = true;
+            displayedValue = CustomValue;
+        };
+
+        if (SetName.Text == GeneralSettings.zoom.ToString())
+        {
+            CustomValue.TextChanged += (_,_) =>
+            {
+                string value = ParseSlider(CustomValue.Text);
+
+                if(double.TryParse(value, out double newZoom))
+                {
+                    App.uiSettings.Zoom = newZoom;
+                }
+                
+            };
+        }
+    }
+
+    private string ParseSlider(string rawText)
+    {
+        string pattern = @"^\[(.*?)\]\[(.*?)\]\[(.*?)\]$";
+        var match = Regex.Match(rawText, pattern);
+
+        if (match.Success)
+        {
+            return match.Groups[2].Value;
+        }
+
+        return "";
     }
 }

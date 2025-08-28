@@ -14,5 +14,6 @@ namespace YAAL
         foregroundColor,
         dropdownColor,
         buttonColor,
+        zoom,
     };
 }

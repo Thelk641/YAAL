@@ -45,6 +45,10 @@ public class CustomLauncher
     public CustomLauncher()
     {
         settings[useCustomColor] = false.ToString();
+        customSettings[GeneralSettings.backgroundColor.ToString()] = IOManager.GetSetting(GeneralSettings.backgroundColor);
+        customSettings[GeneralSettings.foregroundColor.ToString()] = IOManager.GetSetting(GeneralSettings.foregroundColor);
+        customSettings[GeneralSettings.dropdownColor.ToString()] = IOManager.GetSetting(GeneralSettings.dropdownColor);
+        customSettings[GeneralSettings.buttonColor.ToString()] = IOManager.GetSetting(GeneralSettings.buttonColor);
     }
 
 

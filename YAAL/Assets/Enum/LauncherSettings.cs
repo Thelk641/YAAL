@@ -25,7 +25,6 @@ namespace YAAL
         lua_mmbn3,
         lua_oot,
         lua_tolz,
-        useCustomColor,
-        customColor
+        useCustomColor
     };
 }

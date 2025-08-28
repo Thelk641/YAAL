@@ -44,6 +44,12 @@
     <Compile Update="Assets\Axaml\SettingManager\Settings\Setting_Tool.axaml.cs">
       <DependentUpon>Setting_Tool.axaml</DependentUpon>
     </Compile>
+    <Compile Update="Assets\Axaml\ThemeMaker\ThemeGeneral.axaml.cs">
+      <DependentUpon>ThemeGeneral.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Assets\Axaml\ThemeMaker\ThemeSlot.axaml.cs">
+      <DependentUpon>ThemeSlot.axaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>

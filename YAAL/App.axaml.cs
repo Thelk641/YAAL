@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using YAAL.Assets.Scripts;
 
 namespace YAAL;
 
@@ -19,6 +20,8 @@ public partial class App : Application
     string async = "";
     string slot = "";
     bool hasErroredOut = false;
+
+    public static UISettings uiSettings { get; } = new UISettings();
 
     public override void Initialize()
     {

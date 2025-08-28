@@ -17,12 +17,18 @@ namespace YAAL
 {
     public static class BackgroundSetter
     {
-        static Dictionary<GeneralSettings, Dictionary<int, Visual>> backgrounds = new Dictionary<GeneralSettings, Dictionary<int, Visual>>();
+        static Dictionary<GeneralSettings, Dictionary<int, Visual>> backgrounds = new Dictionary<GeneralSettings, Dictionary<int, Visual>>
+        {
+            { GeneralSettings.backgroundColor, new Dictionary<int, Visual>()},
+            { GeneralSettings.foregroundColor, new Dictionary<int, Visual>()},
+            { GeneralSettings.dropdownColor, new Dictionary<int, Visual>()},
+            { GeneralSettings.buttonColor, new Dictionary<int, Visual>()},
+        };
         static Dictionary<string, Dictionary<GeneralSettings, Dictionary<int, Visual>>> custom = new Dictionary<string, Dictionary<GeneralSettings, Dictionary<int, Visual>>>();
 
         public static void UpdateBackground(GeneralSettings group, string newHex)
         {
-            Color color = AutoCol   .HexToColor(newHex);
+            Color color = AutoColor.HexToColor(newHex);
 
             if (!backgrounds.ContainsKey(group))
             {
@@ -119,7 +125,7 @@ namespace YAAL
 
             Color color;
 
-            if (cache.selfsettings[LauncherSettings.useCustomColor] == true.ToString() && cache.customSettings.ContainsKey(group.ToString()))
+            if (cache.selfsettings.ContainsKey(LauncherSettings.useCustomColor) && cache.selfsettings[LauncherSettings.useCustomColor] == true.ToString() && cache.customSettings.ContainsKey(group.ToString()))
             {
                 color = AutoColor.HexToColor(cache.customSettings[group.ToString()]);
             } else
