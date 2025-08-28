@@ -7,9 +7,10 @@ using Avalonia.Styling;
 using Avalonia.VisualTree;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using YAAL.Assets.Scripts;
 
@@ -20,6 +21,9 @@ public partial class Setting : UserControl
     public event Action RequestRemoval;
     private Control displayedValue;
     string realValue = "";
+    bool firstTimeColor = true;
+    bool firstTimeSlider = true;
+    bool firstTimeBoolean = true;
 
     public Setting()
     {
@@ -49,18 +53,42 @@ public partial class Setting : UserControl
             CustomValue.Text = await IOManager.PickFile(this.FindAncestorOfType<Window>());
         };
         BackgroundSetter.Set(File);
+        BackgroundSetter.Set(SpecialMode);
+        BackgroundSetter.Set(SliderModeOff);
         BackgroundSetter.Set(ColorContainer, GeneralSettings.backgroundColor);
     }
 
     private void Setup(string name, string value)
     {
         InitializeComponent();
+        CustomValue.TextChanged += (_, _) =>
+        {
+            SetValue.Text = CustomValue.Text;
+        };
         SetName.Text = name;
 
         SetValue.Text = value;
 
         displayedValue = SetValue;
 
+        SwitchToSpecialMode(value);
+
+        File.Click += async (_, _) =>
+        {
+            CustomValue.Text = await IOManager.PickFile(this.FindAncestorOfType<Window>());
+        };
+
+        SpecialMode.Click += (_, _) =>
+        {
+            SwitchToSpecialMode(CustomValue.Text);
+        };
+
+        BackgroundSetter.Set(File);
+        BackgroundSetter.Set(SpecialMode);
+    }
+
+    public void SwitchToSpecialMode(string value)
+    {
         if (SetValue.Text == true.ToString() || SetValue.Text == false.ToString())
         {
             SwitchToBinary();
@@ -68,7 +96,8 @@ public partial class Setting : UserControl
         else if (Color.TryParse(value, out Color color))
         {
             SwitchToColor();
-        } else
+        }
+        else
         {
             string pattern = @"^\[(.*?)\]\[(.*?)\]\[(.*?)\]$";
             var match = Regex.Match(value, pattern);
@@ -78,12 +107,6 @@ public partial class Setting : UserControl
                 SwitchToSlider(match.Groups[1].Value, match.Groups[2].Value, match.Groups[3].Value);
             }
         }
-
-        File.Click += async (_, _) =>
-        {
-            CustomValue.Text = await IOManager.PickFile(this.FindAncestorOfType<Window>());
-        };
-        BackgroundSetter.Set(File);
     }
 
     public string GetValue(out string value)
@@ -106,10 +129,6 @@ public partial class Setting : UserControl
         }
 
         CustomValue.Text = SetValue.Text;
-        CustomValue.TextChanged += (_, _) =>
-        {
-            SetValue.Text = CustomValue.Text;
-        };
         displayedValue.IsVisible = false;
         CustomValueContainer.IsVisible = true;
         displayedValue = CustomValueContainer;
@@ -127,11 +146,13 @@ public partial class Setting : UserControl
         SetName.IsVisible = false;
         CustomName.IsVisible = true;
 
+
         TurnOnRemovalButton();
     }
 
     private void TurnOnRemovalButton()
     {
+        BackgroundSetter.Set(removeComponent);
         Grid.SetColumnSpan(displayedValue, 1);
         removeComponent.IsVisible = true;
         removeComponent.IsEnabled = true;
@@ -149,16 +170,22 @@ public partial class Setting : UserControl
         BinaryValue.IsVisible = true;
         displayedValue = BinaryValue;
 
-        BinaryValue.SelectionChanged += (_, _) =>
+        if (firstTimeBoolean)
         {
-            SetValue.Text = BinaryValue.SelectedItem.ToString();
-            if(BinaryValue.SelectedItem.ToString() == "Manual")
+            BinaryValue.SelectionChanged += (_, _) =>
             {
-                BinaryValue.IsVisible = false;
-                CustomValueContainer.IsVisible = true;
-                displayedValue = CustomValueContainer;
-            }
-        };
+                CustomValue.Text = BinaryValue.SelectedItem.ToString();
+                if (BinaryValue.SelectedItem.ToString() == "Manual")
+                {
+                    BinaryValue.IsVisible = false;
+                    CustomValueContainer.IsVisible = true;
+                    displayedValue = CustomValueContainer;
+                }
+            };
+            firstTimeBoolean = false;
+        }
+
+        
     }
 
     private void SwitchToColor()
@@ -169,30 +196,54 @@ public partial class Setting : UserControl
 
         ColorValue.Background = new SolidColorBrush(AutoColor.HexToColor(SetValue.Text));
 
-        ColorValue.Click += async (_, _) =>
+        if (firstTimeColor)
         {
-            var output = await ColorSelector.PickColor(this.FindAncestorOfType<Window>(), SetValue.Text.ToString());
-            
-            if (output != null)
+            ColorValue.Click += async (_, _) =>
             {
-                SetValue.Text = output;
-                ColorValue.Background = new SolidColorBrush(AutoColor.HexToColor(SetValue.Text));
-                this.FindAncestorOfType<SettingManager>().ChangedColor(this, SetName.Text, SetValue.Text);
-            }
+                var output = await ColorSelector.PickColor(this.FindAncestorOfType<Window>(), SetValue.Text.ToString());
 
-        };
+                if (output != null)
+                {
+                    CustomValue.Text = output;
+                    ColorValue.Background = new SolidColorBrush(AutoColor.HexToColor(CustomValue.Text));
+                    this.FindAncestorOfType<SettingManager>().ChangedColor(this, SetName.Text, CustomValue.Text);
+                }
+
+            };
+
+            ColorModeOff.Click += (_, _) =>
+            {
+                ColorContainer.IsVisible = false;
+                CustomValue.IsVisible = true;
+                displayedValue = CustomValue;
+            };
+
+            BackgroundSetter.Set(ColorModeOff);
+
+            firstTimeColor = false;
+        }
     }
 
     private void SwitchToSlider(string minimum, string value, string maximum)
     {
         if(
-            !double.TryParse(minimum, out double trueMinimum) ||
-            !double.TryParse(value, out double trueValue) ||
-            !double.TryParse(maximum, out double trueMaximum)){
+            !double.TryParse(Clean(minimum), CultureInfo.InvariantCulture, out double trueMinimum) ||
+            !double.TryParse(Clean(value), CultureInfo.InvariantCulture, out double trueValue) ||
+            !double.TryParse(Clean(maximum), CultureInfo.InvariantCulture, out double trueMaximum)){
             return;
         }
 
-        slider.Minimum = trueMaximum;
+        if(trueValue > trueMaximum)
+        {
+            trueMaximum = trueValue;
+        }
+
+        if(trueValue < trueMinimum)
+        {
+            trueMinimum = trueValue;
+        }
+
+        slider.Minimum = trueMinimum;
         slider.Value = trueValue;
         slider.Maximum = trueMaximum;
 
@@ -200,33 +251,49 @@ public partial class Setting : UserControl
         SliderContainer.IsVisible = true;
         displayedValue = SliderContainer;
 
+        CustomValue.Text = "[" + trueMinimum + "]" + "[" + trueValue + "]" + "[" + trueMaximum + "]";
+
+        if (!firstTimeSlider)
+        {
+            return;
+        }
+        firstTimeSlider = false;
+
         slider.ValueChanged += (_, _) =>
         {
+            slider.Value = Math.Round(slider.Value, 1);
             Debouncer.Debounce(
                 () => {
-                    CustomValue.Text = Math.Round(slider.Value, 2).ToString(); 
+                    string updatedValue = Math.Round(slider.Value, 1).ToString();
+                    string fullText = "[" + trueMinimum + "]" + "[" + updatedValue + "]" + "[" + trueMaximum + "]";
+
+                    CustomValue.Text = Clean(fullText);
+
+                    Debug.WriteLine("Slider changed, new value : " + CustomValue.Text);
                 },
-                2);
+                0.5f);
         };
 
         SliderModeOff.Click += (_, _) =>
         {
             SliderContainer.IsVisible = false;
-            CustomValue.IsVisible = true;
-            displayedValue = CustomValue;
+            CustomValueContainer.IsVisible = true;
+            displayedValue = CustomValueContainer;
         };
+
+        BackgroundSetter.Set(SliderModeOff);
 
         if (SetName.Text == GeneralSettings.zoom.ToString())
         {
-            CustomValue.TextChanged += (_,_) =>
+            CustomValue.TextChanged += (_, _) =>
             {
-                string value = ParseSlider(CustomValue.Text);
+                string value = Clean(ParseSlider(CustomValue.Text));
 
-                if(double.TryParse(value, out double newZoom))
+                if (double.TryParse(value, CultureInfo.InvariantCulture, out double newZoom))
                 {
-                    App.uiSettings.Zoom = newZoom;
+                    App.Settings.Zoom = newZoom;
                 }
-                
+
             };
         }
     }
@@ -242,5 +309,14 @@ public partial class Setting : UserControl
         }
 
         return "";
+    }
+
+    private string Clean(string input)
+    {
+        if (input.Contains(","))
+        {
+            return input.Replace(",", ".");
+        }
+        return input;
     }
 }

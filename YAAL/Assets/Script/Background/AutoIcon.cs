@@ -125,11 +125,13 @@ namespace YAAL
 
             if (darkmode)
             {
-                holder.Path = "avares://YAAL/Assets/Icons/File_dark.svg";
+                holder.Path = icon.Dark();
+                //holder.Path = "avares://YAAL/Assets/Icons/File_dark.svg";
             }
             else
             {
-                holder.Path = "avares://YAAL/Assets/Icons/File_white.svg";
+                holder.Path = icon.White();
+                //holder.Path = "avares://YAAL/Assets/Icons/File_white.svg";
             }
 
             if (backgrounds.ContainsKey(hash))

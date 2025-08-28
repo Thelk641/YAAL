@@ -21,7 +21,7 @@ public partial class App : Application
     string slot = "";
     bool hasErroredOut = false;
 
-    public static UISettings uiSettings { get; } = new UISettings();
+    public static UISettings Settings { get; } = new UISettings();
 
     public override void Initialize()
     {

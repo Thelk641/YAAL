@@ -28,6 +28,7 @@ public partial class SettingManager : Window
     public SettingManager()
     {
         InitializeComponent();
+        DataContext = App.Settings;
         //Test();
         BackgroundSetter.Set(GeneralSettings, foregroundColor);
         BackgroundSetter.Set(LauncherSettings, foregroundColor);

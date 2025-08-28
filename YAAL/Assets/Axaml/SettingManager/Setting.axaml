@@ -51,7 +51,7 @@
 				<Grid 
 					Grid.ColumnSpan="3" 
 					Grid.Column="0" 
-					ColumnDefinitions="*,8,30" 
+					ColumnDefinitions="*,8,30,8,30" 
 					IsVisible="False" 
 					Name="CustomValueContainer"
 					HorizontalAlignment="Stretch"
@@ -70,13 +70,27 @@
 						Grid.Column="2" 
 						HorizontalAlignment="Stretch" 
 						VerticalAlignment="Stretch"
-						local:AutoIcon.Icon="file"
+						local:AutoIcon.Icon="File"
 						>
 						<Svg Path="avares://YAAL/Assets/Icons/File_dark.svg"
 							VerticalAlignment="Center"
 							HorizontalAlignment="Center"
 							Width="30"
 							Name="FileIcon"
+							/>
+					</Button>
+					<Button
+						Name="SpecialMode"
+						Grid.Column="4"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						local:AutoIcon.Icon="Settings"
+						>
+						<Svg Path="avares://YAAL/Assets/Icons/Settings_dark.svg"
+							VerticalAlignment="Center"
+							HorizontalAlignment="Center"
+							Width="30"
+							Name="SpecialModeIcon"
 							/>
 					</Button>
 				</Grid>
@@ -91,25 +105,46 @@
 					ToolTip.Tip="What will replace ${name}"
 					Grid.ColumnSpan="3"
 					/>
-				<Border
-					Name="ColorContainer"
+				<Grid 
+					ColumnDefinitions="*,8,30" 
+					Name="ColorContainer" 
+					Grid.Column="0"
+					Grid.ColumnSpan="3"
+					IsVisible="False"
+					>
+					<Border
+					Name="ColorBackground"
 					Height="30"
 					Padding="4"
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
-					Grid.Column="0" 
-					Grid.ColumnSpan="3"
 					Background="Black"
-					IsVisible="False"
 					>
-					<Button
-						Name="ColorValue"
-						Grid.Column="0"
-						HorizontalAlignment="Stretch"
-						VerticalAlignment="Stretch"
-						Background="Blue"
+						<Button
+							Name="ColorValue"
+							Grid.Column="0"
+							HorizontalAlignment="Stretch"
+							VerticalAlignment="Stretch"
+							Background="Blue"
 						/>
-				</Border>
+					</Border>
+					<Button
+						Name="ColorModeOff"
+							Grid.Column="2"
+							HorizontalAlignment="Stretch"
+							VerticalAlignment="Stretch"
+							local:AutoIcon.Icon="Settings"
+						>
+						<Svg Path="avares://YAAL/Assets/Icons/Settings_dark.svg"
+							VerticalAlignment="Center"
+							HorizontalAlignment="Center"
+							Width="30"
+							Name="ColorModeIcon"
+							/>
+					</Button>
+				</Grid>
+
+
 
 				<Grid
 					ColumnDefinitions="*,8,30"
@@ -125,7 +160,7 @@
 					HorizontalAlignment="Stretch"
 					>
 
-						<Grid ColumnDefinitions="15,*,20,*,15">
+						<Grid ColumnDefinitions="20,*,20,*,20">
 							<TextBlock
 								Text="{Binding #slider.Minimum}"
 								Grid.Column="0"
@@ -155,6 +190,7 @@
 						Grid.Column="2"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"
+						local:AutoIcon.Icon="Settings"
 						>
 						<Svg Path="avares://YAAL/Assets/Icons/Settings_dark.svg"
 							VerticalAlignment="Center"

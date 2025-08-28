@@ -9,9 +9,10 @@ namespace YAAL
 {
     public enum Icons
     {
-        file,
+        File,
         folder,
         play,
+        Settings,
         None,
     };
 
@@ -19,12 +20,12 @@ namespace YAAL
     {
         public static string Dark(this Icons icon)
         {
-            return "avares://YAAL/Assets/Icons/" + icon.ToString() + "_dark";
+            return "avares://YAAL/Assets/Icons/" + icon.ToString() + "_dark.svg";
         }
 
         public static string White(this Icons icon)
         {
-            return "avares://YAAL/Assets/Icons/" + icon.ToString() + "_white";
+            return "avares://YAAL/Assets/Icons/" + icon.ToString() + "_white.svg";
         }
     }
 }
