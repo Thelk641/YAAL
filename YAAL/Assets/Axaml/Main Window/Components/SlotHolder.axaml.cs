@@ -49,6 +49,12 @@ public partial class SlotHolder : UserControl
             UpdateAvailableSlot();
         }
 
+        IOManager.UpdatedLauncher += (string updatedLauncher) =>
+        {
+            UpdateAvailableSlot();
+            // TODO : if it's currently selected, update theme
+        };
+
         _ChangedSlot(null, null);
     }
 
