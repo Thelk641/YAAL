@@ -15,28 +15,42 @@ namespace YAAL
 {
     public static partial class IOManager
     {
+
+        public static event Action<string> UpdatedLauncher;
+        
         public static void SaveLauncher(CustomLauncher toSave)
         {
             Debug.WriteLine("Saving launcher : " + toSave.selfsettings[LauncherSettings.launcherName]);
             Cache_CustomLauncher cache = toSave.WriteCache();
             SaveCacheLauncher(cache);
+            launcherCache[toSave.selfsettings[LauncherSettings.launcherName]] = toSave;
+            launcherList.list[toSave.selfsettings[LauncherSettings.launcherName]] = toSave.selfsettings[LauncherSettings.gameName];
+            SaveCache<Cache_LauncherList>(GetSaveLocation(FileSettings.launcherList), launcherList);
             UpdateLauncherList();
+            UpdatedLauncher?.Invoke(toSave.selfsettings[LauncherSettings.launcherName]);
         }
 
-        public static CustomLauncher LoadLauncher(string gameName)
+        public static CustomLauncher LoadLauncher(string launcherName)
         {
-            if (!GetLauncherList().Contains(gameName)) 
+            if (!GetLauncherList().Contains(launcherName)) 
             {
                 ErrorManager.AddNewError(
                     "IOManager_Launcher - Invalid launcher name",
-                    "IOManager was asked to load " + gameName + " but there doesn't appear to be a folder in /ManagedApworlds with this name containing a launcher.json"
+                    "IOManager was asked to load " + launcherName + " but there doesn't appear to be a folder in /ManagedApworlds with this name containing a launcher.json"
                     );
                 return null;
             }
 
-            CustomLauncher output = new CustomLauncher();
-            output.ReadCache(LoadCacheLauncher(gameName));
-            return output;
+            if (launcherCache.ContainsKey(launcherName))
+            {
+                return launcherCache[launcherName];
+            } else
+            {
+                CustomLauncher output = new CustomLauncher();
+                output.ReadCache(LoadCacheLauncher(launcherName));
+                launcherCache[launcherName] = output;
+                return output;
+            }
         }
 
         public static void DeleteLauncher(string gameName)
@@ -74,12 +88,12 @@ namespace YAAL
 
         public static string GetFirstLauncherForGame(string toFind)
         {
-            foreach (var item in launchers)
+            foreach (var item in launcherList.list)
             {
-                string gameName = item.selfsettings[LauncherSettings.gameName];
+                string gameName = item.Value;
                 if (gameName == toFind)
                 {
-                    return item.selfsettings[LauncherSettings.launcherName];
+                    return item.Key;
                 }
             }
 
@@ -90,12 +104,12 @@ namespace YAAL
         {
             List<string> output = new List<string>();
 
-            foreach (var item in launchers)
+            foreach (var item in launcherList.list)
             {
-                string gameName = item.selfsettings[LauncherSettings.gameName];
+                string gameName = item.Value;
                 if (gameName == toFind)
                 {
-                    output.Add(item.selfsettings[LauncherSettings.launcherName]);
+                    output.Add(item.Value);
                 }
             }
 
@@ -106,9 +120,9 @@ namespace YAAL
         {
             games = new List<string>();
 
-            foreach (var launcher in launchers)
+            foreach (var launcher in launcherList.list)
             {
-                string gameName = launcher.selfsettings[LauncherSettings.gameName];
+                string gameName = launcher.Value;
                 if (!games.Contains(gameName))
                 {
                     games.Add(gameName);
@@ -118,12 +132,7 @@ namespace YAAL
 
         public static void UpdateLauncherList()
         {
-            launchers = new List<CustomLauncher>();
-            foreach (var item in GetLauncherList())
-            {
-                CustomLauncher toAdd = LoadLauncher(item);
-                launchers.Add(toAdd);
-            }
+            launcherList = LoadCache<Cache_LauncherList>(GetSaveLocation(FileSettings.launcherList));
             ReadGameList();
         }
 

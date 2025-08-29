@@ -18,7 +18,8 @@ namespace YAAL
     {
         public static Cache_UserSettings settings;
         public static List<string> games;
-        public static List<CustomLauncher> launchers;
+        static Dictionary<string, CustomLauncher> launcherCache = new Dictionary<string, CustomLauncher>();
+        static Cache_LauncherList launcherList = new Cache_LauncherList();
 
         static IOManager()
         {
@@ -120,11 +121,19 @@ namespace YAAL
 
         public static string GetSetting(GeneralSettings name)
         {
-            if (settings.generalSettings.ContainsKey(name))
+            try
             {
-                return settings[name];
+                if (settings.generalSettings.ContainsKey(name))
+                {
+                    return settings[name];
+                }
+                return "";
             }
-            return "";
+            catch (Exception)
+            {
+                Debug.WriteLine(name.ToString());
+                throw;
+            }    
         }
     }
 }

@@ -34,7 +34,6 @@ namespace YAAL
         public void SetDefaultPath()
         {
             
-
             if (saveLocation.ContainsKey(ManagedApworlds))
             {
                 //We've just read User Settings, no need for defaults
@@ -59,7 +58,7 @@ namespace YAAL
             saveLocation[userSettings] = Path.Combine(baseFolder, userSettings.GetFileName());
             saveLocation[backupList] = Path.Combine(saveLocation[ManagedApworlds], backupList.GetFileName());
             saveLocation[tools] = Path.Combine(saveLocation[ManagedApworlds], tools.GetFileName());
-            
+            saveLocation[launcherList] = Path.Combine(baseFolder, launcherList.GetFileName());
 
             IOManager.SaveCache<Cache_UserSettings>(saveLocation[userSettings], this);
 

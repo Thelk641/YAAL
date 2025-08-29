@@ -497,6 +497,8 @@ public partial class SlotHolder : UserControl
         List<string> versions = IOManager.GetDownloadedVersions(SelectedLauncher.SelectedItem.ToString());
         SelectedVersion.ItemsSource = versions;
 
+        var prevSelection = SelectedVersion.SelectedItem;
+
         if (versions.Contains(thisSlot.settings[version]))
         {
             SelectedVersion.SelectedItem = thisSlot.settings[version];
@@ -505,7 +507,10 @@ public partial class SlotHolder : UserControl
         {
             SelectedVersion.SelectedIndex = 0;
         }
-        Save();
+        if(prevSelection != null)
+        {
+            Save();
+        }
         BackgroundSetter.SetCustom(BackgroundColor, thisSlot.settings[SlotSettings.baseLauncher]);
     }
 

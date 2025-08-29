@@ -16,6 +16,7 @@ namespace YAAL
         previous_async,
         launcher,
         multiworld,
+        launcherList,
 
         // upper case, directories
         ManagedApworlds,
