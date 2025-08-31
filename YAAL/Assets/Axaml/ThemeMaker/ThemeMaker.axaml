@@ -1,0 +1,68 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:local="clr-namespace:YAAL"
+        mc:Ignorable="d"
+		Width="600"
+		MinWidth="520"
+		MinHeight="438"
+		MaxHeight="438"
+        x:Class="YAAL.ThemeMaker"
+        Title="Yet Another Archipelago Launcher"
+		>
+	<Border Padding="8">
+		<Grid RowDefinitions="30,8,208,8,168">
+			<!-- Selector-->
+			<ComboBox
+				Name="Selector"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				Grid.Row="0"
+				HorizontalContentAlignment="Center"
+				/>
+			
+			<!-- Settings -->
+			<Border 
+				Name="SettingBorder"
+				Grid.Row="2" 
+				HorizontalAlignment="Stretch" 
+				VerticalAlignment="Stretch"
+				BorderBrush="Gray"
+				BorderThickness="1"
+				CornerRadius="4"
+				Padding="8"
+				>
+				<Grid ColumnDefinitions="*,8,1,8,*,8,1,8,*,8,1,8,*" Grid.Row="2">
+					<local:ThemeCollumn Name="Collumn_Background" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+					<Rectangle Name="Rect1" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Black"/>
+					<local:ThemeCollumn Name="Collumn_Foreground" Grid.Column="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+					<Rectangle Name="Rect2" Grid.Column="6" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Black"/>
+					<local:ThemeCollumn Name="Collumn_ComboBox" Grid.Column="8" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+					<Rectangle Name="Rect3" Grid.Column="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Black"/>
+					<local:ThemeCollumn Name="Collumn_Button" Grid.Column="12" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+				</Grid>
+			</Border>
+
+
+
+			<!-- Examples-->
+			<Border
+				Name="ExampleBorder"
+				Grid.Row="4"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				BorderBrush="Gray"
+				BorderThickness="1"
+				CornerRadius="4"
+				Padding="8"
+				>
+				<Grid RowDefinitions="52,8,90">
+					<local:ThemeSlot Grid.Row="0"/>
+					<local:ThemeSlot Grid.Row="2" Name="EditMode"/>
+				</Grid>
+			</Border>
+			
+		</Grid>
+	</Border>
+</Window>

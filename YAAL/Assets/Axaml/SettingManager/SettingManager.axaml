@@ -12,10 +12,7 @@
         Title="YAAL settings manager"
 		Name="Window"
 		>
-	<LayoutTransformControl>
-		<LayoutTransformControl.LayoutTransform>
-			<ScaleTransform ScaleX="{Binding Zoom}" ScaleY="{Binding Zoom}" />
-		</LayoutTransformControl.LayoutTransform>
+	<LayoutTransformControl x:Name="Controller">
 
 		<ScrollViewer HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 			<Border Margin="8">

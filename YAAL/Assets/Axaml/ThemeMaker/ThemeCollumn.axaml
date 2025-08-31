@@ -1,0 +1,62 @@
+<UserControl
+	xmlns="https://github.com/avaloniaui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:conv="clr-namespace:YAAL"
+	x:Class="YAAL.ThemeCollumn"
+	HorizontalAlignment="Stretch"
+	VerticalAlignment="Stretch"
+	xmlns:local="clr-namespace:YAAL"
+	Height="190"
+             >
+	<Border
+		Name="BackgroundColor"
+		BorderBrush="Gray"
+		CornerRadius="4"
+		HorizontalAlignment="Stretch">
+		<Grid RowDefinitions="30,8,*,8,30" HorizontalAlignment="Stretch">
+			<TextBlock
+				Name="categoryName"
+				Text="Background"
+				HorizontalAlignment="Center"
+				Grid.Row="0"
+			/>
+
+			<Grid Name="ImageMode" IsVisible="False" RowDefinitions="30,8,30,8,30" Grid.Row="2" HorizontalAlignment="Stretch">
+				<Grid ColumnDefinitions="*,8,30" HorizontalAlignment="Stretch">
+					<TextBox
+						Name="ImageSource"
+						Text="path/to/stuff"
+					/>
+					<Button Name="FilePicker" Grid.Column="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" local:AutoIcon.Icon="File"
+						>
+						<Svg Path="avares://YAAL/Assets/Icons/File_dark.svg"
+							VerticalAlignment="Center"
+							HorizontalAlignment="Center"
+							Width="30"
+							Name="FileIcon"
+							/>
+					</Button>
+				</Grid>
+				<ComboBox Name="StretchSetting" Grid.Row="2" HorizontalAlignment="Stretch"/>
+				<ComboBox Name="TileSetting" Grid.Row="4" HorizontalAlignment="Stretch"/>
+			</Grid>
+
+			<Grid Name="ColorMode" RowDefinitions="30, *" Grid.Row="2" HorizontalAlignment="Stretch">
+				<Border Name="ColorBorder" BorderBrush="Black" BorderThickness="2">
+					<Button
+					Name="ColorButton"
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch"
+				/>
+				</Border>
+			</Grid>
+
+			<Button
+				Grid.Row="4"
+				Content="Switch mode"
+				HorizontalAlignment="Center"
+				/>
+		</Grid>
+	</Border>
+	
+</UserControl>

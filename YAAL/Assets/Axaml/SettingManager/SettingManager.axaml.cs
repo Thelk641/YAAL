@@ -8,13 +8,14 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using YAAL.Assets.Scripts;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using static YAAL.GeneralSettings;
 using static YAAL.LauncherSettings;
 
 namespace YAAL;
 
-public partial class SettingManager : Window
+public partial class SettingManager : ScalableWindow
 {
     private static SettingManager _general;
     private static SettingManager _clmaker;

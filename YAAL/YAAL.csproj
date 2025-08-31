@@ -47,6 +47,12 @@
     <Compile Update="Assets\Axaml\Test\Test.axaml.cs">
       <DependentUpon>Test.axaml</DependentUpon>
     </Compile>
+    <Compile Update="Assets\Axaml\ThemeMaker\ThemeCollumn.axaml.cs">
+      <DependentUpon>ThemeCollumn.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Assets\Axaml\ThemeMaker\ThemeMaker.axaml.cs">
+      <DependentUpon>ThemeMaker.axaml</DependentUpon>
+    </Compile>
     <Compile Update="Assets\Axaml\ThemeMaker\ThemeGeneral.axaml.cs">
       <DependentUpon>ThemeGeneral.axaml</DependentUpon>
     </Compile>
