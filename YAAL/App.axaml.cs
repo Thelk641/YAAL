@@ -42,7 +42,7 @@ public partial class App : Application
         //ParseBuildErrors();
         //return;
 
-
+        Settings.SetTheme("General Theme", IOManager.GetGeneralTheme());
         var args = Environment.GetCommandLineArgs().Skip(1).ToArray();
 
         //var args = new string[2] { "--async PatchTest", "--slot Slot 2" };

@@ -9,7 +9,7 @@
         MinWidth="300"
         x:Class="YAAL.ErrorWindow"
         Title="YAAL error !">
-	<Border Margin="8" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+	<Border Name="BackgroundColor" Margin="8" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 		<ScrollViewer HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 			<StackPanel x:Name="ErrorContainer" />
 		</ScrollViewer>

@@ -34,6 +34,10 @@ public partial class ThemeCollumn : UserControl
         {
             ImageSource.Text = await IOManager.PickFile(this.FindAncestorOfType<Window>());
         };
+        ModeSwitch.Click += (_, _) =>
+        {
+            SwitchMode();
+        };
     }
 
     public void Setup(string name, ThemeSettings newId)
@@ -65,7 +69,7 @@ public partial class ThemeCollumn : UserControl
     public Cache_Brush GetBrush()
     {
         Cache_Brush output = new Cache_Brush();
-        output.isImage = (ImageSource.IsVisible && ImageSource.Text != null && File.Exists(ImageSource.Text));
+        output.isImage = (ImageMode.IsVisible && ImageSource.Text != null && File.Exists(ImageSource.Text));
         output.imageSource = ImageSource.Text;
 
 
@@ -93,6 +97,34 @@ public partial class ThemeCollumn : UserControl
         }
 
         return output;
+    }
 
+    public void SetBrush(Cache_Brush newBrush)
+    {
+        if (newBrush.isImage)
+        {
+            SwitchMode();
+        }
+        if(newBrush.colorBrush != null)
+        {
+            ColorButton.Background = newBrush.colorBrush;
+        }
+        if(newBrush.imageSource != null && newBrush.imageSource != "")
+        {
+            SetImage(newBrush.imageSource, newBrush.stretch, newBrush.tilemode);
+        }
+    }
+
+    public void SwitchMode()
+    {
+        if (ImageMode.IsVisible)
+        {
+            ImageMode.IsVisible = false;
+            ColorMode.IsVisible = true;
+        } else
+        {
+            ImageMode.IsVisible = true;
+            ColorMode.IsVisible = false;
+        }
     }
 }

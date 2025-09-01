@@ -84,8 +84,6 @@ namespace YAAL.Assets.Scripts
             base.InvalidateMeasure();
             base.InvalidateArrange();
             previousZoom = newZoom;
-
-            
         }
     }
 }

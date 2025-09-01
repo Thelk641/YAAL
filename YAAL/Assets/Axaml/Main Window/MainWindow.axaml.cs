@@ -23,7 +23,10 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         BackgroundSetter.Set(this);
+        
         InitializeComponent();
+        AutoTheme.SetAutoTheme(BackgroundColor, new Cache_ThemeInfo() { category = ThemeSettings.backgroundColor });
+        AutoTheme.SetAutoTheme(AsyncBackground, new Cache_ThemeInfo() { category = ThemeSettings.backgroundColor });
         CLMakerButton.Click += (_, _) =>
         {
             CLMakerWindow window = CLMakerWindow.GetCLMakerWindow();

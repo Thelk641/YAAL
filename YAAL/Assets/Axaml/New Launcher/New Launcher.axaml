@@ -10,7 +10,7 @@
         MinWidth="300"
         x:Class="YAAL.NewLauncher"
         Title="Create a new launcher">
-	<Border Margin="8" HorizontalAlignment="Stretch">
+	<Border Margin="8" HorizontalAlignment="Stretch" Name="TrueBackground">
 		<Grid RowDefinitions="48, 4, 1, 4, 48, 8, 48, 8, 48, 8, 48, 8, 48, 8, 30" HorizontalAlignment="Stretch">
 			
 			<Border 

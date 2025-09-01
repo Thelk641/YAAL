@@ -59,6 +59,7 @@ namespace YAAL
 
         public static void Set(Visual visual, GeneralSettings group)
         {
+            return;
             int hash = visual.GetHashCode();
             backgrounds[group][hash] = visual;
             Color color = AutoColor.HexToColor(IOManager.GetSetting(group));
@@ -67,6 +68,7 @@ namespace YAAL
 
         public static void Set(Visual visual, Color color)
         {
+            return;
             switch (visual)
             {
                 case Border border:
@@ -91,6 +93,7 @@ namespace YAAL
 
         public static void Set(Visual visual)
         {
+            return;
             switch (visual)
             {
                 case Border border:
@@ -110,6 +113,7 @@ namespace YAAL
 
         public static void SetCustom(Visual visual, string launcherName)
         {
+            return;
             int hash = visual.GetHashCode();
             CustomLauncher cache = IOManager.LoadLauncher(launcherName);
             GeneralSettings group = GeneralSettings.foregroundColor;

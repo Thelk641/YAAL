@@ -13,9 +13,8 @@
 		Name="Window"
 		>
 	<LayoutTransformControl x:Name="Controller">
-
 		<ScrollViewer HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-			<Border Margin="8">
+			<Border Margin="8" Name="TrueBackground">
 				<Grid RowDefinitions="*, 30">
 					<StackPanel Name="SettingContainer">
 						<Border

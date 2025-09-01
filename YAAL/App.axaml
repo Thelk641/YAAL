@@ -16,6 +16,36 @@
 		</Style>
 
 		<Style Selector="Button">
+			<Setter Property="local:AutoTheme.AutoTheme">
+				<Setter.Value>
+					<local:Cache_ThemeInfo/>
+				</Setter.Value>
+			</Setter>
+			<Setter Property="local:AutoText.AutoText" Value="True"/>
+		</Style>
+
+		<Style Selector="Border:not(UserControl)">
+			<Setter Property="local:AutoTheme.AutoTheme">
+				<Setter.Value>
+					<local:Cache_ThemeInfo/>
+				</Setter.Value>
+			</Setter>
+		</Style>
+
+		<Style Selector="Window">
+			<Setter Property="local:AutoTheme.AutoTheme">
+				<Setter.Value>
+					<local:Cache_ThemeInfo/>
+				</Setter.Value>
+			</Setter>
+		</Style>
+
+		<Style Selector="ComboBox">
+			<Setter Property="local:AutoTheme.AutoTheme">
+				<Setter.Value>
+					<local:Cache_ThemeInfo/>
+				</Setter.Value>
+			</Setter>
 			<Setter Property="local:AutoText.AutoText" Value="True"/>
 		</Style>
     </Application.Styles>

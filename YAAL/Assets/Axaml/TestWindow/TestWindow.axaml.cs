@@ -32,6 +32,7 @@ public partial class TestWindow : Window
         this.Restore.Click += _Restore;
         _testWindow = this;
         this.Closed += (sender, args) => { _testWindow = null; };
+        AutoTheme.SetTheme(TrueBackground, ThemeSettings.backgroundColor);
     }
 
     public static TestWindow GetTestWindow()

@@ -20,13 +20,13 @@ public partial class NewLauncher : Window
     public NewLauncher()
     {
         InitializeComponent();
-        SetBackground();
+        AutoTheme.SetTheme(TrueBackground, ThemeSettings.backgroundColor);
     }
 
     public NewLauncher(CLMakerWindow parent)
     {
         InitializeComponent();
-        SetBackground();
+        AutoTheme.SetTheme(TrueBackground, ThemeSettings.backgroundColor);
         FilePick.Click += _PickFile;
         Create.Click += _CreateLauncher;
         ApworldPath.TextChanged += _ApworldPathTextChanged;
@@ -110,28 +110,5 @@ public partial class NewLauncher : Window
         Window? parentWindow = this.GetVisualRoot() as Window;
         clmaker.LoadLauncher(LauncherName.Text);
         parentWindow.Close();
-    }
-
-    public void SetBackground()
-    {
-        var theme = Application.Current.ActualThemeVariant;
-        if (theme == ThemeVariant.Dark)
-        {
-            Background_0.Background = new SolidColorBrush(Color.Parse("#454545"));
-            Background_1.Background = new SolidColorBrush(Color.Parse("#454545"));
-            Background_2.Background = new SolidColorBrush(Color.Parse("#454545"));
-            Background_3.Background = new SolidColorBrush(Color.Parse("#454545"));
-            Background_4.Background = new SolidColorBrush(Color.Parse("#454545"));
-            Background_5.Background = new SolidColorBrush(Color.Parse("#454545"));
-        }
-        else
-        {
-            Background_0.Background = new SolidColorBrush(Color.Parse("#AAA"));
-            Background_1.Background = new SolidColorBrush(Color.Parse("#AAA"));
-            Background_2.Background = new SolidColorBrush(Color.Parse("#AAA"));
-            Background_3.Background = new SolidColorBrush(Color.Parse("#AAA"));
-            Background_4.Background = new SolidColorBrush(Color.Parse("#AAA"));
-            Background_5.Background = new SolidColorBrush(Color.Parse("#AAA"));
-        }
     }
 }

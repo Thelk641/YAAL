@@ -28,6 +28,15 @@ public partial class CLMakerWindow : Window
 
             customLauncher.DoneRestoring += ActualClose;
         };
+        AutoTheme.SetTheme(BackgroundColor, ThemeSettings.backgroundColor);
+        AutoTheme.SetTheme(CommandBackground, ThemeSettings.backgroundColor);
+        AutoTheme.SetTheme(PaddingBorder, ThemeSettings.transparent);
+
+        this.Opened += (_, _) =>
+        {
+            AutoTheme.SetScrollbarTheme(Scroll);
+        };
+        
     }
 
     public CLMakerWindow(string launcherName) : this()

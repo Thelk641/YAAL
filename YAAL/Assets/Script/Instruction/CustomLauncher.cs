@@ -45,10 +45,7 @@ public class CustomLauncher
     public CustomLauncher()
     {
         settings[useCustomColor] = false.ToString();
-        customSettings[GeneralSettings.backgroundColor.ToString()] = IOManager.GetSetting(GeneralSettings.backgroundColor);
-        customSettings[GeneralSettings.foregroundColor.ToString()] = IOManager.GetSetting(GeneralSettings.foregroundColor);
-        customSettings[GeneralSettings.dropdownColor.ToString()] = IOManager.GetSetting(GeneralSettings.dropdownColor);
-        customSettings[GeneralSettings.buttonColor.ToString()] = IOManager.GetSetting(GeneralSettings.buttonColor);
+        settings[LauncherSettings.launcherName] = "New Launcher";
     }
 
 
@@ -262,13 +259,17 @@ public class CustomLauncher
     {
         if (Enum.TryParse(key, out LauncherSettings setting))
         {
-            return selfsettings[setting];
+            if (selfsettings.ContainsKey(setting))
+            {
+                return selfsettings[setting];
+            }
+            return "";
         }
         else
         {
             ErrorManager.ThrowError(
             "CustomLauncher - Setting doesn't exists",
-            "Tried to access setting " + key + " but it sadly doesn't exists in selfSettings. Please report this issue.");
+            "Tried to access setting " + key + " but it isn't a valid LauncherSetting. Please report this issue.");
             return "";
         }
     }

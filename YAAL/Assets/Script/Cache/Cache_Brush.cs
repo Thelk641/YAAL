@@ -1,5 +1,6 @@
 ﻿using Avalonia.Media;
 using Avalonia.Media.Imaging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,7 +15,24 @@ namespace YAAL
     public class Cache_Brush
     {
         public bool isImage = false;
-        public SolidColorBrush? colorBrush;
+        [JsonIgnore]
+        public SolidColorBrush colorBrush
+        {
+            get 
+            {
+                SolidColorBrush output = new SolidColorBrush();
+                output.Color = color;
+                output.Opacity = opacity;
+                return output;
+            } 
+            set
+            {
+                color = value.Color;
+                opacity = value.Opacity;
+            }
+        }
+        public Color color;
+        public double opacity;
         public string? imageSource;
         public Stretch stretch;
         public TileMode tilemode;
@@ -35,5 +53,34 @@ namespace YAAL
                 return colorBrush;
             }
         }
+
+        public static Cache_Brush DefaultBackground()
+        {
+            Cache_Brush output = new Cache_Brush();
+            output.colorBrush = new SolidColorBrush(AutoColor.HexToColor("#FF000000"));
+            return output;
+        }
+
+        public static Cache_Brush DefaultForeground()
+        {
+            Cache_Brush output = new Cache_Brush();
+            output.colorBrush = new SolidColorBrush(AutoColor.HexToColor("#FF313131"));
+            return output;
+        }
+
+        public static Cache_Brush DefaultComboBox()
+        {
+            Cache_Brush output = new Cache_Brush();
+            output.colorBrush = new SolidColorBrush(AutoColor.HexToColor("#FF1D1D1D"));
+            return output;
+        }
+
+        public static Cache_Brush DefaultButton()
+        {
+            Cache_Brush output = new Cache_Brush();
+            output.colorBrush = new SolidColorBrush(AutoColor.HexToColor("#FF5A5A5A"));
+            return output;
+        }
+
     }
 }

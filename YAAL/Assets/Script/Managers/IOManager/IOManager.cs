@@ -24,7 +24,7 @@ namespace YAAL
         static IOManager()
         {
             string baseDirectory = AppContext.BaseDirectory;
-            string file = Path.Combine(AppContext.BaseDirectory, userSettings.GetFileName());
+            string file = Path.Combine(baseDirectory, userSettings.GetFileName());
             settings = new Cache_UserSettings();
             settings = LoadCache<Cache_UserSettings>(Path.Combine(AppContext.BaseDirectory, userSettings.GetFileName()));
             settings.SetDefaultPath();
@@ -134,6 +134,18 @@ namespace YAAL
                 Debug.WriteLine(name.ToString());
                 throw;
             }    
+        }
+
+        public static Cache_Theme GetGeneralTheme()
+        {
+            return settings.generalTheme;
+        }
+
+        public static void SetGeneralTheme(Cache_Theme newTheme)
+        {
+            settings.generalTheme = newTheme;
+            App.Settings.SetTheme("General Theme", newTheme);
+            SaveCache<Cache_UserSettings>(Path.Combine(AppContext.BaseDirectory, userSettings.GetFileName()), settings);
         }
     }
 }

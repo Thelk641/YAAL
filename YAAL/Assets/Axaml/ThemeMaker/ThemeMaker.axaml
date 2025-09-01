@@ -11,7 +11,10 @@
         x:Class="YAAL.ThemeMaker"
         Title="Yet Another Archipelago Launcher"
 		>
-	<Border Padding="8">
+	<Window.Resources>
+		<local:BoolInvert x:Key="BoolInvert"/>
+	</Window.Resources>
+	<Border Padding="8" Name="TrueBackground">
 		<Grid RowDefinitions="30,8,208,8,168">
 			<!-- Selector-->
 			<ComboBox
@@ -21,6 +24,31 @@
 				Grid.Row="0"
 				HorizontalContentAlignment="Center"
 				/>
+
+			<ComboBox
+				Name="SlotSelector"
+				VerticalAlignment="Center"
+				HorizontalAlignment="Stretch"
+				Grid.Row="0"
+				ItemsSource="{Binding Cache_DisplayTheme}"
+				SelectedItem="{Binding selectedTheme}"
+				>
+				<ComboBox.Styles>
+					<Style Selector="ComboBoxItem">
+						<Setter Property="IsEnabled"
+								Value="{Binding isHeader, Converter={StaticResource BoolInvert}}" />
+						<Setter Property="IsHitTestVisible"
+								Value="{Binding isHeader, Converter={StaticResource BoolInvert}}" />
+					</Style>
+				</ComboBox.Styles>
+				<ComboBox.ItemTemplate>
+					<DataTemplate>
+						<TextBlock
+							Text="{Binding launcherName}"
+										/>
+					</DataTemplate>
+				</ComboBox.ItemTemplate>
+			</ComboBox>
 			
 			<!-- Settings -->
 			<Border 
@@ -33,7 +61,7 @@
 				CornerRadius="4"
 				Padding="8"
 				>
-				<Grid ColumnDefinitions="*,8,1,8,*,8,1,8,*,8,1,8,*" Grid.Row="2">
+				<Grid Name="CollumnContainer" ColumnDefinitions="*,8,1,8,*,8,1,8,*,8,1,8,*" Grid.Row="2">
 					<local:ThemeCollumn Name="Collumn_Background" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
 					<Rectangle Name="Rect1" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Black"/>
 					<local:ThemeCollumn Name="Collumn_Foreground" Grid.Column="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />

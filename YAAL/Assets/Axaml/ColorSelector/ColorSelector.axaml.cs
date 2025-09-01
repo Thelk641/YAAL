@@ -18,14 +18,14 @@ public partial class ColorSelector : Window
     public ColorSelector()
     {
         InitializeComponent();
-        BackgroundSetter.Set(BackgroundColor, GeneralSettings.foregroundColor);
+        AutoTheme.SetTheme(BackgroundColor, ThemeSettings.backgroundColor);
     }
 
     public ColorSelector(string hex)
     {
         
         InitializeComponent();
-        BackgroundSetter.Set(BackgroundColor, GeneralSettings.foregroundColor);
+        AutoTheme.SetTheme(BackgroundColor, ThemeSettings.backgroundColor);
         SetColor(hex);
         OK.Click += (_, _) =>
         {

@@ -20,6 +20,7 @@ public partial class ErrorWindow : Window
     public ErrorWindow()
     {
         InitializeComponent();
+        AutoTheme.SetTheme(BackgroundColor, ThemeSettings.backgroundColor);
         this.IsVisible = false;
     }
 

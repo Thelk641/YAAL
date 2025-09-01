@@ -106,6 +106,7 @@
 				Padding="8"
 				Grid.Row="2"
 				Background="Black"
+				Name="SlotBackground"
 				>
 				<StackPanel
 					Name="SlotsContainer">

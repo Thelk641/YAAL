@@ -24,7 +24,14 @@ namespace YAAL
             Cache_CustomLauncher cache = toSave.WriteCache();
             SaveCacheLauncher(cache);
             launcherCache[toSave.selfsettings[LauncherSettings.launcherName]] = toSave;
-            launcherList.list[toSave.selfsettings[LauncherSettings.launcherName]] = toSave.selfsettings[LauncherSettings.gameName];
+            if (toSave.selfsettings.ContainsKey(LauncherSettings.gameName))
+            {
+                launcherList.list[toSave.selfsettings[LauncherSettings.launcherName]] = toSave.selfsettings[LauncherSettings.gameName];
+            } else
+            {
+                launcherList.list[toSave.selfsettings[LauncherSettings.launcherName]] = "None";
+            }
+
             SaveCache<Cache_LauncherList>(GetSaveLocation(FileSettings.launcherList), launcherList);
             UpdateLauncherList();
             UpdatedLauncher?.Invoke(toSave.selfsettings[LauncherSettings.launcherName]);

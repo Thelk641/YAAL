@@ -4,6 +4,7 @@
              HorizontalAlignment="Stretch"
              Height="108"
              MinWidth="450"
+			 Name="TrueBackground"
              >
   <Border 
     Name="BackgroundColor"
@@ -17,7 +18,7 @@
           >
     <StackPanel Orientation="Vertical" Height="50" VerticalAlignment="Top">
       <Grid ColumnDefinitions="30, 8, 120, 8, *">
-		<Grid RowDefinitions="0, *,8,*,0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="0">
+		<Grid RowDefinitions="0, *,8,*,8" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="0">
 			<Button Name="MoveUp" Content="↑" Grid.Row="1" Width="30" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 			<Button Name="MoveDown" Content="↓" Grid.Row="3" Width="30" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
 		</Grid>

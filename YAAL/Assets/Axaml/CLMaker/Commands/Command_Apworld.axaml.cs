@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Media;
 using Avalonia.VisualTree;
 using YAAL.Assets.Scripts;
 using static YAAL.ApworldSettings;
@@ -14,13 +15,13 @@ public partial class Command_Apworld : Command
     public Command_Apworld()
     {
         InitializeComponent();
-        BackgroundSetter.Set(BackgroundColor, GeneralSettings.foregroundColor);
         SetDebouncedEvents();
         linkedInstruction = new Apworld();
         TurnEventsOn();
         IsNecessary.IsChecked = true;
         FileTarget.Click += _FileExplorer;
         FolderTarget.Click += _FolderExplorer;
+        AutoTheme.SetTheme(TrueBackground, ThemeSettings.transparent);
     }
 
     protected override void TurnEventsOn()

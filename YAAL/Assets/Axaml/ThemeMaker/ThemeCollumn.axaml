@@ -52,6 +52,7 @@
 			</Grid>
 
 			<Button
+				Name="ModeSwitch"
 				Grid.Row="4"
 				Content="Switch mode"
 				HorizontalAlignment="Center"

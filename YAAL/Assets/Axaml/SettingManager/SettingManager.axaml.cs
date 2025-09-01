@@ -30,12 +30,7 @@ public partial class SettingManager : ScalableWindow
     {
         InitializeComponent();
         DataContext = App.Settings;
-        //Test();
-        BackgroundSetter.Set(GeneralSettings, foregroundColor);
-        BackgroundSetter.Set(LauncherSettings, foregroundColor);
-        BackgroundSetter.Set(CustomSettings, foregroundColor);
-        BackgroundSetter.Set(OtherSettings, foregroundColor);
-        BackgroundSetter.Set(Window);
+        AutoTheme.SetTheme(TrueBackground, ThemeSettings.backgroundColor);
 
         addSetting.Click += (_, _) =>
         {
