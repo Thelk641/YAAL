@@ -270,7 +270,7 @@ public partial class CLMakerWindow : Window
 
     private void LauncherSelector_ChangedSelection(object? sender, SelectionChangedEventArgs e)
     {
-        if(LauncherSelector.SelectedItem.ToString() == LauncherName.Text)
+        if(LauncherSelector.SelectedItem == null || LauncherSelector.SelectedItem.ToString() == LauncherName.Text)
         {
             return;
         }
