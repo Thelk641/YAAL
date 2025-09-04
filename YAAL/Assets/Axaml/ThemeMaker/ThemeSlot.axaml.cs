@@ -25,6 +25,28 @@ public partial class ThemeSlot : UserControl
     {
         InitializeComponent();
         ToolSelect.ItemsSource = new List<string> { "A tool" };
+        ToolSelect.SelectedIndex = 0;
+
+        SlotSelector.ItemsSource = new List<string> { "My slot n°1" };
+        SlotSelector.SelectedIndex = 0;
+
+        SelectedLauncher.ItemsSource = new List<string> { "An amazing game" };
+        SelectedLauncher.SelectedIndex = 0;
+
+        SelectedVersion.ItemsSource = new List<string> { "Version 641" };
+        SelectedVersion.SelectedIndex = 0;
+
+        AutoTheme.SetTheme(Transparent, ThemeSettings.transparent);
+
+        AutomaticPatchButton.Click += (_, _) =>
+        {
+            SwitchPatchMode();
+        };
+
+        ManualPatchButton.Click += (_, _) =>
+        {
+            SwitchPatchMode();
+        };
     }
 
     public void SwitchMode()
@@ -39,6 +61,28 @@ public partial class ThemeSlot : UserControl
             PlayMode.IsVisible = true;
             EditMode.IsVisible = false;
             this.Height = baseHeight;
+        }
+    }
+
+    public void SwitchPatchMode()
+    {
+        if (AutomaticPatch.IsVisible)
+        {
+            AutomaticPatch.IsVisible = false;
+            SlotSelector.IsVisible = false;
+            SlotName.IsVisible = true;
+            ManualPatch.IsVisible = true;
+            AutomaticPatchButton.IsVisible = true;
+            ManualPatchButton.IsVisible = false;
+        }
+        else
+        {
+            AutomaticPatch.IsVisible = true;
+            SlotSelector.IsVisible = true;
+            SlotName.IsVisible = false;
+            ManualPatch.IsVisible = false;
+            AutomaticPatchButton.IsVisible = false;
+            ManualPatchButton.IsVisible = true;
         }
     }
 }

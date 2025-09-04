@@ -10,9 +10,10 @@ namespace YAAL
     public enum Icons
     {
         File,
-        folder,
-        play,
+        Folder,
+        Play,
         Settings,
+        Save,
         None,
     };
 

@@ -22,6 +22,7 @@
 				</Setter.Value>
 			</Setter>
 			<Setter Property="local:AutoText.AutoText" Value="True"/>
+			<Setter Property="BorderBrush" Value="Transparent" />
 		</Style>
 
 		<Style Selector="Border:not(UserControl)">

@@ -12,7 +12,8 @@
 		Name="BackgroundColor"
 		BorderBrush="Gray"
 		CornerRadius="4"
-		HorizontalAlignment="Stretch">
+		HorizontalAlignment="Stretch"
+		Padding="8">
 		<Grid RowDefinitions="30,8,*,8,30" HorizontalAlignment="Stretch">
 			<TextBlock
 				Name="categoryName"
@@ -25,7 +26,6 @@
 				<Grid ColumnDefinitions="*,8,30" HorizontalAlignment="Stretch">
 					<TextBox
 						Name="ImageSource"
-						Text="path/to/stuff"
 					/>
 					<Button Name="FilePicker" Grid.Column="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" local:AutoIcon.Icon="File"
 						>

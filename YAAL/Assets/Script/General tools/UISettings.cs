@@ -40,6 +40,19 @@ namespace YAAL.Assets.Scripts
 
         public event EventHandler<string>? ThemeChanged;
 
+        public void LoadThemes()
+        {
+            themes["General Theme"] = IOManager.GetGeneralTheme();
+            foreach (var item in IOManager.GetLauncherList())
+            {
+                Cache_CustomLauncher cache = IOManager.LoadCacheLauncher(item);
+                if(cache.customTheme != null)
+                {
+                    themes[item] = cache.customTheme;
+                }
+            }
+        }
+
         public void SetTheme(string key, Cache_Theme theme)
         {
             themes[key] = theme;

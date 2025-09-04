@@ -6,8 +6,8 @@
         mc:Ignorable="d"
 		Width="600"
 		MinWidth="520"
-		MinHeight="438"
-		MaxHeight="438"
+		MinHeight="476"
+		MaxHeight="476"
         x:Class="YAAL.ThemeMaker"
         Title="Yet Another Archipelago Launcher"
 		>
@@ -15,41 +15,51 @@
 		<local:BoolInvert x:Key="BoolInvert"/>
 	</Window.Resources>
 	<Border Padding="8" Name="TrueBackground">
-		<Grid RowDefinitions="30,8,208,8,168">
+		<Grid RowDefinitions="30,8,208,8,30,8,168">
 			<!-- Selector-->
-			<ComboBox
+			<Grid ColumnDefinitions="*,8,30">
+				<ComboBox
 				Name="Selector"
-				HorizontalAlignment="Stretch"
-				VerticalAlignment="Stretch"
-				Grid.Row="0"
-				HorizontalContentAlignment="Center"
-				/>
-
-			<ComboBox
-				Name="SlotSelector"
 				VerticalAlignment="Center"
 				HorizontalAlignment="Stretch"
+				HorizontalContentAlignment="Center"
 				Grid.Row="0"
 				ItemsSource="{Binding Cache_DisplayTheme}"
-				SelectedItem="{Binding selectedTheme}"
+				SelectedItem="{Binding selectedtheme, Mode=TwoWay}"
 				>
-				<ComboBox.Styles>
-					<Style Selector="ComboBoxItem">
-						<Setter Property="IsEnabled"
-								Value="{Binding isHeader, Converter={StaticResource BoolInvert}}" />
-						<Setter Property="IsHitTestVisible"
-								Value="{Binding isHeader, Converter={StaticResource BoolInvert}}" />
-					</Style>
-				</ComboBox.Styles>
-				<ComboBox.ItemTemplate>
-					<DataTemplate>
-						<TextBlock
-							Text="{Binding launcherName}"
+					<ComboBox.Styles>
+						<Style Selector="ComboBoxItem">
+							<Setter Property="IsEnabled"
+									Value="{Binding isHeader, Converter={StaticResource BoolInvert}}" />
+							<Setter Property="IsHitTestVisible"
+									Value="{Binding isHeader, Converter={StaticResource BoolInvert}}" />
+						</Style>
+					</ComboBox.Styles>
+					<ComboBox.ItemTemplate>
+						<DataTemplate>
+							<TextBlock
+								Text="{Binding launcherName}"
 										/>
-					</DataTemplate>
-				</ComboBox.ItemTemplate>
-			</ComboBox>
-			
+						</DataTemplate>
+					</ComboBox.ItemTemplate>
+				</ComboBox>
+
+				<Button
+					Name="SaveButton"
+					Grid.Column="2"
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch"
+					local:AutoIcon.Icon="Save"
+					>
+					<Svg Path="avares://YAAL/Assets/Icons/Save_Dark.svg"
+							VerticalAlignment="Center"
+							HorizontalAlignment="Center"
+							Width="30"
+							/>
+				</Button>
+			</Grid>
+
+
 			<!-- Settings -->
 			<Border 
 				Name="SettingBorder"
@@ -72,12 +82,17 @@
 				</Grid>
 			</Border>
 
-
+			<TextBlock 
+				Text="Example :"
+				Grid.Row="4"
+				HorizontalAlignment="Center"
+				VerticalAlignment="Center"
+				/>
 
 			<!-- Examples-->
 			<Border
 				Name="ExampleBorder"
-				Grid.Row="4"
+				Grid.Row="6"
 				HorizontalAlignment="Stretch"
 				VerticalAlignment="Stretch"
 				BorderBrush="Gray"
@@ -86,7 +101,7 @@
 				Padding="8"
 				>
 				<Grid RowDefinitions="52,8,90">
-					<local:ThemeSlot Grid.Row="0"/>
+					<local:ThemeSlot Name="PlayMode" Grid.Row="0"/>
 					<local:ThemeSlot Grid.Row="2" Name="EditMode"/>
 				</Grid>
 			</Border>

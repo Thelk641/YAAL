@@ -40,6 +40,7 @@
 							BorderBrush="Gray"
 							Grid.Column="2"
 							Padding="8"
+							Name="Transparent"
 							>
 							<TextBlock
 							Name="_SlotName"
@@ -113,21 +114,6 @@
 								ItemsSource="{Binding Cache_DisplaySlot}"
 								SelectedItem="{Binding selectedSlot}"
 								>
-								<ComboBox.Styles>
-									<Style Selector="ComboBoxItem">
-										<Setter Property="IsEnabled"
-												Value="{Binding isHeader, Converter={StaticResource BoolInvert}}" />
-										<Setter Property="IsHitTestVisible"
-												Value="{Binding isHeader, Converter={StaticResource BoolInvert}}" />
-									</Style>
-								</ComboBox.Styles>
-								<ComboBox.ItemTemplate>
-									<DataTemplate>
-										<TextBlock 
-											Text="{Binding slotName}"
-										/>
-									</DataTemplate>
-								</ComboBox.ItemTemplate>
 							</ComboBox>
 						</Grid>
 						<Grid Grid.Column="2" ColumnDefinitions="*,8,60" HorizontalAlignment="Stretch">
@@ -141,6 +127,7 @@
 								HorizontalAlignment="Stretch"
 								ToolTip.Tip="The patch file"
 								Watermark="/path/to/patch"
+								Text="/path/to/patch"
 								/>
 								<Button
 								Name="PatchSelect"
@@ -175,6 +162,7 @@
 								Grid.Column="4"
 								HorizontalAlignment="Stretch"
 								HorizontalContentAlignment="Center"
+								IsEnabled="False"
 								/>
 						</Grid>
 					</Grid>

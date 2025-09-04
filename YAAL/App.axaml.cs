@@ -41,8 +41,7 @@ public partial class App : Application
         //TODO : this is debug
         //ParseBuildErrors();
         //return;
-
-        Settings.SetTheme("General Theme", IOManager.GetGeneralTheme());
+        Settings.LoadThemes();
         var args = Environment.GetCommandLineArgs().Skip(1).ToArray();
 
         //var args = new string[2] { "--async PatchTest", "--slot Slot 2" };

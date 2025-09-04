@@ -20,6 +20,7 @@ namespace YAAL;
 
 public partial class ThemeCollumn : UserControl
 {
+    public event Action UpdatedBrush;
     public ThemeSettings id;
 
     public ThemeCollumn()
@@ -38,6 +39,47 @@ public partial class ThemeCollumn : UserControl
         {
             SwitchMode();
         };
+        ColorButton.Click += async (_, _) =>
+        {
+            string hex = AutoColor.ColorToHex((ColorButton.Background as SolidColorBrush).Color);
+            var output = await ColorSelector.PickColor(this.FindAncestorOfType<Window>(), hex);
+
+            if (output != null)
+            {
+                SetColor(new SolidColorBrush(AutoColor.HexToColor(output)));
+                UpdatedBrush?.Invoke();
+            }
+        };
+
+        ImageSource.TextChanged += (_, _) =>
+        {
+            Debouncer.Debounce(
+                () =>
+                {
+                    UpdatedBrush?.Invoke();
+                },
+                2);
+        };
+
+        StretchSetting.SelectionChanged += (_, _) =>
+        {
+            Debouncer.Debounce(
+                () =>
+                {
+                    UpdatedBrush?.Invoke();
+                },
+                2);
+        };
+
+        TileSetting.SelectionChanged += (_, _) =>
+        {
+            Debouncer.Debounce(
+                () =>
+                {
+                    UpdatedBrush?.Invoke();
+                },
+                2);
+        };
     }
 
     public void Setup(string name, ThemeSettings newId)
@@ -51,13 +93,12 @@ public partial class ThemeCollumn : UserControl
         ImageSource.Text = source;
         StretchSetting.SelectedItem = stretchMode;
         TileSetting.SelectedItem = tilemode;
-        ColorMode.IsVisible = false;
-        ImageMode.IsVisible = true;
     }
 
     public void SetColor(SolidColorBrush color)
     {
-        ColorButton.Background = color;
+        (ColorButton.Background as SolidColorBrush).Color = color.Color;
+        (ColorButton.Background as SolidColorBrush).Opacity = color.Opacity;
         if (AutoColor.NeedsWhite(color.Color))
         {
             ColorBorder.BorderBrush = new SolidColorBrush(Colors.White);
@@ -101,17 +142,17 @@ public partial class ThemeCollumn : UserControl
 
     public void SetBrush(Cache_Brush newBrush)
     {
-        if (newBrush.isImage)
-        {
-            SwitchMode();
-        }
         if(newBrush.colorBrush != null)
         {
-            ColorButton.Background = newBrush.colorBrush;
+            SetColor(newBrush.colorBrush);
         }
         if(newBrush.imageSource != null && newBrush.imageSource != "")
         {
             SetImage(newBrush.imageSource, newBrush.stretch, newBrush.tilemode);
+        }
+        if (newBrush.isImage)
+        {
+            SwitchMode();
         }
     }
 
@@ -126,5 +167,6 @@ public partial class ThemeCollumn : UserControl
             ImageMode.IsVisible = true;
             ColorMode.IsVisible = false;
         }
+        UpdatedBrush?.Invoke();
     }
 }

@@ -54,17 +54,6 @@
         Name="CommandBackground"
 			>
       <ScrollViewer Name="Scroll" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" AllowAutoHide="False">
-		  <ScrollViewer.Styles>
-			  <Style Selector="ScrollViewer">
-				  <Style Selector="^ ScrollBar">
-					  <Style Selector="^:vertical">
-						  <Style Selector="^ /template/ Rectangle#TrackRect">
-							  <Setter Property="Fill" Value="Red"/>
-						  </Style>
-					  </Style>
-				  </Style>
-			  </Style>
-		  </ScrollViewer.Styles>
         <Border Padding="0,0,8,0" Name="PaddingBorder">
 	        <StackPanel x:Name="CommandContainer" />
         </Border>

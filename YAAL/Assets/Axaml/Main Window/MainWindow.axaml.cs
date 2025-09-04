@@ -25,8 +25,8 @@ public partial class MainWindow : Window
         BackgroundSetter.Set(this);
         
         InitializeComponent();
-        AutoTheme.SetAutoTheme(BackgroundColor, new Cache_ThemeInfo() { category = ThemeSettings.backgroundColor });
-        AutoTheme.SetAutoTheme(AsyncBackground, new Cache_ThemeInfo() { category = ThemeSettings.backgroundColor });
+        AutoTheme.SetTheme(BackgroundColor, ThemeSettings.backgroundColor);
+        AutoTheme.SetTheme(AsyncBackground, ThemeSettings.backgroundColor);
         CLMakerButton.Click += (_, _) =>
         {
             CLMakerWindow window = CLMakerWindow.GetCLMakerWindow();
@@ -47,16 +47,6 @@ public partial class MainWindow : Window
         {
             Dictionary<string, string> customSetting;
             Dictionary<GeneralSettings, string> generalSettings = IOManager.GetUserSettings(out customSetting);
-            /*SettingManager manager = SettingManager.GetSettingsWindow(generalSettings, customSetting);
-            manager.Closing += (_, _) =>
-            {
-                Dictionary<string, string> newCustomSetting;
-                Dictionary<GeneralSettings, string> newGeneralSettings = manager.ParseSettings(out newCustomSetting);
-                IOManager.SetUserSettings(newGeneralSettings, newCustomSetting);
-                this.Topmost = true;
-                this.Topmost = false;
-            };
-            manager.IsVisible = true;*/
             SettingManager manager = SettingManager.GetSettingsWindow(this, generalSettings, customSetting);
             manager.Closing += (_, _) =>
             {
@@ -67,6 +57,18 @@ public partial class MainWindow : Window
                 this.Topmost = false;
             };
             manager.IsVisible = true;
+        };
+
+        ThemeButton.Click += (_, _) =>
+        {
+            ThemeMaker themeMaker = new ThemeMaker();
+            themeMaker.IsVisible = true;
+            themeMaker.Closing += (_, _) =>
+            {
+                this.Activate();
+                this.Topmost = true;
+                this.Topmost = false;
+            };
         };
 
 

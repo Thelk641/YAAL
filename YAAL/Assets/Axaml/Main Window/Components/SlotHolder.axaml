@@ -41,6 +41,7 @@
 							BorderBrush="Gray"
 							Grid.Column="2"
 							Padding="8"
+							Name="Transparent1"
 							>
 							<TextBlock
 							Name="_SlotName"

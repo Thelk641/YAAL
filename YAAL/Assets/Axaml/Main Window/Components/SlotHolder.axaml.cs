@@ -12,6 +12,7 @@ using static YAAL.SlotSettings;
 using static YAAL.AsyncSettings;
 using System.Linq;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 namespace YAAL;
 
@@ -30,6 +31,7 @@ public partial class SlotHolder : UserControl
     public int heightDifference = 38;
     public bool isEditing = false;
     private ObservableCollection<string> toolList = new ObservableCollection<string>();
+    private string previousTheme = "";
     
     public SlotHolder()
     {
@@ -52,9 +54,9 @@ public partial class SlotHolder : UserControl
         IOManager.UpdatedLauncher += (string updatedLauncher) =>
         {
             UpdateAvailableSlot();
-            // TODO : if it's currently selected, update theme
         };
 
+        AutoTheme.SetTheme(Transparent1, ThemeSettings.transparent);
         _ChangedSlot(null, null);
     }
 
@@ -432,8 +434,16 @@ public partial class SlotHolder : UserControl
     public void Save()
     {
         Cache_Slot newSlot = new Cache_Slot();
-        newSlot.settings[baseLauncher] = SelectedLauncher.SelectedItem.ToString();
-        newSlot.settings[version] = SelectedVersion.SelectedItem.ToString();
+        if(SelectedLauncher.SelectedItem != null)
+        {
+            newSlot.settings[baseLauncher] = SelectedLauncher.SelectedItem.ToString();
+        }
+        
+        if(SelectedVersion.SelectedItem != null)
+        {
+            newSlot.settings[version] = SelectedVersion.SelectedItem.ToString();
+        }
+
         newSlot.settings[patch] = Patch.Text;
         newSlot.settings[slotName] = SlotName.Text;
         newSlot.settings[rom] = thisSlot.settings[rom];
@@ -489,8 +499,6 @@ public partial class SlotHolder : UserControl
             }
         }
 
-        
-
         ToolSelect.SelectedIndex = 0;
     }
 
@@ -517,11 +525,46 @@ public partial class SlotHolder : UserControl
         {
             Save();
         }
-        BackgroundSetter.SetCustom(BackgroundColor, thisSlot.settings[SlotSettings.baseLauncher]);
+        SetBackgrounds();
     }
 
     public Cache_Slot GetCache()
     {
         return thisSlot;
+    }
+
+    public void SetBackgrounds()
+    {
+        if(SelectedLauncher.SelectedItem == null)
+        {
+            return;
+        }
+        string themeName = SelectedLauncher.SelectedItem.ToString() ?? "General Theme";
+
+        if(themeName == previousTheme)
+        {
+            return;
+        } else
+        {
+            previousTheme = themeName;
+        }
+
+        AutoTheme.SetTheme(BackgroundColor, themeName);
+        AutoTheme.SetTheme(RealPlay, themeName);
+        AutoTheme.SetTheme(ToolSelect, themeName);
+        AutoTheme.SetTheme(StartTool, themeName);
+        AutoTheme.SetTheme(Edit, themeName);
+        AutoTheme.SetTheme(FakePlay, themeName);
+        AutoTheme.SetTheme(SlotSelector, themeName);
+        AutoTheme.SetTheme(PatchSelect, themeName);
+        AutoTheme.SetTheme(DownloadPatch, themeName);
+        AutoTheme.SetTheme(ReDownloadPatch, themeName);
+        AutoTheme.SetTheme(DoneEditing, themeName);
+        AutoTheme.SetTheme(SelectedLauncher, themeName);
+        AutoTheme.SetTheme(SelectedVersion, themeName);
+        AutoTheme.SetTheme(ManualPatchButton, themeName);
+        AutoTheme.SetTheme(AutomaticPatchButton, themeName);
+        AutoTheme.SetTheme(DeleteSlot, themeName);
+
     }
 }

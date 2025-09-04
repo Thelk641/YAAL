@@ -50,9 +50,6 @@
     <Compile Update="Assets\Axaml\ThemeMaker\ThemeMaker.axaml.cs">
       <DependentUpon>ThemeMaker.axaml</DependentUpon>
     </Compile>
-    <Compile Update="Assets\Axaml\ThemeMaker\ThemeGeneral.axaml.cs">
-      <DependentUpon>ThemeGeneral.axaml</DependentUpon>
-    </Compile>
     <Compile Update="Assets\Axaml\ThemeMaker\ThemeSlot.axaml.cs">
       <DependentUpon>ThemeSlot.axaml</DependentUpon>
     </Compile>
