@@ -1,4 +1,5 @@
 ﻿using Avalonia;
+
 using Avalonia.Animation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -11,10 +12,13 @@ using Avalonia.Svg.Skia;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using ReactiveUI;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Numerics;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
@@ -110,31 +114,22 @@ namespace YAAL
 
         public static bool NeedsWhite(Color color)
         {
-            double R = color.R / 255.0;
-            double G = color.G / 255.0;
-            double B = color.B / 255.0;
-
-            double luminance = 0.299 * R + 0.587 * G + 0.114 * B;
-
-            return luminance < 0.5;
+            return GetLuminance(color) < 0.5;
         }
 
         public static bool NeedsWhite(Control target, Control imageHolder, ImageBrush brush)
         {
+            Vector2 location = new Vector2(0, 0);
             var rect = target.Bounds;
             var pointOnScreen = target.TranslatePoint(new Point(rect.Width / 2, rect.Height / 2), imageHolder);
 
-            int pixelX = 0;
-            int pixelY = 0;
-            double scaleX;
-            double scaleY;
-            double uniformScale;
-            double drawnW;
-            double drawnH;
-            double offsetX;
-            double offsetY;
-            double localX;
-            double localY;
+            if(pointOnScreen == null)
+            {
+                ErrorManager.ThrowError(
+                    "AutoColor - pointOnScreen is null",
+                    "Found a way to call NeedsWhite too early. Please report."
+                    );
+            }
 
             Bitmap bitmap = (brush.Source as Bitmap);
 
@@ -146,64 +141,72 @@ namespace YAAL
             switch (brush.Stretch)
             {
                 case Stretch.Fill:
-                    // Math out the scale
-                    scaleX = bitmap.PixelSize.Width / imageHolder.Bounds.Width;
-                    scaleY = bitmap.PixelSize.Height / imageHolder.Bounds.Height;
-
-                    // Math out the actual position on the image
-                    pixelX = (int)(pointOnScreen.Value.X * scaleX);
-                    pixelY = (int)(pointOnScreen.Value.Y * scaleY);
-
-                    // Ensure floating point doesn't carry us out of the image
-                    pixelX = Math.Clamp(pixelX, 0, bitmap.PixelSize.Width - 1);
-                    pixelY = Math.Clamp(pixelY, 0, bitmap.PixelSize.Height - 1);
+                    location = StretchFill(target, imageHolder, brush);
                     break;
                 case Stretch.Uniform:
-                    // Math out the uniform scale
-                    scaleX = imageHolder.Bounds.Width / bitmap.PixelSize.Width;
-                    scaleY = imageHolder.Bounds.Height / bitmap.PixelSize.Height;
-                    uniformScale = Math.Min(scaleX, scaleY);
-
-                    // Math the actual image size, as drawn
-                    drawnW = bitmap.PixelSize.Width * uniformScale;
-                    drawnH = bitmap.PixelSize.Height * uniformScale;
-
-                    // Math the letter box (black bars)
-                    offsetX = (imageHolder.Bounds.Width - drawnW) / 2;
-                    offsetY = (imageHolder.Bounds.Height - drawnH) / 2;
-
-                    // Adjust X and Y based on the letter box
-                    localX = pointOnScreen.Value.X - offsetX;
-                    localY = pointOnScreen.Value.Y - offsetY;
-
-                    // Math out the actual position on the image
-                    pixelX = (int)(localX / uniformScale);
-                    pixelY = (int)(localY / uniformScale);
-
-                    if(
-                        pixelX < 0 || pixelX >= bitmap.PixelSize.Width ||
-                        pixelY < 0 || pixelY >= bitmap.PixelSize.Height)
+                case Stretch.UniformToFill:
+                    var tempUniform = StretchUniform(target, imageHolder, brush);
+                    if(tempUniform is Vector2 validUniform)
                     {
-                        // We're on the letter box, so the background is black, so we do need text to be turned to white
-                        if(imageHolder.Parent != null)
+                        location = validUniform;
+                    } else
+                    {
+                        if (imageHolder.Parent != null)
                         {
                             return NeedsWhite(imageHolder.Parent as Control);
-                        } else
+                        }
+                        else
                         {
                             return true;
                         }
                     }
                     break;
-                /*
-                case Stretch.UniformToFill:
                 case Stretch.None:
-                    break;*/
+                    var tempNone = StretchNone(target, imageHolder, brush);
+                    if (tempNone is Vector2 validNone)
+                    {
+                        location = validNone;
+                    }
+                    else
+                    {
+                        if (imageHolder.Parent != null)
+                        {
+                            return NeedsWhite(imageHolder.Parent as Control);
+                        }
+                        else
+                        {
+                            return true;
+                        }
+                    }
+                    break;
             }
 
-            pixelX = Math.Clamp(pixelX, 0, bitmap.PixelSize.Width - 1);
-            pixelY = Math.Clamp(pixelY, 0, bitmap.PixelSize.Height - 1);
 
-            return false;
+            int start = Math.Max(0, (int)location.X - 2);
+            int end = Math.Min(bitmap.PixelSize.Width - 1, (int)location.X + 2);
+
+            double averageLuminance = 0;
+
+            for (int i = start; i < end; i++)
+            {
+                Color color = GetPixelColor(bitmap, i, (int)location.Y);
+                averageLuminance += GetLuminance(color);
+            }
+
+            averageLuminance = averageLuminance / 5;
+
+            return averageLuminance < 0.5;
+        }
+
+        public static double GetLuminance(Color color)
+        {
+            double R = color.R / 255.0;
+            double G = color.G / 255.0;
+            double B = color.B / 255.0;
+
+            double luminance = 0.299 * R + 0.587 * G + 0.114 * B;
+
+            return luminance;
         }
 
         public static Color HexToColor(string hex)
@@ -230,6 +233,218 @@ namespace YAAL
                 (byte)(color.R * factor),
                 (byte)(color.G * factor),
                 (byte)(color.B * factor));
+        }
+
+        public static Vector2 StretchFill(Control target, Control imageHolder, ImageBrush brush)
+        {
+            Vector2 output = new Vector2();
+
+            var rect = target.Bounds;
+            var pointOnScreen = target.TranslatePoint(new Point(rect.Width / 2, rect.Height / 2), imageHolder);
+            double scaleX;
+            double scaleY;
+
+            Bitmap bitmap = (brush.Source as Bitmap);
+
+            // Math out the scale
+            scaleX = bitmap.PixelSize.Width / imageHolder.Bounds.Width;
+            scaleY = bitmap.PixelSize.Height / imageHolder.Bounds.Height;
+
+            // Math out the actual position on the image
+            output.X = Math.Clamp((int)(pointOnScreen.Value.X * scaleX), 0, bitmap.PixelSize.Width - 1);
+            output.Y = Math.Clamp((int)(pointOnScreen.Value.Y * scaleY), 0, bitmap.PixelSize.Height - 1);
+
+
+            return output;
+        }
+
+        public static Vector2? StretchUniform(Control target, Control imageHolder, ImageBrush brush)
+        {
+            Vector2 output = new Vector2();
+            var rect = target.Bounds;
+            var pointOnScreen = target.TranslatePoint(new Point(rect.Width / 2, rect.Height / 2), imageHolder);
+
+            double scaleX;
+            double scaleY;
+            double uniformScale;
+            double drawnW;
+            double drawnH;
+            double offsetX = 0;
+            double offsetY = 0;
+            double localX;
+            double localY;
+
+            Vector2 location = new Vector2(0, 0);
+
+            Bitmap bitmap = (brush.Source as Bitmap);
+
+            // Math out the uniform scale
+            scaleX = imageHolder.Bounds.Width / bitmap.PixelSize.Width;
+            scaleY = imageHolder.Bounds.Height / bitmap.PixelSize.Height;
+            if (brush.Stretch == Stretch.Uniform)
+            {
+                uniformScale = Math.Min(scaleX, scaleY);
+            }
+            else
+            {
+                uniformScale = Math.Max(scaleX, scaleY);
+            }
+
+            // Math the actual image size, as drawn
+            drawnW = bitmap.PixelSize.Width * uniformScale;
+            drawnH = bitmap.PixelSize.Height * uniformScale;
+
+            // Math the letter box (black bars)
+            offsetX = (imageHolder.Bounds.Width - drawnW) / 2;
+            offsetY = (imageHolder.Bounds.Height - drawnH) / 2;
+
+            // Adjust X and Y based on the letter box
+            localX = pointOnScreen.Value.X - offsetX;
+            localY = pointOnScreen.Value.Y - offsetY;
+
+            // Math out the actual position on the image
+            output.X = (int)(localX / uniformScale);
+            output.Y = (int)(localY / uniformScale);
+
+            if (
+                output.X < 0 || output.X >= bitmap.PixelSize.Width ||
+                output.Y < 0 || output.Y >= bitmap.PixelSize.Height)
+            {
+                return DealWithTile(output, brush, bitmap);
+            }
+
+            return output;
+        }
+
+        public static Vector2? StretchNone(Control target, Control imageHolder, ImageBrush brush)
+        {
+            Vector2 output = new Vector2();
+            var rect = target.Bounds;
+            var pointOnScreen = target.TranslatePoint(new Point(rect.Width / 2, rect.Height / 2), imageHolder);
+            double offsetX = 0;
+            double offsetY = 0;
+            double localX;
+            double localY;
+
+            Vector2 location = new Vector2(0, 0);
+
+            Bitmap bitmap = (brush.Source as Bitmap);
+
+
+            switch (brush.AlignmentX)
+            {
+                case AlignmentX.Left:
+                    offsetX = 0;
+                    break;
+                case AlignmentX.Center:
+                    offsetX = (imageHolder.Bounds.Width - bitmap.PixelSize.Width) / 2;
+                    break;
+                case AlignmentX.Right:
+                    offsetX = imageHolder.Bounds.Width - bitmap.PixelSize.Width;
+                    break;
+            }
+
+            switch (brush.AlignmentY)
+            {
+                case AlignmentY.Top:
+                    offsetY = 0;
+                    break;
+                case AlignmentY.Center:
+                    offsetY = (imageHolder.Bounds.Height - bitmap.PixelSize.Height) / 2;
+                    break;
+                case AlignmentY.Bottom:
+                    offsetY = imageHolder.Bounds.Height - bitmap.PixelSize.Height;
+                    break;
+            }
+
+            output.X = (int)(pointOnScreen.Value.X - offsetX);
+            output.Y = (int)(pointOnScreen.Value.Y - offsetY);
+
+            if (
+                output.X < 0 || output.X >= bitmap.PixelSize.Width ||
+                output.Y < 0 || output.Y >= bitmap.PixelSize.Height)
+            {
+                return DealWithTile(output, brush, bitmap);
+            }
+
+            return output;
+        }
+
+        public static Vector2? DealWithTile(Vector2 position, ImageBrush brush, Bitmap bitmap)
+        {
+            Vector2 output = position;
+
+            if(brush.TileMode == TileMode.None)
+            {
+                return null;
+            }
+
+            if(position.X < 0)
+            {
+                int offset = bitmap.PixelSize.Width - (int)((position.X * -1) % bitmap.PixelSize.Width);
+                output.X = offset;
+            }
+
+            if (position.Y < 0)
+            {
+                int offset = bitmap.PixelSize.Height - (int)((position.Y * -1) % bitmap.PixelSize.Height);
+                output.Y = offset;
+            }
+
+            if(brush.TileMode == TileMode.FlipX || brush.TileMode == TileMode.FlipXY)
+            {
+                int tileX = (int)(output.X / bitmap.PixelSize.Width);
+                if(tileX % 2 == 1)
+                {
+                    output.X = bitmap.PixelSize.Width - output.X;
+                }
+            }
+
+            if (brush.TileMode == TileMode.FlipY || brush.TileMode == TileMode.FlipXY)
+            {
+                int tileY = (int)(output.Y / bitmap.PixelSize.Height);
+                if (tileY % 2 == 1)
+                {
+                    output.Y = bitmap.PixelSize.Height - output.Y;
+                }
+            }
+
+            return output;
+        }
+
+        public static Color GetPixelColor(Bitmap bitmap, int x, int y)
+        {
+            var rect = new PixelRect(x, y, 1, 1);
+            int bytesPerPixel = 4; // 4 bytes per pixel (BGRA)
+            var stride = bytesPerPixel * rect.Width; 
+
+            var buffer = new byte[bytesPerPixel * rect.Width];
+            var bufferPtr = GCHandle.Alloc(buffer, GCHandleType.Pinned);
+
+            try
+            {
+                bitmap.CopyPixels(rect, bufferPtr.AddrOfPinnedObject(), buffer.Length, stride);
+
+                var b = buffer[0];
+                var g = buffer[1];
+                var r = buffer[2];
+                var a = buffer[3];
+
+                Color output = new Color(a, r, g, b);
+                return output;
+            }
+            catch (Exception e)
+            {
+                ErrorManager.ThrowError(
+                    "AutoColor - Trying to read bitmap threw an exception",
+                    "While trying to read a bitmap, we got the following exception : " + e.Message
+                    );
+                return new Color();
+            }
+            finally
+            {
+                bufferPtr.Free();
+            }
         }
     }
 }
