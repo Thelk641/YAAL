@@ -6,6 +6,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
+using Avalonia.Media.Immutable;
 using Avalonia.Platform;
 using Avalonia.Styling;
 using Avalonia.Svg.Skia;
@@ -103,12 +104,17 @@ namespace YAAL
             } else if (brush is ImageBrush image)
             {
                 return NeedsWhite(control, holder, image);
+            } else if (brush is ImmutableSolidColorBrush immutableSolid){
+                return NeedsWhite(immutableSolid.Color);
             }
 
+            Debug.WriteLine(brush);
+            Debug.WriteLine(brush.GetType());
+
             ErrorManager.ThrowError(
-                "Color Manager - No compatible background found",
-                "While trying to find the best text color, we found this " + control.ToString() + " with a type not allowed. Please report this."
-                );
+                    "Color Manager - No compatible background found",
+                    "While trying to find the best text color, we found this " + control.ToString() + " with a type not allowed. Please report this."
+                    );
             return false;
         }
 

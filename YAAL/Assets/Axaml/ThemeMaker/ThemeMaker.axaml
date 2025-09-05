@@ -51,7 +51,7 @@
 					VerticalAlignment="Stretch"
 					local:AutoIcon.Icon="Save"
 					>
-					<Svg Path="avares://YAAL/Assets/Icons/Save_Dark.svg"
+					<Svg
 							VerticalAlignment="Center"
 							HorizontalAlignment="Center"
 							Width="30"

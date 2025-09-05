@@ -29,7 +29,7 @@ namespace YAAL
     {
         private static Dictionary<ComboBox, EventHandler?> boxDictionary = new Dictionary<ComboBox, EventHandler?>();
         static Dictionary<int, Control> backgrounds = new Dictionary<int, Control>();
-        static Dictionary<int, Color> previousValue = new Dictionary<int, Color>();
+        static Dictionary<int, IBrush> previousValue = new Dictionary<int, IBrush>();
 
         public static readonly AttachedProperty<bool> AutoTextProperty =
         AvaloniaProperty.RegisterAttached<Control, bool>("AutoText", typeof(BackgroundSetter));
@@ -79,19 +79,18 @@ namespace YAAL
 
             int hash = ctrl.GetHashCode();
 
-            if(previousValue.ContainsKey(hash) && previousValue[hash] == (backgroundColor as ISolidColorBrush).Color)
+            if(previousValue.ContainsKey(hash) && previousValue[hash] == backgroundColor)
             {
-                var holder = backgrounds[hash];
                 return;
             }
 
 
-            bool darkMode = true;
+            bool darkMode = !NeedsWhite(ctrl);
 
-            if (backgroundColor is ISolidColorBrush solid)
+            /*if (backgroundColor is ISolidColorBrush solid)
             {
                 darkMode = !NeedsWhite(solid.Color);
-            }
+            }*/
 
             if (ctrl is TextBlock textblock)
             {
@@ -121,7 +120,7 @@ namespace YAAL
                 AutoComboBox(comboBox);
             }
 
-            previousValue[hash] = (backgroundColor as ISolidColorBrush).Color;
+            previousValue[hash] = backgroundColor;
         }
 
 
@@ -130,6 +129,10 @@ namespace YAAL
         {
             int hash = text.GetHashCode();
 
+            if(backgrounds.ContainsKey(hash) && backgrounds[hash] != background){
+                backgrounds.Remove(hash);
+            }
+
             if (!backgrounds.ContainsKey(hash))
             {
                 backgrounds.Add(hash, background);
@@ -137,13 +140,13 @@ namespace YAAL
                 {
                     case TemplatedControl templated:
                         var observer = templated.GetObservable(TemplatedControl.BackgroundProperty);
-                        templated.GetObservable(TemplatedControl.BackgroundProperty).Subscribe(_ => EvaluateBackground(text, GetBrush(background)));
+                        templated.GetObservable(TemplatedControl.BackgroundProperty).Subscribe(_ => EnableAutoText(text));
                         break;
                     case Panel panel:
-                        panel.GetObservable(TemplatedControl.BackgroundProperty).Subscribe(_ => EvaluateBackground(text, GetBrush(background)));
+                        panel.GetObservable(TemplatedControl.BackgroundProperty).Subscribe(_ => EnableAutoText(text));
                         break;
                     case Border border:
-                        border.GetObservable(TemplatedControl.BackgroundProperty).Subscribe(_ => EvaluateBackground(text, GetBrush(background)));
+                        border.GetObservable(TemplatedControl.BackgroundProperty).Subscribe(_ => EnableAutoText(text));
                         break;
                 }
             }
@@ -168,10 +171,7 @@ namespace YAAL
 
                         if(comboBox.GetVisualDescendants().OfType<ContentPresenter>().FirstOrDefault() is ContentPresenter presenter)
                         {
-                            if(presenter.Background is SolidColorBrush solid)
-                            {
-                                darkMode = AutoColor.NeedsWhite(solid.Color);
-                            }
+                            darkMode = !AutoColor.NeedsWhite(presenter);
                         }
 
                         if (item.GetVisualDescendants().OfType<TextBlock>().FirstOrDefault() is TextBlock text)

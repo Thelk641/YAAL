@@ -80,6 +80,12 @@ public partial class ThemeCollumn : UserControl
                 },
                 2);
         };
+
+        IsTransparent.IsCheckedChanged += (_, _) =>
+        {
+            ColorButton.IsEnabled = !(bool)IsTransparent.IsChecked;
+            UpdatedBrush?.Invoke();
+        };
     }
 
     public void Setup(string name, ThemeSettings newId)
@@ -113,6 +119,10 @@ public partial class ThemeCollumn : UserControl
         output.isImage = (ImageMode.IsVisible && ImageSource.Text != null && File.Exists(ImageSource.Text));
         output.imageSource = ImageSource.Text;
 
+        if (ColorMode.IsVisible)
+        {
+            output.isTransparent = (bool)IsTransparent.IsChecked;
+        }
 
         if (StretchSetting.SelectedItem is Stretch stretch)
         {
@@ -154,6 +164,7 @@ public partial class ThemeCollumn : UserControl
         {
             SwitchMode();
         }
+        IsTransparent.IsChecked = newBrush.isTransparent;
     }
 
     public void SwitchMode()

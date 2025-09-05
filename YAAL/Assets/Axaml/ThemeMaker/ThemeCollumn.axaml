@@ -41,7 +41,7 @@
 				<ComboBox Name="TileSetting" Grid.Row="4" HorizontalAlignment="Stretch"/>
 			</Grid>
 
-			<Grid Name="ColorMode" RowDefinitions="30, *" Grid.Row="2" HorizontalAlignment="Stretch">
+			<Grid Name="ColorMode" RowDefinitions="30, 8, 30,*" Grid.Row="2" HorizontalAlignment="Stretch">
 				<Border Name="ColorBorder" BorderBrush="Black" BorderThickness="2">
 					<Button
 					Name="ColorButton"
@@ -49,6 +49,13 @@
 					VerticalAlignment="Stretch"
 				/>
 				</Border>
+				<Grid ColumnDefinitions="20,8,*" Grid.Row="2">
+					<CheckBox Name="IsTransparent" Grid.Column="0"/>
+					<TextBlock 
+						Text="Transparent" 
+						Grid.Column="2"   
+						VerticalAlignment="Center"/>
+				</Grid>
 			</Grid>
 
 			<Button

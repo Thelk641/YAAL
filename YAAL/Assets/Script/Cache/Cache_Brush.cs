@@ -20,6 +20,10 @@ namespace YAAL
         {
             get 
             {
+                if(isTransparent)
+                {
+                    return new SolidColorBrush(Colors.Transparent);
+                }
                 SolidColorBrush output = new SolidColorBrush();
                 output.Color = color;
                 output.Opacity = opacity;
@@ -36,6 +40,7 @@ namespace YAAL
         public string? imageSource;
         public Stretch stretch;
         public TileMode tilemode;
+        public bool isTransparent = false;
 
         public IBrush GetBrush()
         {
