@@ -23,7 +23,9 @@ namespace YAAL
         Async,
         Trash,
         Logs,
-        MinimumWorlds
+        MinimumWorlds,
+        Themes,
+        Images
     };
 
     public static class FileSettingExtensions

@@ -34,7 +34,11 @@ namespace YAAL
 
         public void SetDefaultPath()
         {
-            
+            string baseFolder = "D:\\Unity\\Avalonia port\\YAAL\\";
+            saveLocation[Themes] = Path.Combine(baseFolder, Themes.GetFolderName());
+            Directory.CreateDirectory(saveLocation[Themes]);
+            Directory.CreateDirectory(Path.Combine(saveLocation[Themes], "Images"));
+
             if (saveLocation.ContainsKey(ManagedApworlds))
             {
                 //We've just read User Settings, no need for defaults
@@ -42,7 +46,7 @@ namespace YAAL
             }
 
             // TODO : these are debug, they need to be replaced by the comments bellow
-            string baseFolder = "D:\\Unity\\Avalonia port\\YAAL\\";
+            
             //string baseFolder = AppContext.BaseDirectory;
             Set(aplauncher, "C:\\ProgramData\\Archipelago\\ArchipelagoLauncher.exe");
             //Set(aplauncher, "");
@@ -53,6 +57,8 @@ namespace YAAL
             saveLocation[Async] = Path.Combine(baseFolder, Async.GetFolderName());
             saveLocation[Trash] = Path.Combine(baseFolder, Trash.GetFolderName());
             saveLocation[Logs] = Path.Combine(baseFolder, Logs.GetFolderName());
+            saveLocation[Themes] = Path.Combine(baseFolder, Themes.GetFolderName());
+            saveLocation[Images] = Path.Combine(saveLocation[Themes], Images.GetFolderName());
 
             // lowercase, files
             saveLocation[cache_download] = Path.Combine(saveLocation[ManagedApworlds], cache_download.GetFileName());
@@ -67,6 +73,8 @@ namespace YAAL
             Directory.CreateDirectory(saveLocation[Async]);
             Directory.CreateDirectory(saveLocation[Trash]);
             Directory.CreateDirectory(saveLocation[Logs]);
+            Directory.CreateDirectory(saveLocation[Themes]);
+            Directory.CreateDirectory(Path.Combine(saveLocation[Themes], "Images"));
         }
 
         public string? this[string key]

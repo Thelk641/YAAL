@@ -13,6 +13,7 @@ namespace YAAL
     public class Cache_Theme : INotifyPropertyChanged
     {
         public string name;
+        public int offset = 10;
         public Dictionary<ThemeSettings, Cache_Brush> categories = new Dictionary<ThemeSettings, Cache_Brush>()
         {
             {ThemeSettings.backgroundColor, Cache_Brush.DefaultBackground() },

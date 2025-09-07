@@ -20,17 +20,18 @@
 		<Grid RowDefinitions="30, 8, *" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
 			<StackPanel Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
 				<StackPanel Name="PlayMode" IsVisible="True" VerticalAlignment="Center" HorizontalAlignment="Stretch">
-					<Grid ColumnDefinitions="*,8,80,8,110,8,50" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+					<Grid ColumnDefinitions="30,*,8,80,8,110,8,50" HorizontalAlignment="Stretch" VerticalAlignment="Center">
 						<TextBlock
 							Name="_AsyncNameBox"
 							Text="This async's name"
 							VerticalAlignment="Center"
-							HorizontalAlignment="Center"
+							HorizontalAlignment="Left"
+							Grid.Column="1"
 							/>
 						<Button 
 							Name="NewSlot"
 							Content="New Slot"
-							Grid.Column="2"
+							Grid.Column="3"
 							HorizontalAlignment="Stretch"
 							HorizontalContentAlignment="Center"
 							VerticalAlignment="Stretch"
@@ -38,7 +39,7 @@
 						<Button
 							Name="ToolVersions"
 							Content="Tool versions"
-							Grid.Column="4"
+							Grid.Column="5"
 							HorizontalAlignment="Stretch"
 							HorizontalContentAlignment="Center"
 							VerticalAlignment="Stretch"
@@ -46,7 +47,7 @@
 						<Button 
 							Name="Edit"
 							Content="Edit"
-							Grid.Column="6"
+							Grid.Column="7"
 							HorizontalAlignment="Stretch"
 							HorizontalContentAlignment="Center"
 							VerticalAlignment="Stretch"

@@ -13,6 +13,7 @@ using static YAAL.AsyncSettings;
 using System.Linq;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using Avalonia;
 
 namespace YAAL;
 
@@ -23,12 +24,16 @@ public partial class SlotHolder : UserControl
     private Cache_Room room;
     private List<Cache_RoomSlot> availableGames;
     public Cache_DisplaySlot selectedSlot;
+    public Cache_CustomLauncher currentLauncher;
     public event Action RequestRemoval;
     public event Action SwitchedToBigger;
     public event Action SwitchedToSmaller;
     public event Action FinishedEditing;
+    public event Action ChangedHeight;
+    public int hardCodedHeight = 52;
     public int baseHeight = 52;
-    public int heightDifference = 38;
+    //public int heightDifference = 38;
+    public int heightDifference = 52;
     public bool isEditing = false;
     private ObservableCollection<string> toolList = new ObservableCollection<string>();
     private string previousTheme = "";
@@ -58,6 +63,14 @@ public partial class SlotHolder : UserControl
 
         AutoTheme.SetTheme(Transparent1, ThemeSettings.transparent);
         _ChangedSlot(null, null);
+        EventHandler handler = null;
+        handler = (_, _) =>
+        {
+            Resize();
+            this.LayoutUpdated -= handler;
+        };
+        this.LayoutUpdated += handler;
+
     }
 
     public void SetAsyncName(string newName)
@@ -391,21 +404,23 @@ public partial class SlotHolder : UserControl
         Save();
     }
 
-   
     public void SwitchMode()
     {
         if (PlayMode.IsVisible)
         {
             PlayMode.IsVisible = false;
             EditMode.IsVisible = true;
-            this.Height = baseHeight + heightDifference;
-            SwitchedToBigger?.Invoke();
+            Resize();
+            //this.Height = baseHeight + heightDifference;
+            //SwitchedToBigger?.Invoke();
+            //ChangedHeight?.Invoke();
         } else
         {
             PlayMode.IsVisible = true;
             EditMode.IsVisible = false;
-            this.Height = baseHeight;
-            SwitchedToSmaller?.Invoke();
+            Resize();
+            //this.Height = baseHeight;
+            //SwitchedToSmaller?.Invoke();
         }
     }
 
@@ -525,12 +540,31 @@ public partial class SlotHolder : UserControl
         {
             Save();
         }
+        currentLauncher = IOManager.LoadCacheLauncher(SelectedLauncher.SelectedItem.ToString());
         SetBackgrounds();
     }
 
     public Cache_Slot GetCache()
     {
         return thisSlot;
+    }
+
+    public void Resize()
+    {
+        double newHeight = hardCodedHeight;
+        Cache_Theme theme = IOManager.GetTheme(SelectedLauncher.SelectedItem.ToString() ?? "General Theme");
+        newHeight += theme.offset * 2;
+
+        string combined = theme.offset.ToString() + ",*," + theme.offset.ToString();
+        EmptySpace.RowDefinitions = new RowDefinitions(combined);
+
+        if (EditMode.IsVisible)
+        {
+            newHeight += heightDifference;
+        }
+
+        this.Height = newHeight;
+        ChangedHeight?.Invoke();
     }
 
     public void SetBackgrounds()

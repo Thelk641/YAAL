@@ -155,6 +155,23 @@ namespace YAAL
             return output;
         }
 
+        public static Cache_Theme GetTheme(string launcherName)
+        {
+            if (!GetLauncherList().Contains(launcherName))
+            {
+                return new Cache_Theme();
+            }
+
+            Cache_CustomLauncher cache = LoadCacheLauncher(launcherName);
+            if(cache.customTheme != null)
+            {
+                return cache.customTheme;
+            } else
+            {
+                return new Cache_Theme();
+            }
+        }
+
         public static string? GetGameNameFromApworld(string apworldPath)
         {
             using ZipArchive archive = ZipFile.OpenRead(apworldPath);

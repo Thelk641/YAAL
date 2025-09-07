@@ -21,6 +21,7 @@ public partial class AsyncHolder : UserControl
     private Cache_Async thisAsync = new Cache_Async();
     public event Action? RequestRemoval;
     public event Action? DoneClosing;
+    private Dictionary<SlotHolder, double> previousHeight = new Dictionary<SlotHolder, double>();
     public AsyncHolder()
     {
         InitializeComponent();
@@ -162,6 +163,16 @@ public partial class AsyncHolder : UserControl
         };
 
         this.Height += toAdd.Height + 8;
+
+        previousHeight[toAdd] = toAdd.Height;
+
+        toAdd.ChangedHeight += () =>
+        {
+            this.Height -= previousHeight[toAdd];
+            this.Height += toAdd.Height;
+        };
+
+
 
         if(thisAsync.room.slots.Count > 0)
         {

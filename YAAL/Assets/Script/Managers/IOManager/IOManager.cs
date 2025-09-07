@@ -10,6 +10,9 @@ using System.Xml.Linq;
 using static YAAL.FileSettings;
 using static YAAL.GeneralSettings;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using Avalonia.Media.Imaging;
+using Avalonia.Controls;
+using ReactiveUI;
 
 namespace YAAL
 {
@@ -146,6 +149,23 @@ namespace YAAL
             settings.generalTheme = newTheme;
             App.Settings.SetTheme("General Theme", newTheme);
             SaveCache<Cache_UserSettings>(Path.Combine(AppContext.BaseDirectory, userSettings.GetFileName()), settings);
+        }
+
+        public static Bitmap? ReadImage(string imageName)
+        {
+            string path = Path.Combine(GetSaveLocation(Images), GetFileName(imageName));
+            if (File.Exists(path))
+            {
+                try
+                {
+                    return new Bitmap(path);
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+            }
+            return null;
         }
     }
 }
