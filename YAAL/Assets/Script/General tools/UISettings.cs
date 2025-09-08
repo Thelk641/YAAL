@@ -35,6 +35,8 @@ namespace YAAL.Assets.Scripts
             }
         }
 
+        // -----------------------------
+
         // Better Theme
         private Dictionary<string, Cache_Theme> themes = new Dictionary<string, Cache_Theme>();
 

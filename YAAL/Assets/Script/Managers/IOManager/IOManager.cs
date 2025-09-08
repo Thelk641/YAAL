@@ -153,6 +153,22 @@ namespace YAAL
 
         public static Bitmap? ReadImage(string imageName)
         {
+            if (File.Exists(imageName))
+            {
+                try
+                {
+                    return new Bitmap(imageName);
+                } catch (Exception e)
+                {
+                    ErrorManager.ThrowError(
+                        "IOManager - Failed to read image",
+                        "Trying to parse file " + imageName + " raised the following exception : " + e.Message
+                        );
+                    return null;
+                }
+            }
+
+
             string path = Path.Combine(GetSaveLocation(Images), GetFileName(imageName));
             if (File.Exists(path))
             {
@@ -166,6 +182,26 @@ namespace YAAL
                 }
             }
             return null;
+        }
+
+        public static Cache_CustomTheme? GetCustomTheme(string name)
+        {
+            string path = Path.Combine(GetSaveLocation(Themes), GetFileName(name) + ".json");
+            if (File.Exists(path))
+            {
+                return LoadCache<Cache_CustomTheme>(path);
+            }
+            return null;
+        }
+
+        public static List<string> GetThemeList()
+        {
+            string path = GetSaveLocation(Themes);
+            return Directory
+                .EnumerateFiles(path)
+                .Where(file => string.Equals(Path.GetExtension(file), ".json", StringComparison.OrdinalIgnoreCase))
+                .Select(file => Path.GetFileNameWithoutExtension(file))
+                .ToList();
         }
     }
 }

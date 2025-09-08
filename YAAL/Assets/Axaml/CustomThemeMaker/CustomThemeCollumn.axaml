@@ -1,0 +1,60 @@
+<UserControl
+	xmlns="https://github.com/avaloniaui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:conv="clr-namespace:YAAL"
+	x:Class="YAAL.CustomThemeCollumn"
+	HorizontalAlignment="Stretch"
+	VerticalAlignment="Stretch"
+	xmlns:local="clr-namespace:YAAL"
+	Height="190"
+             >
+	<Border
+		Name="BackgroundColor"
+		BorderBrush="Gray"
+		CornerRadius="4"
+		HorizontalAlignment="Stretch"
+		VerticalAlignment="Stretch"
+		Padding="8"
+		>
+		<Grid RowDefinitions="30,0,*,8,30">
+			<TextBlock
+				Name="categoryName"
+				Text="Background"
+				HorizontalAlignment="Center"
+				VerticalAlignment="Top"
+				Grid.Row="0"
+			/>
+			<Border BorderBrush="Gray"
+				BorderThickness="1"
+				CornerRadius="4"
+				Padding="8"
+				HorizontalAlignment="Stretch"
+				Grid.Row="2"
+				Name="BrushBackground"
+				>
+				<ScrollViewer Name="Scroll" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" AllowAutoHide="False">
+					<Border Padding="0,0,8,0" Name="PaddingBorder">
+						<StackPanel x:Name="CommandContainer" />
+					</Border>
+				</ScrollViewer>
+			</Border>
+			<Grid ColumnDefinitions="*,120,8,120,*" Grid.Row="4">
+				<Button
+					Name="AddColor"
+					Content="Add a color"
+					Grid.Column="1"
+					HorizontalAlignment="Stretch"
+					HorizontalContentAlignment="Center"
+					/>
+				<Button
+					Name="AddImage"
+					Content="Add an image"
+					Grid.Column="3"
+					HorizontalAlignment="Stretch"
+					HorizontalContentAlignment="Center"
+					/>
+			</Grid>
+		</Grid>
+	</Border>
+	
+</UserControl>

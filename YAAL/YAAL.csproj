@@ -26,6 +26,12 @@
     <Compile Update="Assets\Axaml\ConfirmationWindow\ConfirmationWindow.axaml.cs">
       <DependentUpon>ConfirmationWindow.axaml</DependentUpon>
     </Compile>
+    <Compile Update="Assets\Axaml\CustomThemeMaker\CustomThemeMaker.axaml.cs">
+      <DependentUpon>CustomThemeMaker.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Assets\Axaml\CustomThemeMaker\CustomThemeCollumn.axaml.cs">
+      <DependentUpon>CustomThemeCollumn.axaml</DependentUpon>
+    </Compile>
     <Compile Update="Assets\Axaml\Main Window\Components\AsyncHolder.axaml.cs">
       <DependentUpon>AsyncHolder.axaml</DependentUpon>
     </Compile>

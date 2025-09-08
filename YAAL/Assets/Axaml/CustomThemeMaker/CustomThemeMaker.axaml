@@ -1,0 +1,196 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:local="clr-namespace:YAAL"
+        mc:Ignorable="d"
+		MinWidth="600"
+		MaxWidth="600"
+		MinHeight="550"
+		MaxHeight="550"
+        x:Class="YAAL.CustomThemeMaker"
+        Title="Yet Another Archipelago Launcher"
+		>
+	<Window.Resources>
+		<local:BoolInvert x:Key="BoolInvert"/>
+	</Window.Resources>
+	<Border Padding="8" Name="TrueBackground">
+		<Grid RowDefinitions="30,8,276,8,30,8,168">
+			<!-- Selector-->
+			<Grid ColumnDefinitions="30,8,30,8,30,8,*">
+				<Button
+					Name="NewTheme"
+					Grid.Column="0"
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch"
+					local:AutoIcon.Icon="File"
+					>
+					<Svg
+							VerticalAlignment="Center"
+							HorizontalAlignment="Center"
+							Width="30"
+							/>
+				</Button>
+				<Button
+					Name="SaveButton"
+					Grid.Column="2"
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch"
+					local:AutoIcon.Icon="Save"
+					>
+					<Svg
+							VerticalAlignment="Center"
+							HorizontalAlignment="Center"
+							Width="30"
+							/>
+				</Button>
+				<Button
+					Name="RemoveTheme"
+					Grid.Column="4"
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch"
+					local:AutoIcon.Icon="Trash"
+					>
+					<Svg
+							VerticalAlignment="Center"
+							HorizontalAlignment="Center"
+							Width="30"
+							/>
+				</Button>
+				<ComboBox
+				Name="Selector"
+				VerticalAlignment="Center"
+				HorizontalAlignment="Stretch"
+				HorizontalContentAlignment="Center"
+				Grid.Column="6"
+				ItemsSource="{Binding Cache_DisplayTheme}"
+				SelectedItem="{Binding selectedtheme, Mode=TwoWay}"
+				ToolTip.Tip="Saves the current theme automatically if you select another"
+				>
+					<ComboBox.Styles>
+						<Style Selector="ComboBoxItem">
+							<Setter Property="IsEnabled"
+									Value="{Binding isHeader, Converter={StaticResource BoolInvert}}" />
+							<Setter Property="IsHitTestVisible"
+									Value="{Binding isHeader, Converter={StaticResource BoolInvert}}" />
+						</Style>
+					</ComboBox.Styles>
+					<ComboBox.ItemTemplate>
+						<DataTemplate>
+							<TextBlock
+								Text="{Binding launcherName}"
+										/>
+						</DataTemplate>
+					</ComboBox.ItemTemplate>
+				</ComboBox>
+			</Grid>
+
+
+			<!-- Settings -->
+			<Border 
+				Name="SettingBorder"
+				Grid.Row="2" 
+				HorizontalAlignment="Stretch" 
+				VerticalAlignment="Stretch"
+				BorderBrush="Gray"
+				BorderThickness="1"
+				CornerRadius="4"
+				Padding="8"
+				>
+				<Grid RowDefinitions="*,8,1,8,52,8">
+					<Grid Name="CollumnContainer" ColumnDefinitions="*,8,1,8,*" Grid.Row="0">
+						<local:CustomThemeCollumn Name="Collumn_Background" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+						<Rectangle Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Black"/>
+						<local:CustomThemeCollumn Name="Collumn_Foreground" Grid.Column="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+					</Grid>
+					<Rectangle Grid.Row="2" Fill="Black"/>
+					<Grid ColumnDefinitions="168,*,1,*,168,*,1,*,168" Grid.Row="4">
+						<Grid RowDefinitions="*,8,*" Grid.Column="0" HorizontalAlignment="Center">
+							<TextBlock
+								Text="Top offset :"
+								Grid.Row="0"
+								VerticalAlignment="Center"
+								HorizontalAlignment="Center"
+							/>
+							<TextBox
+								Name="OffsetTop"
+								Grid.Row="2"
+								VerticalAlignment="Center"
+								HorizontalAlignment="Center"
+								HorizontalContentAlignment="Center"
+								Height="30"
+								Width="100"
+								Text="0"
+								Watermark="0"
+								ToolTip.Tip="Must be an integer or will default to 0"
+								/>
+						</Grid>
+						<Rectangle Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Black"/>
+						<Grid RowDefinitions="*,8,*" Grid.Column="4" HorizontalAlignment="Center">
+							<TextBlock
+								Text="Button color :"
+								Grid.Row="0"
+								VerticalAlignment="Center"
+								HorizontalAlignment="Center"
+							/>
+							<Button
+								Grid.Row="2"
+								Height="30"
+								Width="100"
+								VerticalAlignment="Stretch"
+								/>
+						</Grid>
+						<Rectangle Grid.Column="6" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Black"/>
+						<Grid RowDefinitions="*,2,*" Grid.Column="8" HorizontalAlignment="Center">
+							<TextBlock
+								Text="Bottom offset :"
+								Grid.Row="0"
+								VerticalAlignment="Center"
+							/>
+							<TextBox
+								Name="OffsetBottom"
+								Grid.Row="2"
+								VerticalAlignment="Center"
+								HorizontalAlignment="Center"
+								HorizontalContentAlignment="Center"
+								Height="30"
+								Width="100"
+								Text="0"
+								Watermark="0"
+								ToolTip.Tip="Must be an integer or will default to 0"
+								/>
+						</Grid>
+					</Grid>
+
+				</Grid>
+				
+
+			</Border>
+
+			<TextBlock 
+				Text="Examples, play and edit mode :"
+				Grid.Row="4"
+				HorizontalAlignment="Center"
+				VerticalAlignment="Center"
+				/>
+
+			<!-- Examples-->
+			<Border
+				Name="ExampleBorder"
+				Grid.Row="6"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				BorderBrush="Gray"
+				BorderThickness="1"
+				CornerRadius="4"
+				Padding="8"
+				>
+				<Grid RowDefinitions="52,8,90">
+					<local:ThemeSlot Name="PlayMode" Grid.Row="0"/>
+					<local:ThemeSlot Grid.Row="2" Name="EditMode"/>
+				</Grid>
+			</Border>
+			
+		</Grid>
+	</Border>
+</Window>

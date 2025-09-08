@@ -14,6 +14,7 @@ namespace YAAL
         Play,
         Settings,
         Save,
+        Trash,
         None,
     };
 

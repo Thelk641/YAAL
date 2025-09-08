@@ -232,8 +232,16 @@ namespace YAAL
             return $"#{color.A:X2}{color.R:X2}{color.G:X2}{color.B:X2}";
         }
 
-        public static Color Darken(Color color, double factor = 0.9)
+        public static Color Darken(Color color)
         {
+            double factor;
+            if(color.A > 0.5 && GetLuminance(color) < 0.5)
+            {
+                factor = 1.1;
+            } else
+            {
+                factor = 0.9;
+            }
             return Color.FromArgb(
                 color.A,
                 (byte)(color.R * factor),

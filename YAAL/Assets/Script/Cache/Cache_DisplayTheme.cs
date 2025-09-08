@@ -12,12 +12,20 @@ namespace YAAL
     {
         public bool isHeader { get; set; } = true;
         public Cache_Theme cache_theme;
+        public Cache_CustomTheme cache_customTheme;
         public string launcherName { get; set; }
 
         public void SetTheme(string name, Cache_Theme theme)
         {
             launcherName = name;
             cache_theme = theme;
+            isHeader = false;
+        }
+
+        public void SetTheme(string name, Cache_CustomTheme customTheme)
+        {
+            launcherName = name;
+            cache_customTheme = customTheme;
             isHeader = false;
         }
     }

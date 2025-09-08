@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 
 namespace YAAL
 {
-    public class Cache_CustomTheme : INotifyPropertyChanged
+    public class Cache_CustomTheme
     {
         public string name;
         public int topOffset { get; set; } = 0;
@@ -19,18 +19,22 @@ namespace YAAL
         public Cache_CustomBrush background { get; set; }
         public Cache_CustomBrush foreground { get; set; }
 
+        public bool transparentButton { get; set; }
+
         [JsonIgnore]
         public SolidColorBrush buttonBackground
         {
             get
             {
+                if (transparentButton)
+                {
+                    return new SolidColorBrush(Colors.Transparent);
+                }
                 return new SolidColorBrush(color, opacity);
             }
         }
 
         public Color color;
         public double opacity;
-
-        public event PropertyChangedEventHandler? PropertyChanged;
     }
 }
