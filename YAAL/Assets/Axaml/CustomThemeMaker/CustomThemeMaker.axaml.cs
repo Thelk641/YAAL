@@ -35,6 +35,15 @@ public partial class CustomThemeMaker : Window
 
         List<Cache_DisplayTheme> list = new List<Cache_DisplayTheme>();
 
+        List<string> themeList = IOManager.GetThemeList();
+
+        if(themeList.Count == 0)
+        {
+            // Need a DefaultManager that deals with that
+            Cache_DisplayTheme defaultTheme = new Cache_DisplayTheme();
+            list.Add(defaultTheme);
+        }
+
         foreach (var item in IOManager.GetThemeList())
         {
             Cache_DisplayTheme toAdd = new Cache_DisplayTheme();

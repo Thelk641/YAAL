@@ -65,4 +65,8 @@
     <AvaloniaResource Include="Assets\Icons\**" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Assets\Script\Managers\DefaultManager\Config\" />
+  </ItemGroup>
+
 </Project>
