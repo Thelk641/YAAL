@@ -1,0 +1,43 @@
+{
+  "name": "Default Theme",
+  "buttonColor": {
+    "A": 255,
+    "R": 25,
+    "G": 25,
+    "B": 25
+  },
+  "buttonOpacity": 1.0,
+  "topOffset": 0,
+  "bottomOffset": 0,
+  "background": {
+    "_cache": [
+      {
+        "color": {
+          "A": 255,
+          "R": 0,
+          "G": 0,
+          "B": 0
+        },
+        "opacity": 1.0,
+        "IsTransparent": false,
+        "brushType": "Color"
+      }
+    ]
+  },
+  "foreground": {
+    "_cache": [
+      {
+        "color": {
+          "A": 255,
+          "R": 79,
+          "G": 79,
+          "B": 79
+        },
+        "opacity": 1.0,
+        "IsTransparent": false,
+        "brushType": "Color"
+      }
+    ]
+  },
+  "transparentButton": false
+}

@@ -10,12 +10,15 @@ using Avalonia.Media;
 using System.ComponentModel;
 using Avalonia.Controls;
 using System.Numerics;
+using Newtonsoft.Json;
 
 namespace YAAL
 {
     public class Cache_CustomBrush
     {
-        private List<Cached_Brush> _cache;
+        [JsonProperty]
+        private List<Cached_Brush> _cache = new List<Cached_Brush>();
+        [JsonIgnore]
         public Dictionary<string, Border> cache { get
             {
                 Dictionary<string, Border> output = new Dictionary<string, Border>();
@@ -27,7 +30,7 @@ namespace YAAL
                 return output;
             } 
         }
-
+        [JsonIgnore]
         public Border BackgroundHolder
         {
             get
@@ -44,12 +47,20 @@ namespace YAAL
             }
         }
 
-        public Stretch stretch;
-        public TileMode tile;
+        public void AddNewBrush(Cached_Brush brush)
+        {
+            _cache.Add(brush);
+        }
+
+        public void RemoveBrush(Cached_Brush brush)
+        {
+            _cache.Remove(brush);
+        }
     }
 
     public abstract class Cached_Brush
     {
+        public string brushType { get; set; } = "";
         public abstract Border GetLayer();
     }
 

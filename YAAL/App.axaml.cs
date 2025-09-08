@@ -30,6 +30,12 @@ public partial class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
+        Newtonsoft.Json.JsonConvert.DefaultSettings = () => new Newtonsoft.Json.JsonSerializerSettings
+        {
+            Formatting = Newtonsoft.Json.Formatting.Indented,
+            Converters = { new CachedBrushConverter() }
+        };
+
         /*if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             desktop.MainWindow = new ActualSettingManager();

@@ -16,10 +16,10 @@ namespace YAAL
         public string name;
         public int topOffset { get; set; } = 0;
         public int bottomOffset { get; set; } = 0;
-        public Cache_CustomBrush background { get; set; }
-        public Cache_CustomBrush foreground { get; set; }
+        public Cache_CustomBrush background { get; set; } = new Cache_CustomBrush();
+        public Cache_CustomBrush foreground { get; set; } = new Cache_CustomBrush();
 
-        public bool transparentButton { get; set; }
+        public bool transparentButton { get; set; } = false;
 
         [JsonIgnore]
         public SolidColorBrush buttonBackground
@@ -30,11 +30,16 @@ namespace YAAL
                 {
                     return new SolidColorBrush(Colors.Transparent);
                 }
-                return new SolidColorBrush(color, opacity);
+                return new SolidColorBrush(buttonColor, buttonOpacity);
+            }
+            set
+            {
+                buttonColor = value.Color;
+                buttonOpacity = value.Opacity;
             }
         }
 
-        public Color color;
-        public double opacity;
+        public Color buttonColor;
+        public double buttonOpacity;
     }
 }
