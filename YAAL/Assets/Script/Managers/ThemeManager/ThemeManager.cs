@@ -22,6 +22,12 @@ namespace YAAL
         public static Dictionary<Control, Border> themeContainers = new Dictionary<Control, Border>();
         public static string defaultTheme = "General Theme";
 
+        static ThemeManager()
+        {
+            // TODO : this shouldn't be hardcoded
+            themes["General Theme"] = DefaultManager.theme;
+        }
+
         public static void ApplyTheme(Control container, string theme = "")
         {
             if (theme == "")
@@ -115,12 +121,13 @@ namespace YAAL
                 return output;
             }
 
+
             ErrorManager.ThrowError(
                 "ThemeManager - Couldn't find themes",
                 "Couldn't find theme " + name + " nor default theme named " + defaultTheme + ". Did you manually delete or rename them maybe ?"
                 );
 
-            return new Cache_CustomTheme();
+            return DefaultManager.theme;
         } 
 
         public static Cache_CustomTheme GetDefaultTheme()

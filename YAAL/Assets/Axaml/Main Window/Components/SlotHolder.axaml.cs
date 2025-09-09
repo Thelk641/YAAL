@@ -552,10 +552,14 @@ public partial class SlotHolder : UserControl
     public void Resize()
     {
         double newHeight = hardCodedHeight;
-        Cache_Theme theme = IOManager.GetTheme(SelectedLauncher.SelectedItem.ToString() ?? "General Theme");
-        newHeight += theme.offset * 2;
+        // TODO : need to grab the theme from the custom launcher instead
+        Cache_CustomTheme customTheme = DefaultManager.theme;
+        //Cache_Theme theme = IOManager.GetTheme(SelectedLauncher.SelectedItem.ToString() ?? "General Theme");
+        //newHeight += theme.offset * 2;
 
-        string combined = theme.offset.ToString() + ",*," + theme.offset.ToString();
+        newHeight += customTheme.topOffset + customTheme.bottomOffset;
+
+        string combined = customTheme.topOffset.ToString() + ",*," + customTheme.bottomOffset.ToString();
         EmptySpace.RowDefinitions = new RowDefinitions(combined);
 
         if (EditMode.IsVisible)

@@ -1,0 +1,278 @@
+<UserControl
+	xmlns="https://github.com/avaloniaui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:local="clr-namespace:YAAL"
+	x:Class="YAAL.SlotHolderV2"
+	HorizontalAlignment="Stretch"
+	Height="112"
+	MinWidth="600"
+	>
+	<UserControl.Resources>
+		<local:BoolInvert x:Key="BoolInvert"/>
+	</UserControl.Resources>
+
+	<Grid RowDefinitions="*" VerticalAlignment="Stretch">
+		<Border
+			Name="PlayMode"
+			BorderBrush="Gray"
+			BorderThickness="1"
+			CornerRadius="4"
+			Padding="6"
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Stretch"
+			Background="#FFF"
+			IsVisible="False"
+			Grid.RowSpan="3"
+			>
+			<Grid Name="PlayEmptySpace" VerticalAlignment="Center" RowDefinitions="0,*,0">
+				<StackPanel IsVisible="True" VerticalAlignment="Center" Grid.Row="1">
+					<Grid ColumnDefinitions="*,8,*" VerticalAlignment="Center">
+						<Grid ColumnDefinitions="60,8,*">
+							<Button
+								Content="Play"
+								Name="RealPlay"
+								VerticalAlignment="Stretch"
+								VerticalContentAlignment="Center"
+								HorizontalAlignment="Stretch"
+								HorizontalContentAlignment="Center"
+								Grid.Column="0"
+								ToolTip.Tip="Launchs the selected game"
+								/>
+							<Border
+								BorderThickness="1"
+								BorderBrush="Gray"
+								Grid.Column="2"
+								Padding="8"
+								Name="Transparent1"
+								>
+								<TextBlock
+									Name="_SlotName"
+									Text="This is a slot name"
+									VerticalAlignment="Center"
+									HorizontalAlignment="Stretch"
+									Grid.Column="2"
+									ToolTip.Tip="The slot name"
+									/>
+							</Border>
+						</Grid>
+
+						<Grid ColumnDefinitions="*,8,85,8,60" Grid.Column="2">
+							<ComboBox
+								Name="ToolSelect"
+								HorizontalAlignment="Stretch"
+								VerticalAlignment="Stretch"
+								HorizontalContentAlignment="Left"
+								VerticalContentAlignment="Center"
+								Grid.Column="0"
+								/>
+							<Button
+								Name="StartTool"
+								Content="Start Tool"
+								VerticalAlignment="Stretch"
+								VerticalContentAlignment="Center"
+								Grid.Column="2"
+								/>
+							<Button
+								Name="Edit"
+								Content="Edit"
+								VerticalAlignment="Stretch"
+								VerticalContentAlignment="Center"
+								HorizontalAlignment="Stretch"
+								HorizontalContentAlignment="Center"
+								Grid.Column="4"
+								/>
+						</Grid>
+					</Grid>
+				</StackPanel>
+			</Grid>
+		</Border>
+
+		<Grid Name="EditMode" RowDefinitions="*,8,*">
+			<Border
+				Name="EditRow1"
+				BorderBrush="Gray"
+				BorderThickness="1"
+				CornerRadius="4"
+				Padding="6"
+				HorizontalAlignment="Stretch"
+				Background="#FFF"
+				IsVisible="True"
+				>
+				<Grid Name="EditEmptySpace1" RowDefinitions="0,*,0">
+					<Grid Grid.Row="1" ColumnDefinitions="*,8,*" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+						<Grid Grid.Column="0" ColumnDefinitions="45,8,*">
+							<Button
+								Content="Play"
+								Name="FakePlay"
+								VerticalAlignment="Center"
+								Grid.Column="0"
+								ToolTip.Tip="Launchs the selected game"
+								IsEnabled="False"
+								local:AutoIcon.Icon="Play"
+								Height="30"
+								>
+								<Svg
+									VerticalAlignment="Center"
+									HorizontalAlignment="Center"
+									Width="30"
+								/>
+							</Button>
+							<TextBox
+								Name="SlotName"
+								VerticalAlignment="Center"
+								HorizontalAlignment="Stretch"
+								Grid.Column="2"
+								ToolTip.Tip="The slot name"
+								Watermark="Slot name"
+								IsVisible="False"
+								/>
+							<ComboBox
+								Name="SlotSelector"
+								VerticalAlignment="Center"
+								HorizontalAlignment="Stretch"
+								Grid.Column="2"
+								IsVisible="True"
+								ItemsSource="{Binding Cache_DisplaySlot}"
+								SelectedItem="{Binding selectedSlot}"
+								>
+								<ComboBox.Styles>
+									<Style Selector="ComboBoxItem">
+										<Setter Property="IsEnabled"
+												Value="{Binding isHeader, Converter={StaticResource BoolInvert}}" />
+										<Setter Property="IsHitTestVisible"
+												Value="{Binding isHeader, Converter={StaticResource BoolInvert}}" />
+									</Style>
+								</ComboBox.Styles>
+								<ComboBox.ItemTemplate>
+									<DataTemplate>
+										<TextBlock 
+											Text="{Binding slotName}"
+										/>
+									</DataTemplate>
+								</ComboBox.ItemTemplate>
+							</ComboBox>
+						</Grid>
+						<Grid Grid.Column="2" ColumnDefinitions="*,8,60" HorizontalAlignment="Stretch">
+							
+							<Grid Name="ManualPatch" IsVisible="False" ColumnDefinitions="*,8,40" Grid.Column="0">
+								<TextBox
+								Name="Patch"
+								Grid.Column="0"
+								VerticalContentAlignment="Center"
+								VerticalAlignment="Center"
+								HorizontalAlignment="Stretch"
+								ToolTip.Tip="The patch file"
+								Watermark="/path/to/patch"
+								/>
+								<Button
+								Name="PatchSelect"
+								Content="File"
+								Grid.Column="2"
+								/>
+							</Grid>
+
+							<Grid Name="AutomaticPatch">
+								<Button
+									Name="DownloadPatch"
+									Content="Download patch"
+									HorizontalAlignment="Stretch"
+									VerticalAlignment="Center"
+									HorizontalContentAlignment="Center"
+									Grid.Column="0"
+									/>
+								<Button
+									Name="ReDownloadPatch"
+									Content="Download patch again"
+									HorizontalAlignment="Stretch"
+									VerticalAlignment="Center"
+									HorizontalContentAlignment="Center"
+									Grid.Column="0"
+									IsVisible="false"
+									/>
+							</Grid>
+
+							<Button
+								Name="DoneEditing"
+								Content="Save"
+								Grid.Column="4"
+								HorizontalAlignment="Stretch"
+								HorizontalContentAlignment="Center"
+								local:AutoIcon.Icon="Save"
+								Height="30"
+								>
+								<Svg
+									VerticalAlignment="Center"
+									HorizontalAlignment="Center"
+									Width="30"
+								/>
+							</Button>
+						</Grid>
+					</Grid>
+				</Grid>
+			</Border>
+
+			<Border
+				Name="EditRow2"
+				BorderBrush="Gray"
+				BorderThickness="1"
+				CornerRadius="4"
+				Padding="6"
+				HorizontalAlignment="Stretch"
+				Background="#FFF"
+				IsVisible="True"
+				Grid.Row="2"
+				>
+				<Grid Name="EditEmptySpace2" RowDefinitions="0,*,0">
+					<Grid Grid.Row="1" ColumnDefinitions="*,8,*" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+						<ComboBox
+							Name="SelectedLauncher"
+							Grid.Column="0"
+							HorizontalAlignment="Stretch"
+							VerticalAlignment="Center"
+							/>
+						<Grid ColumnDefinitions="*,8,70,8,60" Grid.Column="2">
+							<ComboBox
+								Name="SelectedVersion"
+								Grid.Column="0"
+								HorizontalAlignment="Stretch"
+								VerticalAlignment="Center"
+								/>
+							<Button
+								Name="ManualPatchButton"
+								Grid.Column="2"
+								Content="Manual"
+								HorizontalAlignment="Stretch"
+								HorizontalContentAlignment="Center"
+								IsVisible="True"
+								/>
+							<Button
+								Name="AutomaticPatchButton"
+								Grid.Column="2"
+								Content="Auto"
+								HorizontalAlignment="Stretch"
+								HorizontalContentAlignment="Center"
+								IsVisible="False"
+								
+								/>
+							<Button
+								Name="DeleteSlot"
+								Grid.Column="4"
+								Content="Delete"
+								HorizontalAlignment="Stretch"
+								HorizontalContentAlignment="Center"
+								local:AutoIcon.Icon="Trash"
+								Height="30"
+								>
+								<Svg
+									VerticalAlignment="Center"
+									HorizontalAlignment="Center"
+									Width="30"
+								/>
+							</Button>
+						</Grid>
+					</Grid>
+				</Grid>
+			</Border>
+		</Grid>
+	</Grid>
+</UserControl>
