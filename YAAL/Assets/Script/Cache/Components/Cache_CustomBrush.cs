@@ -119,20 +119,13 @@ namespace YAAL
     public class Cached_SolidColorBrush : Cached_Brush
     {
         public Color color;
-        public double opacity;
-        public bool IsTransparent;
 
         public override Border GetLayer()
         {
             Border output = new Border();
-            if (IsTransparent)
-            {
-                output.Background = new SolidColorBrush(Colors.Transparent);
-                return output;
-            }
             SolidColorBrush brush = new SolidColorBrush();
             brush.Color = color;
-            brush.Opacity = opacity;
+            brush.Opacity = 1;
             output.Background = brush;
             
             return output;
