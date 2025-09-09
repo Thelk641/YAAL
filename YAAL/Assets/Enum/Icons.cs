@@ -15,6 +15,10 @@ namespace YAAL
         Settings,
         Save,
         Trash,
+        Up,
+        Down,
+        Plus,
+        Minus,
         None,
     };
 

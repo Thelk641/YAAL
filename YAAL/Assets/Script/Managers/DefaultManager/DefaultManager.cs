@@ -13,11 +13,48 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using Avalonia.Media.Imaging;
 using Avalonia.Controls;
 using ReactiveUI;
+using System.Reflection;
 
 namespace YAAL
 {
     public static class DefaultManager
     {
+        public static Cache_CustomTheme theme
+        {
+            get
+            {
+                string json = LoadFile("theme.json");
+                return JsonConvert.DeserializeObject<Cache_CustomTheme>(json)!;
+            }
+        }
 
+        public static Cache_UserSettings userSettings
+        {
+            get
+            {
+                string json = LoadFile("userSettings.json");
+                return JsonConvert.DeserializeObject<Cache_UserSettings>(json)!;
+            }
+        }
+
+        private static string LoadFile(string fileName)
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+
+            string trueName = "YAAL.Assets.Script.Managers.DefaultManager.Config." + fileName;
+
+            using (Stream? stream = assembly.GetManifestResourceStream(trueName))
+            {
+                if (stream == null)
+                {
+                    throw new FileNotFoundException($"Embedded resource '{trueName}' not found.");
+                }  
+
+                using (var reader = new StreamReader(stream))
+                {
+                    return reader.ReadToEnd();
+                }
+            }
+        }
     }
 }

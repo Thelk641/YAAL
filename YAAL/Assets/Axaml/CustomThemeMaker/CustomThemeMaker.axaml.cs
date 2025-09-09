@@ -39,8 +39,8 @@ public partial class CustomThemeMaker : Window
 
         if(themeList.Count == 0)
         {
-            // Need a DefaultManager that deals with that
             Cache_DisplayTheme defaultTheme = new Cache_DisplayTheme();
+            defaultTheme.SetTheme("Default Theme", DefaultManager.theme);
             list.Add(defaultTheme);
         }
 
@@ -65,8 +65,6 @@ public partial class CustomThemeMaker : Window
             SaveTheme((Selector.SelectedItem as Cache_DisplayTheme).launcherName);
         };
 
-        LoadTheme();
-
         OffsetTop.TextChanged += (_, _) =>
         {
             Debouncer.Debounce(Resize, 1);
@@ -76,6 +74,8 @@ public partial class CustomThemeMaker : Window
         {
             Debouncer.Debounce(Resize, 1);
         };
+
+        //LoadTheme();
     }
 
     public void SaveTheme(string savedName = "")

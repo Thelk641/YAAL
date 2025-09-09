@@ -32,6 +32,9 @@
     <Compile Update="Assets\Axaml\CustomThemeMaker\CustomThemeCollumn.axaml.cs">
       <DependentUpon>CustomThemeCollumn.axaml</DependentUpon>
     </Compile>
+    <Compile Update="Assets\Axaml\CustomThemeMaker\BrushHolder.axaml.cs">
+      <DependentUpon>BrushHolder.axaml</DependentUpon>
+    </Compile>
     <Compile Update="Assets\Axaml\Main Window\Components\AsyncHolder.axaml.cs">
       <DependentUpon>AsyncHolder.axaml</DependentUpon>
     </Compile>
@@ -66,7 +69,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Assets\Script\Managers\DefaultManager\Config\" />
+    <EmbeddedResource Include="Assets\Script\Managers\DefaultManager\Config\*.json" />
   </ItemGroup>
 
 </Project>

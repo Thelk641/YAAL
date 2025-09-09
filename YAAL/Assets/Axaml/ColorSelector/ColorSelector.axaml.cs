@@ -15,10 +15,13 @@ namespace YAAL;
 
 public partial class ColorSelector : Window
 {
+    public event Action ChangedColor;
+    public event Action CancelSelection;
     public ColorSelector()
     {
         InitializeComponent();
         AutoTheme.SetTheme(BackgroundColor, ThemeSettings.backgroundColor);
+        View.ColorChanged += (_, _) => ChangedColor?.Invoke();
     }
 
     public ColorSelector(string hex)
@@ -33,13 +36,20 @@ public partial class ColorSelector : Window
         };
         Cancel.Click += (_, _) =>
         {
+            CancelSelection?.Invoke();
             this.Close(false);
         };
+        View.ColorChanged += (_, _) => ChangedColor?.Invoke();
     }
 
     public void SetColor(string hex)
     {
         View.Color = AutoColor.HexToColor(hex);
+    }
+
+    public Color GetColor()
+    {
+        return View.Color;
     }
 
     public static async Task<string?> PickColor(Window owner, string hex)

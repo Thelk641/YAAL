@@ -26,6 +26,5 @@
 
   <ItemGroup>
     <ProjectReference Include="..\YAAL\YAAL.csproj" />
-    <EmbeddedResource Include="..\YAAL\Assets\Script\Managers\DefaultManager\Config\*.json" />
   </ItemGroup>
 </Project>
