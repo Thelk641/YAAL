@@ -44,7 +44,6 @@ public class CustomLauncher
 
     public CustomLauncher()
     {
-        settings[useCustomColor] = false.ToString();
         settings[LauncherSettings.launcherName] = "New Launcher";
     }
 

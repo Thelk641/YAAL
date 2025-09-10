@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
@@ -47,6 +48,30 @@ namespace YAAL
                         if (!subscribed.Contains(button.GetHashCode()))
                         {
                             button.GetObservable(Button.BackgroundProperty).Subscribe(_ => EvaluateBackground(button));
+                            button.AttachedToVisualTree += (_, _) =>
+                            {
+                                if (VisibilityHolder.GetVisibilityHolder(button) is Control control)
+                                {
+                                    control.GetObservable(Control.IsVisibleProperty).Subscribe(_ =>
+                                    {
+                                        if (!control.IsEffectivelyVisible)
+                                        {
+                                            return;
+                                        }
+                                        Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+                                        {
+                                            Icons icon = AutoIcon.GetIcon(button);
+                                            if(AutoIcon.GetIcon(button) == Icons.Trash)
+                                            {
+                                                Debug.WriteLine("got ya");
+                                            }
+
+                                            EvaluateBackground(button);
+                                        }, Avalonia.Threading.DispatcherPriority.Render);
+                                    });
+                                }
+                            };
+
                             subscribed.Add(button.GetHashCode());
                             UpdateDictionary(button, (Icons)e.NewValue!);
                         }
@@ -55,12 +80,13 @@ namespace YAAL
                             return;
                         }
                     }
-                });
+                }
+            );
         }
 
         private static void EvaluateBackground(Button button)
         {
-            if(button.Background == null)
+            if(button.Background == null || !button.IsEffectivelyVisible)
             {
                 return;
             }

@@ -129,7 +129,8 @@ namespace YAAL
 
             Color color;
 
-            if (cache.selfsettings.ContainsKey(LauncherSettings.useCustomColor) && cache.selfsettings[LauncherSettings.useCustomColor] == true.ToString() && cache.customSettings.ContainsKey(group.ToString()))
+            //if (cache.selfsettings.ContainsKey(LauncherSettings.useCustomColor) && cache.selfsettings[LauncherSettings.useCustomColor] == true.ToString() && cache.customSettings.ContainsKey(group.ToString()))
+            if(true)
             {
                 color = AutoColor.HexToColor(cache.customSettings[group.ToString()]);
             } else

@@ -21,7 +21,7 @@ public partial class AsyncHolder : UserControl
     private Cache_Async thisAsync = new Cache_Async();
     public event Action? RequestRemoval;
     public event Action? DoneClosing;
-    private Dictionary<SlotHolder, double> previousHeight = new Dictionary<SlotHolder, double>();
+    private Dictionary<SlotHolderV2, double> previousHeight = new Dictionary<SlotHolderV2, double>();
     public AsyncHolder()
     {
         InitializeComponent();
@@ -48,7 +48,7 @@ public partial class AsyncHolder : UserControl
         _AsyncNameBox.Text = thisAsync.settings[asyncName];
         NewSlot.Click += (_, _) =>
         {
-            SlotHolder newSlot = AddNewSlot(IOManager.CreateNewSlot(thisAsync, "New"));
+            SlotHolderV2 newSlot = AddNewSlot(IOManager.CreateNewSlot(thisAsync, "New"));
             newSlot.SwitchMode();
         };
 
@@ -124,7 +124,7 @@ public partial class AsyncHolder : UserControl
 
         foreach (var item in SlotsContainer.Children)
         {
-            if (item is SlotHolder slotHolder)
+            if (item is SlotHolderV2 slotHolder)
             {
                 slotHolder.SetRoom(thisAsync.room);
             }
@@ -133,11 +133,12 @@ public partial class AsyncHolder : UserControl
         Save();
     }
 
-    public SlotHolder AddNewSlot(Cache_Slot newSlot)
+    public SlotHolderV2 AddNewSlot(Cache_Slot newSlot)
     {
-        SlotHolder toAdd = new SlotHolder(thisAsync, newSlot);
+        SlotHolderV2 toAdd = new SlotHolderV2(thisAsync, newSlot);
+        this.Height += 8; // they're going to switch to edit mode immediately, triggering ChangedHeight with previousHeight=0
 
-        if(SlotsContainer.Children.Count > 0)
+        if (SlotsContainer.Children.Count > 0)
         {
             Rectangle rect = new Rectangle();
             rect.Height = 8;
@@ -152,27 +153,11 @@ public partial class AsyncHolder : UserControl
             this.Height -= toAdd.Height;
         };
 
-        toAdd.SwitchedToBigger += () =>
+        toAdd.ChangedHeight += (double previousHeight, double newHeight) =>
         {
-            this.Height += toAdd.heightDifference;
+            this.Height -= previousHeight;
+            this.Height += newHeight;
         };
-
-        toAdd.SwitchedToSmaller += () =>
-        {
-            this.Height -= toAdd.heightDifference;
-        };
-
-        this.Height += toAdd.Height + 8;
-
-        previousHeight[toAdd] = toAdd.Height;
-
-        toAdd.ChangedHeight += () =>
-        {
-            this.Height -= previousHeight[toAdd];
-            this.Height += toAdd.Height;
-        };
-
-
 
         if(thisAsync.room.slots.Count > 0)
         {
@@ -209,15 +194,15 @@ public partial class AsyncHolder : UserControl
 
         foreach (var item in SlotsContainer.Children)
         {
-            if(item is SlotHolder slotHolder)
+            if(item is SlotHolderV2 slotHolder)
             {
-                toSave.slots.Add(slotHolder.GetCache());
+                toSave.slots.Add(slotHolder.Slot);
             }
         }
 
         foreach (var item in SlotsContainer.Children)
         {
-            if (item is SlotHolder slotHolder)
+            if (item is SlotHolderV2 slotHolder)
             {
                 slotHolder.SetAsyncName(toSave.settings[asyncName]);
                 slotHolder.SetRoom(toSave.room);
@@ -237,7 +222,7 @@ public partial class AsyncHolder : UserControl
     {
         foreach (var item in SlotsContainer.Children)
         {
-            if(item is SlotHolder slot)
+            if(item is SlotHolderV2 slot)
             {
                 slot.ClosingSave();
             }

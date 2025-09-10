@@ -31,13 +31,19 @@ namespace YAAL
     {
         public static readonly AttachedProperty<ThemeSettings> Category =
             AvaloniaProperty.RegisterAttached<Control, ThemeSettings>(
-                "ThemeCategory", 
-                typeof(ThemeCategory), 
-                defaultValue:ThemeSettings.foregroundColor
+                "Category",
+                typeof(ThemeCategory),
+                defaultValue: ThemeSettings.foregroundColor
             );
 
-        public static void SetThemeCategory(AvaloniaObject element, bool value) =>
-            element.SetValue(Category, value);
+        public static void SetThemeCategory(AvaloniaObject element, string value)
+        {
+            if(Enum.TryParse<ThemeSettings>(value, out ThemeSettings setting))
+            {
+                element.SetValue(Category, setting);
+            }
+        }
+            
 
         public static ThemeSettings GetThemeCategory(AvaloniaObject element)
         {

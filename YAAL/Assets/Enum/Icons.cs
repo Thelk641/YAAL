@@ -12,6 +12,7 @@ namespace YAAL
         File,
         Folder,
         Play,
+        ToolPlay,
         Settings,
         Save,
         Trash,
