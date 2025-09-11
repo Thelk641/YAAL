@@ -19,6 +19,37 @@ namespace YAAL
 {
     public static class DefaultManager
     {
+        private static Dictionary<Type, Func<object>> Factory = new Dictionary<Type, Func<object>>
+        {
+            {
+                typeof(Cache_CustomTheme), () =>
+                {
+                    return theme;
+                }
+
+            },
+
+            {
+                typeof(Cache_UserSettings), () =>
+                {
+                    return userSettings;
+                }
+            },
+        };
+
+
+        public static T GetDefault<T>() where T : new()
+        {
+            if(Factory.TryGetValue(typeof(T), out var creator))
+            {
+                return (T)creator();
+            }
+
+            return new T();
+        }
+
+
+
         public static Cache_CustomTheme theme
         {
             get

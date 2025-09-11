@@ -24,14 +24,15 @@ namespace YAAL
 
             if (!File.Exists(path))
             {
-                return new T();
+                return DefaultManager.GetDefault<T>();
             }
 
             string json = File.ReadAllText(path);
-            T output = new T();
+            T output;
             try
             {
                 output = JsonConvert.DeserializeObject<T>(json) ?? new T();
+                return output;
             }
             catch (Exception e)
             {
@@ -43,7 +44,7 @@ namespace YAAL
                 Environment.Exit(1);
             }
 
-            return output;
+            return new T();
         }
 
         public static void SaveCache<T>(string path, T cache)
@@ -264,7 +265,7 @@ namespace YAAL
                 settings.customSettings[item.Key] = item.Value;
             }
 
-            SaveCache<Cache_UserSettings>(Path.Combine(AppContext.BaseDirectory, userSettings.GetFileName()), settings);
+            SaveCache<Cache_UserSettings>(Path.Combine(userSettings.GetFullPath()), settings);
         }
     }
 }

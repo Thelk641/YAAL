@@ -25,7 +25,8 @@ namespace YAAL
         Logs,
         MinimumWorlds,
         Themes,
-        Images
+        Images,
+        Rendered
     };
 
     public static class FileSettingExtensions
@@ -37,7 +38,13 @@ namespace YAAL
 
         public static string GetFolderName(this FileSettings setting)
         {
-            return setting.ToString();
+            return "./" + setting.ToString();
+        }
+
+        public static string GetFullPath(this FileSettings setting)
+        {
+            string relativePath = "./" + setting.GetFileName();
+            return IOManager.ProcessLocalPath(relativePath);
         }
     }
 }

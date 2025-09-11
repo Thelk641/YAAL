@@ -18,6 +18,7 @@ namespace YAAL
         public static string GetSlotDirectory(string async, string slot)
         {
             string output = Path.Combine(GetSaveLocation(Async), async, slot);
+            output = ProcessLocalPath(output);
             Directory.CreateDirectory(output);
             return output;
         }

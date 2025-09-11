@@ -34,47 +34,39 @@ namespace YAAL
 
         public void SetDefaultPath()
         {
-            string baseFolder = "D:\\Unity\\Avalonia port\\YAAL\\";
-            saveLocation[Themes] = Path.Combine(baseFolder, Themes.GetFolderName());
-            Directory.CreateDirectory(saveLocation[Themes]);
-            Directory.CreateDirectory(Path.Combine(saveLocation[Themes], "Images"));
-
             if (saveLocation.ContainsKey(ManagedApworlds))
             {
                 //We've just read User Settings, no need for defaults
                 return;
             }
 
-            // TODO : these are debug, they need to be replaced by the comments bellow
-            
-            //string baseFolder = AppContext.BaseDirectory;
             Set(aplauncher, "C:\\ProgramData\\Archipelago\\ArchipelagoLauncher.exe");
-            //Set(aplauncher, "");
             Set("bizhawk", "I:\\Emulators\\Bizhawk\\EmuHawk.exe");
 
             // uppercase, folders
-            saveLocation[ManagedApworlds] = Path.Combine(baseFolder, ManagedApworlds.GetFolderName());
-            saveLocation[Async] = Path.Combine(baseFolder, Async.GetFolderName());
-            saveLocation[Trash] = Path.Combine(baseFolder, Trash.GetFolderName());
-            saveLocation[Logs] = Path.Combine(baseFolder, Logs.GetFolderName());
-            saveLocation[Themes] = Path.Combine(baseFolder, Themes.GetFolderName());
-            saveLocation[Images] = Path.Combine(saveLocation[Themes], Images.GetFolderName());
+            saveLocation[ManagedApworlds] = ManagedApworlds.GetFolderName();
+            saveLocation[MinimumWorlds] = Path.Combine(saveLocation[ManagedApworlds], MinimumWorlds.ToString());
+            saveLocation[Async] = Async.GetFolderName();
+            saveLocation[Trash] = Trash.GetFolderName();
+            saveLocation[Logs] = Logs.GetFolderName();
+            saveLocation[Themes] = Themes.GetFolderName();
+            saveLocation[Images] = Path.Combine(saveLocation[Themes], Images.ToString());
+            saveLocation[Rendered] = Path.Combine(saveLocation[Themes], Rendered.ToString());
 
             // lowercase, files
             saveLocation[cache_download] = Path.Combine(saveLocation[ManagedApworlds], cache_download.GetFileName());
-            saveLocation[userSettings] = Path.Combine(baseFolder, userSettings.GetFileName());
             saveLocation[backupList] = Path.Combine(saveLocation[ManagedApworlds], backupList.GetFileName());
             saveLocation[tools] = Path.Combine(saveLocation[ManagedApworlds], tools.GetFileName());
-            saveLocation[launcherList] = Path.Combine(baseFolder, launcherList.GetFileName());
+            saveLocation[launcherList] = "./" + launcherList.GetFileName();
+            saveLocation[userSettings] = "./" + userSettings.GetFileName();
 
-            IOManager.SaveCache<Cache_UserSettings>(saveLocation[userSettings], this);
-
-            Directory.CreateDirectory(saveLocation[ManagedApworlds]);
-            Directory.CreateDirectory(saveLocation[Async]);
-            Directory.CreateDirectory(saveLocation[Trash]);
-            Directory.CreateDirectory(saveLocation[Logs]);
-            Directory.CreateDirectory(saveLocation[Themes]);
-            Directory.CreateDirectory(Path.Combine(saveLocation[Themes], "Images"));
+            Directory.CreateDirectory(IOManager.ProcessLocalPath(saveLocation[ManagedApworlds]));
+            Directory.CreateDirectory(IOManager.ProcessLocalPath(saveLocation[Async]));
+            Directory.CreateDirectory(IOManager.ProcessLocalPath(saveLocation[Trash]));
+            Directory.CreateDirectory(IOManager.ProcessLocalPath(saveLocation[Logs]));
+            Directory.CreateDirectory(IOManager.ProcessLocalPath(saveLocation[Themes]));
+            Directory.CreateDirectory(IOManager.ProcessLocalPath(saveLocation[Images]));
+            Directory.CreateDirectory(IOManager.ProcessLocalPath(saveLocation[Rendered]));
         }
 
         public string? this[string key]

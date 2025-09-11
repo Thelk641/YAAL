@@ -307,7 +307,7 @@ namespace YAAL
 
             Directory.CreateDirectory(customWorlds);
 
-            CopyFolder(Path.Combine(GetSaveLocation(ManagedApworlds), MinimumWorlds.GetFolderName()), worlds);
+            CopyFolder(Path.Combine(GetSaveLocation(MinimumWorlds)), worlds);
             return true;
         }
 

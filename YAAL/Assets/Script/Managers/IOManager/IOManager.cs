@@ -19,6 +19,7 @@ namespace YAAL
 
     public static partial class IOManager
     {
+        private static string baseDirectory = "D:\\Unity\\Avalonia port\\YAAL\\";
         public static Cache_UserSettings settings;
         public static List<string> games;
         static Dictionary<string, CustomLauncher> launcherCache = new Dictionary<string, CustomLauncher>();
@@ -27,11 +28,8 @@ namespace YAAL
         static IOManager()
         {
             string baseDirectory = AppContext.BaseDirectory;
-            string file = Path.Combine(baseDirectory, userSettings.GetFileName());
-            settings = new Cache_UserSettings();
-            settings = LoadCache<Cache_UserSettings>(Path.Combine(AppContext.BaseDirectory, userSettings.GetFileName()));
+            settings = LoadCache<Cache_UserSettings>(userSettings.GetFullPath());
             settings.SetDefaultPath();
-            settings.SetDefaultSettings();
             UpdateLauncherList();
         }
 
@@ -45,7 +43,7 @@ namespace YAAL
                     );
             }
 
-            string path = settings.saveLocation[key];
+            string path = ProcessLocalPath(settings.saveLocation[key]);
 
             Directory.CreateDirectory(Path.GetDirectoryName(path));
 
@@ -59,7 +57,7 @@ namespace YAAL
 
         public static bool SetUpMinimumWorlds()
         {
-            string targetFolder = Path.Combine(GetSaveLocation(ManagedApworlds), MinimumWorlds.GetFolderName());
+            string targetFolder = GetSaveLocation(MinimumWorlds);
             if (Directory.Exists(targetFolder))
             {
                 return true;
@@ -148,7 +146,7 @@ namespace YAAL
         {
             settings.generalTheme = newTheme;
             App.Settings.SetTheme("General Theme", newTheme);
-            SaveCache<Cache_UserSettings>(Path.Combine(AppContext.BaseDirectory, userSettings.GetFileName()), settings);
+            SaveCache<Cache_UserSettings>(ProcessLocalPath(userSettings.GetFullPath()), settings);
         }
 
         public static Bitmap? ReadImage(string imageName)
@@ -202,6 +200,54 @@ namespace YAAL
                 .Where(file => string.Equals(Path.GetExtension(file), ".json", StringComparison.OrdinalIgnoreCase))
                 .Select(file => Path.GetFileNameWithoutExtension(file))
                 .ToList();
+        }
+
+        public static string CopyImageToDefaultFolder(string path)
+        {
+            string originalPath = ProcessLocalPath(path);
+            string targetPath = Path.Combine(GetSaveLocation(Images), GetFileName(path));
+
+            if(path == targetPath)
+            {
+                return path;
+            }
+
+            if(CopyFile(path, targetPath))
+            {
+                return targetPath;
+            } else
+            {
+                ErrorManager.AddNewError(
+                    "IOManager - Failed to copy image to default folder",
+                    "See other errors for more information"
+                    );
+                ErrorManager.ThrowError();
+                return path;
+            }
+        }
+
+        public static string ProcessLocalPath(string originalPath)
+        {
+            if (originalPath.StartsWith("./"))
+            {
+                string relativePath = originalPath.Substring(2);
+                string fullPath = Path.GetFullPath(relativePath, baseDirectory);
+                return fullPath;
+            } else
+            {
+                return originalPath;
+            }
+        }
+
+        public static string ToLocalPath(string originalPath)
+        {
+            string relativePath = Path.GetRelativePath(baseDirectory, Path.GetFullPath(originalPath));
+
+            if(Path.IsPathRooted(relativePath) && !relativePath.StartsWith(".")){
+                return originalPath;
+            }
+
+            return "./" + relativePath.Replace("\\", "/");
         }
     }
 }
