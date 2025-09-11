@@ -19,8 +19,8 @@ namespace YAAL
 
     public static partial class IOManager
     {
-        //private static string baseDirectory = "D:\\Unity\\Avalonia port\\YAAL\\";
-        private static string baseDirectory = AppContext.BaseDirectory;
+        private static string baseDirectory = "I:\\Emulators\\vba\\rom\\OOS rando\\YAAL - Pingu 7";
+        //private static string baseDirectory = AppContext.BaseDirectory;
         public static Cache_UserSettings settings;
         public static List<string> games;
         static Dictionary<string, CustomLauncher> launcherCache = new Dictionary<string, CustomLauncher>();

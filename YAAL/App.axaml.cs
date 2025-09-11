@@ -55,6 +55,7 @@ public partial class App : Application
         //var args = new string[2]{"--error ", "D:\\Unity\\Avalonia port\\YAAL\\Logs\\31-07-2025-22-27-27.json" };
         //var args = new string[2]{"--restore", "--exit" };
         //var args = new string[4] { "--async", "\"Debug_CLMaker_Async\"", "--slot\"Debug_CLMaker_Slot\"", "--launcher\"Universal Tracker\"" };
+        //var args = new string[4] { "--async", "Early test", "--slot", "M-Ash-saru", };
 
         if (args == null || args.Length == 0)
         {

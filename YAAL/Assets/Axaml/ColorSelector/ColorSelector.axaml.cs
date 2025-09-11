@@ -17,6 +17,8 @@ public partial class ColorSelector : Window
 {
     public event Action ChangedColor;
     public event Action CancelSelection;
+    private Avalonia.Controls.ColorView wtf;
+    private ColorView gnya;
     public ColorSelector()
     {
         InitializeComponent();

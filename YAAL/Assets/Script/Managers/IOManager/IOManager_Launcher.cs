@@ -116,7 +116,7 @@ namespace YAAL
                 string gameName = item.Value;
                 if (gameName == toFind)
                 {
-                    output.Add(item.Value);
+                    output.Add(item.Key);
                 }
             }
 
@@ -137,9 +137,30 @@ namespace YAAL
             }
         }
 
+        public static void GenerateLauncherList()
+        {
+            string path = GetSaveLocation(FileSettings.launcherList);
+            if (File.Exists(path))
+            {
+                HardDeleteFile(path);
+            }
+            Cache_LauncherList newList = new Cache_LauncherList();
+            foreach (var item in GetLauncherList())
+            {
+                Cache_CustomLauncher cache = LoadCacheLauncher(item);
+                newList.list[item] = cache.settings[LauncherSettings.gameName];
+            }
+            launcherList = newList;
+        }
+
         public static void UpdateLauncherList()
         {
-            launcherList = LoadCache<Cache_LauncherList>(GetSaveLocation(FileSettings.launcherList));
+            launcherList = new Cache_LauncherList();
+            foreach (var item in GetLauncherList())
+            {
+                Cache_CustomLauncher cache = LoadCacheLauncher(item);
+                launcherList.list[item] = cache.settings[LauncherSettings.gameName];
+            }
             ReadGameList();
         }
 
