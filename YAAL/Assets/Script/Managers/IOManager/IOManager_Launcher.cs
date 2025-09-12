@@ -110,6 +110,7 @@ namespace YAAL
         public static List<string> GetLaunchersForGame(string toFind)
         {
             List<string> output = new List<string>();
+            List<string> otherGames = new List<string>();
 
             foreach (var item in launcherList.list)
             {
@@ -118,6 +119,12 @@ namespace YAAL
                 {
                     output.Add(item.Key);
                 }
+                otherGames.Add(item.Key);
+            }
+
+            foreach (var item in otherGames)
+            {
+                output.Add(item);
             }
 
             return output;

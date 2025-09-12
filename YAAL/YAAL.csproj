@@ -35,6 +35,9 @@
     <Compile Update="Assets\Axaml\CustomThemeMaker\BrushHolder.axaml.cs">
       <DependentUpon>BrushHolder.axaml</DependentUpon>
     </Compile>
+    <Compile Update="Assets\Axaml\CustomThemeMaker\ThemeSlotV2.axaml.cs">
+      <DependentUpon>ThemeSlotV2.axaml</DependentUpon>
+    </Compile>
     <Compile Update="Assets\Axaml\Main Window\Components\AsyncHolder.axaml.cs">
       <DependentUpon>AsyncHolder.axaml</DependentUpon>
     </Compile>

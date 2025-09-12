@@ -6,8 +6,8 @@
         mc:Ignorable="d"
 		MinWidth="600"
 		MaxWidth="600"
-		MinHeight="550"
-		MaxHeight="550"
+		MinHeight="622"
+		MaxHeight="622"
         x:Class="YAAL.CustomThemeMaker"
         Title="Yet Another Archipelago Launcher"
 		>
@@ -15,7 +15,7 @@
 		<local:BoolInvert x:Key="BoolInvert"/>
 	</Window.Resources>
 	<Border Padding="8" Name="TrueBackground">
-		<Grid RowDefinitions="30,8,276,8,30,8,168">
+		<Grid RowDefinitions="30,8,276,8,30,8,250">
 			<!-- Selector-->
 			<Grid ColumnDefinitions="30,8,30,8,30,8,*">
 				<Button
@@ -185,9 +185,19 @@
 				CornerRadius="4"
 				Padding="8"
 				>
-				<Grid RowDefinitions="52,8,90">
-					<local:ThemeSlot Name="PlayMode" Grid.Row="0"/>
-					<local:ThemeSlot Grid.Row="2" Name="EditMode"/>
+				<Grid RowDefinitions="52,8,52,8,110">
+					<Border
+						Name="EmptyExample"
+						BorderBrush="Gray"
+						BorderThickness="1"
+						CornerRadius="4"
+						Padding="6"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						Background="#FFF"
+						IsVisible="True" />
+					<local:ThemeSlotV2 Name="PlayMode" Grid.Row="2"/>
+					<local:ThemeSlotV2 Name="EditMode" Grid.Row="4"/>
 				</Grid>
 			</Border>
 			

@@ -7,6 +7,7 @@ using Avalonia.VisualTree;
 using DynamicData;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using YAAL.Assets.Scripts;
 using static YAAL.ApworldSettings;
@@ -37,6 +38,10 @@ public partial class AsyncHolder : UserControl
 
         foreach (var item in thisAsync.slots)
         {
+            if (item.settings[SlotSettings.slotName].Contains("Ash"))
+            {
+                Debug.WriteLine("gnya");
+            }
             AddNewSlot(item);
         }
 
