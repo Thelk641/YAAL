@@ -19,7 +19,21 @@ namespace YAAL;
 
 public partial class BrushHolder : UserControl
 {
-    public Cached_Brush brush;
+    public Cached_Brush brush 
+    { get {
+            switch (Holder.Background)
+            {
+                case ImageBrush image:
+                    return imageBrush;
+                case SolidColorBrush solid:
+                    Cached_SolidColorBrush solidBrush = new Cached_SolidColorBrush();
+                    solidBrush.color = solid.Color;
+                    return solidBrush;
+            }
+
+            return new Cached_SolidColorBrush();
+        }
+    }
     public event Action MoveUp;
     public event Action MoveDown;
     public event Action AskForRemoval;

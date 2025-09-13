@@ -227,6 +227,20 @@ namespace YAAL
             }
         }
 
+        public static void SaveImage(Bitmap image, string themeName, ThemeSettings category)
+        {
+            string fullname = themeName + "_" + category.ToString() + "_" + image.Size.Width + "_" + image.Size.Height + ".png";
+            string path = Path.Combine(GetSaveLocation(Images), fullname);
+
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
+
+            using var fileStream = File.Create(path);
+            image.Save(fileStream);
+        }
+
         public static string ProcessLocalPath(string originalPath)
         {
             if (originalPath.StartsWith("./"))

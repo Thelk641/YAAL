@@ -1,4 +1,5 @@
-﻿using Avalonia.Controls;
+﻿using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
 using Avalonia.LogicalTree;
 using Avalonia.Media;
@@ -8,6 +9,7 @@ using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -187,6 +189,33 @@ namespace YAAL
                     ApplyTheme(item, name);
                 }
             }
+        }
+
+        public static Bitmap Render(Control ctrl, string themeName, ThemeSettings category)
+        {
+            Vector2 dpi = new Vector2(96, 96);
+            Size renderSize = ctrl.Bounds.Size;
+            if(renderSize.Width <=0 || renderSize.Height <= 0)
+            {
+                ctrl.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+                renderSize = ctrl.DesiredSize;
+            }
+
+            int pixelWidth = (int)Math.Ceiling(renderSize.Width * dpi.X / 96.0);
+            int pixelHeight = (int)Math.Ceiling(renderSize.Height * dpi.Y / 96.0);
+
+            var pixelSize = new PixelSize(pixelWidth, pixelHeight);
+
+            var renderer = new RenderTargetBitmap(pixelSize, dpi);
+            var finalRect = new Rect(renderSize);
+
+            ctrl.Measure(renderSize);
+            ctrl.Arrange(finalRect);
+
+            renderer.Render(ctrl);
+
+            IOManager.SaveImage(renderer, themeName, category);
+            return renderer;
         }
     }
 }

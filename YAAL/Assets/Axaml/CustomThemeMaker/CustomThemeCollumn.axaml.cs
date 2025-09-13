@@ -41,4 +41,17 @@ public partial class CustomThemeCollumn : UserControl
                 break;
         }
     }
+
+    public Cache_CustomBrush GetBrush()
+    {
+        Cache_CustomBrush brush = new Cache_CustomBrush();
+        foreach (var item in CommandContainer.Children)
+        {
+            if(item is BrushHolder holder)
+            {
+                brush.AddNewBrush(holder.brush);
+            }
+        }
+        return brush;
+    }
 }

@@ -4,6 +4,7 @@ using Avalonia.Controls.Presenters;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using System;
@@ -76,6 +77,13 @@ public partial class ThemeSlotV2 : UserControl
         previousHeight = newHeight;
     }
 
+    public void Resize(int top, int bottom)
+    {
+        topOffset = top;
+        bottomOffset = bottom;
+        Resize();
+    }
+
     public void SwitchMode()
     {
         if (PlayMode.IsVisible)
@@ -119,9 +127,17 @@ public partial class ThemeSlotV2 : UserControl
         switch (category)
         {
             case ThemeSettings.backgroundColor:
+                if(EditMode.Background is ImageBrush oldBackgroundBrush && oldBackgroundBrush.Source is Bitmap oldBackgroundBitmap)
+                {
+                    oldBackgroundBitmap.Dispose();
+                }
                 EditMode.Background = brush;
                 break;
             case ThemeSettings.foregroundColor:
+                if (PlayMode.Background is ImageBrush oldForegroundBrush && oldForegroundBrush.Source is Bitmap oldForegroundBitmap)
+                {
+                    oldForegroundBitmap.Dispose();
+                }
                 PlayMode.Background = brush;
                 EditRow1.Background = brush;
                 EditRow2.Background = brush;
