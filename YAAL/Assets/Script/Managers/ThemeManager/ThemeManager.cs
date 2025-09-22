@@ -24,10 +24,16 @@ namespace YAAL
         public static Dictionary<Control, Border> themeContainers = new Dictionary<Control, Border>();
         public static string defaultTheme = "General Theme";
 
+        public static Dictionary<string, Point> playCenters = new Dictionary<string, Point>();
+        public static Dictionary<string, Point> editCenters = new Dictionary<string, Point>();
+        public static List<Combo_Centers> centers = new List<Combo_Centers>();
+        private static Vector2 slotSize;
+
         static ThemeManager()
         {
             // TODO : this shouldn't be hardcoded
             themes["General Theme"] = DefaultManager.theme;
+            UpdateCenters();
         }
 
         public static void ApplyTheme(Control container, string theme = "")
@@ -216,6 +222,126 @@ namespace YAAL
 
             IOManager.SaveImage(renderer, themeName, category);
             return renderer;
+        }
+
+        public static void UpdateCenters()
+        {
+            playCenters = new Dictionary<string, Point>();
+            editCenters = new Dictionary<string, Point>();
+
+            ThemeSlotV2 themeSlot = new ThemeSlotV2();
+            themeSlot.Measure(Size.Infinity);
+            slotSize = WindowManager.GetSlotSize();
+            Rect desiredSize = new Rect(0, 0, slotSize.X, slotSize.Y);
+            themeSlot.Arrange(desiredSize);
+
+            playCenters["Play Button"] = themeSlot.FindControl<Button>("RealPlay")!.Bounds.Center;
+            playCenters["Slot Name"] = themeSlot.FindControl<TextBlock>("_SlotName")!.Bounds.Center;
+            playCenters["Tool Name"] = themeSlot.FindControl<ComboBox>("ToolSelect")!.Bounds.Center;
+            playCenters["Start Tool"] = themeSlot.FindControl<Button>("StartTool")!.Bounds.Center;
+            playCenters["Settings"] = themeSlot.FindControl<Button>("Edit")!.Bounds.Center;
+
+            themeSlot.SwitchMode();
+
+            editCenters["Play Button"] = themeSlot.FindControl<Button>("FakePlay")!.Bounds.Center;
+            editCenters["Slot Selector"] = themeSlot.FindControl<ComboBox>("SlotSelector")!.Bounds.Center;
+            editCenters["Download"] = themeSlot.FindControl<Button>("DownloadPatch")!.Bounds.Center;
+            editCenters["Save"] = themeSlot.FindControl<Button>("DoneEditing")!.Bounds.Center;
+            editCenters["Launcher Selector"] = themeSlot.FindControl<ComboBox>("SelectedLauncher")!.Bounds.Center;
+            editCenters["Version Selector"] = themeSlot.FindControl<ComboBox>("SelectedVersion")!.Bounds.Center;
+            editCenters["Auto/Manual"] = themeSlot.FindControl<Button>("AutomaticPatchButton")!.Bounds.Center;
+            editCenters["Delete"] = themeSlot.FindControl<Button>("DeleteSlot")!.Bounds.Center;
+        }
+
+        public static void SetCenter(Control ctrl, string name)
+        {
+            string trueName = name.Substring(9);
+            bool playMode = name.Contains("PlayMode_");
+
+            Point center = new Point(0, 0);
+            if (playMode)
+            {
+                if (playCenters.TryGetValue(trueName, out Point truePlayPoint))
+                {
+                    center = truePlayPoint;
+                }
+            }
+            else
+            {
+                if (editCenters.TryGetValue(trueName, out Point trueEditPoint))
+                {
+                    center = trueEditPoint;
+                }
+            }
+
+            double X = center.X - (slotSize.X / 2);
+            double Y = center.Y - (slotSize.Y / 2);
+            ctrl.RenderTransform = new TranslateTransform(X, Y);
+        }
+
+        public static Point GetCenter(string name)
+        {
+            if(name == "Default")
+            {
+                Vector2 slotSize = WindowManager.GetSlotSize();
+                Point output = new Point(slotSize.X / 2, slotSize.Y / 2);
+                return output;
+            }
+
+            if(playCenters.TryGetValue(name, out Point play))
+            {
+                return play;
+            }
+
+            if(editCenters.TryGetValue(name, out Point edit))
+            {
+                return edit;
+            }
+
+            return new Point(0, 0);
+        }
+
+        public static List<Combo_Centers> GetCenterList()
+        {
+            if(centers.Count > 0)
+            {
+                return centers;
+            }
+
+            Combo_Centers center = new Combo_Centers();
+            center.SetName("Default");
+            centers.Add(center);
+
+            Combo_Centers playHeader = new Combo_Centers();
+            playHeader.centerName = "-- Play Mode";
+            centers.Add(playHeader);
+
+            Combo_Centers toAdd;
+
+            if (playCenters.Count == 0)
+            {
+                UpdateCenters();
+            }
+
+            foreach (var item in playCenters)
+            {
+                toAdd = new Combo_Centers();
+                toAdd.SetName(item.Key);
+                centers.Add(toAdd);
+            }
+
+            Combo_Centers editHeader = new Combo_Centers();
+            editHeader.centerName = "-- Edit Mode";
+            centers.Add(editHeader);
+
+            foreach (var item in editCenters)
+            {
+                toAdd = new Combo_Centers();
+                toAdd.SetName(item.Key);
+                centers.Add(toAdd);
+            }
+
+            return centers;
         }
     }
 }

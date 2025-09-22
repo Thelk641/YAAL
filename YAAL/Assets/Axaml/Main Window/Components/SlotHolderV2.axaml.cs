@@ -86,7 +86,7 @@ public partial class SlotHolderV2 : UserControl
 
         Cache_CustomTheme customTheme;
 
-        if (currentLauncher.settings.TryGetValue(LauncherSettings.customTheme, out string themeName))
+        if (currentLauncher != null && currentLauncher.settings.TryGetValue(LauncherSettings.customTheme, out string themeName))
         {
             customTheme = ThemeManager.GetTheme(themeName);
         } else

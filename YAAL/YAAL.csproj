@@ -59,6 +59,9 @@
     <Compile Update="Assets\Axaml\SettingManager\Settings\Setting_Tool.axaml.cs">
       <DependentUpon>Setting_Tool.axaml</DependentUpon>
     </Compile>
+    <Compile Update="Assets\Axaml\ThemeMaker\BrushMaker.axaml.cs">
+      <DependentUpon>BrushMaker.axaml</DependentUpon>
+    </Compile>
     <Compile Update="Assets\Axaml\ThemeMaker\ThemeCollumn.axaml.cs">
       <DependentUpon>ThemeCollumn.axaml</DependentUpon>
     </Compile>

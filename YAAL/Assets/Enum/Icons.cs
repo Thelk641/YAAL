@@ -20,6 +20,8 @@ namespace YAAL
         Down,
         Plus,
         Minus,
+        Percent,
+        Pin,
         None,
     };
 

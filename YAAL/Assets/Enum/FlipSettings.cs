@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 
 namespace YAAL
 {
-    public enum ImageSettings
+    public enum FlipSettings
     {
         None,
         FlipX,
         FlipY,
         FlipXY,
-
     };
 }

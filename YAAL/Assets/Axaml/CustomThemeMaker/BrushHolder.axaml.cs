@@ -62,7 +62,7 @@ public partial class BrushHolder : UserControl
         BrushOptions.Background = new SolidColorBrush(Colors.Transparent);
         Holder.Background = newBrush.GetLayer().Background;
 
-        brush = newBrush;
+        //brush = newBrush;
     }
 
     public Cached_Brush GetBrush()

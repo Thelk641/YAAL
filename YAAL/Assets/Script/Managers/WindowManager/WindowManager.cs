@@ -17,9 +17,23 @@ namespace YAAL
 {
     public static class WindowManager 
     {
+        public static MainWindow mainWindow;
         public static Vector2 GetWindowSize()
         {
             return new Vector2(700, 400);
+        }
+
+        public static Vector2 GetSlotSize()
+        {
+            float mathedX = GetWindowSize().X - 70;
+            Vector2 baseSize = new Vector2(mathedX, 52);
+            return new Vector2((float)(baseSize.X * App.Settings.Zoom), (float)(baseSize.Y * App.Settings.Zoom));
+        }
+
+        public static void OpenWindow()
+        {
+            mainWindow = new MainWindow();
+            mainWindow.IsVisible = true;
         }
     }
 }

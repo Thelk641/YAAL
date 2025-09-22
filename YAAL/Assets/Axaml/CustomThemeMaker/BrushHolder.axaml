@@ -6,7 +6,7 @@
              HorizontalAlignment="Stretch"
              MinHeight="30"
              >
-	<Grid ColumnDefinitions="30,8,30,8,*,8,30">
+	<Grid ColumnDefinitions="30,8,30,8,*,8,30,8,30">
 		<Button
 			Name="Up"
 			Grid.Column="0"
@@ -58,8 +58,20 @@
 				Grid.Column="2"
 				/>
 		</Grid>
-			
 
+		<Button
+			Name="Settings"
+			Grid.Column="6"
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Stretch"
+			local:AutoIcon.Icon="Settings"
+			>
+			<Svg
+				VerticalAlignment="Center"
+				HorizontalAlignment="Center"
+				Width="20"
+			/>
+		</Button>
 
 
 		<Button

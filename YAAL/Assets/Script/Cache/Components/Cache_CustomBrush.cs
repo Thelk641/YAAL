@@ -73,7 +73,7 @@ namespace YAAL
         public bool originIsRelative;
         public Vector2 absoluteOrigin;
         public Vector2 relativeOrigin;
-        public ImageSettings flipSetting;
+        public FlipSettings flipSetting;
 
         public override Border GetLayer()
         {
@@ -88,12 +88,12 @@ namespace YAAL
 
             ScaleTransform scale = new ScaleTransform { ScaleX = 1, ScaleY = 1 };
 
-            if (flipSetting == ImageSettings.FlipX || flipSetting == ImageSettings.FlipXY) 
+            if (flipSetting == FlipSettings.FlipX || flipSetting == FlipSettings.FlipXY) 
             {
                 scale.ScaleX = -1;
             }
 
-            if (flipSetting == ImageSettings.FlipY || flipSetting == ImageSettings.FlipXY)
+            if (flipSetting == FlipSettings.FlipY || flipSetting == FlipSettings.FlipXY)
             {
                 scale.ScaleY = -1;
             }

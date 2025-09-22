@@ -38,14 +38,18 @@ public partial class AsyncHolder : UserControl
 
         foreach (var item in thisAsync.slots)
         {
-            if (item.settings[SlotSettings.slotName].Contains("Ash"))
-            {
-                Debug.WriteLine("gnya");
-            }
             AddNewSlot(item);
         }
 
         UpdatePort();
+
+        Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+        {
+            foreach (var item in SlotsContainer.Children)
+            {
+                Debug.WriteLine(item.Bounds.Width);
+            }
+        }, Avalonia.Threading.DispatcherPriority.Render);
     }
 
     public void SetupPlayMode()
@@ -141,6 +145,7 @@ public partial class AsyncHolder : UserControl
     public SlotHolderV2 AddNewSlot(Cache_Slot newSlot)
     {
         SlotHolderV2 toAdd = new SlotHolderV2(thisAsync, newSlot);
+        
         this.Height += 8; // they're going to switch to edit mode immediately, triggering ChangedHeight with previousHeight=0
 
         if (SlotsContainer.Children.Count > 0)
@@ -151,6 +156,7 @@ public partial class AsyncHolder : UserControl
         }
 
         SlotsContainer.Children.Add(toAdd);
+        
 
         toAdd.RequestRemoval += () => 
         { 

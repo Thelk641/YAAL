@@ -1,0 +1,442 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:local="clr-namespace:YAAL"
+        mc:Ignorable="d"
+		Width="300"
+        Height="460"
+        x:Class="YAAL.BrushMaker"
+        Title="Brush Maker">
+	<Window.Resources>
+		<local:BoolInvert x:Key="BoolInvert"/>
+	</Window.Resources>
+	<Border Margin="8" HorizontalAlignment="Stretch" Name="TrueBackground">
+		<Grid RowDefinitions="48, 8, 124,8,86,8,162" HorizontalAlignment="Stretch">
+			
+			<Border 				
+				Grid.Row="0" 
+				Name="Background_1" 
+				Background="#AAA"
+				BorderBrush="Gray"
+				BorderThickness="1"
+				CornerRadius="4"
+				Padding="8"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				>
+				<Grid>
+					<Grid Name="ColorMode" IsVisible="False" ColumnDefinitions="110, 4, *" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+						<TextBlock
+							Text="Color :"
+							Grid.Column="0"
+							VerticalAlignment="Center"
+							HorizontalAlignment="Left"
+							/>
+						<Button 
+							Name="ColorHolder"
+							Grid.Column="2"
+							HorizontalAlignment="Stretch"
+							VerticalAlignment="Stretch"
+							/>
+					</Grid>
+
+					<Grid Name="ImageMode" IsVisible="True" ColumnDefinitions="110, 4, *,8,30" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+						<TextBlock
+							Text="Image source :"
+							Grid.Column="0"
+							VerticalAlignment="Center"
+							HorizontalAlignment="Left"
+							/>
+						<TextBox
+							Name="ImageSource"
+							Grid.Column="2"
+							VerticalAlignment="Center"
+							/>
+						<Button
+							Name="ImageSelect"
+							Content="File"
+							Grid.Column="4"
+							VerticalAlignment="Stretch"
+							HorizontalAlignment="Stretch"
+							local:AutoIcon.Icon="File"
+							local:VisibilityHolder.VisibilityHolder="ImageMode"
+							Height="30"
+							>
+							<Svg
+								VerticalAlignment="Center"
+								HorizontalAlignment="Center"
+								Width="30"
+								/>
+						</Button>
+					</Grid>
+				</Grid>
+			</Border>
+
+			<Border 
+				Grid.Row="2"
+				Name="Background_2"
+				Background="#AAA"
+				BorderBrush="Gray"
+				BorderThickness="1"
+				CornerRadius="4"
+				Padding="8"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				>
+				<Grid RowDefinitions="30,8,30,8,30">
+					<Grid Grid.Row="0" ColumnDefinitions="110, 4, *" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+						<TextBlock
+							Text="Center : "
+							Grid.Column="0"
+							VerticalAlignment="Center"
+							HorizontalAlignment="Left"
+							/>
+
+						<ComboBox
+							Name="CenterPicker"
+							VerticalAlignment="Center"
+							HorizontalAlignment="Stretch"
+							Grid.Column="2"
+							IsVisible="True"
+							ItemsSource="{Binding Cache_DisplaySlot}"
+							SelectedItem="{Binding selectedSlot}"
+							>
+							<ComboBox.Styles>
+								<Style Selector="ComboBoxItem">
+									<Setter Property="IsEnabled"
+											Value="{Binding isHeader, Converter={StaticResource BoolInvert}}" />
+									<Setter Property="IsHitTestVisible"
+											Value="{Binding isHeader, Converter={StaticResource BoolInvert}}" />
+								</Style>
+							</ComboBox.Styles>
+							<ComboBox.ItemTemplate>
+								<DataTemplate>
+									<TextBlock
+										Text="{Binding centerName}"
+											/>
+								</DataTemplate>
+							</ComboBox.ItemTemplate>
+						</ComboBox>
+					</Grid>
+
+					<Grid Grid.Row="2" ColumnDefinitions="110, 4, *, 8, 30" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+						<TextBlock
+							Text="X offset : "
+							Grid.Column="0"
+							VerticalAlignment="Center"
+							HorizontalAlignment="Left"
+							/>
+						<TextBox
+							Name="CenterOffsetX"
+							Grid.Column="2"
+							HorizontalAlignment="Stretch"
+							VerticalAlignment="Stretch"
+							/>
+						<Button
+							IsVisible="False"
+							Name="XOffsetFixed"
+							Content="File"
+							Grid.Column="4"
+							VerticalAlignment="Stretch"
+							HorizontalAlignment="Stretch"
+							local:AutoIcon.Icon="Pin"
+							local:VisibilityHolder.VisibilityHolder="XOffsetFixed"
+							Height="30"
+							>
+							<Svg
+								VerticalAlignment="Center"
+								HorizontalAlignment="Center"
+								Width="30"
+								/>
+						</Button>
+						<Button
+							IsVisible="True"
+							Name="XOffsetRelative"
+							Content="File"
+							Grid.Column="4"
+							VerticalAlignment="Stretch"
+							HorizontalAlignment="Stretch"
+							local:AutoIcon.Icon="Percent"
+							local:VisibilityHolder.VisibilityHolder="XOffsetRelative"
+							Height="30"
+							>
+							<Svg
+								VerticalAlignment="Center"
+								HorizontalAlignment="Center"
+								Width="30"
+								/>
+						</Button>
+					</Grid>
+
+					<Grid Grid.Row="4" ColumnDefinitions="110, 4, *, 8, 30" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+						<TextBlock
+							Text="Y offset : "
+							Grid.Column="0"
+							VerticalAlignment="Center"
+							HorizontalAlignment="Left"
+							/>
+						<TextBox
+							Name="CenterOffsetY"
+							Grid.Column="2"
+							HorizontalAlignment="Stretch"
+							VerticalAlignment="Stretch"
+							/>
+						<Button
+							IsVisible="False"
+							Name="YOffsetFixed"
+							Content="File"
+							Grid.Column="4"
+							VerticalAlignment="Stretch"
+							HorizontalAlignment="Stretch"
+							local:AutoIcon.Icon="Pin"
+							local:VisibilityHolder.VisibilityHolder="XOffsetFixed"
+							Height="30"
+							>
+							<Svg
+								VerticalAlignment="Center"
+								HorizontalAlignment="Center"
+								Width="30"
+								/>
+						</Button>
+						<Button
+							IsVisible="True"
+							Name="YOffsetRelative"
+							Content="File"
+							Grid.Column="4"
+							VerticalAlignment="Stretch"
+							HorizontalAlignment="Stretch"
+							local:AutoIcon.Icon="Percent"
+							local:VisibilityHolder.VisibilityHolder="XOffsetRelative"
+							Height="30"
+							>
+							<Svg
+								VerticalAlignment="Center"
+								HorizontalAlignment="Center"
+								Width="30"
+								/>
+						</Button>
+					</Grid>
+					
+				</Grid>
+			</Border>
+
+
+			<Border
+				Grid.Row="4"
+				Name="Background_3"
+				Background="#AAA"
+				BorderBrush="Gray"
+				BorderThickness="1"
+				CornerRadius="4"
+				Padding="8"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				>
+				<Grid RowDefinitions="30,8,30">
+					<Grid Grid.Row="0" ColumnDefinitions="110, 4, *, 8, 30" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+						<TextBlock
+							Text="Width : "
+							Grid.Column="0"
+							VerticalAlignment="Center"
+							HorizontalAlignment="Left"
+							/>
+						<TextBox
+							Name="BrushWidth"
+							Grid.Column="2"
+							HorizontalAlignment="Stretch"
+							VerticalAlignment="Stretch"
+							/>
+						<Button
+							IsVisible="False"
+							Name="WidthFixed"
+							Content="File"
+							Grid.Column="4"
+							VerticalAlignment="Stretch"
+							HorizontalAlignment="Stretch"
+							local:AutoIcon.Icon="Pin"
+							local:VisibilityHolder.VisibilityHolder="WidthFixed"
+							Height="30"
+							>
+							<Svg
+								VerticalAlignment="Center"
+								HorizontalAlignment="Center"
+								Width="30"
+								/>
+						</Button>
+						<Button
+							IsVisible="True"
+							Name="WidthRelative"
+							Content="File"
+							Grid.Column="4"
+							VerticalAlignment="Stretch"
+							HorizontalAlignment="Stretch"
+							local:AutoIcon.Icon="Percent"
+							local:VisibilityHolder.VisibilityHolder="WidthRelative"
+							Height="30"
+							>
+							<Svg
+								VerticalAlignment="Center"
+								HorizontalAlignment="Center"
+								Width="30"
+								/>
+						</Button>
+					</Grid>
+
+					<Grid Grid.Row="2" ColumnDefinitions="110, 4, *, 8, 30" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+						<TextBlock
+							Text="Height : "
+							Grid.Column="0"
+							VerticalAlignment="Center"
+							HorizontalAlignment="Left"
+							/>
+						<TextBox
+							Name="BrushHeight"
+							Grid.Column="2"
+							HorizontalAlignment="Stretch"
+							VerticalAlignment="Stretch"
+							/>
+						<Button
+							IsVisible="False"
+							Name="HeightFixed"
+							Content="File"
+							Grid.Column="4"
+							VerticalAlignment="Stretch"
+							HorizontalAlignment="Stretch"
+							local:AutoIcon.Icon="Pin"
+							local:VisibilityHolder.VisibilityHolder="HeightFixed"
+							Height="30"
+							>
+							<Svg
+								VerticalAlignment="Center"
+								HorizontalAlignment="Center"
+								Width="30"
+								/>
+						</Button>
+						<Button
+							IsVisible="True"
+							Name="HeightRelative"
+							Content="File"
+							Grid.Column="4"
+							VerticalAlignment="Stretch"
+							HorizontalAlignment="Stretch"
+							local:AutoIcon.Icon="Percent"
+							local:VisibilityHolder.VisibilityHolder="HeightRelative"
+							Height="30"
+							>
+							<Svg
+								VerticalAlignment="Center"
+								HorizontalAlignment="Center"
+								Width="30"
+								/>
+						</Button>
+					</Grid>
+				</Grid>
+			</Border>
+
+
+			<Border
+				Grid.Row="6"
+				Name="ImageSettings"
+				Background="#AAA"
+				BorderBrush="Gray"
+				BorderThickness="1"
+				CornerRadius="4"
+				Padding="8"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				>
+				<Grid RowDefinitions="30,8,30,8,30,8,30">
+					<Grid Grid.Row="0" ColumnDefinitions="110, 4, *" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+						<TextBlock
+							Text="Stretch mode : "
+							Grid.Column="0"
+							VerticalAlignment="Center"
+							HorizontalAlignment="Left"
+							/>
+
+						<ComboBox
+							Name="StretchMode"
+							Grid.Column="2"
+							VerticalAlignment="Center"
+							HorizontalAlignment="Stretch"
+							/>
+					</Grid>
+					<Grid Grid.Row="2" ColumnDefinitions="110, 4, *" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+						<TextBlock
+							Text="Tile mode : "
+							Grid.Column="0"
+							VerticalAlignment="Center"
+							HorizontalAlignment="Left"
+							/>
+
+						<ComboBox
+							Name="TileMode"
+							Grid.Column="2"
+							VerticalAlignment="Center"
+							HorizontalAlignment="Stretch"
+							/>
+					</Grid>
+					<Grid Grid.Row="4" ColumnDefinitions="110, 4, *" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+						<TextBlock
+							Text="Flip mode : "
+							Grid.Column="0"
+							VerticalAlignment="Center"
+							HorizontalAlignment="Left"
+							/>
+
+						<ComboBox
+							Name="FlipMode"
+							Grid.Column="2"
+							VerticalAlignment="Center"
+							HorizontalAlignment="Stretch"
+							/>
+					</Grid>
+
+					<Grid Grid.Row="6" ColumnDefinitions="110, 4, *" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+						<TextBlock
+							Text="Opacity : "
+							Grid.Column="0"
+							VerticalAlignment="Center"
+							HorizontalAlignment="Left"
+							/>
+
+						<Grid
+							RowDefinitions="*,*"
+							Grid.Column="2"
+							VerticalAlignment="Stretch"
+							HorizontalAlignment="Stretch"
+							>
+
+							<Grid ColumnDefinitions="25,*,25,*,25">
+								<TextBlock
+									Text="{Binding #OpacitySlider.Minimum}"
+									Grid.Column="0"
+								/>
+								<TextBlock
+									Text="{Binding #OpacitySlider.Value}"
+									Grid.Column="2"
+								/>
+								<TextBlock
+									Text="{Binding #OpacitySlider.Maximum}"
+									Grid.Column="4"
+								/>
+							</Grid>
+							<Slider
+								x:Name="OpacitySlider"
+								HorizontalAlignment="Stretch"
+								VerticalAlignment="Center"
+								Grid.Row="1"
+								Minimum="0"
+								Maximum="100"
+								Height="50"
+						/>
+						</Grid>
+					</Grid>
+				</Grid>
+			</Border>
+
+
+		</Grid>
+	</Border>
+</Window>
