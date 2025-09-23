@@ -180,6 +180,18 @@ namespace YAAL
             return null;
         }
 
+        public static string AddNewImage(string path)
+        {
+            string output = IOManager.CopyImageToDefaultFolder(path);
+            if(output != "")
+            {
+                return output;
+            } else
+            {
+                return path;
+            }
+        }
+
         public static void UpdateTheme(string name, Cache_CustomTheme newTheme)
         {
             if (themes.ContainsKey(name))

@@ -1,24 +1,25 @@
-﻿using System;
+﻿using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Layout;
+using Avalonia.Media;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
+using System.ComponentModel;
 using System.Linq;
+using System.Numerics;
+using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using static YAAL.AsyncSettings;
-using Avalonia;
-using Avalonia.Media;
-using System.ComponentModel;
-using Avalonia.Controls;
-using System.Numerics;
-using Newtonsoft.Json;
-using Avalonia.Layout;
 
 namespace YAAL
 {
-    public class Cache_CustomBrushV2
+    public class Cache_LayeredBrush
     {
         [JsonProperty]
-        private List<Cached_BrushV2> _cache = new List<Cached_BrushV2>();
+        private List<Cached_Layer> _cache = new List<Cached_Layer>();
         [JsonIgnore]
         public Dictionary<string, Border> cache { get
             {
@@ -47,18 +48,18 @@ namespace YAAL
             }
         }
 
-        public void AddNewBrush(Cached_BrushV2 brush)
+        public void AddNewBrush(Cached_Layer brush)
         {
             _cache.Add(brush);
         }
 
-        public void RemoveBrush(Cached_BrushV2 brush)
+        public void RemoveBrush(Cached_Layer brush)
         {
             _cache.Remove(brush);
         }
     }
 
-    public abstract class Cached_BrushV2
+    public abstract class Cached_Layer
     {
         public BrushType brushType { get; set; }
         public Border GetLayer()
@@ -77,7 +78,8 @@ namespace YAAL
         public bool yOffsetAbsolute;
         public double yOffset = 0;
         public string center = "Default";
-        
+
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         public void CenterBorder(Border toCenter)
         {
@@ -149,7 +151,7 @@ namespace YAAL
         }
     }
 
-    public class Cached_ImageBrushV2 : Cached_BrushV2
+    public class Cached_ImageLayer : Cached_Layer
     {
         public string imageSource = "";
         public Stretch stretch;
@@ -186,7 +188,7 @@ namespace YAAL
         }
     }
 
-    public class Cached_SolidColorBrushV2 : Cached_BrushV2
+    public class Cache_ColorLayer : Cached_Layer
     {
         public Color color;
 

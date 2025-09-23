@@ -35,5 +35,13 @@ namespace YAAL
             mainWindow = new MainWindow();
             mainWindow.IsVisible = true;
         }
+
+        public static void ChangeHeight(Window toResize, int newHeight)
+        {
+            double trueHeight = newHeight * App.Settings.Zoom;
+            toResize.MinHeight = trueHeight;
+            toResize.MaxHeight = trueHeight;
+            toResize.Height = trueHeight;
+        }
     }
 }

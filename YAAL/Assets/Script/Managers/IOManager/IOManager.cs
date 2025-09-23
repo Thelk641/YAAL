@@ -205,6 +205,11 @@ namespace YAAL
 
         public static string CopyImageToDefaultFolder(string path)
         {
+            if (!File.Exists(path))
+            {
+                return "";
+            }
+
             string originalPath = ProcessLocalPath(path);
             string targetPath = Path.Combine(GetSaveLocation(Images), GetFileName(path));
 
