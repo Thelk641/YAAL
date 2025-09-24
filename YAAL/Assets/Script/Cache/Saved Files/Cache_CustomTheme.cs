@@ -16,8 +16,8 @@ namespace YAAL
         public string name;
         public int topOffset { get; set; } = 0;
         public int bottomOffset { get; set; } = 0;
-        public Cache_CustomBrush background { get; set; } = new Cache_CustomBrush();
-        public Cache_CustomBrush foreground { get; set; } = new Cache_CustomBrush();
+        public Cache_LayeredBrush background { get; set; } = new Cache_LayeredBrush();
+        public Cache_LayeredBrush foreground { get; set; } = new Cache_LayeredBrush();
 
         public bool transparentButton { get; set; } = false;
 

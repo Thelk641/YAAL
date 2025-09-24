@@ -26,9 +26,9 @@ public partial class CustomThemeMaker : Window
     private string previousSelection = "General Theme";
     private Cache_CustomTheme currentTheme;
     private Window backgroundWindow;
-    private ThemeSlotV2 backgroundSlot;
+    private ThemeSlot backgroundSlot;
     private Window foregroundWindow;
-    private ThemeSlotV2 foregroundSlot;
+    private ThemeSlot foregroundSlot;
     private int baseHeight = 600;
     private int baseWidth = 550;
     public CustomThemeMaker()
@@ -178,7 +178,7 @@ public partial class CustomThemeMaker : Window
         currentTheme.background = Collumn_Background.GetBrush();
         if (backgroundSlot == null)
         {
-            backgroundSlot = new ThemeSlotV2();
+            backgroundSlot = new ThemeSlot();
             backgroundSlot.Width = EditMode.Width;
             backgroundSlot.Height = EditMode.Height;
         }
@@ -227,7 +227,7 @@ public partial class CustomThemeMaker : Window
         currentTheme.foreground = Collumn_Foreground.GetBrush();
         if (foregroundSlot == null)
         {
-            foregroundSlot = new ThemeSlotV2();
+            foregroundSlot = new ThemeSlot();
             foregroundSlot.Width = PlayMode.Width;
             foregroundSlot.Height = PlayMode.Height;
         }

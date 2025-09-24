@@ -188,7 +188,7 @@ namespace YAAL
         }
     }
 
-    public class Cache_ColorLayer : Cached_Layer
+    public class Cached_ColorLayer : Cached_Layer
     {
         public Color color;
 

@@ -35,14 +35,11 @@
     <Compile Update="Assets\Axaml\CustomThemeMaker\BrushHolder.axaml.cs">
       <DependentUpon>BrushHolder.axaml</DependentUpon>
     </Compile>
-    <Compile Update="Assets\Axaml\CustomThemeMaker\ThemeSlotV2.axaml.cs">
-      <DependentUpon>ThemeSlotV2.axaml</DependentUpon>
+    <Compile Update="Assets\Axaml\CustomThemeMaker\ThemeSlot.axaml.cs">
+      <DependentUpon>ThemeSlot.axaml</DependentUpon>
     </Compile>
     <Compile Update="Assets\Axaml\Main Window\Components\AsyncHolder.axaml.cs">
       <DependentUpon>AsyncHolder.axaml</DependentUpon>
-    </Compile>
-    <Compile Update="Assets\Axaml\Main Window\Components\SlotHolderV2.axaml.cs">
-      <DependentUpon>SlotHolderV2.axaml</DependentUpon>
     </Compile>
     <Compile Update="Assets\Axaml\Main Window\Components\SlotHolder.axaml.cs">
       <DependentUpon>SlotHolder.axaml</DependentUpon>
@@ -59,17 +56,8 @@
     <Compile Update="Assets\Axaml\SettingManager\Settings\Setting_Tool.axaml.cs">
       <DependentUpon>Setting_Tool.axaml</DependentUpon>
     </Compile>
-    <Compile Update="Assets\Axaml\ThemeMaker\BrushMaker.axaml.cs">
+    <Compile Update="Assets\Axaml\CustomThemeMaker\BrushMaker.axaml.cs">
       <DependentUpon>BrushMaker.axaml</DependentUpon>
-    </Compile>
-    <Compile Update="Assets\Axaml\ThemeMaker\ThemeCollumn.axaml.cs">
-      <DependentUpon>ThemeCollumn.axaml</DependentUpon>
-    </Compile>
-    <Compile Update="Assets\Axaml\ThemeMaker\ThemeMaker.axaml.cs">
-      <DependentUpon>ThemeMaker.axaml</DependentUpon>
-    </Compile>
-    <Compile Update="Assets\Axaml\ThemeMaker\ThemeSlot.axaml.cs">
-      <DependentUpon>ThemeSlot.axaml</DependentUpon>
     </Compile>
   </ItemGroup>
 

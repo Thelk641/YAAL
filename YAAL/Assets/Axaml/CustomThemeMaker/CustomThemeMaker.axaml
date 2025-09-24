@@ -199,8 +199,8 @@
 						IsVisible="True">
 						<StackPanel Name="ThemeContainer"/>
 					</Border>
-					<local:ThemeSlotV2 Name="PlayMode" Grid.Row="2"/>
-					<local:ThemeSlotV2 Name="EditMode" Grid.Row="4"/>
+					<local:ThemeSlot Name="PlayMode" Grid.Row="2"/>
+					<local:ThemeSlot Name="EditMode" Grid.Row="4"/>
 				</Grid>
 			</Border>
 			

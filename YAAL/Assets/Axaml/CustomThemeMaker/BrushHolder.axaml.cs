@@ -19,19 +19,19 @@ namespace YAAL;
 
 public partial class BrushHolder : UserControl
 {
-    public Cached_Brush brush 
+    public Cached_Layer brush 
     { get {
             switch (Holder.Background)
             {
                 case ImageBrush image:
                     return imageBrush;
                 case SolidColorBrush solid:
-                    Cached_SolidColorBrush solidBrush = new Cached_SolidColorBrush();
+                    Cached_ColorLayer solidBrush = new Cached_ColorLayer();
                     solidBrush.color = solid.Color;
                     return solidBrush;
             }
 
-            return new Cached_SolidColorBrush();
+            return new Cached_ColorLayer();
         }
     }
     public event Action MoveUp;
@@ -41,7 +41,7 @@ public partial class BrushHolder : UserControl
 
     public IBrush temporaryBrush { get { return Holder.Background!; } }
     public string type;
-    public Cached_ImageBrush imageBrush;
+    public Cached_ImageLayer imageBrush;
     public BrushHolder()
     {
         InitializeComponent();
@@ -55,7 +55,7 @@ public partial class BrushHolder : UserControl
         //Update Preview
     }
 
-    public void Setup(string type, Cached_Brush newBrush)
+    public void Setup(string type, Cached_Layer newBrush)
     {
         this.type = type;
         BrushType.Text = type;
@@ -63,21 +63,6 @@ public partial class BrushHolder : UserControl
         Holder.Background = newBrush.GetLayer().Background;
 
         //brush = newBrush;
-    }
-
-    public Cached_Brush GetBrush()
-    {
-        switch (Holder.Background)
-        {
-            case ImageBrush image:
-                return imageBrush;
-            case SolidColorBrush solid:
-                Cached_SolidColorBrush solidBrush = new Cached_SolidColorBrush();
-                solidBrush.color = solid.Color;
-                return solidBrush;
-        }
-
-        return new Cached_SolidColorBrush();
     }
 
     public void OpenEditWindow()

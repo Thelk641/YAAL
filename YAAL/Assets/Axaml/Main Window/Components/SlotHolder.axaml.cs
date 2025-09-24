@@ -21,6 +21,7 @@ public partial class SlotHolder : UserControl
 {
     private string asyncName;
     private Cache_Slot thisSlot;
+    public Cache_Slot Slot { get { return thisSlot; } }
     private Cache_Room room;
     private List<Cache_RoomSlot> availableGames;
     public Cache_DisplaySlot selectedSlot;
@@ -29,11 +30,9 @@ public partial class SlotHolder : UserControl
     public event Action SwitchedToBigger;
     public event Action SwitchedToSmaller;
     public event Action FinishedEditing;
-    public event Action ChangedHeight;
+    public event Action<double,double> ChangedHeight;
     public int hardCodedHeight = 52;
-    public int baseHeight = 52;
-    //public int heightDifference = 38;
-    public int heightDifference = 52;
+    public double previousHeight = 0;
     public bool isEditing = false;
     private ObservableCollection<string> toolList = new ObservableCollection<string>();
     private string previousTheme = "";
@@ -43,7 +42,7 @@ public partial class SlotHolder : UserControl
         InitializeComponent();
     }
 
-    public SlotHolder (Cache_Async async, Cache_Slot slot) : this()
+    public SlotHolder(Cache_Async async, Cache_Slot slot) : this()
     {
         asyncName = async.settings[AsyncSettings.asyncName];
         thisSlot = slot;
@@ -52,7 +51,8 @@ public partial class SlotHolder : UserControl
         SetupPlayMode();
         SetupEditMode();
 
-        if (room.slots.Count > 0) {
+        if (room.slots.Count > 0)
+        {
             UpdateAvailableSlot();
         }
 
@@ -78,16 +78,101 @@ public partial class SlotHolder : UserControl
         asyncName = newName;
     }
 
+
+
+    public void Resize()
+    {
+        double newHeight = hardCodedHeight;
+
+        Cache_CustomTheme customTheme;
+
+        if (currentLauncher != null && currentLauncher.settings.TryGetValue(LauncherSettings.customTheme, out string themeName))
+        {
+            customTheme = ThemeManager.GetTheme(themeName);
+        } else
+        {
+            customTheme = ThemeManager.GetDefaultTheme();
+        }
+
+        newHeight += customTheme.topOffset + customTheme.bottomOffset;
+
+        string combined = customTheme.topOffset.ToString() + ",*," + customTheme.bottomOffset.ToString();
+        PlayEmptySpace.RowDefinitions = new RowDefinitions(combined);
+        EditEmptySpace1.RowDefinitions = new RowDefinitions(combined);
+        EditEmptySpace2.RowDefinitions = new RowDefinitions(combined);
+
+        if (EditMode.IsVisible)
+        {
+            newHeight += hardCodedHeight + 8; // one more line, plus spacing
+        }
+
+        this.Height = newHeight;
+        ChangedHeight?.Invoke(previousHeight, newHeight);
+        previousHeight = newHeight;
+    }
+
+    public async Task AutoDownload(bool overridePatch = false)
+    {
+        Patch.Text = await WebManager.DownloadPatch(asyncName, thisSlot.settings[slotName], selectedSlot.cache.patchURL, overridePatch);
+
+        if (!overridePatch)
+        {
+            DownloadPatch.IsVisible = false;
+            ReDownloadPatch.IsVisible = true;
+        }
+        
+        Save();
+    }
+
+    public void ClosingSave()
+    {
+        if (!PlayMode.IsVisible)
+        {
+            Save();
+        }
+    }
+
+    public void Save()
+    {
+        Cache_Slot newSlot = new Cache_Slot();
+        if (SelectedLauncher.SelectedItem != null)
+        {
+            newSlot.settings[baseLauncher] = SelectedLauncher.SelectedItem.ToString();
+        }
+
+        if (SelectedVersion.SelectedItem != null)
+        {
+            newSlot.settings[version] = SelectedVersion.SelectedItem.ToString();
+        }
+
+        newSlot.settings[patch] = Patch.Text;
+        newSlot.settings[slotName] = SlotName.Text;
+        newSlot.settings[rom] = thisSlot.settings[rom];
+        string newName = IOManager.SaveSlot(asyncName, newSlot, thisSlot);
+
+        newSlot.settings[slotName] = newName;
+        SlotName.Text = newName;
+        _SlotName.Text = newName;
+
+        thisSlot = newSlot;
+    }
+
+    public void SetBackgrounds()
+    {
+        //TODO
+    }
+
     public void SetRoom(Cache_Room newRoom)
     {
         if (!isEditing)
         {
             DebouncedSetRoom(newRoom);
             return;
-        } else
+        }
+        else
         {
-            Action handler = null;  
-            
+            Action handler = null;
+
             handler = () =>
             {
                 DebouncedSetRoom(newRoom);
@@ -96,14 +181,14 @@ public partial class SlotHolder : UserControl
             FinishedEditing += handler;
         }
 
-            
+
     }
 
     public void DebouncedSetRoom(Cache_Room newRoom)
     {
         room = newRoom;
         UpdateAvailableSlot();
-        if (room.slots.Count > 0) 
+        if (room.slots.Count > 0)
         {
             SwitchPatchMode();
         }
@@ -126,97 +211,6 @@ public partial class SlotHolder : UserControl
         ToolSelect.SelectedIndex = 0;
     }
 
-    public void UpdateAvailableSlot()
-    {
-        // TODO : this is going to be slow and done once per slot every time we open the software
-        // Need to find a way to cache it with the time of last update of launcher list
-        // Which also means caching the launcher list with a time
-        List<string> patterns = IOManager.SplitPathList(IOManager.GetSetting(GeneralSettings.slotNameFilter));
-        List<Cache_RoomSlot> filteredSlots = new List<Cache_RoomSlot>();
-        List<Cache_RoomSlot> unfilteredSlots = new List<Cache_RoomSlot>();
-        List<string> games = IOManager.GetGameList();
-        List<string> slots = IOManager.GetSlotList(asyncName);
-
-        foreach (var item in room.slots)
-        {
-            if (slots.Contains(item.Key) && item.Key != thisSlot.settings[slotName])
-            {
-                continue;
-            }
-
-            if (patterns.Any(p => item.Key.Contains(p)))
-            {
-                filteredSlots.Add(item.Value);
-                continue;
-            }
-            else
-            {
-                if (games.Contains(item.Value.gameName))
-                {
-                    unfilteredSlots.Add(item.Value);
-                }
-            }
-        }
-
-        availableGames = new List<Cache_RoomSlot>();
-        List<Cache_DisplaySlot> possibleSlots = new List<Cache_DisplaySlot>();
-        Cache_DisplaySlot selected = null;
-
-        if (filteredSlots.Count > 0) 
-        {
-            Cache_DisplaySlot header = new Cache_DisplaySlot();
-            header.slotName = "-- Filtered";
-            possibleSlots.Add(header);
-        }
-
-        foreach (var item in filteredSlots)
-        {
-            availableGames.Add(item);
-            Cache_DisplaySlot toAdd = new Cache_DisplaySlot();
-            toAdd.SetSlot(item);
-            possibleSlots.Add(toAdd);
-            if(selected == null && item.slotName == _SlotName.Text)
-            {
-                selected = toAdd;
-            }
-        }
-
-        if (unfilteredSlots.Count > 0)
-        {
-            Cache_DisplaySlot header = new Cache_DisplaySlot();
-            header.slotName = "-- Unfiltered";
-            possibleSlots.Add(header);
-        }
-
-        foreach (var item in unfilteredSlots)
-        {
-            availableGames.Add(item);
-            Cache_DisplaySlot toAdd = new Cache_DisplaySlot();
-            toAdd.SetSlot(item);
-            possibleSlots.Add(toAdd);
-            if (selected == null && item.slotName == _SlotName.Text)
-            {
-                selected = toAdd;
-            }
-        }
-
-        SlotSelector.ItemsSource = possibleSlots;
-
-        if(selected != null)
-        {
-            SlotSelector.SelectedItem = selected;
-        } else
-        {
-            if(possibleSlots.Count == 0)
-            {
-                SlotSelector.SelectedIndex = 0;
-            } else
-            {
-                SlotSelector.SelectedIndex = 1;
-            }
-        }
-    }
-
     public void SetupPlayMode()
     {
         _SlotName.Text = thisSlot.settings[slotName];
@@ -226,13 +220,14 @@ public partial class SlotHolder : UserControl
             toolList.Add(item);
         }
 
-        if(toolList.Count == 0)
+        if (toolList.Count == 0)
         {
             toolList.Add("None");
         }
 
         ToolSelect.ItemsSource = toolList;
-        
+        ToolSelect.SelectedIndex = 0;
+
 
         RealPlay.Click += async (_, _) =>
         {
@@ -245,14 +240,14 @@ public partial class SlotHolder : UserControl
                 await AutoDownload();
             }
             ProcessManager.StartProcess(
-                Environment.ProcessPath,
+                Environment.ProcessPath!,
                 ("--async " + "\"" + asyncName + "\"" + " --slot " + "\"" + _SlotName.Text + "\""),
                 true);
         };
 
         StartTool.Click += (_, _) =>
         {
-            if (ToolSelect.SelectedItem == "None")
+            if (ToolSelect.SelectedItem == null)
             {
                 return;
             }
@@ -268,18 +263,18 @@ public partial class SlotHolder : UserControl
                     }
                     break;
                 case "Cheesetracker":
-                    if(room.cheeseTrackerURL != "")
+                    if (room.cheeseTrackerURL != "")
                     {
                         ProcessManager.StartProcess(room.cheeseTrackerURL, "", true);
                     }
                     break;
                 default:
                     ProcessManager.StartProcess(
-                        Environment.ProcessPath,
+                        Environment.ProcessPath!,
                         ("--async " + "\"" + asyncName + "\"" + " --slot " + "\"" + _SlotName.Text + "\"" + " --launcher " + "\"" + ToolSelect.SelectedItem.ToString() + "\""),
                         true);
                     break;
-            } 
+            }
         };
 
         Edit.Click += (source, args) =>
@@ -292,6 +287,12 @@ public partial class SlotHolder : UserControl
     {
         SlotName.Text = thisSlot.settings[slotName];
         Patch.Text = thisSlot.settings[patch];
+
+        Action finished = () =>
+        {
+            isEditing = false;
+            FinishedEditing?.Invoke();
+        };
 
         List<string> launcherList = IOManager.GetLauncherList();
 
@@ -330,7 +331,7 @@ public partial class SlotHolder : UserControl
         {
             isEditing = true;
             Patch.Text = await IOManager.PickFile(this.VisualRoot as Window);
-            DebouncedFinishedEditing();
+            finished();
         };
 
         DoneEditing.Click += (_, _) =>
@@ -359,19 +360,17 @@ public partial class SlotHolder : UserControl
         {
             _SlotName.Text = SlotName.Text;
             isEditing = true;
-            Debouncer.Debounce(DebouncedFinishedEditing, 1);
+            Debouncer.Debounce(finished, 1);
         };
 
-        DownloadPatch.Click += async (_, _) => 
+        DownloadPatch.Click += async (_, _) =>
         {
-            AutoDownload();
+            AutoDownload(false);
         };
 
         ReDownloadPatch.Click += async (_, _) =>
         {
-            Patch.Text = await WebManager.DownloadPatch(asyncName, thisSlot.settings[slotName], selectedSlot.cache.patchURL, true);
-            IOManager.SetSlotSetting(asyncName, thisSlot.settings[slotName], rom, "");
-            Save();
+            AutoDownload(true);
         };
 
         if (thisSlot.settings[patch] != "")
@@ -396,32 +395,19 @@ public partial class SlotHolder : UserControl
         }
     }
 
-    public async Task AutoDownload()
-    {
-        Patch.Text = await WebManager.DownloadPatch(asyncName, thisSlot.settings[slotName], selectedSlot.cache.patchURL);
-        DownloadPatch.IsVisible = false;
-        ReDownloadPatch.IsVisible = true;
-        Save();
-    }
-
     public void SwitchMode()
     {
         if (PlayMode.IsVisible)
         {
             PlayMode.IsVisible = false;
             EditMode.IsVisible = true;
-            Resize();
-            //this.Height = baseHeight + heightDifference;
-            //SwitchedToBigger?.Invoke();
-            //ChangedHeight?.Invoke();
-        } else
+        }
+        else
         {
             PlayMode.IsVisible = true;
             EditMode.IsVisible = false;
-            Resize();
-            //this.Height = baseHeight;
-            //SwitchedToSmaller?.Invoke();
         }
+        Resize();
     }
 
     public void SwitchPatchMode()
@@ -446,45 +432,96 @@ public partial class SlotHolder : UserControl
         }
     }
 
-    public void Save()
+    public void UpdateAvailableSlot()
     {
-        Cache_Slot newSlot = new Cache_Slot();
-        if(SelectedLauncher.SelectedItem != null)
+        // TODO : needs to check that this actually works, not sure it does
+        List<Cache_RoomSlot> filteredSlots = new List<Cache_RoomSlot>();
+        List<Cache_RoomSlot> unfilteredSlots = new List<Cache_RoomSlot>();
+        List<string> games = IOManager.GetGameList();
+        List<string> slots = IOManager.GetSlotList(asyncName);
+
+        foreach (var item in room.slots)
         {
-            newSlot.settings[baseLauncher] = SelectedLauncher.SelectedItem.ToString();
+            if (slots.Contains(item.Key) && item.Key != thisSlot.settings[slotName])
+            {
+                // This item already has another SlotHolder dedicated to it, let's ignore it
+                continue;
+            } else
+            {
+                if (games.Contains(item.Value.gameName))
+                {
+                    filteredSlots.Add(item.Value);
+                } else
+                {
+                    unfilteredSlots.Add(item.Value);
+                }
+            }
         }
-        
-        if(SelectedVersion.SelectedItem != null)
+
+        availableGames = new List<Cache_RoomSlot>();
+        List<Cache_DisplaySlot> possibleSlots = new List<Cache_DisplaySlot>();
+        Cache_DisplaySlot selected = null;
+
+        if (filteredSlots.Count > 0)
         {
-            newSlot.settings[version] = SelectedVersion.SelectedItem.ToString();
+            Cache_DisplaySlot header = new Cache_DisplaySlot();
+            header.slotName = "-- Implemented";
+            possibleSlots.Add(header);
         }
 
-        newSlot.settings[patch] = Patch.Text;
-        newSlot.settings[slotName] = SlotName.Text;
-        newSlot.settings[rom] = thisSlot.settings[rom];
-        string newName = IOManager.SaveSlot(asyncName, newSlot, thisSlot);
+        foreach (var item in filteredSlots)
+        {
+            availableGames.Add(item);
+            Cache_DisplaySlot toAdd = new Cache_DisplaySlot();
+            toAdd.SetSlot(item);
+            possibleSlots.Add(toAdd);
+            if (selected == null && item.slotName == _SlotName.Text)
+            {
+                selected = toAdd;
+            }
+        }
 
-        newSlot.settings[slotName] = newName;
-        SlotName.Text = newName;
-        _SlotName.Text = newName;
+        if (unfilteredSlots.Count > 0)
+        {
+            Cache_DisplaySlot header = new Cache_DisplaySlot();
+            header.slotName = "-- Not implemented";
+            possibleSlots.Add(header);
+        }
 
-        thisSlot = newSlot;
+        foreach (var item in unfilteredSlots)
+        {
+            availableGames.Add(item);
+            Cache_DisplaySlot toAdd = new Cache_DisplaySlot();
+            toAdd.SetSlot(item);
+            possibleSlots.Add(toAdd);
+            if (selected == null && item.slotName == _SlotName.Text)
+            {
+                selected = toAdd;
+            }
+        }
+
+        SlotSelector.ItemsSource = possibleSlots;
+
+        if (selected != null)
+        {
+            SlotSelector.SelectedItem = selected;
+        }
+        else
+        {
+            if (possibleSlots.Count == 0)
+            {
+                SlotSelector.SelectedIndex = 0;
+            }
+            else
+            {
+                SlotSelector.SelectedIndex = 1;
+            }
+        }
     }
 
-    public void ClosingSave()
-    {
-        if (!PlayMode.IsVisible)
-        {
-            Save();
-        }
-    }
 
-    public void DebouncedFinishedEditing()
-    {
-        isEditing = false;
-        FinishedEditing?.Invoke();
-    }
-    
+    // EVENTS
+
     private void _ChangedSlot(object? sender, SelectionChangedEventArgs e)
     {
         if (SlotSelector.SelectedItem == null)
@@ -506,7 +543,8 @@ public partial class SlotHolder : UserControl
             {
                 ListSorter.AddSorted(toolList, "Tracker");
             }
-        } else
+        }
+        else
         {
             if (toolList.Contains("Tracker"))
             {
@@ -519,7 +557,7 @@ public partial class SlotHolder : UserControl
 
     private void _ChangedLauncher(object? sender, SelectionChangedEventArgs e)
     {
-        if(SelectedLauncher.SelectedItem == null)
+        if (SelectedLauncher.SelectedItem == null)
         {
             return;
         }
@@ -536,73 +574,11 @@ public partial class SlotHolder : UserControl
         {
             SelectedVersion.SelectedIndex = 0;
         }
-        if(prevSelection != null)
+        if (prevSelection != null)
         {
             Save();
         }
         currentLauncher = IOManager.LoadCacheLauncher(SelectedLauncher.SelectedItem.ToString());
         SetBackgrounds();
-    }
-
-    public Cache_Slot GetCache()
-    {
-        return thisSlot;
-    }
-
-    public void Resize()
-    {
-        double newHeight = hardCodedHeight;
-        // TODO : need to grab the theme from the custom launcher instead
-        Cache_CustomTheme customTheme = DefaultManager.theme;
-        //Cache_Theme theme = IOManager.GetTheme(SelectedLauncher.SelectedItem.ToString() ?? "General Theme");
-        //newHeight += theme.offset * 2;
-
-        newHeight += customTheme.topOffset + customTheme.bottomOffset;
-
-        string combined = customTheme.topOffset.ToString() + ",*," + customTheme.bottomOffset.ToString();
-        EmptySpace.RowDefinitions = new RowDefinitions(combined);
-
-        if (EditMode.IsVisible)
-        {
-            newHeight += heightDifference;
-        }
-
-        this.Height = newHeight;
-        ChangedHeight?.Invoke();
-    }
-
-    public void SetBackgrounds()
-    {
-        if(SelectedLauncher.SelectedItem == null)
-        {
-            return;
-        }
-        string themeName = SelectedLauncher.SelectedItem.ToString() ?? "General Theme";
-
-        if(themeName == previousTheme)
-        {
-            return;
-        } else
-        {
-            previousTheme = themeName;
-        }
-
-        AutoTheme.SetTheme(BackgroundColor, themeName);
-        AutoTheme.SetTheme(RealPlay, themeName);
-        AutoTheme.SetTheme(ToolSelect, themeName);
-        AutoTheme.SetTheme(StartTool, themeName);
-        AutoTheme.SetTheme(Edit, themeName);
-        AutoTheme.SetTheme(FakePlay, themeName);
-        AutoTheme.SetTheme(SlotSelector, themeName);
-        AutoTheme.SetTheme(PatchSelect, themeName);
-        AutoTheme.SetTheme(DownloadPatch, themeName);
-        AutoTheme.SetTheme(ReDownloadPatch, themeName);
-        AutoTheme.SetTheme(DoneEditing, themeName);
-        AutoTheme.SetTheme(SelectedLauncher, themeName);
-        AutoTheme.SetTheme(SelectedVersion, themeName);
-        AutoTheme.SetTheme(ManualPatchButton, themeName);
-        AutoTheme.SetTheme(AutomaticPatchButton, themeName);
-        AutoTheme.SetTheme(DeleteSlot, themeName);
-
     }
 }

@@ -224,14 +224,14 @@ public partial class BrushMaker : Window
     public void SetupColor(Cached_Layer brush)
     {
         
-        if (!(brush is Cache_ColorLayer))
+        if (!(brush is Cached_ColorLayer))
         {
             ErrorManager.ThrowError(
                 "BrushMaker - Invalid brush type",
                 "Brush is of type Color yet it's not a SolidColorBrush, this shouldn't happen, please report this issue.");
         }
 
-        Cache_ColorLayer solid = brush as Cache_ColorLayer ?? new Cache_ColorLayer();
+        Cached_ColorLayer solid = brush as Cached_ColorLayer ?? new Cached_ColorLayer();
 
         WindowManager.ChangeHeight(this, 290);
         ColorMode.IsVisible = true;

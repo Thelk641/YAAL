@@ -20,7 +20,7 @@ namespace YAAL;
 
 public partial class CustomThemeCollumn : UserControl
 {
-    public event Action UpdatedBrush;
+    public event Action? UpdatedBrush;
     public ThemeSettings id;
 
     public CustomThemeCollumn()
@@ -42,9 +42,9 @@ public partial class CustomThemeCollumn : UserControl
         }
     }
 
-    public Cache_CustomBrush GetBrush()
+    public Cache_LayeredBrush GetBrush()
     {
-        Cache_CustomBrush brush = new Cache_CustomBrush();
+        Cache_LayeredBrush brush = new Cache_LayeredBrush();
         foreach (var item in CommandContainer.Children)
         {
             if(item is BrushHolder holder)

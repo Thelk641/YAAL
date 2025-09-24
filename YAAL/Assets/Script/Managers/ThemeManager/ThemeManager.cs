@@ -21,7 +21,7 @@ namespace YAAL
         public static Dictionary<string, Cache_CustomTheme> themes = new Dictionary<string, Cache_CustomTheme>();
         public static Dictionary<string, WeakReference<Bitmap>> images = new Dictionary<string, WeakReference<Bitmap>>();
         public static Dictionary<string, List<Control>> themedControl = new Dictionary<string, List<Control>>();
-        public static Dictionary<Control, Border> themeContainers = new Dictionary<Control, Border>();
+        public static Dictionary<Control, Grid> themeContainers = new Dictionary<Control, Grid>();
         public static string defaultTheme = "General Theme";
 
         public static Dictionary<string, Point> playCenters = new Dictionary<string, Point>();
@@ -77,7 +77,7 @@ namespace YAAL
                     }
                 }
 
-                Border layer0 = null;
+                Grid layer0 = null;
 
                 if(category == ThemeSettings.backgroundColor)
                 {
@@ -241,7 +241,7 @@ namespace YAAL
             playCenters = new Dictionary<string, Point>();
             editCenters = new Dictionary<string, Point>();
 
-            ThemeSlotV2 themeSlot = new ThemeSlotV2();
+            ThemeSlot themeSlot = new ThemeSlot();
             themeSlot.Measure(Size.Infinity);
             slotSize = WindowManager.GetSlotSize();
             Rect desiredSize = new Rect(0, 0, slotSize.X, slotSize.Y);

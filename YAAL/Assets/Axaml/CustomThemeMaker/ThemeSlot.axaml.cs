@@ -20,7 +20,7 @@ using static YAAL.SlotSettings;
 
 namespace YAAL;
 
-public partial class ThemeSlotV2 : UserControl
+public partial class ThemeSlot : UserControl
 {
     public Cache_DisplaySlot selectedSlot;
     public Cache_CustomLauncher currentLauncher;
@@ -30,7 +30,7 @@ public partial class ThemeSlotV2 : UserControl
     public int topOffset = 0;
     public int bottomOffset = 0;
     
-    public ThemeSlotV2()
+    public ThemeSlot()
     {
         InitializeComponent();
         ToolSelect.ItemsSource = new List<string> { "A tool" };

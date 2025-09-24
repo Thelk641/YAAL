@@ -61,14 +61,7 @@ public partial class MainWindow : Window
 
         ThemeButton.Click += (_, _) =>
         {
-            ThemeMaker themeMaker = new ThemeMaker();
-            themeMaker.IsVisible = true;
-            themeMaker.Closing += (_, _) =>
-            {
-                this.Activate();
-                this.Topmost = true;
-                this.Topmost = false;
-            };
+            // TODO : open custom theme maker ! 
         };
 
 

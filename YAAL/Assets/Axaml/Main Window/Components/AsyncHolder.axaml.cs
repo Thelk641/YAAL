@@ -22,7 +22,7 @@ public partial class AsyncHolder : UserControl
     private Cache_Async thisAsync = new Cache_Async();
     public event Action? RequestRemoval;
     public event Action? DoneClosing;
-    private Dictionary<SlotHolderV2, double> previousHeight = new Dictionary<SlotHolderV2, double>();
+    private Dictionary<SlotHolder, double> previousHeight = new Dictionary<SlotHolder, double>();
     public AsyncHolder()
     {
         InitializeComponent();
@@ -57,7 +57,7 @@ public partial class AsyncHolder : UserControl
         _AsyncNameBox.Text = thisAsync.settings[asyncName];
         NewSlot.Click += (_, _) =>
         {
-            SlotHolderV2 newSlot = AddNewSlot(IOManager.CreateNewSlot(thisAsync, "New"));
+            SlotHolder newSlot = AddNewSlot(IOManager.CreateNewSlot(thisAsync, "New"));
             newSlot.SwitchMode();
         };
 
@@ -133,7 +133,7 @@ public partial class AsyncHolder : UserControl
 
         foreach (var item in SlotsContainer.Children)
         {
-            if (item is SlotHolderV2 slotHolder)
+            if (item is SlotHolder slotHolder)
             {
                 slotHolder.SetRoom(thisAsync.room);
             }
@@ -142,9 +142,9 @@ public partial class AsyncHolder : UserControl
         Save();
     }
 
-    public SlotHolderV2 AddNewSlot(Cache_Slot newSlot)
+    public SlotHolder AddNewSlot(Cache_Slot newSlot)
     {
-        SlotHolderV2 toAdd = new SlotHolderV2(thisAsync, newSlot);
+        SlotHolder toAdd = new SlotHolder(thisAsync, newSlot);
         
         this.Height += 8; // they're going to switch to edit mode immediately, triggering ChangedHeight with previousHeight=0
 
@@ -205,7 +205,7 @@ public partial class AsyncHolder : UserControl
 
         foreach (var item in SlotsContainer.Children)
         {
-            if(item is SlotHolderV2 slotHolder)
+            if(item is SlotHolder slotHolder)
             {
                 toSave.slots.Add(slotHolder.Slot);
             }
@@ -213,7 +213,7 @@ public partial class AsyncHolder : UserControl
 
         foreach (var item in SlotsContainer.Children)
         {
-            if (item is SlotHolderV2 slotHolder)
+            if (item is SlotHolder slotHolder)
             {
                 slotHolder.SetAsyncName(toSave.settings[asyncName]);
                 slotHolder.SetRoom(toSave.room);
@@ -233,7 +233,7 @@ public partial class AsyncHolder : UserControl
     {
         foreach (var item in SlotsContainer.Children)
         {
-            if(item is SlotHolderV2 slot)
+            if(item is SlotHolder slot)
             {
                 slot.ClosingSave();
             }

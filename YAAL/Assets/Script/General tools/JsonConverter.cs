@@ -17,9 +17,9 @@ using Newtonsoft.Json.Linq;
 
 namespace YAAL
 {
-    public class CachedBrushConverter : JsonConverter<Cached_Brush>
+    public class CachedBrushConverter : JsonConverter<Cached_Layer>
     {
-        public override Cached_Brush? ReadJson(JsonReader reader, Type objectType, Cached_Brush? existingValue, bool hasExistingValue, JsonSerializer serializer)
+        public override Cached_Layer? ReadJson(JsonReader reader, Type objectType, Cached_Layer? existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
             var JsonObject = JObject.Load(reader);
             string brushType = JsonObject["brushType"]?.ToString() ?? "";
@@ -27,19 +27,19 @@ namespace YAAL
             switch (brushType)
             {
                 case "Image":
-                    return JsonObject.ToObject<Cached_ImageBrush>(GetDefaultSerializer(serializer));
+                    return JsonObject.ToObject<Cached_ImageLayer>(GetDefaultSerializer(serializer));
                 case "Color":
-                    return JsonObject.ToObject<Cached_SolidColorBrush>(GetDefaultSerializer(serializer));
+                    return JsonObject.ToObject<Cached_ColorLayer>(GetDefaultSerializer(serializer));
                 default:
                     return null;
             }
         }
 
-        public override void WriteJson(JsonWriter writer, Cached_Brush? value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, Cached_Layer? value, JsonSerializer serializer)
         {
             JObject JsonObject = JObject.FromObject(value, GetDefaultSerializer(serializer));
-            if (value is Cached_SolidColorBrush) JsonObject["brushType"] = "Color";
-            if (value is Cached_ImageBrush) JsonObject["brushType"] = "Image";
+            if (value is Cached_ColorLayer) JsonObject["brushType"] = "Color";
+            if (value is Cached_ImageLayer) JsonObject["brushType"] = "Image";
             JsonObject.WriteTo(writer);
         }
 
