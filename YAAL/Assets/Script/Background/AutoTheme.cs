@@ -88,6 +88,10 @@ namespace YAAL
 
         private static void ApplyTheme(Control ctrl, Cache_Theme theme, Cache_ThemeInfo themeInfo)
         {
+            if(theme == null)
+            {
+                return;
+            }
             if (themeInfo.category == ThemeSettings.transparent)
             {
                 IBrush brush = new SolidColorBrush(Avalonia.Media.Colors.Transparent);

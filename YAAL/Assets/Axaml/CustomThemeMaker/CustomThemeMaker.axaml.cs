@@ -5,6 +5,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Styling;
+using Avalonia.Threading;
 using Avalonia.VisualTree;
 using DynamicData;
 using System;
@@ -24,7 +25,7 @@ namespace YAAL;
 public partial class CustomThemeMaker : Window
 {
     private string previousSelection = "General Theme";
-    private Cache_CustomTheme currentTheme;
+    private Cache_CustomTheme currentTheme = new Cache_CustomTheme();
     private Window backgroundWindow;
     private ThemeSlot backgroundSlot;
     private Window foregroundWindow;
@@ -34,6 +35,19 @@ public partial class CustomThemeMaker : Window
     public CustomThemeMaker()
     {
         InitializeComponent();
+
+        Border test = new Border()
+        {
+            Width = 10,
+            Height = 10,
+        };
+        test.SetValue(AutoTheme.AutoThemeProperty!, null);
+        test.Background = new SolidColorBrush(Colors.Red);
+        test.IsVisible = true;
+        ExampleContainer.Children.Add(test);
+        ThemeManager.SetCenter(test, "Start Tool", currentTheme.topOffset);
+
+
 
         EditMode.SwitchMode();
 
@@ -69,7 +83,7 @@ public partial class CustomThemeMaker : Window
 
         SaveButton.Click += (_, _) =>
         {
-            SaveTheme((Selector.SelectedItem as Cache_DisplayTheme).launcherName);
+            SaveTheme((Selector.SelectedItem as Cache_DisplayTheme)!.launcherName);
         };
 
         OffsetTop.TextChanged += (_, _) =>

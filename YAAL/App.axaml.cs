@@ -35,10 +35,11 @@ public partial class App : Application
             Formatting = Newtonsoft.Json.Formatting.Indented,
             Converters = { new CachedBrushConverter() }
         };
+        ThemeManager.UpdateCenters();
 
         /*if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            desktop.MainWindow = new ActualSettingManager();
+            desktop.MainWindow = new CustomThemeMaker();
             base.OnFrameworkInitializationCompleted();
             return;
         }*/
@@ -222,7 +223,7 @@ public partial class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            if (launcher != "")
+            /*if (launcher != "")
             {
                 CLMakerWindow clmaker = new CLMakerWindow(launcher);
                 desktop.MainWindow = clmaker;
@@ -231,7 +232,8 @@ public partial class App : Application
             {
                 desktop.MainWindow = new MainWindow();
                 //desktop.MainWindow = new UpdateWindow();
-            }
+            }*/
+            desktop.MainWindow = new CustomThemeMaker();
         }
         base.OnFrameworkInitializationCompleted();
     }

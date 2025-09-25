@@ -4,8 +4,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:local="clr-namespace:YAAL"
         mc:Ignorable="d"
-		MinWidth="600"
-		MaxWidth="600"
+		MinWidth="666"
+		MaxWidth="666"
 		MinHeight="622"
 		MaxHeight="622"
         x:Class="YAAL.CustomThemeMaker"
@@ -192,12 +192,11 @@
 						BorderBrush="Gray"
 						BorderThickness="1"
 						CornerRadius="4"
-						Padding="6"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"
 						Background="#FFF"
 						IsVisible="True">
-						<StackPanel Name="ThemeContainer"/>
+						<Canvas Name="ExampleContainer" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
 					</Border>
 					<local:ThemeSlot Name="PlayMode" Grid.Row="2"/>
 					<local:ThemeSlot Name="EditMode" Grid.Row="4"/>

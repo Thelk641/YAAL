@@ -33,6 +33,14 @@ public partial class BrushMaker : Window
         CenterPicker.ItemsSource = ThemeManager.GetCenterList();
     }
 
+    public BrushMaker(Cached_Layer newBrush)
+    {
+        InitializeComponent();
+        AutoTheme.SetTheme(TrueBackground, ThemeSettings.backgroundColor);
+        CenterPicker.ItemsSource = ThemeManager.GetCenterList();
+        Setup(newBrush);
+    }
+
     public void SetEvents()
     {
         XOffsetRelative.Click += (source, _) => { SwitchRelativeAbsolute((Button)source); };

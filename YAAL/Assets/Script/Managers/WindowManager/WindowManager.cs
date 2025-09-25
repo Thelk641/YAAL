@@ -27,7 +27,7 @@ namespace YAAL
         {
             float mathedX = GetWindowSize().X - 70;
             Vector2 baseSize = new Vector2(mathedX, 52);
-            return new Vector2((float)(baseSize.X * App.Settings.Zoom), (float)(baseSize.Y * App.Settings.Zoom));
+            return new Vector2((float)(baseSize.X * App.Settings.Zoom), (float)((baseSize.Y - 1) * App.Settings.Zoom));
         }
 
         public static void OpenWindow()

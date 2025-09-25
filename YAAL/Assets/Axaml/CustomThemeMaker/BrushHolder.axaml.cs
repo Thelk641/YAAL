@@ -8,6 +8,7 @@ using Avalonia.VisualTree;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Reactive.Linq;
@@ -37,7 +38,7 @@ public partial class BrushHolder : UserControl
     public event Action MoveUp;
     public event Action MoveDown;
     public event Action AskForRemoval;
-    public event Action BrushUpdated;
+    public event PropertyChangedEventHandler? BrushUpdated;
 
     public IBrush temporaryBrush { get { return Holder.Background!; } }
     public string type;
@@ -50,9 +51,17 @@ public partial class BrushHolder : UserControl
         Down.Click += (_, _) => MoveDown?.Invoke();
         Remove.Click += (_, _) => AskForRemoval?.Invoke();
 
-        //Todo : 
-        BrushOptions.Click += (_, _) => OpenEditWindow();
-        //Update Preview
+        BrushOptions.Click += (_, _) =>
+        {
+            BrushMaker maker = new BrushMaker(brush);
+            maker.SettingChanged += (_, property) =>
+            {
+                BrushUpdated?.Invoke(this, property);
+                // Preview info : width = height * slotSize.Height / slotSize.Width
+            };
+        };
+
+        //TODO : Update Preview
     }
 
     public void Setup(string type, Cached_Layer newBrush)
@@ -65,31 +74,4 @@ public partial class BrushHolder : UserControl
         //brush = newBrush;
     }
 
-    public void OpenEditWindow()
-    {
-        switch (type)
-        {
-            case ("Color"):
-                IBrush previousBackground = Holder.Background!;
-                ColorSelector selector = new ColorSelector();
-                selector.IsVisible = true;
-                selector.ChangedColor += () =>
-                {
-                    if(Holder.Background is SolidColorBrush solid)
-                    {
-                        solid.Color = selector.GetColor();
-                        BrushUpdated?.Invoke();
-                    }
-                };
-
-                selector.CancelSelection += () =>
-                {
-                    Holder.Background = previousBackground;
-                    BrushUpdated?.Invoke();
-                };
-                break;
-            case ("Image"):
-                break;
-        }
-    }
 }

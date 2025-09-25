@@ -88,7 +88,7 @@ namespace YAAL
             toCenter.VerticalAlignment = VerticalAlignment.Center;
             if (center != "")
             {
-                ThemeManager.SetCenter(toCenter, center);
+                ThemeManager.SetCenter(toCenter, center, 0);
             }
 
             TranslateTransform transform = new TranslateTransform();

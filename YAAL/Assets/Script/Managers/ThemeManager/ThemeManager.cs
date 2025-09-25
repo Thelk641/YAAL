@@ -4,10 +4,12 @@ using Avalonia.Controls.Presenters;
 using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
+using Avalonia.Threading;
 using Avalonia.VisualTree;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -33,7 +35,6 @@ namespace YAAL
         {
             // TODO : this shouldn't be hardcoded
             themes["General Theme"] = DefaultManager.theme;
-            UpdateCenters();
         }
 
         public static void ApplyTheme(Control container, string theme = "")
@@ -238,57 +239,80 @@ namespace YAAL
 
         public static void UpdateCenters()
         {
+            var root = new Window();
+            root.Opacity = 0;
+            root.IsHitTestVisible = false;
+            Vector2 size = WindowManager.GetWindowSize();
+            root.Width = size.X;
+            root.Height = size.Y;
+
+
             playCenters = new Dictionary<string, Point>();
             editCenters = new Dictionary<string, Point>();
 
             ThemeSlot themeSlot = new ThemeSlot();
+            root.Content = themeSlot;
             themeSlot.Measure(Size.Infinity);
             slotSize = WindowManager.GetSlotSize();
             Rect desiredSize = new Rect(0, 0, slotSize.X, slotSize.Y);
             themeSlot.Arrange(desiredSize);
 
-            playCenters["Play Button"] = themeSlot.FindControl<Button>("RealPlay")!.Bounds.Center;
-            playCenters["Slot Name"] = themeSlot.FindControl<TextBlock>("_SlotName")!.Bounds.Center;
-            playCenters["Tool Name"] = themeSlot.FindControl<ComboBox>("ToolSelect")!.Bounds.Center;
-            playCenters["Start Tool"] = themeSlot.FindControl<Button>("StartTool")!.Bounds.Center;
-            playCenters["Settings"] = themeSlot.FindControl<Button>("Edit")!.Bounds.Center;
+            Dispatcher.UIThread.Post(() =>
+            {
+                Debug.WriteLine("themeSlot size : " + themeSlot.Bounds);
+                playCenters["Play Button"] = ComputeCenter(themeSlot.FindControl<Button>("RealPlay")!, themeSlot);
+                playCenters["Slot Name"] = ComputeCenter(themeSlot.FindControl<TextBlock>("_SlotName")!, themeSlot);
+                playCenters["Tool Name"] = ComputeCenter(themeSlot.FindControl<ComboBox>("ToolSelect")!, themeSlot);
+                playCenters["Start Tool"] = ComputeCenter(themeSlot.FindControl<Button>("StartTool")!, themeSlot);
+                playCenters["Settings"] = ComputeCenter(themeSlot.FindControl<Button>("Edit")!, themeSlot);
 
-            themeSlot.SwitchMode();
 
-            editCenters["Play Button"] = themeSlot.FindControl<Button>("FakePlay")!.Bounds.Center;
-            editCenters["Slot Selector"] = themeSlot.FindControl<ComboBox>("SlotSelector")!.Bounds.Center;
-            editCenters["Download"] = themeSlot.FindControl<Button>("DownloadPatch")!.Bounds.Center;
-            editCenters["Save"] = themeSlot.FindControl<Button>("DoneEditing")!.Bounds.Center;
-            editCenters["Launcher Selector"] = themeSlot.FindControl<ComboBox>("SelectedLauncher")!.Bounds.Center;
-            editCenters["Version Selector"] = themeSlot.FindControl<ComboBox>("SelectedVersion")!.Bounds.Center;
-            editCenters["Auto/Manual"] = themeSlot.FindControl<Button>("AutomaticPatchButton")!.Bounds.Center;
-            editCenters["Delete"] = themeSlot.FindControl<Button>("DeleteSlot")!.Bounds.Center;
+                themeSlot.SwitchMode();
+
+                editCenters["Slot Selector"] = ComputeCenter(themeSlot.FindControl<ComboBox>("SlotSelector")!, themeSlot);
+                editCenters["Download"] = ComputeCenter(themeSlot.FindControl<Button>("DownloadPatch")!, themeSlot);
+                editCenters["Save"] = ComputeCenter(themeSlot.FindControl<Button>("DoneEditing")!, themeSlot);
+                editCenters["Launcher Selector"] = ComputeCenter(themeSlot.FindControl<ComboBox>("SelectedLauncher")!, themeSlot);
+                editCenters["Version Selector"] = ComputeCenter(themeSlot.FindControl<ComboBox>("SelectedVersion")!, themeSlot);
+                editCenters["Auto/Manual"] = ComputeCenter(themeSlot.FindControl<Button>("AutomaticPatchButton")!, themeSlot);
+                editCenters["Delete"] = ComputeCenter(themeSlot.FindControl<Button>("DeleteSlot")!, themeSlot);
+                root.Close();
+            }
+            );
         }
 
-        public static void SetCenter(Control ctrl, string name)
+        private static Point ComputeCenter(Control toFind, Control relativeTo)
         {
-            string trueName = name.Substring(9);
-            bool playMode = name.Contains("PlayMode_");
-
-            Point center = new Point(0, 0);
-            if (playMode)
+            // If they share the same parent, Bounds.Center is already relative to that parent
+            if (toFind.GetVisualParent() == relativeTo)
             {
-                if (playCenters.TryGetValue(trueName, out Point truePlayPoint))
-                {
-                    center = truePlayPoint;
-                }
+                return toFind.Bounds.Center;
             }
-            else
+                
+
+            var matrix = toFind.TransformToVisual(relativeTo);
+            if (matrix is null)
             {
-                if (editCenters.TryGetValue(trueName, out Point trueEditPoint))
-                {
-                    center = trueEditPoint;
-                }
+                return new Point(0, 0); // not attached yet or not transformable
             }
 
-            double X = center.X - (slotSize.X / 2);
-            double Y = center.Y - (slotSize.Y / 2);
-            ctrl.RenderTransform = new TranslateTransform(X, Y);
+            // Use local coordinates: top-left of control local space is (0,0)
+            var localCenter = new Point(toFind.Bounds.Width / 2.0, toFind.Bounds.Height / 2.0);
+            return matrix.Value.Transform(localCenter);
+        }
+
+        public static void SetCenter(Control ctrl, string name, int topOffset)
+        {
+            Dispatcher.UIThread.Post(() =>
+            {
+                Point baseCenter = GetCenter(name);
+                Point offsetCenter = new Point(baseCenter.X, baseCenter.Y + topOffset);
+                double X = offsetCenter.X - (ctrl.Width / 2);
+                double Y = offsetCenter.Y - (ctrl.Height / 2);
+
+                Canvas.SetLeft(ctrl, X);
+                Canvas.SetTop(ctrl, Y);
+            });
         }
 
         public static Point GetCenter(string name)
