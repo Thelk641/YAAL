@@ -22,6 +22,7 @@ namespace YAAL
         Minus,
         Percent,
         Pin,
+        Refresh,
         None,
     };
 

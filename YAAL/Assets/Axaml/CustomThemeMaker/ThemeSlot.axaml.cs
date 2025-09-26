@@ -25,10 +25,18 @@ public partial class ThemeSlot : UserControl
     public Cache_DisplaySlot selectedSlot;
     public Cache_CustomLauncher currentLauncher;
     public event Action<double,double> ChangedHeight;
-    public int hardCodedHeight = 52;
+    public int hardCodedHeight = 112;
     public double previousHeight = 0;
     public int topOffset = 0;
     public int bottomOffset = 0;
+
+    private List<string> fakeItemList = new List<string>()
+    {
+        "1 - Sword",
+        "2 - Oak's Parcel",
+        "5 - Potion",
+        "6 - Marines"
+    };
     
     public ThemeSlot()
     {
@@ -54,6 +62,22 @@ public partial class ThemeSlot : UserControl
         {
             SwitchPatchMode();
         };
+
+        foreach (var item in fakeItemList)
+        {
+            TextBox box = new TextBox();
+            box.Text = item;
+            box.IsVisible = true;
+            TrackerItemHolder.Children.Add(box);
+            box.SetValue(AutoTheme.AutoThemeProperty, null);
+            box.Background = new SolidColorBrush(Colors.Transparent);
+        }
+
+        Cache_DisplaySlot display = new Cache_DisplaySlot();
+        display.slotName = "A selected slot";
+        display.isHeader = false;
+        SlotSelector.ItemsSource = new List<Cache_DisplaySlot>() { display };
+        SlotSelector.SelectedItem = display;
     }
 
     public void Resize()
@@ -64,13 +88,7 @@ public partial class ThemeSlot : UserControl
 
         string combined = topOffset.ToString() + ",*," + bottomOffset.ToString();
         PlayEmptySpace.RowDefinitions = new RowDefinitions(combined);
-        EditEmptySpace1.RowDefinitions = new RowDefinitions(combined);
-        EditEmptySpace2.RowDefinitions = new RowDefinitions(combined);
-
-        if (EditMode.IsVisible)
-        {
-            newHeight += hardCodedHeight + 8; // one more line, plus spacing
-        }
+        EditEmptySpace.RowDefinitions = new RowDefinitions(combined);
 
         this.Height = newHeight;
         ChangedHeight?.Invoke(previousHeight, newHeight);
@@ -96,7 +114,6 @@ public partial class ThemeSlot : UserControl
             PlayMode.IsVisible = true;
             EditMode.IsVisible = false;
         }
-        Resize();
     }
 
     public void SwitchPatchMode()
@@ -139,8 +156,6 @@ public partial class ThemeSlot : UserControl
                     oldForegroundBitmap.Dispose();
                 }
                 PlayMode.Background = brush;
-                EditRow1.Background = brush;
-                EditRow2.Background = brush;
                 break;
             case ThemeSettings.buttonColor:
                 RealPlay.Background = brush;
@@ -173,12 +188,5 @@ public partial class ThemeSlot : UserControl
                 presenter.Background = new SolidColorBrush(AutoColor.Darken(solid.Color));
             }
         }
-    }
-
-    public void SetOffset(int top, int bottom)
-    {
-        topOffset = top;
-        bottomOffset = bottom;
-        Resize();
     }
 }

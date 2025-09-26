@@ -6,8 +6,8 @@
         mc:Ignorable="d"
 		MinWidth="666"
 		MaxWidth="666"
-		MinHeight="622"
-		MaxHeight="622"
+		MinHeight="742"
+		MaxHeight="742"
         x:Class="YAAL.CustomThemeMaker"
         Title="Yet Another Archipelago Launcher"
 		>
@@ -15,7 +15,7 @@
 		<local:BoolInvert x:Key="BoolInvert"/>
 	</Window.Resources>
 	<Border Padding="8" Name="TrueBackground">
-		<Grid RowDefinitions="30,8,276,8,30,8,250">
+		<Grid RowDefinitions="30,8,276,8,30,8,368">
 			<!-- Selector-->
 			<Grid ColumnDefinitions="30,8,30,8,30,8,*">
 				<Button
@@ -186,7 +186,7 @@
 				CornerRadius="4"
 				Padding="8"
 				>
-				<Grid RowDefinitions="52,8,52,8,110">
+				<Grid RowDefinitions="112,8,112,8,112">
 					<Border
 						Name="EmptyExample"
 						BorderBrush="Gray"
@@ -196,7 +196,27 @@
 						VerticalAlignment="Stretch"
 						Background="#FFF"
 						IsVisible="True">
-						<Canvas Name="ExampleContainer" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+						<Grid>
+							<Canvas Name="ExampleContainer" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+							<Grid Name="ExampleEmptySpace" RowDefinitions="0,*,0">
+								<Grid RowDefinitions="*,8,*" Grid.Row="1">
+									<Grid ColumnDefinitions="*,8,30" Grid.Row="2">
+										<Border 
+											Name="ForegroundContainer"
+											BorderBrush="Gray"
+											BorderThickness="1"
+											CornerRadius="4"
+											HorizontalAlignment="Stretch"
+											VerticalAlignment="Stretch"
+											Background="#FFF"
+											IsVisible="True"
+											Grid.Column="0"
+											/>
+									</Grid>
+								</Grid>
+							</Grid>
+						</Grid>
+						
 					</Border>
 					<local:ThemeSlot Name="PlayMode" Grid.Row="2"/>
 					<local:ThemeSlot Name="EditMode" Grid.Row="4"/>

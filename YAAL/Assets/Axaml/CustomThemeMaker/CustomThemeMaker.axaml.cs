@@ -30,8 +30,8 @@ public partial class CustomThemeMaker : Window
     private ThemeSlot backgroundSlot;
     private Window foregroundWindow;
     private ThemeSlot foregroundSlot;
-    private int baseHeight = 600;
-    private int baseWidth = 550;
+    private int baseHeight = 742;
+    private int baseWidth = 666;
     public CustomThemeMaker()
     {
         InitializeComponent();
