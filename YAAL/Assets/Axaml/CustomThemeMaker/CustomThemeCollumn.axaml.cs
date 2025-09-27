@@ -15,6 +15,7 @@ using System.Collections.ObjectModel;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using System.IO;
+using System.Diagnostics;
 
 namespace YAAL;
 
@@ -22,10 +23,63 @@ public partial class CustomThemeCollumn : UserControl
 {
     public event Action? UpdatedBrush;
     public ThemeSettings id;
+    public CustomThemeMaker window;
 
     public CustomThemeCollumn()
     {
         InitializeComponent();
+    }
+
+    public void SetWindow(CustomThemeMaker maker)
+    {
+        window = maker;
+
+        AddColor.Click += (_, _) =>
+        {
+            AddNewBrush("Color");
+        };
+
+        AddImage.Click += (_, _) =>
+        {
+            AddNewBrush("Image");
+        };
+    }
+
+    private void AddNewBrush(string type)
+    {
+        BrushHolder brush = new BrushHolder();
+        brush.isForeground = (id == ThemeSettings.foregroundColor);
+        CommandContainer.Children.Add(brush);
+
+        brush.MoveUp += () =>
+        {
+            int index = CommandContainer.Children.IndexOf(brush);
+            if (index > 0)
+            {
+                CommandContainer.Children.RemoveAt(index);
+                CommandContainer.Children.Insert(index - 1, brush);
+                window.MoveLayerUp(brush);
+            }
+        };
+
+        brush.MoveDown += () =>
+        {
+            int index = CommandContainer.Children.IndexOf(brush);
+            if (index < CommandContainer.Children.Count - 1)
+            {
+                CommandContainer.Children.RemoveAt(index);
+                CommandContainer.Children.Insert(index + 1, brush);
+                window.MoveLayerDown(brush);
+            }
+        };
+
+        brush.AskForRemoval += () =>
+        {
+            CommandContainer.Children.Remove(brush);
+            window.RemoveLayer(brush);
+        };
+
+        window.AddLayer(id, type, brush);
     }
 
     public void SetCategory(ThemeSettings newId)

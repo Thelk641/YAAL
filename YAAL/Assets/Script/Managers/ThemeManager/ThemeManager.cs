@@ -163,6 +163,11 @@ namespace YAAL
 
         public static Bitmap? GetImage(string name)
         {
+            if(name == "")
+            {
+                return null;
+            }
+
             if(images.TryGetValue(name, out var weakRef))
             {
                 if(weakRef.TryGetTarget(out var image))
@@ -265,7 +270,7 @@ namespace YAAL
                 playCenters["Tool Name"] = ComputeCenter(themeSlot.FindControl<ComboBox>("ToolSelect")!, themeSlot);
                 playCenters["Start Tool"] = ComputeCenter(themeSlot.FindControl<Button>("StartTool")!, themeSlot);
                 playCenters["Settings"] = ComputeCenter(themeSlot.FindControl<Button>("Edit")!, themeSlot);
-
+                playCenters["Tracker"] = ComputeCenter(themeSlot.FindControl<ScrollViewer>("Viewer")!, themeSlot);
 
                 themeSlot.SwitchMode();
 

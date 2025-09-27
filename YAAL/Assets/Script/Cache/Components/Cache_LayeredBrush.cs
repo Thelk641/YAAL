@@ -68,14 +68,16 @@ namespace YAAL
             CenterBorder(output);
             return output;
         }
+
+        private Border? computedLayer;
         public abstract Border GetRawLayer();
-        public bool widthAbsolute;
-        public double width = 0;
-        public bool heightAbsolute;
-        public double height = 0;
-        public bool xOffsetAbsolute;
+        public bool widthAbsolute = true;
+        public double width = 50;
+        public bool heightAbsolute = true;
+        public double height = 50;
+        public bool xOffsetAbsolute = true;
         public double xOffset = 0;
-        public bool yOffsetAbsolute;
+        public bool yOffsetAbsolute = true;
         public double yOffset = 0;
         public string center = "Default";
 
@@ -86,10 +88,6 @@ namespace YAAL
             Vector2 slotSize = WindowManager.GetSlotSize();
             toCenter.HorizontalAlignment = HorizontalAlignment.Center;
             toCenter.VerticalAlignment = VerticalAlignment.Center;
-            if (center != "")
-            {
-                ThemeManager.SetCenter(toCenter, center, 0);
-            }
 
             TranslateTransform transform = new TranslateTransform();
 
@@ -107,7 +105,7 @@ namespace YAAL
             }
             else
             {
-                transform.Y = slotSize.X * yOffset / 100;
+                transform.Y = (slotSize.Y + 4) * yOffset / 100;
             }
 
             TransformGroup group = new TransformGroup();
@@ -144,7 +142,7 @@ namespace YAAL
                     toCenter.Height = height;
                 } else
                 {
-                    toCenter.Height = slotSize.Y * height / 100;
+                    toCenter.Height = (slotSize.Y + 4) * height / 100;
                 }
             }
             
@@ -162,6 +160,7 @@ namespace YAAL
         public override Border GetRawLayer()
         {
             Border output = new Border();
+            output.SetValue(AutoTheme.AutoThemeProperty!, null);
             ImageBrush brush = new ImageBrush();
             brush.Source = ThemeManager.GetImage(imageSource);
             brush.Stretch = stretch;
@@ -195,6 +194,7 @@ namespace YAAL
         public override Border GetRawLayer()
         {
             Border output = new Border();
+            output.SetValue(AutoTheme.AutoThemeProperty!, null);
             SolidColorBrush brush = new SolidColorBrush();
             brush.Color = color;
             brush.Opacity = 1;

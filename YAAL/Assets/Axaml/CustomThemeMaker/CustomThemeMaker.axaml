@@ -26,10 +26,10 @@
 					local:AutoIcon.Icon="File"
 					>
 					<Svg
-							VerticalAlignment="Center"
-							HorizontalAlignment="Center"
-							Width="30"
-							/>
+						VerticalAlignment="Center"
+						HorizontalAlignment="Center"
+						Width="30"
+						/>
 				</Button>
 				<Button
 					Name="SaveButton"
@@ -95,10 +95,10 @@
 				BorderBrush="Gray"
 				BorderThickness="1"
 				CornerRadius="4"
-				Padding="8"
+				Padding="0,8,0,8"
 				>
 				<Grid RowDefinitions="*,8,1,8,52,8">
-					<Grid Name="CollumnContainer" ColumnDefinitions="*,8,1,8,*" Grid.Row="0">
+					<Grid Name="CollumnContainer" ColumnDefinitions="*,2,1,2,*" Grid.Row="0">
 						<local:CustomThemeCollumn Name="Collumn_Background" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
 						<Rectangle Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Black"/>
 						<local:CustomThemeCollumn Name="Collumn_Foreground" Grid.Column="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
@@ -188,7 +188,7 @@
 				>
 				<Grid RowDefinitions="112,8,112,8,112">
 					<Border
-						Name="EmptyExample"
+						Name="BackgroundExample"
 						BorderBrush="Gray"
 						BorderThickness="1"
 						CornerRadius="4"
@@ -197,12 +197,12 @@
 						Background="#FFF"
 						IsVisible="True">
 						<Grid>
-							<Canvas Name="ExampleContainer" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+							<Canvas Name="ExampleBackgroundContainer" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
 							<Grid Name="ExampleEmptySpace" RowDefinitions="0,*,0">
 								<Grid RowDefinitions="*,8,*" Grid.Row="1">
 									<Grid ColumnDefinitions="*,8,30" Grid.Row="2">
-										<Border 
-											Name="ForegroundContainer"
+										<Border
+											Name="ForegroundExample"
 											BorderBrush="Gray"
 											BorderThickness="1"
 											CornerRadius="4"
@@ -211,7 +211,9 @@
 											Background="#FFF"
 											IsVisible="True"
 											Grid.Column="0"
-											/>
+											>
+											<Canvas Name="ExampleForegroundContainer" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+										</Border>
 									</Grid>
 								</Grid>
 							</Grid>

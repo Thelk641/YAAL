@@ -27,9 +27,7 @@ public partial class BrushHolder : UserControl
                 case ImageBrush image:
                     return imageBrush;
                 case SolidColorBrush solid:
-                    Cached_ColorLayer solidBrush = new Cached_ColorLayer();
-                    solidBrush.color = solid.Color;
-                    return solidBrush;
+                    return colorBrush;
             }
 
             return new Cached_ColorLayer();
@@ -40,12 +38,15 @@ public partial class BrushHolder : UserControl
     public event Action AskForRemoval;
     public event PropertyChangedEventHandler? BrushUpdated;
 
-    public IBrush temporaryBrush { get { return Holder.Background!; } }
+    public bool isForeground = false;
     public string type;
     public Cached_ImageLayer imageBrush;
+    public Cached_ColorLayer colorBrush;
     public BrushHolder()
     {
         InitializeComponent();
+
+        BrushOptions.SetValue(AutoTheme.AutoThemeProperty, null);
 
         Up.Click += (_, _) => MoveUp?.Invoke();
         Down.Click += (_, _) => MoveDown?.Invoke();
@@ -53,9 +54,11 @@ public partial class BrushHolder : UserControl
 
         BrushOptions.Click += (_, _) =>
         {
-            BrushMaker maker = new BrushMaker(brush);
+            BrushMaker maker = new BrushMaker(isForeground, brush);
+            maker.IsVisible = true;
             maker.SettingChanged += (_, property) =>
             {
+                Setup(type, maker.brush);
                 BrushUpdated?.Invoke(this, property);
                 // Preview info : width = height * slotSize.Height / slotSize.Width
             };
@@ -70,8 +73,27 @@ public partial class BrushHolder : UserControl
         BrushType.Text = type;
         BrushOptions.Background = new SolidColorBrush(Colors.Transparent);
         Holder.Background = newBrush.GetLayer().Background;
+        if(newBrush is Cached_ImageLayer image)
+        {
+            imageBrush = image;
+        } else if (newBrush is Cached_ColorLayer color)
+        {
+            colorBrush = color;
+        }
+    }
 
-        //brush = newBrush;
+    public void Setup(string type)
+    {
+        Cached_Layer layer;
+        if(type == "Color")
+        {
+            layer = new Cached_ColorLayer();
+        } else
+        {
+            layer = new Cached_ImageLayer();
+        }
+
+        Setup(type, layer);
     }
 
 }

@@ -143,7 +143,6 @@
 							VerticalAlignment="Stretch"
 							HorizontalAlignment="Stretch"
 							local:AutoIcon.Icon="Pin"
-							local:VisibilityHolder.VisibilityHolder="XOffsetFixed"
 							Height="30"
 							>
 							<Svg
@@ -160,7 +159,6 @@
 							VerticalAlignment="Stretch"
 							HorizontalAlignment="Stretch"
 							local:AutoIcon.Icon="Percent"
-							local:VisibilityHolder.VisibilityHolder="XOffsetRelative"
 							Height="30"
 							>
 							<Svg
@@ -192,7 +190,6 @@
 							VerticalAlignment="Stretch"
 							HorizontalAlignment="Stretch"
 							local:AutoIcon.Icon="Pin"
-							local:VisibilityHolder.VisibilityHolder="XOffsetFixed"
 							Height="30"
 							>
 							<Svg
@@ -209,7 +206,6 @@
 							VerticalAlignment="Stretch"
 							HorizontalAlignment="Stretch"
 							local:AutoIcon.Icon="Percent"
-							local:VisibilityHolder.VisibilityHolder="XOffsetRelative"
 							Height="30"
 							>
 							<Svg
@@ -257,7 +253,6 @@
 							VerticalAlignment="Stretch"
 							HorizontalAlignment="Stretch"
 							local:AutoIcon.Icon="Pin"
-							local:VisibilityHolder.VisibilityHolder="WidthFixed"
 							Height="30"
 							>
 							<Svg
@@ -274,7 +269,6 @@
 							VerticalAlignment="Stretch"
 							HorizontalAlignment="Stretch"
 							local:AutoIcon.Icon="Percent"
-							local:VisibilityHolder.VisibilityHolder="WidthRelative"
 							Height="30"
 							>
 							<Svg
@@ -306,7 +300,6 @@
 							VerticalAlignment="Stretch"
 							HorizontalAlignment="Stretch"
 							local:AutoIcon.Icon="Pin"
-							local:VisibilityHolder.VisibilityHolder="HeightFixed"
 							Height="30"
 							>
 							<Svg
@@ -323,7 +316,6 @@
 							VerticalAlignment="Stretch"
 							HorizontalAlignment="Stretch"
 							local:AutoIcon.Icon="Percent"
-							local:VisibilityHolder.VisibilityHolder="HeightRelative"
 							Height="30"
 							>
 							<Svg

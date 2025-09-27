@@ -4,92 +4,105 @@
 			 xmlns:local="clr-namespace:YAAL"
              x:Class="YAAL.BrushHolder"
              HorizontalAlignment="Stretch"
-             MinHeight="30"
              >
-	<Grid ColumnDefinitions="30,8,30,8,*,8,30,8,30">
-		<Button
-			Name="Up"
-			Grid.Column="0"
-			HorizontalAlignment="Stretch"
-			VerticalAlignment="Stretch"
-			local:AutoIcon.Icon="Up"
-			>
-			<Svg
-				VerticalAlignment="Center"
+	<Border
+		Margin="0"
+		Padding="4"
+		BorderBrush="Gray"
+		BorderThickness="1"
+		>
+		<Grid ColumnDefinitions="30,8,30,8,*,8,30,8,30">
+			<Button
+				Name="Up"
+				Content="Up"
+				Grid.Column="0"
 				HorizontalAlignment="Center"
-				Width="30"
-			/>
-		</Button>
-		<Button
-			Name="Down"
-			Grid.Column="2"
-			HorizontalAlignment="Stretch"
-			VerticalAlignment="Stretch"
-			local:AutoIcon.Icon="Down"
-			>
-			<Svg
 				VerticalAlignment="Center"
+				local:AutoIcon.Icon="Up"
+				Height="30"
+				>
+				<Svg
+					VerticalAlignment="Stretch"
+					HorizontalAlignment="Stretch"
+					Width="30"
+					/>
+			</Button>
+			<Button
+				Name="Down"
+				Content="Up"
+				Grid.Column="2"
 				HorizontalAlignment="Center"
-				Width="30"
-			/>
-		</Button>
+				VerticalAlignment="Center"
+				local:AutoIcon.Icon="Down"
+				Height="30"
+				>
+				<Svg
+					VerticalAlignment="Center"
+					HorizontalAlignment="Center"
+					Width="30"
+					/>
+			</Button>
 
 
-		<Grid ColumnDefinitions="*,8,60" Grid.Column="4">
+			<Grid ColumnDefinitions="*,8,60" Grid.Column="4">
+				<TextBlock
+					Name="BrushType"
+					Grid.Column="0"
+					Text="Image"
+					HorizontalAlignment="Center"
+					VerticalAlignment="Center"
+					/>
+				<StackPanel
+					Name="Holder"
+					Width="60"
+					Height="28"
+					Background="Green"
+					Grid.Column="2"
+					/>
+			</Grid>
+
 			<Button
 				Name="BrushOptions"
-				Width="60"
 				Height="28"
-				Grid.Column="0"
-				Grid.ColumnSpan="2"
+				Grid.Column="3"
+				Grid.ColumnSpan="3"
+				Background="Transparent"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
 				/>
-			<TextBlock
-				Name="BrushType"
-				Grid.Column="0"
-				Text="Image"
-				HorizontalAlignment="Center"
-				VerticalAlignment="Center"
-				/>
-			<StackPanel
-				Name="Holder"
-				Width="60"
-				Height="28"
-				Background="Green"
-				Grid.Column="2"
-				/>
+
+			<Button
+				Name="Settings"
+				Grid.Column="6"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				local:AutoIcon.Icon="Settings"
+				Height="30"
+				>
+				<Svg
+					VerticalAlignment="Center"
+					HorizontalAlignment="Center"
+					Width="30"
+					/>
+			</Button>
+
+
+			<Button
+				Name="Remove"
+				Grid.Column="8"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				local:AutoIcon.Icon="Minus"
+				Height="30"
+				>
+				<Svg
+					VerticalAlignment="Center"
+					HorizontalAlignment="Center"
+					Width="30"
+					/>
+			</Button>
 		</Grid>
-
-		<Button
-			Name="Settings"
-			Grid.Column="6"
-			HorizontalAlignment="Stretch"
-			VerticalAlignment="Stretch"
-			local:AutoIcon.Icon="Settings"
-			>
-			<Svg
-				VerticalAlignment="Center"
-				HorizontalAlignment="Center"
-				Width="20"
-			/>
-		</Button>
-
-
-		<Button
-			Name="Remove"
-			Grid.Column="8"
-			HorizontalAlignment="Stretch"
-			VerticalAlignment="Stretch"
-			local:AutoIcon.Icon="Minus"
-			>
-			<Svg
-				VerticalAlignment="Center"
-				HorizontalAlignment="Center"
-				Width="30"
-			/>
-		</Button>
-
-
-	</Grid>
+	</Border>
 </UserControl>
 
 <!-- SizeToContent="WidthAndHeight" 

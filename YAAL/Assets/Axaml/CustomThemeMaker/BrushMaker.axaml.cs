@@ -13,6 +13,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Numerics;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using YAAL.Assets.Script.Cache;
 using YAAL.Assets.Scripts;
 using static System.Net.Mime.MediaTypeNames;
@@ -33,29 +34,47 @@ public partial class BrushMaker : Window
         CenterPicker.ItemsSource = ThemeManager.GetCenterList();
     }
 
-    public BrushMaker(Cached_Layer newBrush)
+    public BrushMaker(bool isForeground, Cached_Layer newBrush)
     {
         InitializeComponent();
         AutoTheme.SetTheme(TrueBackground, ThemeSettings.backgroundColor);
-        CenterPicker.ItemsSource = ThemeManager.GetCenterList();
+        if(isForeground == true)
+        {
+            List<Combo_Centers> list = new List<Combo_Centers>();
+            Combo_Centers center = new Combo_Centers();
+            center.SetName("Tracker");
+            list.Add(center);
+
+
+            CenterPicker.ItemsSource = list;
+            CenterPicker.SelectedItem = center;
+        } else
+        {
+            CenterPicker.ItemsSource = ThemeManager.GetCenterList();
+        }
+            
         Setup(newBrush);
     }
 
     public void SetEvents()
     {
-        XOffsetRelative.Click += (source, _) => { SwitchRelativeAbsolute((Button)source); };
-        XOffsetFixed.Click += (source, _) => { SwitchRelativeAbsolute((Button)source); };
-        YOffsetRelative.Click += (source, _) => { SwitchRelativeAbsolute((Button)source); };
-        YOffsetFixed.Click += (source, _) => { SwitchRelativeAbsolute((Button)source); };
-        WidthRelative.Click += (source, _) => { SwitchRelativeAbsolute((Button)source); };
-        WidthFixed.Click += (source, _) => { SwitchRelativeAbsolute((Button)source); };
-        HeightRelative.Click += (source, _) => { SwitchRelativeAbsolute((Button)source); };
-        HeightFixed.Click += (source, _) => { SwitchRelativeAbsolute((Button)source); };
+        XOffsetRelative.Click += (source, _) => { SwitchRelativeAbsolute((Button)source!); };
+        XOffsetFixed.Click += (source, _) => { SwitchRelativeAbsolute((Button)source!); };
+        YOffsetRelative.Click += (source, _) => { SwitchRelativeAbsolute((Button)source!); };
+        YOffsetFixed.Click += (source, _) => { SwitchRelativeAbsolute((Button)source!); };
+        WidthRelative.Click += (source, _) => { SwitchRelativeAbsolute((Button)source!); };
+        WidthFixed.Click += (source, _) => { SwitchRelativeAbsolute((Button)source!); };
+        HeightRelative.Click += (source, _) => { SwitchRelativeAbsolute((Button)source!); };
+        HeightFixed.Click += (source, _) => { SwitchRelativeAbsolute((Button)source!); };
 
         CenterPicker.SelectionChanged += (_, _) =>
         {
-            brush.center = CenterPicker.SelectedItem!.ToString()!;
-            RaiseEvent(Center);
+            if(CenterPicker.SelectedItem is Combo_Centers newCenter)
+            {
+                Debug.WriteLine(newCenter.centerName);
+                brush.center = newCenter.centerName;
+                RaiseEvent(Center);
+            }
         };
 
         CenterOffsetX.TextChanged += (_, _) =>
@@ -146,7 +165,16 @@ public partial class BrushMaker : Window
             SwitchRelativeAbsolute(HeightRelative);
         }
 
-        CenterPicker.SelectedItem = brush.center;
+        for (int i = 0; i < CenterPicker.ItemCount; i++)
+        {
+            if (CenterPicker.Items[i] is Combo_Centers center && center.centerName == brush.center)
+            {
+                CenterPicker.SelectedIndex = i;
+                break;
+            }
+        }
+
+        
         CenterOffsetX.Text = brush.xOffset.ToString();
         CenterOffsetY.Text = brush.yOffset.ToString();
         BrushWidth.Text = brush.width.ToString();
@@ -249,7 +277,7 @@ public partial class BrushMaker : Window
 
         ColorHolder.Click += async (_, _) =>
         {
-            var output = await ColorSelector.PickColor(this.FindAncestorOfType<Window>()!, AutoColor.ColorToHex((ColorHolder.Background as SolidColorBrush)!.Color));
+            var output = await ColorSelector.PickColor(this, AutoColor.ColorToHex((ColorHolder.Background as SolidColorBrush)!.Color));
 
             if (output != null)
             {
@@ -271,36 +299,60 @@ public partial class BrushMaker : Window
         switch (source.Name)
         {
             case "XOffsetRelative":
+                XOffsetRelative.IsVisible = false;
+                XOffsetFixed.IsVisible = true;
                 toModify = CenterOffsetX;
+                brush.xOffsetAbsolute = true;
                 break;
             case "XOffsetFixed":
+                XOffsetRelative.IsVisible = true;
+                XOffsetFixed.IsVisible = false;
                 toModify = CenterOffsetX;
                 toAbsolute = false;
+                brush.xOffsetAbsolute = false;
                 break;
             case "YOffsetRelative":
+                YOffsetRelative.IsVisible = false;
+                YOffsetFixed.IsVisible = true;
                 toModify = CenterOffsetY;
                 horizontal = false;
+                brush.yOffsetAbsolute = true;
                 break;
             case "YOffsetFixed":
+                YOffsetRelative.IsVisible = true;
+                YOffsetFixed.IsVisible = false;
                 toModify = CenterOffsetY;
                 toAbsolute = false;
                 horizontal = false;
+                brush.yOffsetAbsolute = false;
                 break;
             case "WidthRelative":
+                WidthRelative.IsVisible = false;
+                WidthFixed.IsVisible = true;
                 toModify = BrushWidth;
+                brush.widthAbsolute = true;
                 break;
             case "WidthFixed":
+                WidthRelative.IsVisible = true;
+                WidthFixed.IsVisible = false;
                 toModify = BrushWidth;
                 toAbsolute = false;
+                brush.widthAbsolute = false;
                 break;
             case "HeightRelative":
+                HeightRelative.IsVisible = false;
+                HeightFixed.IsVisible = true;
                 toModify = BrushHeight;
                 horizontal = false;
+                brush.heightAbsolute = true;
                 break;
             case "HeightFixed":
+                HeightRelative.IsVisible = true;
+                HeightFixed.IsVisible = false;
                 toModify = BrushHeight;
                 toAbsolute = false;
                 horizontal = false;
+                brush.heightAbsolute = false;
                 break;
             default:
                 Debug.WriteLine("SwitchRelativeAbsolute called from button " + source.Name);
@@ -317,7 +369,7 @@ public partial class BrushMaker : Window
             baseValue = slotSize.X;
         } else
         {
-            baseValue = slotSize.Y;
+            baseValue = slotSize.Y + 4;
         }
 
         if (toAbsolute)

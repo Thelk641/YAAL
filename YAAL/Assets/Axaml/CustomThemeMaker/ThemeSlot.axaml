@@ -106,7 +106,7 @@
 						</Grid>
 
 						<Grid ColumnDefinitions="*,8,30" Grid.Row="2">
-							<ScrollViewer Grid.Column="0">
+							<ScrollViewer Grid.Column="0" Name="Viewer">
 								<StackPanel Name="TrackerItemHolder"/>
 							</ScrollViewer>
 							<Button
