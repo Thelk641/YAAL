@@ -271,6 +271,7 @@ namespace YAAL
                 playCenters["Start Tool"] = ComputeCenter(themeSlot.FindControl<Button>("StartTool")!, themeSlot);
                 playCenters["Settings"] = ComputeCenter(themeSlot.FindControl<Button>("Edit")!, themeSlot);
                 playCenters["Tracker"] = ComputeCenter(themeSlot.FindControl<ScrollViewer>("Viewer")!, themeSlot);
+                playCenters["Update"] = ComputeCenter(themeSlot.FindControl<Button>("UpdateItems")!, themeSlot);
 
                 themeSlot.SwitchMode();
 
@@ -303,20 +304,39 @@ namespace YAAL
 
             // Use local coordinates: top-left of control local space is (0,0)
             var localCenter = new Point(toFind.Bounds.Width / 2.0, toFind.Bounds.Height / 2.0);
-            return matrix.Value.Transform(localCenter);
+            Point output = matrix.Value.Transform(localCenter);
+            return output;
         }
 
-        public static void SetCenter(Control ctrl, string name, int topOffset)
+        private static Point ComputePoint(Point toCompute, Control origin, Control relativeTo)
+        {
+            var matrix = origin.TransformToVisual(relativeTo);
+            if (matrix is null)
+            {
+                return new Point(0, 0); // not attached yet or not transformable
+            }
+
+            Point output = matrix.Value.Transform(toCompute);
+            return output;
+        }
+
+        public static void SetCenter(Control ctrl, string name, int topOffset, Border container)
         {
             Dispatcher.UIThread.Post(() =>
             {
                 Point baseCenter = GetCenter(name);
+
+                if(ctrl.Parent!.Name == "ExampleForegroundContainer")
+                {
+                    baseCenter = new Point(baseCenter.X, GetCenter("Tracker").Y);
+                }
+
                 Point offsetCenter = new Point(baseCenter.X, baseCenter.Y + topOffset);
                 double X = offsetCenter.X - (ctrl.Width / 2);
                 double Y = offsetCenter.Y - (ctrl.Height / 2);
-
-                Canvas.SetLeft(ctrl, X);
-                Canvas.SetTop(ctrl, Y);
+                Point transformedPoint = ComputePoint(new Point(X, Y), container, (ctrl.Parent as Canvas)!);
+                Canvas.SetLeft(ctrl, transformedPoint.X);
+                Canvas.SetTop(ctrl, transformedPoint.Y);
             });
         }
 

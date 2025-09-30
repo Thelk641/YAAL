@@ -25,9 +25,18 @@ namespace YAAL
 
         public static Vector2 GetSlotSize()
         {
-            float mathedX = GetWindowSize().X - 70;
+            float mathedX = (float)(GetWindowSize().X - (70 * App.Settings.Zoom));
+            float mathedY = (float)(112 * App.Settings.Zoom);
             Vector2 baseSize = new Vector2(mathedX, 52);
-            return new Vector2((float)(baseSize.X * App.Settings.Zoom), (float)((baseSize.Y - 1) * App.Settings.Zoom));
+            return new Vector2(mathedX, mathedY);
+        }
+
+        public static Vector2 GetSlotForegroundSize()
+        {
+            Vector2 baseSize = GetSlotSize();
+            float mathedX = (float)(baseSize.X - (38 * App.Settings.Zoom));
+            float mathedY = (float)(((baseSize.Y - (8 * App.Settings.Zoom)) / 2) - 1);
+            return new Vector2(mathedX, mathedY);
         }
 
         public static void OpenWindow()

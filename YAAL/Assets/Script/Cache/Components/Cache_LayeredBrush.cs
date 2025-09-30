@@ -62,6 +62,7 @@ namespace YAAL
     public abstract class Cached_Layer
     {
         public BrushType brushType { get; set; }
+        public bool isForeground;
         public Border GetLayer()
         {
             Border output = GetRawLayer();
@@ -72,9 +73,9 @@ namespace YAAL
         private Border? computedLayer;
         public abstract Border GetRawLayer();
         public bool widthAbsolute = true;
-        public double width = 50;
+        public double width = 10;
         public bool heightAbsolute = true;
-        public double height = 50;
+        public double height = 10;
         public bool xOffsetAbsolute = true;
         public double xOffset = 0;
         public bool yOffsetAbsolute = true;
@@ -85,7 +86,16 @@ namespace YAAL
 
         public void CenterBorder(Border toCenter)
         {
-            Vector2 slotSize = WindowManager.GetSlotSize();
+            Vector2 slotSize;
+
+            if (isForeground)
+            {
+                slotSize = WindowManager.GetSlotForegroundSize();
+            } else
+            {
+                slotSize = WindowManager.GetSlotSize();
+            }
+
             toCenter.HorizontalAlignment = HorizontalAlignment.Center;
             toCenter.VerticalAlignment = VerticalAlignment.Center;
 
@@ -96,7 +106,7 @@ namespace YAAL
                 transform.X = xOffset;
             } else
             {
-                transform.X = slotSize.X * xOffset / 100;
+                transform.X = slotSize.X * xOffset / 200;
             }
 
             if (yOffsetAbsolute)
@@ -105,7 +115,7 @@ namespace YAAL
             }
             else
             {
-                transform.Y = (slotSize.Y + 4) * yOffset / 100;
+                transform.Y = (slotSize.Y + 4) * yOffset / 200;
             }
 
             TransformGroup group = new TransformGroup();

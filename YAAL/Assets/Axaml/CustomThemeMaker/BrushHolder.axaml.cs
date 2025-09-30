@@ -92,7 +92,7 @@ public partial class BrushHolder : UserControl
         {
             layer = new Cached_ImageLayer();
         }
-
+        layer.isForeground = this.isForeground;
         Setup(type, layer);
     }
 

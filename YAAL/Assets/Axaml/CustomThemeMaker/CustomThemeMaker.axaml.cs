@@ -17,6 +17,7 @@ using System.Linq;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using YAAL.Assets.Scripts;
 using static YAAL.ThemeSettings;
 
@@ -38,7 +39,7 @@ public partial class CustomThemeMaker : Window
         InitializeComponent();
 
         // DEBUG
-        AddARedSquare("Start Tool");
+        //AddARedSquare("Start Tool");
         // END OF DEBUG
 
 
@@ -57,7 +58,7 @@ public partial class CustomThemeMaker : Window
 
         List<string> themeList = IOManager.GetThemeList();
 
-        if(themeList.Count == 0)
+        if (themeList.Count == 0)
         {
             Cache_DisplayTheme defaultTheme = new Cache_DisplayTheme();
             defaultTheme.SetTheme("Default Theme", DefaultManager.theme);
@@ -94,22 +95,42 @@ public partial class CustomThemeMaker : Window
         {
             Debouncer.Debounce(Resize, 1);
         };
-
         //LoadTheme();
     }
+
+
 
     private void AddARedSquare(string centerName)
     {
         Border test = new Border()
         {
-            Width = 10,
-            Height = 10,
+            Width = 12,
+            Height = 12,
         };
         test.SetValue(AutoTheme.AutoThemeProperty!, null);
         test.Background = new SolidColorBrush(Colors.Red);
         test.IsVisible = true;
         ExampleBackgroundContainer.Children.Add(test);
-        ThemeManager.SetCenter(test, centerName, currentTheme.topOffset);
+        ThemeManager.SetCenter(test, "Tracker", currentTheme.topOffset, BackgroundExample);
+
+        Border secondTest = new Border()
+        {
+            Width = 10,
+            Height = 200,
+        };
+        secondTest.SetValue(AutoTheme.AutoThemeProperty!, null);
+        secondTest.Background = new SolidColorBrush(Colors.White);
+        secondTest.IsVisible = true;
+        ExampleForegroundContainer.Children.Add(secondTest);
+        ThemeManager.SetCenter(secondTest, "Tracker", currentTheme.topOffset, BackgroundExample);
+
+        Dispatcher.UIThread.Post(() =>
+        {
+            Point testPoint = new Point(Canvas.GetLeft(test), Canvas.GetTop(test));
+            Point secondtestPoint = new Point(Canvas.GetLeft(secondTest), Canvas.GetTop(secondTest));
+            Debug.WriteLine("Red : " + testPoint + " / " + test.TransformToVisual(BackgroundExample));
+            Debug.WriteLine("White : " + secondtestPoint + " / " + secondTest.TransformToVisual(BackgroundExample));
+        });
     }
 
     public void AddLayer(ThemeSettings target, string layerType, BrushHolder brush)
@@ -140,8 +161,7 @@ public partial class CustomThemeMaker : Window
         brush.BrushUpdated += (_, _) =>
         {
             Border updated = brush.brush.GetLayer();
-            ThemeManager.SetCenter(updated, brush.brush.center, currentTheme.topOffset);
-
+            ThemeManager.SetCenter(updated, brush.brush.center, currentTheme.topOffset, BackgroundExample);
 
             int index = holder.Children.IndexOf(layers[brush]);
             holder.Children.Remove(layers[brush]);

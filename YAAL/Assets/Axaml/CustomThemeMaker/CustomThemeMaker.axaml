@@ -195,7 +195,9 @@
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"
 						Background="#FFF"
-						IsVisible="True">
+						IsVisible="True"
+						ClipToBounds="True"
+						>
 						<Grid>
 							<Canvas Name="ExampleBackgroundContainer" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
 							<Grid Name="ExampleEmptySpace" RowDefinitions="0,*,0">
@@ -211,6 +213,7 @@
 											Background="#FFF"
 											IsVisible="True"
 											Grid.Column="0"
+											ClipToBounds="True"
 											>
 											<Canvas Name="ExampleForegroundContainer" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
 										</Border>

@@ -27,6 +27,7 @@ public partial class BrushMaker : Window
 {
     public Cached_Layer brush;
     public event PropertyChangedEventHandler? SettingChanged;
+    public bool isForeground;
     public BrushMaker()
     {
         InitializeComponent();
@@ -34,25 +35,13 @@ public partial class BrushMaker : Window
         CenterPicker.ItemsSource = ThemeManager.GetCenterList();
     }
 
-    public BrushMaker(bool isForeground, Cached_Layer newBrush)
+    public BrushMaker(bool shouldBeForeground, Cached_Layer newBrush)
     {
         InitializeComponent();
+        isForeground = shouldBeForeground;
         AutoTheme.SetTheme(TrueBackground, ThemeSettings.backgroundColor);
-        if(isForeground == true)
-        {
-            List<Combo_Centers> list = new List<Combo_Centers>();
-            Combo_Centers center = new Combo_Centers();
-            center.SetName("Tracker");
-            list.Add(center);
+        CenterPicker.ItemsSource = ThemeManager.GetCenterList();
 
-
-            CenterPicker.ItemsSource = list;
-            CenterPicker.SelectedItem = center;
-        } else
-        {
-            CenterPicker.ItemsSource = ThemeManager.GetCenterList();
-        }
-            
         Setup(newBrush);
     }
 
@@ -292,7 +281,15 @@ public partial class BrushMaker : Window
     public void SwitchRelativeAbsolute(Button source)
     {
         TextBox? toModify;
-        Vector2 slotSize = WindowManager.GetSlotSize();
+        Vector2 slotSize;
+        if(isForeground)
+        {
+            slotSize = WindowManager.GetSlotForegroundSize();
+        } else
+        {
+            slotSize = WindowManager.GetSlotSize();
+        }
+
         bool toAbsolute = true;
         bool horizontal = true;
 
