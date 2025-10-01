@@ -61,7 +61,18 @@ namespace YAAL
 
     public abstract class Cached_Layer
     {
-        public BrushType brushType { get; set; }
+        [JsonProperty]
+        public BrushType brushType { get {
+                if(this is Cached_ImageLayer)
+                {
+                    return BrushType.Image;
+                } else
+                {
+                    return BrushType.Color;
+                }
+            } }
+
+
         public bool isForeground;
         public Border GetLayer()
         {
@@ -70,7 +81,6 @@ namespace YAAL
             return output;
         }
 
-        private Border? computedLayer;
         public abstract Border GetRawLayer();
         public bool widthAbsolute = true;
         public double width = 10;
@@ -164,22 +174,36 @@ namespace YAAL
         public string imageSource = "";
         public Stretch stretch;
         public TileMode tilemode;
-        public double opacity;
+        public double opacity = 100;
         public FlipSettings flipSetting;
+        public int imageWidth = 0;
+        public int imageHeight = 0;
+        public bool absoluteImageWidth;
+        public bool absoluteImageHeight;
 
         public override Border GetRawLayer()
         {
             Border output = new Border();
             output.SetValue(AutoTheme.AutoThemeProperty!, null);
             ImageBrush brush = new ImageBrush();
-            brush.Source = ThemeManager.GetImage(imageSource);
+            brush.Source = ThemeManager.GetImage(imageSource, imageWidth, imageHeight);
             brush.Stretch = stretch;
             brush.TileMode = tilemode;
             brush.Opacity = opacity;
-            brush.AlignmentX = AlignmentX.Center;
-            brush.AlignmentY = AlignmentY.Center;
+            
+            brush.DestinationRect = new RelativeRect(0, 0, imageWidth, imageHeight, RelativeUnit.Absolute);
 
-            ScaleTransform scale = new ScaleTransform { ScaleX = 1, ScaleY = 1 };
+            if(tilemode == TileMode.None)
+            {
+                brush.AlignmentX = AlignmentX.Center;
+                brush.AlignmentY = AlignmentY.Center;
+            } else
+            {
+                brush.AlignmentX = AlignmentX.Left;
+                brush.AlignmentY = AlignmentY.Top;
+            }
+
+                ScaleTransform scale = new ScaleTransform { ScaleX = 1, ScaleY = 1 };
 
             if (flipSetting == FlipSettings.FlipX || flipSetting == FlipSettings.FlipXY) 
             {

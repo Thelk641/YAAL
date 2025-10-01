@@ -213,9 +213,9 @@ namespace YAAL
             string originalPath = ProcessLocalPath(path);
             string targetPath = Path.Combine(GetSaveLocation(Images), GetFileName(path));
 
-            if(path == targetPath)
+            if(path == targetPath || File.Exists(targetPath))
             {
-                return path;
+                return targetPath;
             }
 
             if(CopyFile(path, targetPath))

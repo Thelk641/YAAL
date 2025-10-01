@@ -10,6 +10,8 @@ namespace YAAL
     {
         BrushColor,
         ImageSource,
+        ImageHeight,
+        ImageWidth,
         Center,
         XOffset,
         YOffset,

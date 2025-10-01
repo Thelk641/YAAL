@@ -42,6 +42,7 @@ public partial class BrushHolder : UserControl
     public string type;
     public Cached_ImageLayer imageBrush;
     public Cached_ColorLayer colorBrush;
+
     public BrushHolder()
     {
         InitializeComponent();
@@ -63,7 +64,6 @@ public partial class BrushHolder : UserControl
                 // Preview info : width = height * slotSize.Height / slotSize.Width
             };
         };
-
         //TODO : Update Preview
     }
 

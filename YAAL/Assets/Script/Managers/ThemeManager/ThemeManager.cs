@@ -15,6 +15,7 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace YAAL
 {
@@ -161,7 +162,7 @@ namespace YAAL
             return new Cache_CustomTheme();
         }
 
-        public static Bitmap? GetImage(string name)
+        public static Bitmap? GetImage(string name, int imageWidth = 0, int imageHeight = 0)
         {
             if(name == "")
             {
@@ -172,6 +173,10 @@ namespace YAAL
             {
                 if(weakRef.TryGetTarget(out var image))
                 {
+                    if(imageWidth != 0 && imageHeight != 0)
+                    {
+                        return image.CreateScaledBitmap(new PixelSize(imageWidth, imageHeight));
+                    }
                     return image;
                 }
 
@@ -182,6 +187,11 @@ namespace YAAL
             if (readBitmap != null)
             {
                 images[name] = new WeakReference<Bitmap>(readBitmap);
+                if (imageWidth != 0 && imageHeight != 0)
+                {
+                    return readBitmap.CreateScaledBitmap(new PixelSize(imageWidth, imageHeight));
+                }
+                return readBitmap;
             }
             return null;
         }

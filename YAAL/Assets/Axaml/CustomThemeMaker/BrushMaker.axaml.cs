@@ -182,15 +182,27 @@ public partial class BrushMaker : Window
 
         Cached_ImageLayer image = brush as Cached_ImageLayer ?? new Cached_ImageLayer();
 
+        if (image.absoluteImageHeight)
+        {
+            SwitchRelativeAbsolute(ImageHeightRelative);
+        }
+
+        if (image.absoluteImageWidth)
+        {
+            SwitchRelativeAbsolute(ImageWidthRelative);
+        }
+
         StretchMode.ItemsSource = Enum.GetValues(typeof(Stretch));
         FlipMode.ItemsSource = Enum.GetValues(typeof(FlipSettings));
         TileMode.ItemsSource = Enum.GetValues(typeof(TileMode));
 
-        WindowManager.ChangeHeight(this, 460);
+        WindowManager.ChangeHeight(this, 536);
         ColorMode.IsVisible = false;
         ImageMode.IsVisible = true;
         ImageSettings.IsVisible = true;
         ImageSource.Text = image.imageSource;
+        ImageWidth.Text = image.imageWidth.ToString();
+        ImageHeight.Text = image.imageHeight.ToString();
         StretchMode.SelectedItem = image.stretch;
         FlipMode.SelectedItem = image.flipSetting;
         TileMode.SelectedItem = image.tilemode;
@@ -207,7 +219,7 @@ public partial class BrushMaker : Window
 
         FlipMode.SelectionChanged += (_, _) =>
         {
-            if (Enum.TryParse<FlipSettings>(StretchMode.SelectedItem.ToString(), out FlipSettings newFlip))
+            if (Enum.TryParse<FlipSettings>(FlipMode.SelectedItem.ToString(), out FlipSettings newFlip))
             {
                 image.flipSetting = newFlip;
                 RaiseEvent(BrushEvents.FlipMode);
@@ -216,7 +228,7 @@ public partial class BrushMaker : Window
 
         TileMode.SelectionChanged += (_, _) =>
         {
-            if (Enum.TryParse<TileMode>(StretchMode.SelectedItem.ToString(), out TileMode newTile))
+            if (Enum.TryParse<TileMode>(TileMode.SelectedItem.ToString(), out TileMode newTile))
             {
                 image.tilemode = newTile;
                 RaiseEvent(BrushEvents.TileMode);
@@ -244,6 +256,47 @@ public partial class BrushMaker : Window
                     },
                 0.5f);
         };
+
+        ImageSelect.Click += async (_, _) =>
+        {
+            ImageSource.Text = await IOManager.PickFile(this);
+        };
+
+        ImageHeight.TextChanged += (_, _) =>
+        {
+            Debouncer.Debounce(
+                () =>
+                {
+                    if(int.TryParse(ImageHeight.Text, out int rawImageHeight) && rawImageHeight != image.imageHeight)
+                    {
+                        image.imageHeight = rawImageHeight;
+                        RaiseEvent(BrushEvents.ImageHeight);
+                    }
+                },
+                0.5f
+                );
+        };
+
+        ImageHeightFixed.Click += (source, _) => { SwitchRelativeAbsolute((source as Button)!); };
+        ImageHeightRelative.Click += (source, _) => { SwitchRelativeAbsolute((source as Button)!); };
+
+        ImageWidth.TextChanged += (_, _) =>
+        {
+            Debouncer.Debounce(
+                () =>
+                {
+                    if (int.TryParse(ImageWidth.Text, out int rawImageWidth) && rawImageWidth != image.imageWidth)
+                    {
+                        image.imageWidth = rawImageWidth;
+                        RaiseEvent(BrushEvents.ImageWidth);
+                    }
+                },
+                0.5f
+                );
+        };
+
+        ImageWidthFixed.Click += (source, _) => { SwitchRelativeAbsolute((source as Button)!); };
+        ImageWidthRelative.Click += (source, _) => { SwitchRelativeAbsolute((source as Button)!); };
     }
 
     public void SetupColor(Cached_Layer brush)
@@ -350,6 +403,38 @@ public partial class BrushMaker : Window
                 toAbsolute = false;
                 horizontal = false;
                 brush.heightAbsolute = false;
+                break;
+            case "ImageHeightFixed":
+                ImageHeightFixed.IsVisible = false;
+                ImageHeightRelative.IsVisible = true;
+                toModify = ImageHeight;
+                toAbsolute = false;
+                horizontal = false;
+                (brush as Cached_ImageLayer)!.absoluteImageHeight = false;
+                break;
+            case "ImageHeightRelative":
+                ImageHeightFixed.IsVisible = true;
+                ImageHeightRelative.IsVisible = false;
+                toModify = ImageHeight;
+                toAbsolute = true;
+                horizontal = false;
+                (brush as Cached_ImageLayer)!.absoluteImageHeight = true;
+                break;
+            case "ImageWidthFixed":
+                ImageWidthFixed.IsVisible = false;
+                ImageWidthRelative.IsVisible = true;
+                toModify = ImageWidth;
+                toAbsolute = false;
+                horizontal = true;
+                (brush as Cached_ImageLayer)!.absoluteImageWidth = false;
+                break;
+            case "ImageWidthRelative":
+                ImageWidthFixed.IsVisible = true;
+                ImageWidthRelative.IsVisible = false;
+                toModify = ImageWidth;
+                toAbsolute = true;
+                horizontal = true;
+                (brush as Cached_ImageLayer)!.absoluteImageWidth = true;
                 break;
             default:
                 Debug.WriteLine("SwitchRelativeAbsolute called from button " + source.Name);

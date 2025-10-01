@@ -161,12 +161,24 @@ public partial class CustomThemeMaker : Window
         brush.BrushUpdated += (_, _) =>
         {
             Border updated = brush.brush.GetLayer();
-            ThemeManager.SetCenter(updated, brush.brush.center, currentTheme.topOffset, BackgroundExample);
-
             int index = holder.Children.IndexOf(layers[brush]);
             holder.Children.Remove(layers[brush]);
             holder.Children.Insert(index, updated);
             layers[brush] = updated;
+            Debug.WriteLine(updated.Parent);
+
+            ThemeManager.SetCenter(updated, brush.brush.center, currentTheme.topOffset, BackgroundExample);
+
+            if (updated.Background is ImageBrush image)
+            {
+                Debug.WriteLine((border.Background as ImageBrush)!.SourceRect);
+                Debug.WriteLine(border.Bounds);
+                Debug.WriteLine(
+                    "Stretch : " + image.Stretch +
+                    " / Tile : " + image.TileMode +
+                    " / Flip : " + (brush.brush as Cached_ImageLayer)!.flipSetting
+                    );
+            }
         };
     }
 
