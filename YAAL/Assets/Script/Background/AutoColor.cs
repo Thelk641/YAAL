@@ -108,9 +108,6 @@ namespace YAAL
                 return NeedsWhite(immutableSolid.Color);
             }
 
-            Debug.WriteLine(brush);
-            Debug.WriteLine(brush.GetType());
-
             ErrorManager.ThrowError(
                     "Color Manager - No compatible background found",
                     "While trying to find the best text color, we found this " + control.ToString() + " with a type not allowed. Please report this."

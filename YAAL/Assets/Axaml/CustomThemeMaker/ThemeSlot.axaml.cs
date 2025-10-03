@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Numerics;
 using System.Threading.Tasks;
 using YAAL.Assets.Scripts;
 using static YAAL.ApworldSettings;
@@ -78,11 +79,13 @@ public partial class ThemeSlot : UserControl
         display.isHeader = false;
         SlotSelector.ItemsSource = new List<Cache_DisplaySlot>() { display };
         SlotSelector.SelectedItem = display;
+        Resize();
     }
 
     public void Resize()
     {
-        double newHeight = hardCodedHeight;
+        Vector2 size = WindowManager.GetSlotSize();
+        double newHeight = size.Y;
 
         newHeight += topOffset + bottomOffset;
 
@@ -93,6 +96,7 @@ public partial class ThemeSlot : UserControl
         this.Height = newHeight;
         ChangedHeight?.Invoke(previousHeight, newHeight);
         previousHeight = newHeight;
+        this.Width = size.X;
     }
 
     public void Resize(int top, int bottom)

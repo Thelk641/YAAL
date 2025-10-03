@@ -43,7 +43,10 @@ namespace YAAL
             AutoThemeProperty.Changed.AddClassHandler<Control>(
                 (ctrl, e) =>
                 {
-                    EnableAutoTheme(ctrl, e.NewValue as Cache_ThemeInfo);
+                    if(e != null && e.NewValue is Cache_ThemeInfo cache)
+                    {
+                        EnableAutoTheme(ctrl, cache);
+                    }
                 });
         }
 

@@ -42,14 +42,6 @@ public partial class AsyncHolder : UserControl
         }
 
         UpdatePort();
-
-        Avalonia.Threading.Dispatcher.UIThread.Post(() =>
-        {
-            foreach (var item in SlotsContainer.Children)
-            {
-                Debug.WriteLine(item.Bounds.Width);
-            }
-        }, Avalonia.Threading.DispatcherPriority.Render);
     }
 
     public void SetupPlayMode()

@@ -50,36 +50,31 @@ public partial class CustomThemeCollumn : UserControl
         BrushHolder brush = new BrushHolder();
         brush.isForeground = (id == ThemeSettings.foregroundColor);
         CommandContainer.Children.Add(brush);
+        window.AddLayer(id, type, brush);
+        brush.AskForRemoval += () =>
+        {
+            CommandContainer.Children.Remove(brush);
+        };
 
         brush.MoveUp += () =>
         {
             int index = CommandContainer.Children.IndexOf(brush);
-            if (index > 0)
+            if(index > 0)
             {
-                CommandContainer.Children.RemoveAt(index);
+                CommandContainer.Children.Remove(brush);
                 CommandContainer.Children.Insert(index - 1, brush);
-                window.MoveLayerUp(brush);
             }
         };
 
         brush.MoveDown += () =>
         {
             int index = CommandContainer.Children.IndexOf(brush);
-            if (index < CommandContainer.Children.Count - 1)
+            if (index < CommandContainer.Children.Count)
             {
-                CommandContainer.Children.RemoveAt(index);
+                CommandContainer.Children.Remove(brush);
                 CommandContainer.Children.Insert(index + 1, brush);
-                window.MoveLayerDown(brush);
             }
         };
-
-        brush.AskForRemoval += () =>
-        {
-            CommandContainer.Children.Remove(brush);
-            window.RemoveLayer(brush);
-        };
-
-        window.AddLayer(id, type, brush);
     }
 
     public void SetCategory(ThemeSettings newId)

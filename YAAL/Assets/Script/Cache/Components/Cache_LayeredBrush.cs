@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.CompilerServices;
@@ -21,13 +22,13 @@ namespace YAAL
         [JsonProperty]
         private List<Cached_Layer> _cache = new List<Cached_Layer>();
         [JsonIgnore]
-        public Dictionary<string, Border> cache { get
+        public Dictionary<string, Border> layers { get
             {
                 Dictionary<string, Border> output = new Dictionary<string, Border>();
                 for (int i = 0; i < _cache.Count; i++)
                 {
                     string name = "layer" + i;
-                    output[name] = _cache[i].GetRawLayer();
+                    output[name] = _cache[i].GetLayer();
                 }
                 return output;
             } 
@@ -41,21 +42,63 @@ namespace YAAL
                 holder.Name = "Background Holder";
                 for (int i = 0; i < _cache.Count; i++)
                 {
-                    Border newLayer = _cache[i].GetRawLayer();
+                    Border newLayer = _cache[i].GetLayer();
                     holder.Children.Add(newLayer);
                 }
                 return holder;
             }
         }
 
-        public void AddNewBrush(Cached_Layer brush)
+        public void AddNewBrush(Cached_Layer brush, int index = -1)
         {
-            _cache.Add(brush);
+            if(index == -1)
+            {
+                _cache.Add(brush);
+            } else
+            {
+                _cache.Insert(index, brush);
+            }
+        }
+
+        public void UpdateBrush(Cached_Layer oldBrush, Cached_Layer newBrush)
+        {
+            int index = _cache.IndexOf(oldBrush);
+            _cache.Remove(oldBrush);
+            _cache.Insert(index, newBrush);
         }
 
         public void RemoveBrush(Cached_Layer brush)
         {
             _cache.Remove(brush);
+        }
+
+        public bool MoveBrushUp(Cached_Layer brush)
+        {
+            int index = _cache.IndexOf(brush);
+            if(index > 0)
+            {
+                _cache.Remove(brush);
+                _cache.Insert(index - 1, brush);
+                return true;
+            }
+            return false;
+        }
+
+        public bool MoveBrushDown(Cached_Layer brush)
+        {
+            int index = _cache.IndexOf(brush);
+            if (index < _cache.Count - 1)
+            {
+                _cache.Remove(brush);
+                _cache.Insert(index + 1, brush);
+                return true;
+            }
+            return false;
+        }
+
+        public List<Cached_Layer> GetLayers()
+        {
+            return _cache;
         }
     }
 
@@ -125,7 +168,7 @@ namespace YAAL
             }
             else
             {
-                transform.Y = (slotSize.Y + 4) * yOffset / 200;
+                transform.Y = slotSize.Y * yOffset / 200;
             }
 
             TransformGroup group = new TransformGroup();
@@ -160,9 +203,11 @@ namespace YAAL
                 if (heightAbsolute)
                 {
                     toCenter.Height = height;
+                    Debug.WriteLine("IsForeground : " + isForeground + " / slotSize : " + slotSize + " / height : " + height + " / mathed : " + toCenter.Height);
                 } else
                 {
-                    toCenter.Height = (slotSize.Y + 4) * height / 100;
+                    toCenter.Height = slotSize.Y * height / 100;
+                    Debug.WriteLine("IsForeground : " + isForeground + " / slotSize : " + slotSize + " / height : " + height + " / mathed : " + toCenter.Height);
                 }
             }
             

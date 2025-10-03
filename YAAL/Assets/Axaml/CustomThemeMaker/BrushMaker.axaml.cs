@@ -60,7 +60,6 @@ public partial class BrushMaker : Window
         {
             if(CenterPicker.SelectedItem is Combo_Centers newCenter)
             {
-                Debug.WriteLine(newCenter.centerName);
                 brush.center = newCenter.centerName;
                 RaiseEvent(Center);
             }

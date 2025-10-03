@@ -106,9 +106,11 @@
 						</Grid>
 
 						<Grid ColumnDefinitions="*,8,30" Grid.Row="2">
-							<ScrollViewer Grid.Column="0" Name="Viewer">
-								<StackPanel Name="TrackerItemHolder"/>
-							</ScrollViewer>
+							<Border Name="Foreground">
+								<ScrollViewer Grid.Column="0" Name="Viewer">
+									<StackPanel Name="TrackerItemHolder"/>
+								</ScrollViewer>
+							</Border>
 							<Button
 									Name="UpdateItems"
 									VerticalAlignment="Stretch"

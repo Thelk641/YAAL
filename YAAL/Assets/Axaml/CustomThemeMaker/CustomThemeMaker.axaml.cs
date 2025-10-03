@@ -40,6 +40,7 @@ public partial class CustomThemeMaker : Window
 
         // DEBUG
         //AddARedSquare("Start Tool");
+        currentTheme.name = "Default Theme";
         // END OF DEBUG
 
 
@@ -98,129 +99,66 @@ public partial class CustomThemeMaker : Window
         //LoadTheme();
     }
 
-
-
-    private void AddARedSquare(string centerName)
-    {
-        Border test = new Border()
-        {
-            Width = 12,
-            Height = 12,
-        };
-        test.SetValue(AutoTheme.AutoThemeProperty!, null);
-        test.Background = new SolidColorBrush(Colors.Red);
-        test.IsVisible = true;
-        ExampleBackgroundContainer.Children.Add(test);
-        ThemeManager.SetCenter(test, "Tracker", currentTheme.topOffset, BackgroundExample);
-
-        Border secondTest = new Border()
-        {
-            Width = 10,
-            Height = 200,
-        };
-        secondTest.SetValue(AutoTheme.AutoThemeProperty!, null);
-        secondTest.Background = new SolidColorBrush(Colors.White);
-        secondTest.IsVisible = true;
-        ExampleForegroundContainer.Children.Add(secondTest);
-        ThemeManager.SetCenter(secondTest, "Tracker", currentTheme.topOffset, BackgroundExample);
-
-        Dispatcher.UIThread.Post(() =>
-        {
-            Point testPoint = new Point(Canvas.GetLeft(test), Canvas.GetTop(test));
-            Point secondtestPoint = new Point(Canvas.GetLeft(secondTest), Canvas.GetTop(secondTest));
-            Debug.WriteLine("Red : " + testPoint + " / " + test.TransformToVisual(BackgroundExample));
-            Debug.WriteLine("White : " + secondtestPoint + " / " + secondTest.TransformToVisual(BackgroundExample));
-        });
-    }
-
     public void AddLayer(ThemeSettings target, string layerType, BrushHolder brush)
     {
-        Canvas holder = new Canvas();
-        switch (target)
-        {
-            case ThemeSettings.backgroundColor:
-                holder = ExampleBackgroundContainer;
-                break;
-            case ThemeSettings.foregroundColor:
-                holder = ExampleForegroundContainer;
-                break;
-        }
+        Cached_Layer layer;
 
-        if(layerType == "Color")
+        if (layerType == "Color")
         {
+            layer = new Cached_ColorLayer();
             brush.Setup("Color");
-        } else
+        }
+        else
         {
+            layer = new Cached_ImageLayer();
             brush.Setup("Image");
         }
 
-        Border border = brush.brush.GetLayer();
-        holder.Children.Add(border);
-        layers[brush] = border;
 
-        brush.BrushUpdated += (_, _) =>
+        Cache_LayeredBrush layeredBrush;
+
+        switch (target)
         {
-            Border updated = brush.brush.GetLayer();
-            int index = holder.Children.IndexOf(layers[brush]);
-            holder.Children.Remove(layers[brush]);
-            holder.Children.Insert(index, updated);
-            layers[brush] = updated;
-            Debug.WriteLine(updated.Parent);
+            case ThemeSettings.backgroundColor:
+                layeredBrush = currentTheme.background;
+                break;
+            case ThemeSettings.foregroundColor:
+                layeredBrush = currentTheme.foreground;
+                break;
+            default:
+                return;
+        }
 
-            ThemeManager.SetCenter(updated, brush.brush.center, currentTheme.topOffset, BackgroundExample);
+        layeredBrush.AddNewBrush(layer);
 
-            if (updated.Background is ImageBrush image)
+        brush.BrushUpdated += (_, property) =>
+        {
+            layeredBrush.UpdateBrush(layer, brush.brush);
+            layer = brush.brush;
+            UpdateDisplay(layeredBrush, currentTheme.name, target);
+        };
+
+        brush.MoveUp += () =>
+        {
+            if (layeredBrush.MoveBrushUp(layer))
             {
-                Debug.WriteLine((border.Background as ImageBrush)!.SourceRect);
-                Debug.WriteLine(border.Bounds);
-                Debug.WriteLine(
-                    "Stretch : " + image.Stretch +
-                    " / Tile : " + image.TileMode +
-                    " / Flip : " + (brush.brush as Cached_ImageLayer)!.flipSetting
-                    );
+                UpdateDisplay(layeredBrush, currentTheme.name, target);
             }
         };
-    }
 
-    public void MoveLayerUp(BrushHolder brush)
-    {
-        if (layers.ContainsKey(brush))
+        brush.MoveDown += () =>
         {
-            Border toMove = layers[brush];
-            if (toMove.Parent is Canvas canvas)
+            if (layeredBrush.MoveBrushDown(layer))
             {
-                int index = canvas.Children.IndexOf(toMove);
-                canvas.Children.Remove(toMove);
-                canvas.Children.Insert(index - 1, toMove);
+                UpdateDisplay(layeredBrush, currentTheme.name, target);
             }
-        }
-    }
+        };
 
-    public void MoveLayerDown(BrushHolder brush)
-    {
-        if (layers.ContainsKey(brush))
+        brush.AskForRemoval += () =>
         {
-            Border toMove = layers[brush];
-            if (toMove.Parent is Canvas canvas)
-            {
-                int index = canvas.Children.IndexOf(toMove);
-                canvas.Children.Remove(toMove);
-                canvas.Children.Insert(index + 1, toMove);
-            }
-        }
-    }
-
-    public void RemoveLayer(BrushHolder brush)
-    {
-        if (layers.ContainsKey(brush))
-        {
-            Border toRemove = layers[brush];
-            if(toRemove.Parent is Canvas canvas)
-            {
-                layers.Remove(brush);
-                canvas.Children.Remove(toRemove);
-            }
-        }
+            layeredBrush.RemoveBrush(layer);
+            UpdateDisplay(layeredBrush, currentTheme.name, target);
+        };
     }
 
     public void SaveTheme(string savedName = "")
@@ -232,6 +170,56 @@ public partial class CustomThemeMaker : Window
     {
         // TODO : make this function
         currentTheme = new Cache_CustomTheme();
+    }
+
+    public void UpdateDisplay(Bitmap newBitmap, ThemeSettings setting)
+    {
+        Border exampleBorder;
+        Border playBorder;
+        Border editBorder1;
+        Border? editBorder2 = null;
+
+        switch (setting)
+        {
+            case ThemeSettings.backgroundColor:
+                exampleBorder = BackgroundExample;
+                playBorder = PlayMode.PlayMode;
+                editBorder1 = EditMode.EditMode;
+                break;
+            case ThemeSettings.foregroundColor:
+                exampleBorder = ForegroundExample;
+                playBorder = PlayMode.Foreground;
+                editBorder1 = EditMode.EditRow1;
+                editBorder2 = EditMode.EditRow2;
+                break;
+            default:
+                return;
+        }
+
+        ImageBrush newBrush = new ImageBrush(newBitmap);
+        newBrush.AlignmentX = AlignmentX.Center;
+        newBrush.AlignmentY = AlignmentY.Center;
+        newBrush.Stretch = Stretch.Fill;
+        
+
+        exampleBorder.Background = newBrush;
+        playBorder.Background = newBrush;
+        editBorder1.Background = newBrush;
+
+
+        if(editBorder2 != null)
+        {
+            editBorder2.Background = newBrush;
+        }
+    }
+
+    public async Task UpdateDisplay(Cache_LayeredBrush layeredBrush, string themeName, ThemeSettings target)
+    {
+        Bitmap? bitmap = await ThemeManager.UpdateTheme(layeredBrush, currentTheme.name, target, false);
+        if (bitmap != null)
+        {
+            UpdateDisplay(bitmap, target);
+        }
     }
 
     public void Resize()
@@ -248,8 +236,8 @@ public partial class CustomThemeMaker : Window
             bottom = newBottom;
         }
 
-        this.Height = baseHeight + top * 3 + bottom * 3;
-        this.Width = baseWidth + top * 3 + bottom * 3;
+        this.Height = (baseHeight + top * 3 + bottom * 3) * App.Settings.Zoom;
+        this.Width = (baseWidth + top * 3 + bottom * 3) * App.Settings.Zoom;
 
         PlayMode.Resize(top, bottom);
         EditMode.Resize(top, bottom);

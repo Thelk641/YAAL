@@ -61,11 +61,6 @@ namespace YAAL
                                         Avalonia.Threading.Dispatcher.UIThread.Post(() =>
                                         {
                                             Icons icon = AutoIcon.GetIcon(button);
-                                            if(AutoIcon.GetIcon(button) == Icons.Trash)
-                                            {
-                                                Debug.WriteLine("got ya");
-                                            }
-
                                             EvaluateBackground(button);
                                         }, Avalonia.Threading.DispatcherPriority.Render);
                                     });

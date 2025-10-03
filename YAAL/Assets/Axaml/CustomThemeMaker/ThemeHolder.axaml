@@ -1,0 +1,13 @@
+<Window
+	xmlns="https://github.com/avaloniaui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:local="clr-namespace:YAAL"
+	x:Class="YAAL.ThemeHolder"
+	HorizontalAlignment="Stretch"
+	Height="100"
+	Width="100"
+	>
+	<Canvas Name="Back" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsVisible="True">
+		<Canvas Name="ExampleBackgroundContainer" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+	</Canvas>
+</Window>
