@@ -15,5 +15,6 @@ namespace YAAL
         dropdownColor,
         buttonColor,
         zoom,
+        scaleModifier,
     };
 }

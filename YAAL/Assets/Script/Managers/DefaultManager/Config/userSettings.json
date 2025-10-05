@@ -2,7 +2,9 @@
   "saveLocation": {
   },
   "generalSettings": {
-    "aplauncher": ""
+    "aplauncher": "",
+    "scaleModifier": "1",
+    "zoom": "1",
   },
   "customSettings": {
   },

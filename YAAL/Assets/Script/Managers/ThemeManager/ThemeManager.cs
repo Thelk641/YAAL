@@ -12,6 +12,7 @@ using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using System.Reflection.Emit;
@@ -217,31 +218,39 @@ namespace YAAL
 
         public static Bitmap Render(Control ctrl, string themeName, ThemeSettings category, bool save = true)
         {
-            Vector2 dpi = new Vector2(96, 96);
-            Size renderSize = ctrl.Bounds.Size;
-            if(renderSize.Width <=0 || renderSize.Height <= 0)
+            float sharpnessMultiplier = 2f;
+            try
             {
-                ctrl.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
-                renderSize = ctrl.DesiredSize;
-                if (renderSize.Width <= 0 || renderSize.Height <= 0) 
+                string setting = IOManager.GetSetting(GeneralSettings.scaleModifier).TrimEnd('f');
+                float parsed = float.Parse(setting, CultureInfo.InvariantCulture.NumberFormat);
+                if (parsed != 0)
                 {
-                    Vector2 defaultSize;
-
-                    switch (category)
-                    {
-                        case ThemeSettings.backgroundColor:
-                            defaultSize = WindowManager.GetSlotSize();
-                            break;
-                        case ThemeSettings.foregroundColor:
-                            defaultSize = WindowManager.GetSlotForegroundSize();
-                            break;
-                        default:
-                            defaultSize = WindowManager.GetWindowSize();
-                            break;
-                    }
-                    renderSize = new Size(defaultSize);
+                    sharpnessMultiplier = parsed;
                 }
             }
+            catch (Exception e)
+            {
+                ErrorManager.ThrowError(
+                    "ThemeManager - Invalid sharpness multiplier",
+                    "Trying to parse your sharpness multiplier setting raised the following exception : " + e.Message);
+            }
+            
+            Vector2 dpi = new Vector2(96 * sharpnessMultiplier, 96 * sharpnessMultiplier);
+            Vector2 defaultSize;
+
+            switch (category)
+            {
+                case ThemeSettings.backgroundColor:
+                    defaultSize = WindowManager.GetSlotSize();
+                    break;
+                case ThemeSettings.foregroundColor:
+                    defaultSize = WindowManager.GetSlotForegroundSize();
+                    break;
+                default:
+                    defaultSize = WindowManager.GetWindowSize();
+                    break;
+            }
+            Size renderSize = new Size(defaultSize);
 
             int pixelWidth = (int)Math.Ceiling(renderSize.Width * dpi.X / 96.0);
             int pixelHeight = (int)Math.Ceiling(renderSize.Height * dpi.Y / 96.0);
@@ -309,6 +318,7 @@ namespace YAAL
             }
 
             Dictionary<Border, string> centers = new Dictionary<Border, string>();
+            Dictionary<Border, Vector2> sizes = new Dictionary<Border, Vector2>();
 
             foreach (var item in brush.GetLayers())
             {
@@ -317,11 +327,41 @@ namespace YAAL
                 border.IsVisible = true;
                 centers[border] = layer.center;
                 holder.Children.Add(border);
+
+                Vector2 size;
+                if(layer is Cached_ImageLayer image)
+                {
+                    float width = image.imageWidth;
+                    if (!image.absoluteImageWidth)
+                    {
+                        width *= temporarySize.X / 100;
+                    }
+                    float height = image.imageHeight;
+                    if (!image.absoluteImageHeight)
+                    {
+                        height *= temporarySize.Y / 100;
+                    }
+                    size = new Vector2(width, height);
+                } else
+                {
+                    float width = (float)layer.height;
+                    if (!layer.heightAbsolute)
+                    {
+                        width *= temporarySize.X;
+                    }
+                    float height = (float)layer.width;
+                    if (!layer.widthAbsolute)
+                    {
+                        height *= temporarySize.Y;
+                    }
+                    size = new Vector2(width, height);
+                }
+                sizes[border] = size;
             }
 
             foreach (var item in centers)
             {
-                await SetCenter(item.Key, item.Value, theme.topOffset, container, setting);
+                await SetCenter(item.Key, item.Value, theme.topOffset, container, setting, sizes[item.Key]);
             }
 
             Bitmap output = Render(holder, themeName, setting, true);
@@ -410,7 +450,7 @@ namespace YAAL
             return output;
         }
 
-        public static Task SetCenter(Control ctrl, string centerName, int topOffset, Canvas container, ThemeSettings setting)
+        public static Task SetCenter(Control ctrl, string centerName, int topOffset, Canvas container, ThemeSettings setting, Vector2 realSize)
         {
             var tcs = new TaskCompletionSource<object?>(TaskCreationOptions.RunContinuationsAsynchronously);
 
@@ -424,8 +464,8 @@ namespace YAAL
                 }
 
                 Point offsetCenter = new Point(baseCenter.X, baseCenter.Y + topOffset);
-                double X = offsetCenter.X - (ctrl.Width / 2);
-                double Y = offsetCenter.Y - (ctrl.Height / 2);
+                double X = offsetCenter.X - (realSize.X / 2);
+                double Y = offsetCenter.Y - (realSize.Y / 2);
                 Point transformedPoint = ComputePoint(new Point(X, Y), container, (ctrl.Parent as Canvas)!);
                 Canvas.SetLeft(ctrl, transformedPoint.X);
                 Canvas.SetTop(ctrl, transformedPoint.Y);

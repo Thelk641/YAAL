@@ -219,7 +219,7 @@ namespace YAAL
         public string imageSource = "";
         public Stretch stretch;
         public TileMode tilemode;
-        public double opacity = 100;
+        public double opacity = 1;
         public FlipSettings flipSetting;
         public int imageWidth = 0;
         public int imageHeight = 0;

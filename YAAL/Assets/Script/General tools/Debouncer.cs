@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Threading;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -34,10 +35,20 @@ namespace YAAL.Assets.Scripts
 
         private static void EvaluateCountdown(object? sender, EventArgs e)
         {
+
+            var newCountdown = new Dictionary<Action, float>();
+            var newBoxCountdown = new Dictionary<TextBox, float>();
+
             foreach (var item in countdown)
             {
+                newCountdown.Add(item.Key, item.Value);
+            }
+
+
+            foreach (var item in newCountdown)
+            {
                 countdown[item.Key] -= 0.1f;
-                if (item.Value <= 0)
+                if (countdown[item.Key] <= 0)
                 {
                     item.Key();
                     countdown.Remove(item.Key);
@@ -49,15 +60,22 @@ namespace YAAL.Assets.Scripts
                 }
             }
 
+
             foreach (var item in boxCountdown)
             {
+                newBoxCountdown.Add(item.Key, item.Value);
+            }
+
+
+            foreach (var item in newBoxCountdown)
+            {
                 boxCountdown[item.Key] -= 0.1f;
-                if (item.Value <= 0)
+                if (boxCountdown[item.Key] <= 0)
                 {
                     boxOrigin[item.Key].Trigger(item.Key);
-                    boxCountdown.Remove(item.Key);
                     boxOrigin.Remove(item.Key);
-                    if(boxCountdown.Count == 0)
+                    boxCountdown.Remove(item.Key);
+                    if (boxCountdown.Count == 0)
                     {
                         isDone = true;
                         DebounceCompleted?.Invoke();

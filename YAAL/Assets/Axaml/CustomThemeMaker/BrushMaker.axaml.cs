@@ -205,7 +205,7 @@ public partial class BrushMaker : Window
         StretchMode.SelectedItem = image.stretch;
         FlipMode.SelectedItem = image.flipSetting;
         TileMode.SelectedItem = image.tilemode;
-        OpacitySlider.Value = image.opacity;
+        OpacitySlider.Value = image.opacity * 100;
 
         StretchMode.SelectionChanged += (_, _) =>
         {
@@ -236,7 +236,7 @@ public partial class BrushMaker : Window
 
         OpacitySlider.ValueChanged += (_, _) =>
         {
-            image.opacity = OpacitySlider.Value;
+            image.opacity = OpacitySlider.Value / 100;
             RaiseEvent(BrushEvents.Opacity);
         };
 
