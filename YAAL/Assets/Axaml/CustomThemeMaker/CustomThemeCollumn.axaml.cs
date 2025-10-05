@@ -69,7 +69,7 @@ public partial class CustomThemeCollumn : UserControl
         brush.MoveDown += () =>
         {
             int index = CommandContainer.Children.IndexOf(brush);
-            if (index < CommandContainer.Children.Count)
+            if (index < CommandContainer.Children.Count - 1)
             {
                 CommandContainer.Children.Remove(brush);
                 CommandContainer.Children.Insert(index + 1, brush);

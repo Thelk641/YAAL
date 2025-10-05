@@ -2,6 +2,7 @@
 using Avalonia.Controls;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Media.Imaging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -125,13 +126,13 @@ namespace YAAL
         }
 
         public abstract Border GetRawLayer();
-        public bool widthAbsolute = true;
-        public double width = 10;
-        public bool heightAbsolute = true;
-        public double height = 10;
-        public bool xOffsetAbsolute = true;
+        public bool widthAbsolute = false;
+        public double width = 100;
+        public bool heightAbsolute = false;
+        public double height = 100;
+        public bool xOffsetAbsolute = false;
         public double xOffset = 0;
-        public bool yOffsetAbsolute = true;
+        public bool yOffsetAbsolute = false;
         public double yOffset = 0;
         public string center = "Default";
 
@@ -149,27 +150,75 @@ namespace YAAL
                 slotSize = WindowManager.GetSlotSize();
             }
 
+            if (width != 0)
+            {
+                if (widthAbsolute)
+                {
+                    toCenter.Width = width;
+                }
+                else
+                {
+                    toCenter.Width = slotSize.X * width / 100;
+                }
+            }
+
+            if (height != 0)
+            {
+                if (heightAbsolute)
+                {
+                    toCenter.Height = height;
+                }
+                else
+                {
+                    toCenter.Height = slotSize.Y * height / 100;
+                }
+            }
+
             toCenter.HorizontalAlignment = HorizontalAlignment.Center;
             toCenter.VerticalAlignment = VerticalAlignment.Center;
 
             TranslateTransform transform = new TranslateTransform();
+            double trueXOffset = xOffset;
+            double trueYOffset = yOffset;
 
-            if (xOffsetAbsolute)
+            if (!xOffsetAbsolute)
             {
-                transform.X = xOffset;
-            } else
-            {
-                transform.X = slotSize.X * xOffset / 200;
+                trueXOffset *= slotSize.X / 100;
             }
 
-            if (yOffsetAbsolute)
+            if (!yOffsetAbsolute)
             {
-                transform.Y = yOffset;
+                trueYOffset *= slotSize.Y / 100;
             }
-            else
+
+            if (this is Cached_ImageLayer cache && cache.stretch == Stretch.None && toCenter.Background is ImageBrush image)
             {
-                transform.Y = slotSize.Y * yOffset / 200;
+                double dx = image.DestinationRect.Rect.Width / 4;
+                double dy = image.DestinationRect.Rect.Height / 4;
+                switch (image.AlignmentX)
+                {
+                    case AlignmentX.Left:
+                        trueXOffset += image.DestinationRect.Rect.Width / 4;
+                        break;
+                    case AlignmentX.Right:
+                        trueXOffset -= image.DestinationRect.Rect.Width / 4;
+                        break;
+                }
+                
+
+                switch (image.AlignmentY)
+                {
+                    case AlignmentY.Top:
+                        trueYOffset += image.DestinationRect.Rect.Height / 4;
+                        break;
+                    case AlignmentY.Bottom:
+                        trueYOffset += image.DestinationRect.Rect.Height / 4;
+                        break;
+                }
             }
+
+            transform.X = trueXOffset;
+            transform.Y = trueYOffset;
 
             TransformGroup group = new TransformGroup();
 
@@ -185,31 +234,6 @@ namespace YAAL
                 group.Children.Add(transform);
                 toCenter.RenderTransform = group;
             }
-
-            if (width != 0)
-            {
-                if (widthAbsolute)
-                {
-                    toCenter.Width = width;
-                }
-                else
-                {
-                    toCenter.Width = slotSize.X * width / 100;
-                }
-            }
-
-            if(height != 0)
-            {
-                if (heightAbsolute)
-                {
-                    toCenter.Height = height;
-                    Debug.WriteLine("IsForeground : " + isForeground + " / slotSize : " + slotSize + " / height : " + height + " / mathed : " + toCenter.Height);
-                } else
-                {
-                    toCenter.Height = slotSize.Y * height / 100;
-                    Debug.WriteLine("IsForeground : " + isForeground + " / slotSize : " + slotSize + " / height : " + height + " / mathed : " + toCenter.Height);
-                }
-            }
             
         }
     }
@@ -221,22 +245,48 @@ namespace YAAL
         public TileMode tilemode;
         public double opacity = 1;
         public FlipSettings flipSetting;
-        public int imageWidth = 0;
-        public int imageHeight = 0;
+        public float imageWidth = 100;
+        public float imageHeight = 100;
         public bool absoluteImageWidth;
         public bool absoluteImageHeight;
 
         public override Border GetRawLayer()
         {
+            float trueWidth = imageWidth;
+            float trueHeight = imageHeight;
+
+            Vector2 slotSize;
+
+            if (isForeground)
+            {
+                slotSize = WindowManager.GetSlotForegroundSize();
+            }
+            else
+            {
+                slotSize = WindowManager.GetSlotSize();
+            }
+
+            if (!absoluteImageHeight)
+            {
+                trueHeight = (int)Math.Round(trueHeight * slotSize.Y / 100);
+            }
+
+            if (!absoluteImageWidth)
+            {
+                trueWidth = (int)Math.Round(trueWidth * slotSize.X / 100);
+            }
+
+
+
             Border output = new Border();
             output.SetValue(AutoTheme.AutoThemeProperty!, null);
             ImageBrush brush = new ImageBrush();
-            brush.Source = ThemeManager.GetImage(imageSource, imageWidth, imageHeight);
+            brush.Source = ThemeManager.GetImage(imageSource, (int)trueWidth, (int)trueHeight);
             brush.Stretch = stretch;
             brush.TileMode = tilemode;
             brush.Opacity = opacity;
             
-            brush.DestinationRect = new RelativeRect(0, 0, imageWidth, imageHeight, RelativeUnit.Absolute);
+            brush.DestinationRect = new RelativeRect(0, 0, (int)trueWidth, (int)trueHeight, RelativeUnit.Absolute);
 
             if(tilemode == TileMode.None)
             {
@@ -248,7 +298,7 @@ namespace YAAL
                 brush.AlignmentY = AlignmentY.Top;
             }
 
-                ScaleTransform scale = new ScaleTransform { ScaleX = 1, ScaleY = 1 };
+            ScaleTransform scale = new ScaleTransform { ScaleX = 1, ScaleY = 1 };
 
             if (flipSetting == FlipSettings.FlipX || flipSetting == FlipSettings.FlipXY) 
             {

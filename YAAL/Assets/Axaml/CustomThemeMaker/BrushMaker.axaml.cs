@@ -10,8 +10,10 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Numerics;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using YAAL.Assets.Script.Cache;
@@ -70,7 +72,7 @@ public partial class BrushMaker : Window
             Debouncer.Debounce(
                 () =>
                 {
-                    if(double.TryParse(CenterOffsetX.Text, out double newDouble) && newDouble != brush.xOffset)
+                    if(CenterOffsetX.Text != null && double.TryParse(CenterOffsetX.Text.Replace(",", "."), out double newDouble) && newDouble != brush.xOffset)
                     {
                         brush.xOffset = newDouble;
                         RaiseEvent(XOffset);
@@ -84,7 +86,7 @@ public partial class BrushMaker : Window
             Debouncer.Debounce(
                 () =>
                 {
-                    if (double.TryParse(CenterOffsetY.Text, out double newDouble) && newDouble != brush.yOffset)
+                    if (CenterOffsetY.Text != null && double.TryParse(CenterOffsetY.Text.Replace(",", "."), out double newDouble) && newDouble != brush.yOffset)
                     {
                         brush.yOffset = newDouble;
                         RaiseEvent(YOffset);
@@ -98,7 +100,10 @@ public partial class BrushMaker : Window
             Debouncer.Debounce(
                 () =>
                 {
-                    if (double.TryParse(BrushWidth.Text, out double newDouble) && newDouble != brush.width)
+                    string toParse = BrushWidth.Text.Replace(",", ".");
+                    double parsed = 0;
+                    double.TryParse(toParse, CultureInfo.InvariantCulture.NumberFormat, out parsed);
+                    if (BrushWidth.Text != null && double.TryParse(BrushWidth.Text.Replace(",", "."), CultureInfo.InvariantCulture.NumberFormat, out double newDouble) && newDouble != brush.width)
                     {
                         brush.width = newDouble;
                         RaiseEvent(BrushEvents.Width);
@@ -112,7 +117,7 @@ public partial class BrushMaker : Window
             Debouncer.Debounce(
                 () =>
                 {
-                    if (double.TryParse(BrushHeight.Text, out double newDouble) && newDouble != brush.height)
+                    if (BrushHeight.Text != null && double.TryParse(BrushHeight.Text.Replace(",", "."), CultureInfo.InvariantCulture.NumberFormat, out double newDouble) && newDouble != brush.height)
                     {
                         brush.height = newDouble;
                         RaiseEvent(BrushEvents.Height);
@@ -245,6 +250,10 @@ public partial class BrushMaker : Window
             Debouncer.Debounce(
                 () =>
                     {
+                        if(ImageSource.Text == null)
+                        {
+                            return;
+                        }
                         string newPath = ThemeManager.AddNewImage(ImageSource.Text);
                         if(newPath != image.imageSource)
                         {
@@ -266,7 +275,7 @@ public partial class BrushMaker : Window
             Debouncer.Debounce(
                 () =>
                 {
-                    if(int.TryParse(ImageHeight.Text, out int rawImageHeight) && rawImageHeight != image.imageHeight)
+                if (ImageHeight.Text != null && float.TryParse(ImageHeight.Text.Replace(",","."), CultureInfo.InvariantCulture.NumberFormat, out float rawImageHeight) && rawImageHeight != image.imageHeight)
                     {
                         image.imageHeight = rawImageHeight;
                         RaiseEvent(BrushEvents.ImageHeight);
@@ -284,7 +293,7 @@ public partial class BrushMaker : Window
             Debouncer.Debounce(
                 () =>
                 {
-                    if (int.TryParse(ImageWidth.Text, out int rawImageWidth) && rawImageWidth != image.imageWidth)
+                    if(ImageWidth.Text != null &&float.TryParse(ImageWidth.Text.Replace(",", "."), CultureInfo.InvariantCulture.NumberFormat, out float rawImageWidth) && rawImageWidth != image.imageWidth)
                     {
                         image.imageWidth = rawImageWidth;
                         RaiseEvent(BrushEvents.ImageWidth);
@@ -450,7 +459,7 @@ public partial class BrushMaker : Window
             baseValue = slotSize.X;
         } else
         {
-            baseValue = slotSize.Y + 4;
+            baseValue = slotSize.Y;
         }
 
         if (toAbsolute)
@@ -465,6 +474,7 @@ public partial class BrushMaker : Window
         }
 
         toModify.Text = Math.Round(newValue, 2).ToString();
+        
     }
 
     public void RaiseEvent(BrushEvents eventName)

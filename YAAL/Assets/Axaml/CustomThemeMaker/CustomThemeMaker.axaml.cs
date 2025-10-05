@@ -236,12 +236,13 @@ public partial class CustomThemeMaker : Window
             bottom = newBottom;
         }
 
-        this.Height = (baseHeight + top * 3 + bottom * 3) * App.Settings.Zoom;
-        this.Width = (baseWidth + top * 3 + bottom * 3) * App.Settings.Zoom;
+        double newHeight = (baseHeight + top * 3 + bottom * 3) * App.Settings.Zoom;
+        WindowManager.ChangeHeight(this, (int)Math.Round(newHeight));
 
         PlayMode.Resize(top, bottom);
         EditMode.Resize(top, bottom);
         BackgroundExample.Height = PlayMode.Height;
+        ExampleEmptySpace.RowDefinitions = new RowDefinitions(newTop + ",*," + newBottom);
     }
 
     public void ComputeOffSets()

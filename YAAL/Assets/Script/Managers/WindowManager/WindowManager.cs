@@ -34,8 +34,8 @@ namespace YAAL
         public static Vector2 GetSlotForegroundSize()
         {
             Vector2 baseSize = GetSlotSize();
-            float mathedX = (float)(baseSize.X - (38 * App.Settings.Zoom));
-            float mathedY = (float)(((baseSize.Y - (8 * App.Settings.Zoom)) / 2) - 1);
+            float mathedX = (float)(baseSize.X - (38 * App.Settings.Zoom)); //38 is the spacing for the "update" button
+            float mathedY = (float)(baseSize.Y / 2);
             return new Vector2(mathedX, mathedY);
         }
 

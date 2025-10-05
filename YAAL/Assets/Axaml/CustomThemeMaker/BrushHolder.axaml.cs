@@ -61,10 +61,12 @@ public partial class BrushHolder : UserControl
             {
                 Setup(type, maker.brush);
                 BrushUpdated?.Invoke(this, property);
-                // Preview info : width = height * slotSize.Height / slotSize.Width
+            };
+            (this.GetVisualRoot() as Window)!.Closing += (_, _) => {
+                Debug.WriteLine("FFS");
+                maker.Close();
             };
         };
-        //TODO : Update Preview
     }
 
     public void Setup(string type, Cached_Layer newBrush)

@@ -344,17 +344,18 @@ namespace YAAL
                     size = new Vector2(width, height);
                 } else
                 {
-                    float width = (float)layer.height;
-                    if (!layer.heightAbsolute)
-                    {
-                        width *= temporarySize.X;
-                    }
-                    float height = (float)layer.width;
+                    float width = (float)layer.width;
                     if (!layer.widthAbsolute)
                     {
-                        height *= temporarySize.Y;
+                        width *= temporarySize.X / 100;
                     }
-                    size = new Vector2(width, height);
+                    float height = (float)layer.height;
+                    if (!layer.heightAbsolute)
+                    {
+                        height *= temporarySize.Y / 100;
+                    }
+                    
+                    size = new Vector2((float)Math.Round(width), (float)Math.Round(height));
                 }
                 sizes[border] = size;
             }

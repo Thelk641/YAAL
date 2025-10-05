@@ -41,13 +41,14 @@ public partial class ThemeHolder : Window
         if (isForeground)
         {
             baseSize = WindowManager.GetSlotForegroundSize();
+            baseSize = new Vector2(baseSize.X, baseSize.Y - (int)Math.Round(4 * App.Settings.Zoom)); // shorter height to let theme bleed into the separation layer
         } else
         {
             baseSize = WindowManager.GetSlotSize();
             baseSize.Y += newTop + newBottom;
         }
 
-        this.Height = baseSize.Y;
+        this.Height = baseSize.Y; 
         this.Width = baseSize.X;
     }
 }
