@@ -42,6 +42,7 @@ public partial class BrushHolder : UserControl
     public string type;
     public Cached_ImageLayer imageBrush;
     public Cached_ColorLayer colorBrush;
+    public string themeName;
 
     public BrushHolder()
     {

@@ -36,18 +36,20 @@ public partial class CustomThemeCollumn : UserControl
 
         AddColor.Click += (_, _) =>
         {
-            AddNewBrush("Color");
+            AddNewBrush("Color", maker.Selector.SelectedItem.ToString());
         };
 
         AddImage.Click += (_, _) =>
         {
-            AddNewBrush("Image");
+            AddNewBrush("Image", maker.Selector.SelectedItem.ToString());
         };
     }
 
-    private void AddNewBrush(string type)
+    private void AddNewBrush(string type, string newThemeName)
     {
+        
         BrushHolder brush = new BrushHolder();
+        brush.themeName = newThemeName;
         brush.isForeground = (id == ThemeSettings.foregroundColor);
         CommandContainer.Children.Add(brush);
         window.AddLayer(id, type, brush);

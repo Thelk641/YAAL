@@ -46,14 +46,51 @@ namespace YAAL
             themes["General Theme"] = DefaultManager.theme;
         }
 
-        public static void ApplyTheme(Control container, string theme = "")
+        public static void SaveTheme(Cache_CustomTheme cache)
         {
-            if (theme == "")
+            IOManager.SaveCustomTheme(cache);
+        }
+
+        public static Cache_CustomTheme LoadTheme(string name)
+        {
+            if (themes.TryGetValue(name, out var result))
             {
-                theme = defaultTheme;
+                return result;
             }
+
+            Cache_CustomTheme? output = IOManager.LoadCustomTheme(name);
+            if (output != null)
+            {
+                themes[name] = output;
+                return output;
+            }
+
+            if (themes.TryGetValue(defaultTheme, out var defaultResult))
+            {
+                return defaultResult;
+            }
+
+            output = IOManager.LoadCustomTheme(defaultTheme);
+            if (output != null)
+            {
+                themes[defaultTheme] = output;
+                return output;
+            }
+
+
+            ErrorManager.ThrowError(
+                "ThemeManager - Couldn't find themes",
+                "Couldn't find theme " + name + " nor default theme named " + defaultTheme + ". Did you manually delete or rename them maybe ?"
+                );
+
+            return DefaultManager.theme;
+        }
+
+
+        public static void ApplyTheme(Control container, string theme)
+        {
             ThemeSettings category = ThemeCategory.GetThemeCategory(container);
-            Cache_CustomTheme cache = GetTheme(theme);
+            Cache_CustomTheme cache = LoadTheme(theme);
 
             if(container is Button button)
             {
@@ -73,38 +110,17 @@ namespace YAAL
             }
 
 
-            if(container is Panel panel)
+            if(container is Border border)
             {
-                if (themeContainers.ContainsKey(container))
+                Bitmap? fetchBackground = GetBackgroundImage(theme);
+                if(fetchBackground is Bitmap newBackground)
                 {
-                    panel.Children.Remove(themeContainers[container]);
-                    foreach (var item in themedControl)
-                    {
-                        if (item.Value.Contains(container))
-                        {
-                            item.Value.Remove(container);
-                        }
-                    }
+                    ImageBrush backgroundBrush = new ImageBrush(newBackground);
+                    backgroundBrush.AlignmentX = AlignmentX.Center;
+                    backgroundBrush.AlignmentY = AlignmentY.Center;
+                    backgroundBrush.Stretch = Stretch.Fill;
+                    border.Background = backgroundBrush;
                 }
-
-                Grid layer0 = null;
-
-                if(category == ThemeSettings.backgroundColor)
-                {
-                    layer0 = cache.background.BackgroundHolder;
-                } else
-                {
-                    layer0 = cache.foreground.BackgroundHolder;
-                }
-
-                panel.Children.Add(layer0);
-                themeContainers[container] = layer0;
-                if (!themedControl.ContainsKey(theme))
-                {
-                    themedControl[theme] = new List<Control>();
-                }
-                themedControl[theme].Add(container);
-                return;
             }
 
             ErrorManager.ThrowError(
@@ -113,40 +129,40 @@ namespace YAAL
                 );
         }
 
-        public static Cache_CustomTheme GetTheme(string name)
+        public static Bitmap? GetBackgroundImage(string themeName)
         {
-            if(themes.TryGetValue(name, out var result))
+            if (!themes.ContainsKey(themeName))
             {
-                return result;
+                return null;
             }
 
-            Cache_CustomTheme? output = IOManager.GetCustomTheme(name);
-            if(output != null)
+            // Have we tried to access this recently ?
+            if (images.TryGetValue(themeName, out var oldRef) && oldRef.TryGetTarget(out var oldRender))
             {
-                themes[name] = output;
+                Vector2 slotSize = WindowManager.GetSlotSize();
+                if(oldRender.Size.Width == slotSize.X && oldRender.Size.Height == slotSize.Y)
+                {
+                    return oldRender;
+                }
+            }
+
+            // Have we already rendered this theme at these dimensions ?
+            Bitmap? preRender = IOManager.GetRender(themeName);
+            if(preRender is Bitmap toOutput)
+            {
+                return toOutput;
+            }
+
+            // Let's render it at these new dimensions !
+            RenderTheme(themeName);
+            if(images.TryGetValue(themeName, out var weakRef) && weakRef.TryGetTarget(out var output))
+            {
                 return output;
             }
 
-            if(themes.TryGetValue(defaultTheme, out var defaultResult))
-            {
-                return defaultResult;
-            }
-
-            output = IOManager.GetCustomTheme(defaultTheme);
-            if (output != null)
-            {
-                themes[defaultTheme] = output;
-                return output;
-            }
-
-
-            ErrorManager.ThrowError(
-                "ThemeManager - Couldn't find themes",
-                "Couldn't find theme " + name + " nor default theme named " + defaultTheme + ". Did you manually delete or rename them maybe ?"
-                );
-
-            return DefaultManager.theme;
-        } 
+            // Something went wrong, nope out of there
+            return null;
+        }
 
         public static Cache_CustomTheme GetDefaultTheme()
         {
@@ -155,7 +171,7 @@ namespace YAAL
                 return defaultResult;
             }
 
-            Cache_CustomTheme? output = IOManager.GetCustomTheme(defaultTheme);
+            Cache_CustomTheme? output = IOManager.LoadCustomTheme(defaultTheme);
             if (output != null)
             {
                 themes[defaultTheme] = output;
@@ -204,9 +220,9 @@ namespace YAAL
             return null;
         }
 
-        public static string AddNewImage(string path)
+        public static string AddNewImage(string path, string themeName)
         {
-            string output = IOManager.CopyImageToDefaultFolder(path);
+            string output = IOManager.CopyImageToDefaultFolder(path, themeName);
             if(output != "")
             {
                 return output;
@@ -240,6 +256,7 @@ namespace YAAL
 
             switch (category)
             {
+                case ThemeSettings.rendered:
                 case ThemeSettings.backgroundColor:
                     defaultSize = WindowManager.GetSlotSize();
                     break;
@@ -271,9 +288,59 @@ namespace YAAL
             return renderer;
         }
 
+        public async static void RenderTheme(string themeName)
+        {
+            if (!themes.ContainsKey(themeName))
+            {
+                ErrorManager.ThrowError(
+                    "ThemeManager - Couldn't find a theme",
+                    "Tried to render theme " + themeName + " but it doesn't appear to exist."
+                    );
+                return;
+            }
+
+
+            if(slotBackground != null)
+            {
+                slotBackground.Close();
+                slotBackground = null;
+            }
+
+            if(slotForeground != null)
+            {
+                slotForeground.Close();
+                slotForeground = null;
+            }
+
+            Cache_CustomTheme cache = themes[themeName];
+            Bitmap background = await UpdateTheme(cache.background, themeName, ThemeSettings.backgroundColor, false);
+            Bitmap foreground = await UpdateTheme(cache.foreground, themeName, ThemeSettings.foregroundColor, false);
+
+            EmptySlot holder = new EmptySlot();
+            Vector2 slotSize = WindowManager.GetSlotSize();
+            holder.Width = slotSize.X;
+            holder.Height = slotSize.Y;
+
+            ImageBrush backgroundBrush = new ImageBrush(background);
+            backgroundBrush.AlignmentX = AlignmentX.Center;
+            backgroundBrush.AlignmentY = AlignmentY.Center;
+            backgroundBrush.Stretch = Stretch.Fill;
+
+            ImageBrush foregroundBrush = new ImageBrush(foreground);
+            foregroundBrush.AlignmentX = AlignmentX.Center;
+            foregroundBrush.AlignmentY = AlignmentY.Center;
+            foregroundBrush.Stretch = Stretch.Fill;
+
+            holder.Back.Background = backgroundBrush;
+            holder.Foreground.Background = foregroundBrush;
+
+            Bitmap output = Render(holder.Back, themeName, ThemeSettings.rendered, true);
+            images[themeName] = new WeakReference<Bitmap>(output);
+        }
+
         public async static Task<Bitmap> UpdateTheme(Cache_LayeredBrush brush, string themeName, ThemeSettings setting, bool save = true)
         {
-            Cache_CustomTheme theme = GetTheme(themeName);
+            Cache_CustomTheme theme = LoadTheme(themeName);
             Canvas holder;
             Canvas container;
             Vector2 temporarySize;
@@ -365,7 +432,7 @@ namespace YAAL
                 await SetCenter(item.Key, item.Value, theme.topOffset, container, setting, sizes[item.Key]);
             }
 
-            Bitmap output = Render(holder, themeName, setting, true);
+            Bitmap output = Render(holder, themeName, setting, save);
             return output;
         }
 

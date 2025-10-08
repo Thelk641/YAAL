@@ -88,7 +88,7 @@ public partial class SlotHolder : UserControl
 
         if (currentLauncher != null && currentLauncher.settings.TryGetValue(LauncherSettings.customTheme, out string themeName))
         {
-            customTheme = ThemeManager.GetTheme(themeName);
+            customTheme = ThemeManager.LoadTheme(themeName);
         } else
         {
             customTheme = ThemeManager.GetDefaultTheme();

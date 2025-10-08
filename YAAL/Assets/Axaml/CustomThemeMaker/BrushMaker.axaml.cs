@@ -30,6 +30,7 @@ public partial class BrushMaker : Window
     public Cached_Layer brush;
     public event PropertyChangedEventHandler? SettingChanged;
     public bool isForeground;
+    public string themeName;
     public BrushMaker()
     {
         InitializeComponent();
@@ -254,11 +255,11 @@ public partial class BrushMaker : Window
                         {
                             return;
                         }
-                        string newPath = ThemeManager.AddNewImage(ImageSource.Text);
+                        string newPath = ThemeManager.AddNewImage(ImageSource.Text, themeName);
                         if(newPath != image.imageSource)
                         {
                             ImageSource.Text = newPath;
-                            image.imageSource = newPath;
+                            image.imageSource = IOManager.ProcessLocalPath(newPath);
                             RaiseEvent(BrushEvents.ImageSource);
                         }
                     },

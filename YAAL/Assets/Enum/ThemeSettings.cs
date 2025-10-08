@@ -14,6 +14,7 @@ namespace YAAL
         foregroundColor,
         dropdownColor,
         buttonColor,
-        transparent
+        transparent,
+        rendered
     };
 }
