@@ -36,23 +36,28 @@ public partial class CustomThemeCollumn : UserControl
 
         AddColor.Click += (_, _) =>
         {
-            AddNewBrush("Color", maker.Selector.SelectedItem.ToString());
+            AddNewBrush(BrushType.Color, maker.Selector.SelectedItem.ToString());
         };
 
         AddImage.Click += (_, _) =>
         {
-            AddNewBrush("Image", maker.Selector.SelectedItem.ToString());
+            AddNewBrush(BrushType.Image, maker.Selector.SelectedItem.ToString());
         };
     }
 
-    private void AddNewBrush(string type, string newThemeName)
+    private BrushHolder AddNewBrush(BrushType type, string newThemeName)
+    {
+        return AddNewBrush(type, newThemeName, null);
+    }
+
+    private BrushHolder AddNewBrush(BrushType type, string newThemeName, Cached_Layer? existingLayer)
     {
         
         BrushHolder brush = new BrushHolder();
         brush.themeName = newThemeName;
         brush.isForeground = (id == ThemeSettings.foregroundColor);
         CommandContainer.Children.Add(brush);
-        window.AddLayer(id, type, brush);
+        window.AddLayer(id, type, brush, existingLayer);
         brush.AskForRemoval += () =>
         {
             CommandContainer.Children.Remove(brush);
@@ -77,6 +82,8 @@ public partial class CustomThemeCollumn : UserControl
                 CommandContainer.Children.Insert(index + 1, brush);
             }
         };
+
+        return brush;
     }
 
     public void SetCategory(ThemeSettings newId)
@@ -104,5 +111,19 @@ public partial class CustomThemeCollumn : UserControl
             }
         }
         return brush;
+    }
+
+    public void LoadBrush(Cache_LayeredBrush cache, string themeName)
+    {
+        foreach (var item in cache.GetLayers())
+        {
+            var brush = AddNewBrush(item.brushType, themeName, item);
+            brush.Setup(item);
+        }
+    }
+
+    public void EmptyCollumn()
+    {
+        CommandContainer.Children.Clear();
     }
 }

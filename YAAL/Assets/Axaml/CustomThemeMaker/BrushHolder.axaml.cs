@@ -39,7 +39,7 @@ public partial class BrushHolder : UserControl
     public event PropertyChangedEventHandler? BrushUpdated;
 
     public bool isForeground = false;
-    public string type;
+    public BrushType type;
     public Cached_ImageLayer imageBrush;
     public Cached_ColorLayer colorBrush;
     public string themeName;
@@ -60,20 +60,19 @@ public partial class BrushHolder : UserControl
             maker.IsVisible = true;
             maker.SettingChanged += (_, property) =>
             {
-                Setup(type, maker.brush);
+                Setup(maker.brush);
                 BrushUpdated?.Invoke(this, property);
             };
             (this.GetVisualRoot() as Window)!.Closing += (_, _) => {
-                Debug.WriteLine("FFS");
                 maker.Close();
             };
         };
     }
 
-    public void Setup(string type, Cached_Layer newBrush)
+    public void Setup(Cached_Layer newBrush)
     {
-        this.type = type;
-        BrushType.Text = type;
+        this.type = newBrush.brushType;
+        BrushType.Text = type.ToString();
         BrushOptions.Background = new SolidColorBrush(Colors.Transparent);
         Holder.Background = newBrush.GetLayer().Background;
         if(newBrush is Cached_ImageLayer image)
@@ -85,10 +84,10 @@ public partial class BrushHolder : UserControl
         }
     }
 
-    public void Setup(string type)
+    public void Setup(BrushType type)
     {
         Cached_Layer layer;
-        if(type == "Color")
+        if(type == YAAL.BrushType.Color)
         {
             layer = new Cached_ColorLayer();
         } else
@@ -96,7 +95,7 @@ public partial class BrushHolder : UserControl
             layer = new Cached_ImageLayer();
         }
         layer.isForeground = this.isForeground;
-        Setup(type, layer);
+        Setup(layer);
     }
 
 }

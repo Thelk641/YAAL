@@ -23,6 +23,7 @@ namespace YAAL
         Percent,
         Pin,
         Refresh,
+        Text,
         None,
     };
 

@@ -1,5 +1,4 @@
 {
-  "name": "Default Theme",
   "buttonColor": {
     "A": 255,
     "R": 25,
@@ -7,6 +6,7 @@
     "B": 25
   },
   "buttonOpacity": 1.0,
+  "name": "Default Theme",
   "topOffset": 0,
   "bottomOffset": 0,
   "background": {
@@ -18,8 +18,16 @@
           "G": 0,
           "B": 0
         },
-        "opacity": 1.0,
-        "IsTransparent": false,
+        "isForeground": false,
+        "widthAbsolute": false,
+        "width": 100.0,
+        "heightAbsolute": false,
+        "height": 100.0,
+        "xOffsetAbsolute": false,
+        "xOffset": 0.0,
+        "yOffsetAbsolute": false,
+        "yOffset": 0.0,
+        "center": "Default",
         "brushType": "Color"
       }
     ]
@@ -33,11 +41,18 @@
           "G": 79,
           "B": 79
         },
-        "opacity": 1.0,
-        "IsTransparent": false,
+        "isForeground": false,
+        "widthAbsolute": false,
+        "width": 100.0,
+        "heightAbsolute": false,
+        "height": 100.0,
+        "xOffsetAbsolute": false,
+        "xOffset": 0.0,
+        "yOffsetAbsolute": false,
+        "yOffset": 0.0,
+        "center": "Tracker",
         "brushType": "Color"
       }
     ]
-  },
-  "transparentButton": false
+  }
 }

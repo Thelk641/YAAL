@@ -10,6 +10,7 @@ using Avalonia.VisualTree;
 using DynamicData;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -26,7 +27,7 @@ namespace YAAL;
 public partial class CustomThemeMaker : Window
 {
     private string previousSelection = "General Theme";
-    private Cache_CustomTheme currentTheme = new Cache_CustomTheme();
+    private Cache_CustomTheme currentTheme;
     private Window backgroundWindow;
     private ThemeSlot backgroundSlot;
     private Window foregroundWindow;
@@ -34,15 +35,10 @@ public partial class CustomThemeMaker : Window
     private int baseHeight = 742;
     private int baseWidth = 666;
     public Dictionary<BrushHolder, Border> layers = new Dictionary<BrushHolder, Border>();
+    private bool loading = false;
     public CustomThemeMaker()
     {
         InitializeComponent();
-
-        // DEBUG
-        //AddARedSquare("Start Tool");
-        currentTheme.name = "Default Theme";
-        // END OF DEBUG
-
 
         BackgroundExample.SetValue(AutoTheme.AutoThemeProperty, null);
         BackgroundExample.Background = new SolidColorBrush(Colors.Transparent);
@@ -55,36 +51,32 @@ public partial class CustomThemeMaker : Window
         Collumn_Foreground.SetCategory(ThemeSettings.foregroundColor);
         Collumn_Foreground.SetWindow(this);
 
-        List<Cache_DisplayTheme> list = new List<Cache_DisplayTheme>();
+        ObservableCollection<Cache_CustomTheme> list = new ObservableCollection<Cache_CustomTheme>();
 
         List<string> themeList = IOManager.GetThemeList();
 
         if (themeList.Count == 0)
         {
-            Cache_DisplayTheme defaultTheme = new Cache_DisplayTheme();
-            defaultTheme.SetTheme("Default Theme", DefaultManager.theme);
-            list.Add(defaultTheme);
-        }
-
-        foreach (var item in IOManager.GetThemeList())
+            list.Add(DefaultManager.theme);
+        } else
         {
-            Cache_DisplayTheme toAdd = new Cache_DisplayTheme();
-            toAdd.SetTheme(item, IOManager.GetTheme(item));
-            list.Add(toAdd);
-        }
+            foreach (var item in themeList)
+            {
+                list.Add(ThemeManager.LoadTheme(item));
+            }
+        } 
 
         Selector.ItemsSource = list;
         Selector.SelectedIndex = 0;
 
         Selector.SelectionChanged += (_, _) =>
         {
-            SaveTheme();
             LoadTheme();
         };
 
         SaveButton.Click += (_, _) =>
         {
-            SaveTheme((Selector.SelectedItem as Cache_DisplayTheme)!.launcherName);
+            SaveTheme();
         };
 
         OffsetTop.TextChanged += (_, _) =>
@@ -96,22 +88,28 @@ public partial class CustomThemeMaker : Window
         {
             Debouncer.Debounce(Resize, 1);
         };
-        //LoadTheme();
+
+
+        LoadTheme();
     }
 
-    public void AddLayer(ThemeSettings target, string layerType, BrushHolder brush)
+    public void AddLayer(ThemeSettings target, BrushType layerType, BrushHolder brush, Cached_Layer? layer)
     {
-        Cached_Layer layer;
-
-        if (layerType == "Color")
+        if (layerType == BrushType.Color)
         {
-            layer = new Cached_ColorLayer();
-            brush.Setup("Color");
+            if(layer == null)
+            {
+                layer = new Cached_ColorLayer();
+            }
+            brush.Setup(BrushType.Color);
         }
         else
         {
-            layer = new Cached_ImageLayer();
-            brush.Setup("Image");
+            if (layer == null)
+            {
+                layer = new Cached_ImageLayer();
+            }
+            brush.Setup(BrushType.Image);
         }
 
 
@@ -129,7 +127,11 @@ public partial class CustomThemeMaker : Window
                 return;
         }
 
-        layeredBrush.AddNewBrush(layer);
+        if (!loading)
+        {
+            layeredBrush.AddNewBrush(layer);
+        }
+        
 
         brush.BrushUpdated += (_, property) =>
         {
@@ -161,15 +163,99 @@ public partial class CustomThemeMaker : Window
         };
     }
 
-    public void SaveTheme(string savedName = "")
+    public void SaveTheme()
     {
-        
+        if (loading)
+        {
+            return;
+        }
+        Cache_CustomTheme toSave = new Cache_CustomTheme();
+        toSave.name = currentTheme.name;
+        toSave.background = Collumn_Background.GetBrush();
+        toSave.foreground = Collumn_Foreground.GetBrush();
+        if(int.TryParse(OffsetTop.Text, out int top))
+        {
+            toSave.topOffset = top;
+        } else
+        {
+            toSave.topOffset = 0;
+        }
+        if (int.TryParse(OffsetBottom.Text, out int bottom))
+        {
+            toSave.bottomOffset = bottom;
+        }
+        else
+        {
+            toSave.bottomOffset = 0;
+        }
+        if(ButtonColor.Background is SolidColorBrush solid)
+        {
+            toSave.buttonBackground = solid;
+        }
+
+        ThemeManager.SaveTheme(toSave);
+
+        var list = Selector.ItemsSource as ObservableCollection<Cache_CustomTheme>;
+        var display = list.FirstOrDefault(t => t.name == toSave.name);
+        if(display != null)
+        {
+            bool wasSelected = Selector.SelectedItem == display;
+            loading = true;
+            int index = list.IndexOf(display);
+            list.Remove(display);
+            list.Insert(index, toSave);
+            if (wasSelected)
+            {
+                Selector.SelectedItem = toSave;
+            }
+            loading = false;
+        }
     }
 
     public void LoadTheme()
     {
-        // TODO : make this function
-        currentTheme = new Cache_CustomTheme();
+        if (loading)
+        {
+            return;
+        }
+        if(currentTheme != null)
+        {
+            SaveTheme();
+        }
+        if(Selector.SelectedItem is Cache_CustomTheme newSelection)
+        {
+            if(newSelection == currentTheme)
+            {
+                return;
+            }
+            currentTheme = newSelection;
+        } else
+        {
+            return;
+        }
+
+        string themeName = currentTheme.name;
+
+        loading = true;
+
+        Collumn_Background.EmptyCollumn();
+        Collumn_Background.LoadBrush(currentTheme.background, themeName);
+
+        Collumn_Foreground.EmptyCollumn();
+        Collumn_Foreground.LoadBrush(currentTheme.foreground, themeName);
+
+
+        OffsetTop.Text = currentTheme.topOffset.ToString();
+        OffsetBottom.Text = currentTheme.bottomOffset.ToString();
+
+        ButtonColor.Background = currentTheme.buttonBackground;
+
+        loading = false;
+
+        Resize();
+        UpdateDisplay(currentTheme.background, themeName, ThemeSettings.backgroundColor);
+        UpdateDisplay(currentTheme.foreground, themeName, ThemeSettings.foregroundColor);
+        
     }
 
     public void UpdateDisplay(Bitmap newBitmap, ThemeSettings setting)
@@ -213,8 +299,12 @@ public partial class CustomThemeMaker : Window
         }
     }
 
-    public async Task UpdateDisplay(Cache_LayeredBrush layeredBrush, string themeName, ThemeSettings target)
+    public async void UpdateDisplay(Cache_LayeredBrush layeredBrush, string themeName, ThemeSettings target)
     {
+        if (loading)
+        {
+            return;
+        }
         Bitmap? bitmap = await ThemeManager.UpdateTheme(layeredBrush, currentTheme.name, target, false);
         if (bitmap != null)
         {
@@ -224,6 +314,10 @@ public partial class CustomThemeMaker : Window
 
     public void Resize()
     {
+        if (loading)
+        {
+            return;
+        }
         int top = 0;
         int bottom = 0;
 

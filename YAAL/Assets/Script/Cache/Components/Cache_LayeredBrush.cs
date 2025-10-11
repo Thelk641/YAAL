@@ -64,6 +64,10 @@ namespace YAAL
         public void UpdateBrush(Cached_Layer oldBrush, Cached_Layer newBrush)
         {
             int index = _cache.IndexOf(oldBrush);
+            if(index == -1)
+            {
+                Debug.WriteLine(_cache.Contains(oldBrush));
+            }
             _cache.Remove(oldBrush);
             _cache.Insert(index, newBrush);
         }

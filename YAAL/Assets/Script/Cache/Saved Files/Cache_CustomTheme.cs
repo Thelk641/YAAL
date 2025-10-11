@@ -13,23 +13,17 @@ namespace YAAL
 {
     public class Cache_CustomTheme
     {
-        public string name;
+        public string name { get; set; }
         public int topOffset { get; set; } = 0;
         public int bottomOffset { get; set; } = 0;
         public Cache_LayeredBrush background { get; set; } = new Cache_LayeredBrush();
         public Cache_LayeredBrush foreground { get; set; } = new Cache_LayeredBrush();
-
-        public bool transparentButton { get; set; } = false;
 
         [JsonIgnore]
         public SolidColorBrush buttonBackground
         {
             get
             {
-                if (transparentButton)
-                {
-                    return new SolidColorBrush(Colors.Transparent);
-                }
                 return new SolidColorBrush(buttonColor, buttonOpacity);
             }
             set

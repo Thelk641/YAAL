@@ -44,10 +44,15 @@ namespace YAAL
         {
             // TODO : this shouldn't be hardcoded
             themes["General Theme"] = DefaultManager.theme;
+            UpdateCenters();
         }
 
         public static void SaveTheme(Cache_CustomTheme cache)
         {
+            if(cache.name == null || cache.name == "")
+            {
+                return;
+            }
             IOManager.SaveCustomTheme(cache);
         }
 
@@ -476,7 +481,7 @@ namespace YAAL
                 editCenters["Auto/Manual"] = ComputeCenter(themeSlot.FindControl<Button>("AutomaticPatchButton")!, themeSlot);
                 editCenters["Delete"] = ComputeCenter(themeSlot.FindControl<Button>("DeleteSlot")!, themeSlot);
                 root.Close();
-            }
+            }, DispatcherPriority.Render
             );
         }
 
@@ -518,11 +523,11 @@ namespace YAAL
             return output;
         }
 
-        public static Task SetCenter(Control ctrl, string centerName, int topOffset, Canvas container, ThemeSettings setting, Vector2 realSize)
+        public static async Task SetCenter(Control ctrl, string centerName, int topOffset, Canvas container, ThemeSettings setting, Vector2 realSize)
         {
             var tcs = new TaskCompletionSource<object?>(TaskCreationOptions.RunContinuationsAsynchronously);
-
-            Dispatcher.UIThread.Post(() =>
+            
+            await Dispatcher.UIThread.InvokeAsync(() =>
             {
                 Point baseCenter = GetCenter(centerName);
 
@@ -537,11 +542,7 @@ namespace YAAL
                 Point transformedPoint = ComputePoint(new Point(X, Y), container, (ctrl.Parent as Canvas)!);
                 Canvas.SetLeft(ctrl, transformedPoint.X);
                 Canvas.SetTop(ctrl, transformedPoint.Y);
-
-                tcs.SetResult(null);
-            }, DispatcherPriority.Render);
-
-            return tcs.Task;
+            }, DispatcherPriority.Loaded);
         }
 
         public static Point GetCenter(string name)
