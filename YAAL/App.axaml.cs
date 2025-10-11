@@ -35,7 +35,6 @@ public partial class App : Application
             Formatting = Newtonsoft.Json.Formatting.Indented,
             Converters = { new CachedBrushConverter() }
         };
-        ThemeManager.UpdateCenters();
 
         /*if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
