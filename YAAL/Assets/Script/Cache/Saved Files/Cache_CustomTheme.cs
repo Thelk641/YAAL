@@ -33,7 +33,7 @@ namespace YAAL
             }
         }
 
-        public Color buttonColor;
-        public double buttonOpacity;
+        public Color buttonColor = Colors.Transparent;
+        public double buttonOpacity = 1;
     }
 }

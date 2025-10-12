@@ -16,6 +16,7 @@ using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using System.Reflection.Emit;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -45,6 +46,37 @@ namespace YAAL
             // TODO : this shouldn't be hardcoded
             themes["General Theme"] = DefaultManager.theme;
             UpdateCenters();
+        }
+
+        public static Cache_CustomTheme CreateNewTheme()
+        {
+            List<string> themeList = IOManager.GetThemeList();
+
+            string temporaryName = "New Theme";
+            int i = 1;
+            while (themeList.Contains(temporaryName))
+            {
+                temporaryName = "New Theme (" + i + ")";
+                ++i;
+            }
+
+            Cache_CustomTheme cache = new Cache_CustomTheme();
+            cache.name = temporaryName;
+            SaveTheme(cache);
+            return cache;
+        }
+
+        public static void DeleteTheme(string name)
+        {
+            IOManager.DeleteTheme(name);
+        }
+
+        public static string RenameTheme(Cache_CustomTheme cache, string newName)
+        {
+            string trueName = IOManager.RenameTheme(cache.name, newName);
+            cache.name = trueName;
+            SaveTheme(cache);
+            return trueName;
         }
 
         public static void SaveTheme(Cache_CustomTheme cache)

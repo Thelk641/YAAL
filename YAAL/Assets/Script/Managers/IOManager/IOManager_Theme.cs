@@ -81,14 +81,43 @@ namespace YAAL
             SaveCache<Cache_CustomTheme>(path, cache);
         }
 
+        public static void DeleteTheme(string name)
+        {
+            string path = Path.Combine(GetSaveLocation(Themes), name);
+            if (Directory.Exists(path))
+            {
+                SoftDeleteFolder(path);
+            }
+        }
+
+        public static string RenameTheme(string oldName, string newName)
+        {
+            string oldPath = Path.Combine(GetSaveLocation(Themes), oldName);
+            string newPath = Path.Combine(GetSaveLocation(Themes), newName);
+            if (Directory.Exists(oldPath))
+            {
+                string trueName = newName;
+                if (Directory.Exists(newPath)) {
+                    trueName = FindAvailableDirectoryName(GetSaveLocation(Themes), newName);
+                }
+                Directory.Move(oldPath, newPath);
+                return trueName;
+            }
+            return oldPath;
+        }
+
         public static List<string> GetThemeList()
         {
             string path = GetSaveLocation(Themes);
-            return Directory
-                .EnumerateFiles(path)
-                .Where(file => string.Equals(Path.GetExtension(file), ".json", StringComparison.OrdinalIgnoreCase))
-                .Select(file => Path.GetFileNameWithoutExtension(file))
-                .ToList();
+            List<string> output = new List<string>();
+            foreach (var item in Directory.GetDirectories(path))
+            {
+                if(File.Exists(Path.Combine(item, "customTheme.json")))
+                {
+                    output.Add(Path.GetFileName(item));
+                }
+            }
+            return output;
         }
 
         public static string CopyImageToDefaultFolder(string path, string themeName)

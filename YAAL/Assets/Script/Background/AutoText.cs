@@ -11,6 +11,7 @@ using Avalonia.Styling;
 using Avalonia.Svg.Skia;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
+using Metsys.Bson;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
@@ -84,13 +85,8 @@ namespace YAAL
                 return;
             }
 
-
             bool darkMode = !NeedsWhite(ctrl);
 
-            /*if (backgroundColor is ISolidColorBrush solid)
-            {
-                darkMode = !NeedsWhite(solid.Color);
-            }*/
 
             if (ctrl is TextBlock textblock)
             {

@@ -27,7 +27,8 @@ namespace YAAL
         MinimumWorlds,
         Themes,
         Images,
-        Rendered
+        Rendered,
+        Assets,
     };
 
     public static class FileSettingExtensions

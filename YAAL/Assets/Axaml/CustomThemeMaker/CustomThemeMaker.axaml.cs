@@ -51,29 +51,6 @@ public partial class CustomThemeMaker : Window
         Collumn_Foreground.SetCategory(ThemeSettings.foregroundColor);
         Collumn_Foreground.SetWindow(this);
 
-        ObservableCollection<Cache_CustomTheme> list = new ObservableCollection<Cache_CustomTheme>();
-
-        List<string> themeList = IOManager.GetThemeList();
-
-        if (themeList.Count == 0)
-        {
-            list.Add(DefaultManager.theme);
-        } else
-        {
-            foreach (var item in themeList)
-            {
-                list.Add(ThemeManager.LoadTheme(item));
-            }
-        } 
-
-        Selector.ItemsSource = list;
-        Selector.SelectedIndex = 0;
-
-        Selector.SelectionChanged += (_, _) =>
-        {
-            LoadTheme();
-        };
-
         SaveButton.Click += (_, _) =>
         {
             SaveTheme();
@@ -89,7 +66,92 @@ public partial class CustomThemeMaker : Window
             Debouncer.Debounce(Resize, 1);
         };
 
+        NewTheme.Click += (_, _) =>
+        {
+            Cache_CustomTheme newTheme = ThemeManager.CreateNewTheme();
+            DisableEvents();
+            GenerateThemeList();
+            if(Selector.ItemsSource is ObservableCollection<Cache_CustomTheme> list)
+            {
+                foreach (var item in list)
+                {
+                    if(item.name == newTheme.name)
+                    {
+                        Selector.SelectedItem = item;
+                        break;
+                    }
+                }
+            }
+            
+            LoadTheme();
+            EnableEvents();
+        };
 
+        RemoveTheme.Click += async (_, _) =>
+        {
+            ConfirmationWindow confirm = new ConfirmationWindow(currentTheme.name);
+
+            confirm.Closing += (source, args) =>
+            {
+                if (confirm.confirmed)
+                {
+                    DisableEvents();
+                    ThemeManager.DeleteTheme(currentTheme.name);
+                    currentTheme = null;
+                    GenerateThemeList();
+                    LoadTheme();
+                    EnableEvents();
+                }
+            };
+        };
+
+        RenameTheme.Click += (_, _) =>
+        {
+            //TODO
+        };
+
+        EnableEvents();
+        GenerateThemeList();
+        LoadTheme();
+    }
+
+    private void GenerateThemeList()
+    {
+        ObservableCollection<Cache_CustomTheme> list = new ObservableCollection<Cache_CustomTheme>();
+
+        List<string> themeList = IOManager.GetThemeList();
+
+        if (themeList.Count == 0)
+        {
+            list.Add(DefaultManager.theme);
+        }
+        else
+        {
+            foreach (var item in themeList)
+            {
+                list.Add(ThemeManager.LoadTheme(item));
+            }
+        }
+
+        Selector.ItemsSource = list;
+        Selector.SelectedIndex = 0;
+    }
+
+    private void DisableEvents()
+    {
+        Selector.SelectionChanged -= SelectionChanged;
+    }
+
+    private void EnableEvents()
+    {
+        Dispatcher.UIThread.Post(() =>
+        {
+            Selector.SelectionChanged += SelectionChanged;
+        });
+    }
+
+    private void SelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
         LoadTheme();
     }
 
@@ -195,21 +257,31 @@ public partial class CustomThemeMaker : Window
 
         ThemeManager.SaveTheme(toSave);
 
+        DisableEvents();
         var list = Selector.ItemsSource as ObservableCollection<Cache_CustomTheme>;
         var display = list.FirstOrDefault(t => t.name == toSave.name);
-        if(display != null)
+        if(display != null && Selector.SelectedItem != null)
         {
-            bool wasSelected = Selector.SelectedItem == display;
+            var currentSelection = Selector.SelectedItem;
+            Selector.SelectedItem = null;
             loading = true;
             int index = list.IndexOf(display);
-            list.Remove(display);
+            list.RemoveAt(index);
             list.Insert(index, toSave);
-            if (wasSelected)
+            if (currentSelection == display)
             {
                 Selector.SelectedItem = toSave;
+            } else
+            {
+                Selector.SelectedItem = currentSelection;
             }
             loading = false;
+            var template = Selector.ItemTemplate;
+            Selector.ItemTemplate = null;
+            Selector.ItemTemplate = template;
+
         }
+        EnableEvents();
     }
 
     public void LoadTheme()

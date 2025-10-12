@@ -42,7 +42,7 @@ namespace YAAL
                 }
 
                 brush = GetBrush(current);
-                if(brush != null && !(brush is SolidColorBrush color && color.Color == Colors.Transparent))
+                if(brush != null && !(brush is ISolidColorBrush color && color.Color == Colors.Transparent))
                 {
                     return current;
                 }

@@ -50,8 +50,9 @@ namespace YAAL
             saveLocation[Trash] = Trash.GetFolderName();
             saveLocation[Logs] = Logs.GetFolderName();
             saveLocation[Themes] = Themes.GetFolderName();
-            saveLocation[Images] = Path.Combine(saveLocation[Themes], Images.ToString());
-            saveLocation[Rendered] = Path.Combine(saveLocation[Themes], Rendered.ToString());
+            saveLocation[FileSettings.Assets] = FileSettings.Assets.GetFolderName();
+            saveLocation[Images] = Path.Combine(saveLocation[FileSettings.Assets], Images.ToString());
+            saveLocation[Rendered] = Path.Combine(saveLocation[FileSettings.Assets], Rendered.ToString());
 
             // lowercase, files
             saveLocation[cache_download] = Path.Combine(saveLocation[ManagedApworlds], cache_download.GetFileName());

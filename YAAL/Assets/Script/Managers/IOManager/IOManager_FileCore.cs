@@ -262,6 +262,22 @@ namespace YAAL
             return MoveFile(path, bin);
         }
 
+        public static bool SoftDeleteFolder(string path)
+        {
+            string fileName = Path.GetFileName(path);
+            string binDirectory = Path.Combine(GetSaveLocation(Trash), DateTime.Now.ToString("dd-MM-yyyy-HH-mm"));
+            Directory.CreateDirectory(binDirectory);
+            if (Directory.Exists(path))
+            {
+                string trueName = FindAvailableDirectoryName(binDirectory, fileName);
+                return MoveFile(path, Path.Combine(binDirectory, trueName));
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         public static bool HardDeleteFile(string path)
         {
             try

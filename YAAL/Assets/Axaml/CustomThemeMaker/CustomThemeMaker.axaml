@@ -58,7 +58,7 @@
 							/>
 				</Button>
 				<Button
-					Name="Rename"
+					Name="RenameTheme"
 					Grid.Column="6"
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
