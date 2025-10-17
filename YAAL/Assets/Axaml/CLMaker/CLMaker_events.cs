@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using static System.Diagnostics.Debug;
 using static YAAL.LauncherSettings;
+using System.Collections.ObjectModel;
 
 namespace YAAL;
 
@@ -39,6 +40,47 @@ public partial class CLMakerWindow : Window
         CommandAdder.Click += AddCommand;
         OpenTestWindow.Click += Test;
 
+        Rename.Click += (_, _) =>
+        {
+            if(NamingBox.IsVisible)
+            {
+                TurnEventsOff();
+                if(LauncherSelector.SelectedItem is Cache_DisplayLauncher cache 
+                && NamingBox.Text is string newName 
+                && newName != "" 
+                && newName != cache.name)
+                {
+                    cache.name = newName;
+                    string trueName = IOManager.RenameLauncher(cache, newName);
+                    if(trueName == cache.name)
+                    {
+                        return;
+                    }
+                    ReloadLauncherList(false);
+                    if(LauncherSelector.ItemsSource is ObservableCollection<Cache_DisplayLauncher> list)
+                    {
+                        foreach (var item in list)
+                        {
+                            if(item.name == trueName)
+                            {
+                                LauncherSelector.SelectedItem = item;
+                                LoadLauncher();
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                NamingBox.IsVisible = false;
+                LauncherSelector.IsVisible = true;
+                TurnEventsBackOn();
+            } else
+            {
+                NamingBox.IsVisible = true;
+                LauncherSelector.IsVisible = false;
+            }
+        };
+
         TurnEventsBackOn();
         ReloadLauncherList(autoLoad);
     }
@@ -56,14 +98,12 @@ public partial class CLMakerWindow : Window
     {
         // When loading a launcher, we need to turn these off while setting everything up
         // and then turn them back on when we're done
-        LauncherName.TextChanged -= LauncherName_TextChanged;
         ModeSelector.SelectionChanged -= ModeSelector_ChangedSelection;
         LauncherSelector.SelectionChanged -= LauncherSelector_ChangedSelection;
     }
 
     private void TurnEventsOn()
     {
-        LauncherName.TextChanged += LauncherName_TextChanged;
         ModeSelector.SelectionChanged += ModeSelector_ChangedSelection;
         LauncherSelector.SelectionChanged += LauncherSelector_ChangedSelection;
     }
@@ -147,8 +187,8 @@ public partial class CLMakerWindow : Window
         
         TurnEventsOff();
         customLauncher = new CustomLauncher();
-        LauncherName.Text = IOManager.FindAvailableDirectoryName("NewLauncher");
-        customLauncher.SetSetting(launcherName.ToString(), LauncherName.Text);
+        string trueName = IOManager.FindAvailableLauncherName("NewLauncher");
+        customLauncher.SetSetting(launcherName, trueName);
         ModeSelector.SelectedIndex = 0;
 
         AvailableVersions.ItemsSource = new List<string> { "None" };
@@ -174,33 +214,39 @@ public partial class CLMakerWindow : Window
     {
         Save();
         TurnEventsOff();
-        LauncherName.Text += " - clone";
-        customLauncher.SetSetting(launcherName.ToString(), LauncherName.Text);
+        if(LauncherSelector.SelectedItem is Cache_DisplayLauncher cache)
+        {
+            string trueName = IOManager.FindAvailableLauncherName(cache.name);
+            customLauncher.SetSetting(launcherName, trueName);
+        }
         Save();
         TurnEventsBackOn();
     }
 
     public void DeleteLauncher(object? sender, RoutedEventArgs e)
     {
-        ConfirmationWindow confirm = new ConfirmationWindow(LauncherName.Text);
-        confirm.IsVisible = true;
-        confirm.Closed += (source, args) =>
+        //TODO : this needs looking at, cf Pingu async feedback
+        if(LauncherSelector.SelectedItem is Cache_DisplayLauncher cache)
         {
-            if (confirm.confirmed)
+            ConfirmationWindow confirm = new ConfirmationWindow(cache.name);
+            confirm.IsVisible = true;
+            confirm.Closed += (source, args) =>
             {
-                TurnEventsOff();
-                IOManager.DeleteLauncher(LauncherName.Text);
-                ReloadLauncherList(true);
-                TurnEventsBackOn();
-            }
-        };
+                if (confirm.confirmed)
+                {
+                    TurnEventsOff();
+                    IOManager.DeleteLauncher(cache.name);
+                    ReloadLauncherList(true);
+                    TurnEventsBackOn();
+                }
+            };
+        }
+
+        
     }
 
     public void OpenSettingManager(object? sender, RoutedEventArgs e)
     {
-        /*settingManager = SettingManager.GetSettingsWindow(this.customLauncher.selfsettings, this.customLauncher.customSettings);
-        settingManager.Show();
-        settingManager.Closing += UpdateSettings;*/
         settingManager = SettingManager.GetSettingsWindow(this, this.customLauncher.selfsettings, this.customLauncher.customSettings);
         settingManager.Show();
         settingManager.Closing += UpdateSettings;
@@ -224,37 +270,6 @@ public partial class CLMakerWindow : Window
 
 
 
-
-
-
-    // TEXT CHANGED
-    private void LauncherName_TextChanged(object? sender, EventArgs e)
-    {
-        Debouncer.Debounce(_LauncherName_TextChanged, 1f);
-    }
-
-    private void _LauncherName_TextChanged()
-    {
-        if(LauncherName.Text == "")
-        {
-            TurnEventsOff();
-            LauncherName.Text = "Temp";
-            TurnEventsBackOn();
-        }
-        if (IOManager.MoveLauncher(customLauncher.GetSetting(launcherName), LauncherName.Text))
-        {
-            customLauncher.SetSetting(launcherName.ToString(), LauncherName.Text);
-            Save();
-            ReloadLauncherList();
-        }
-    }
-
-
-
-
-
-
-
     // CHANGED SELECTION
     private void ModeSelector_ChangedSelection(object? sender, SelectionChangedEventArgs e)
     {
@@ -270,10 +285,9 @@ public partial class CLMakerWindow : Window
 
     private void LauncherSelector_ChangedSelection(object? sender, SelectionChangedEventArgs e)
     {
-        if(LauncherSelector.SelectedItem == null || LauncherSelector.SelectedItem.ToString() == LauncherName.Text)
+        if(LauncherSelector.SelectedItem is Cache_DisplayLauncher cache)
         {
-            return;
+            LoadLauncher(cache.cache);
         }
-        LoadLauncher(LauncherSelector.SelectedItem.ToString());
     }
 }

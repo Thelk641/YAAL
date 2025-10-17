@@ -45,7 +45,7 @@ public partial class NewLauncher : Window
             string gameName = IOManager.GetGameNameFromApworld(ApworldPath.Text);
             if(gameName != "")
             {
-                LauncherName.Text = IOManager.FindAvailableDirectoryName(gameName);
+                LauncherName.Text = IOManager.FindAvailableLauncherName(gameName);
                 GameName.Text = gameName;
             }
 
@@ -108,7 +108,7 @@ public partial class NewLauncher : Window
 
         IOManager.SaveCacheLauncher(launcher);
         Window? parentWindow = this.GetVisualRoot() as Window;
-        clmaker.LoadLauncher(LauncherName.Text);
+        clmaker.LoadLauncher(launcher);
         parentWindow.Close();
     }
 }

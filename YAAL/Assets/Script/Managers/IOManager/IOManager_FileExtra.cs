@@ -51,7 +51,7 @@ namespace YAAL
             return output;
         }
 
-        public static string FindAvailableDirectoryName(string gameName)
+        public static string FindAvailableLauncherName(string gameName)
         {
             return FindAvailableDirectoryName(GetSaveLocation(ManagedApworlds), gameName);
         }

@@ -24,6 +24,8 @@ namespace YAAL
         Pin,
         Refresh,
         Text,
+        Duplicate,
+        Download,
         None,
     };
 

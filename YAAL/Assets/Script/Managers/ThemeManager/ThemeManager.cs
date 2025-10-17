@@ -69,6 +69,7 @@ namespace YAAL
         public static void DeleteTheme(string name)
         {
             IOManager.DeleteTheme(name);
+            themes.Remove(name);
         }
 
         public static string RenameTheme(Cache_CustomTheme cache, string newName)
@@ -77,9 +78,19 @@ namespace YAAL
             {
                 return newName;
             }
-            string trueName = IOManager.GetAvailableNewThemeName(cache.name, newName);
+            themes.Remove(cache.name);
+            string trueName = IOManager.RenameTheme(cache.name, newName);
             cache.name = trueName;
             SaveTheme(cache);
+            return trueName;
+        }
+
+        public static string DuplicateTheme(Cache_CustomTheme cache)
+        {
+            string trueName = IOManager.GetAvailableThemeName(cache.name);
+            Cache_CustomTheme newCache = cache.Clone() as Cache_CustomTheme;
+            newCache.name = trueName;
+            SaveTheme(newCache);
             return trueName;
         }
 
@@ -90,6 +101,7 @@ namespace YAAL
                 return;
             }
             IOManager.SaveCustomTheme(cache);
+            themes[cache.name] = cache;
         }
 
         public static Cache_CustomTheme LoadTheme(string name)

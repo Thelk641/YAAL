@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 
 namespace YAAL
 {
-    public class Cache_CustomTheme
+    public class Cache_CustomTheme : ICloneable
     {
         public string name { get; set; }
         public int topOffset { get; set; } = 0;
@@ -35,5 +35,10 @@ namespace YAAL
 
         public Color buttonColor = Colors.Transparent;
         public double buttonOpacity = 1;
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
     }
 }

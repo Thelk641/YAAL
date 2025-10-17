@@ -1,6 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
+		xmlns:local="clr-namespace:YAAL"
         x:Class="YAAL.CLMakerWindow"
         Title="YAAL - Custom Launcher maker"
         Width="800"
@@ -9,88 +10,272 @@
         MinWidth="700"
         Name="mainWindow"
         >
-	<Border Name="BackgroundColor">
-  <Grid RowDefinitions="83, 16, *, 70, 8, 30, 8">
+	<Border Name="BackgroundColor" Padding="8">
+	<Grid RowDefinitions="30, 8, *, 8, 48, 8, 30">
     
-    <!-- Top of the Window, most of the controls -->
-    <Grid RowDefinitions="8, 30, 8, 45" VerticalAlignment="Top" Grid.Row="0">
+		<!-- Top of the Window, most of the controls -->
+		<Grid RowDefinitions="30, 8, 45" VerticalAlignment="Top" Grid.Row="0">
+			<Grid ColumnDefinitions="*,*" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+				<Grid ColumnDefinitions="30, 8, 30, 8, 30, 8, 30, 8,30" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+					<Button
+						Name="EmptyLauncher"
+						Grid.Column="0"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						local:AutoIcon.Icon="File"
+						>
+						<Svg
+							VerticalAlignment="Center"
+							HorizontalAlignment="Center"
+							Width="30"
+							/>
+					</Button>
 
-		<!-- First Line -->
-		<Grid ColumnDefinitions="8, 100, 8, 100, 8, 100, 8, 100, *, 300, 8" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+					<Button
+						Name="Duplicate"
+						Grid.Column="2"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						local:AutoIcon.Icon="Duplicate"
+						>
+						<Svg
+							VerticalAlignment="Center"
+							HorizontalAlignment="Center"
+							Width="30"
+							/>
+					</Button>
 
-			<Button Name="EmptyLauncher" Content="New" Grid.Column="1"  Width="100" HorizontalAlignment="Right" HorizontalContentAlignment="Center"/>
-			<Button Name="Duplicate" Content="Duplicate" Grid.Column="3"  Width="100" HorizontalAlignment="Right" HorizontalContentAlignment="Center"/>
-			<Button Name="Delete" Content="Delete" Grid.Column="5"  Width="100" HorizontalAlignment="Right" HorizontalContentAlignment="Center"/>
-			<Button Name="Settings" Content="Settings" Grid.Column="7"  Width="100" HorizontalAlignment="Right" HorizontalContentAlignment="Center"/>
-			<ComboBox Name="LauncherSelector"  MinWidth="100" Grid.Column="9" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+					<Button
+						Name="Delete"
+						Grid.Column="4"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						local:AutoIcon.Icon="Trash"
+						>
+						<Svg
+							VerticalAlignment="Center"
+							HorizontalAlignment="Center"
+							Width="30"
+							/>
+					</Button>
 
+					<Button
+						Name="Settings"
+						Grid.Column="6"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						local:AutoIcon.Icon="Settings"
+						>
+						<Svg
+							VerticalAlignment="Center"
+							HorizontalAlignment="Center"
+							Width="30"
+							/>
+					</Button>
+
+					<Button
+						Name="Rename"
+						Grid.Column="8"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						local:AutoIcon.Icon="Text"
+						>
+						<Svg
+							VerticalAlignment="Center"
+							HorizontalAlignment="Center"
+							Width="30"
+							/>
+					</Button>
+				</Grid>
+
+				<TextBox 
+					IsVisible="False" 
+					Name="NamingBox" 
+					MinWidth="100" 
+					Grid.Column="1" 
+					HorizontalAlignment="Stretch" 
+					VerticalAlignment="Stretch" 
+					/>
+
+				<ComboBox
+					Name="LauncherSelector"
+					MinWidth="150"
+					Grid.Column="1"
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch"
+					>
+					<ComboBox.ItemTemplate>
+						<DataTemplate>
+							<TextBlock
+								Text="{Binding name}"
+										/>
+						</DataTemplate>
+					</ComboBox.ItemTemplate>
+				</ComboBox>
+
+			</Grid>
 		</Grid>
-		
-      <!-- Second Line -->
-      <Grid ColumnDefinitions="8,*,8" Grid.Row="3">
-        <TextBox
-          Name="LauncherName"
-          Watermark="Launcher name"
-          Grid.Column="1"
-          HorizontalAlignment="Stretch"
-          VerticalAlignment="Stretch"
-          MinWidth="30"
-          HorizontalContentAlignment="Center"
-          VerticalContentAlignment="Center"
-          FontSize="25"
-          ToolTip.Tip="This launcher's name"
-      />
-      </Grid>
-    </Grid>
     
-    <!-- Second part, components -->
-    <Border BorderBrush="Gray"
-        BorderThickness="1"
-        CornerRadius="4"
-        Margin="8"
-        Padding="8"
-        HorizontalAlignment="Stretch"
-        Grid.Row="2"
-        Name="CommandBackground"
+		<!-- Second part, components -->
+		<Border BorderBrush="Gray"
+			BorderThickness="1"
+			CornerRadius="4"
+			Padding="8"
+			HorizontalAlignment="Stretch"
+			Grid.Row="2"
+			Name="CommandBackground"
+				>
+			<Grid RowDefinitions="*, 48">
+				<ScrollViewer 
+					Name="Scroll" 
+					Grid.Row="0"
+					Grid.RowSpan="2"
+					HorizontalAlignment="Stretch" 
+					VerticalAlignment="Stretch" 
+					AllowAutoHide="False"
+					>
+					<Border Padding="0,0,8,0" Name="PaddingBorder">
+						<StackPanel x:Name="CommandContainer" />
+					</Border>
+				</ScrollViewer>
+				<Grid ColumnDefinitions="*,150" Grid.Row="1">
+					<Border
+						Grid.Column="1"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						CornerRadius="4"
+						Padding="8"
+						>
+						<Grid
+							ColumnDefinitions="*,8,30"
+							Grid.Column="3"
+							HorizontalAlignment="Stretch"
+							VerticalAlignment="Stretch"
+							>
+
+							<ComboBox
+								Name="CommandSelector"
+								Grid.Column="0"
+								HorizontalAlignment="Stretch"
+								VerticalAlignment="Stretch"
+								/>
+							
+							<Button
+								Name="CommandAdder"
+								Grid.Column="2"
+								HorizontalAlignment="Stretch"
+								VerticalAlignment="Stretch"
+								local:AutoIcon.Icon="Plus"
+								>
+								<Svg
+									VerticalAlignment="Center"
+									HorizontalAlignment="Center"
+									Width="30"
+									/>
+							</Button>							
+						</Grid>
+					</Border>
+				</Grid>
+			</Grid>
+
+		</Border>
+    
+		<!-- Third part, version control -->
+		<Border BorderBrush="Gray"
+		  BorderThickness="1"
+		  CornerRadius="4"
+		  Padding="8"
+		  HorizontalAlignment="Stretch"
+		  Grid.Row="4">
+			
+		  <Grid ColumnDefinitions="70, 150, 8, 30, *, 150, 8, 30, 8">
+			  
+			<TextBlock 
+				Text="Installed : "  
+				Grid.Column="0" 
+				VerticalAlignment="Center" 
+				HorizontalAlignment="Left"
+				/>
+
+			<ComboBox 
+				Name="AvailableVersions"  
+				MinWidth="100" 
+				Grid.Column="1" 
+				HorizontalAlignment="Stretch" 
+				VerticalAlignment="Stretch" 
+				/>
+
+			  <Button
+				Name="Remove"
+				Grid.Column="3"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				local:AutoIcon.Icon="Trash"
+				>
+				<Svg
+					VerticalAlignment="Center"
+					HorizontalAlignment="Center"
+					Width="30"
+					/>
+			  </Button>
+			  
+			<ComboBox 
+				Name="GitHubVersions"  
+				MinWidth="100" 
+				Grid.Column="5" 
+				HorizontalAlignment="Stretch" 
+				VerticalAlignment="Stretch" 
+				HorizontalContentAlignment="Left" 
+				/>
+
+			<Button
+				Name="Download"
+				Grid.Column="7"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				local:AutoIcon.Icon="Download"
+				>
+					<Svg
+					VerticalAlignment="Center"
+					HorizontalAlignment="Center"
+					Width="30"
+					/>
+			</Button>
+		  </Grid>
+		</Border>
+
+    
+    
+		<!-- Bottom of the Window, mode selector, command add, text -->
+		<Grid 
+			ColumnDefinitions="120, 100, *, 246, 8, 100" 
+			VerticalAlignment="Bottom" 
+			Grid.Row="6"
 			>
-      <ScrollViewer Name="Scroll" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" AllowAutoHide="False">
-        <Border Padding="0,0,8,0" Name="PaddingBorder">
-	        <StackPanel x:Name="CommandContainer" />
-        </Border>
-
-	  </ScrollViewer>
-    </Border>
-    
-    <!-- Third part, version control -->
-    <Border BorderBrush="Gray"
-      BorderThickness="1"
-      CornerRadius="4"
-      Margin="8"
-      Padding="8"
-      HorizontalAlignment="Stretch"
-      Grid.Row="3">
-      <Grid ColumnDefinitions="70, 150, 8, 100, * 100, 8, 150, 8">
-        <TextBlock Text="Installed : "  Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
-        <ComboBox Name="AvailableVersions"  MinWidth="100" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-        <Button Name="Remove" Content="Remove" Grid.Column="3"  Width="100" HorizontalAlignment="Right" HorizontalContentAlignment="Center"/>
-        <Button Name="Download" Content="Download : " Grid.Column="5"  Width="100" HorizontalAlignment="Right"/>
-        <ComboBox Name="GitHubVersions"  MinWidth="100" Grid.Column="7" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Left" />
-      </Grid>
-    </Border>
-
-    
-    
-    <!-- Bottom of the Window, mode selector, command add, text -->
-    <Grid ColumnDefinitions="8, 120, 100, *, 246, 8, 100, 8" VerticalAlignment="Bottom" Grid.Row="5">
-      <TextBlock Text="Launcher mode : "  Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
-      <ComboBox Name="ModeSelector"  Grid.Column="2"  Width="100" VerticalAlignment="Stretch" />
-      <Grid ColumnDefinitions="38,*" Grid.Column="4" Width="238" HorizontalAlignment="Left" VerticalAlignment="Stretch">
-        <Button Name="CommandAdder" Content="+" Grid.Column="0" Width="30" HorizontalAlignment="Left" VerticalAlignment="Stretch"/>
-        <ComboBox Name="CommandSelector" Grid.Column="1" Width="200" VerticalAlignment="Stretch" />
-      </Grid>
-      <Button Name="OpenTestWindow" Content="Test" HorizontalContentAlignment="Center" Grid.Column="6" Width="100" HorizontalAlignment="Left"/>
-    </Grid>
-  </Grid>
+			
+			<TextBlock 
+				Text="Launcher mode : "  
+				Grid.Column="0" 
+				VerticalAlignment="Center" 
+				HorizontalAlignment="Left"
+				/>
+		  
+			<ComboBox 
+				Name="ModeSelector"  
+				Grid.Column="1"  
+				Width="100" 
+				VerticalAlignment="Stretch" 
+				/>
+			<Button 
+				Name="OpenTestWindow" 
+				Content="Test" 
+				HorizontalContentAlignment="Center" 
+				Grid.Column="5" 
+				Width="100" 
+				HorizontalAlignment="Left"
+				/>
+		</Grid>
+	  </Grid>
 	</Border>
 </Window>
 

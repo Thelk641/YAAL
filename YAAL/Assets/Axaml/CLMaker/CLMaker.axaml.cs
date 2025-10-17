@@ -36,14 +36,23 @@ public partial class CLMakerWindow : Window
         {
             AutoTheme.SetScrollbarTheme(Scroll);
         };
-        
     }
 
     public CLMakerWindow(string launcherName) : this()
     {
         SetEvents(false);
-        LauncherSelector.SelectedItem = launcherName;
-        LoadLauncher(LauncherSelector.SelectedItem.ToString());
+        foreach (var item in LauncherSelector.ItemsSource)
+        {
+            if(item is Cache_DisplayLauncher cache && cache.name == launcherName)
+            {
+                LauncherSelector.SelectedItem = launcherName;
+                LoadLauncher(cache.cache);
+                return;
+            }
+        }
+
+        LauncherSelector.SelectedIndex = 0;
+        LoadLauncher();
     }
 
     public CLMakerWindow(bool autoLoad) : this()

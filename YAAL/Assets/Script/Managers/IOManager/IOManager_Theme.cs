@@ -90,7 +90,7 @@ namespace YAAL
             }
         }
 
-        public static string GetAvailableNewThemeName(string oldName, string newName)
+        public static string RenameTheme(string oldName, string newName)
         {
             string oldPath = Path.Combine(GetSaveLocation(Themes), oldName);
             string newPath = Path.Combine(GetSaveLocation(Themes), newName);
@@ -100,10 +100,27 @@ namespace YAAL
                 if (Directory.Exists(newPath)) {
                     trueName = FindAvailableDirectoryName(GetSaveLocation(Themes), newName);
                 }
-                Directory.Move(oldPath, newPath);
+                try
+                {
+                    Directory.Move(oldPath, newPath);
+                }
+                catch (Exception e)
+                {
+                    ErrorManager.ThrowError(
+                        "IOManager_Theme - Failed to move folder",
+                        "Trying to move folder at " + oldPath + " to " + newPath + " raised the following exception : " + e.Message
+                        );
+                    return oldPath;
+                }
+                
                 return trueName;
             }
             return oldPath;
+        }
+
+        public static string GetAvailableThemeName(string name)
+        {
+            return FindAvailableDirectoryName(GetSaveLocation(Themes), name);
         }
 
         public static List<string> GetThemeList()

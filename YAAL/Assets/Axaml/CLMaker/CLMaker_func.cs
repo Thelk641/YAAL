@@ -4,6 +4,7 @@ using Avalonia.OpenGL;
 using Avalonia.Threading;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -61,20 +62,31 @@ public partial class CLMakerWindow : Window
     public void ReloadLauncherList(bool autoLoad = false)
     {
         List<string> launcherList = IOManager.GetLauncherList();
-        LauncherSelector.ItemsSource = launcherList;
+        ObservableCollection<Cache_DisplayLauncher> list = new ObservableCollection<Cache_DisplayLauncher>();
+        foreach (var item in launcherList)
+        {
+            Cache_DisplayLauncher cache = new Cache_DisplayLauncher();
+            cache.name = item;
+            cache.cache = IOManager.LoadCacheLauncher(item);
+        }
+
+
+        LauncherSelector.ItemsSource = list;
         LauncherSelector.SelectedIndex = 0;
         if (!autoLoad)
         {
             return;
         }
 
-        if (launcherList.Count > 0)
+        if (launcherList.Count > 0 && LauncherSelector.SelectedItem is Cache_DisplayLauncher display)
         {
-            LoadLauncher(LauncherSelector.SelectedItem.ToString());
+            LoadLauncher(display.cache);
         } else
         {
             CreateEmptyLauncher();
         }
+
+        WindowManager.UpdateComboBox(LauncherSelector);
     }
 
     public void MoveUp(Command toMove)
@@ -91,17 +103,6 @@ public partial class CLMakerWindow : Window
         commandList.Remove(toMove);
         commandList.Insert(index + 1, toMove);
         customLauncher.MoveInstructionDown(toMove.linkedInstruction);
-    }
-
-
-    public string GetVersionToDownload()
-    {
-        return GitHubVersions.SelectedItem.ToString();
-    }
-
-    public string GetGameName()
-    {
-        return LauncherName.Text;
     }
 
     public string GetLatestAvailableVersion()
@@ -131,25 +132,18 @@ public partial class CLMakerWindow : Window
         return defaultVersion;
     }
 
-    public void LoadLauncher(string launcherName)
+    public void LoadLauncher()
     {
-        if(customLauncher != null)
+        if(LauncherSelector.SelectedItem is Cache_DisplayLauncher cache)
         {
-            Save();
+            LoadLauncher(cache.cache);
         }
-        Debug.WriteLine("Attempting to load launcher " + launcherName);
-        if (!IOManager.GetLauncherList().Contains(launcherName))
-        {
-            ErrorManager.ThrowError(
-                "CLMaker_func - Launcher doesn't exists",
-                "Unable to load launcher, there doesn't seem to appear a folder named " + launcherName + " containing a launcher.json file.");
-            return;
-        }
-        
+    }
 
+    public void LoadLauncher(Cache_CustomLauncher toLoad)
+    {
         TurnEventsOff();
-        customLauncher = IOManager.LoadLauncher(launcherName);
-        LauncherName.Text = customLauncher.GetSetting("launcherName");
+        customLauncher = IOManager.LoadLauncher(toLoad);
 
         foreach (var item in commandList)
         {
@@ -165,7 +159,8 @@ public partial class CLMakerWindow : Window
             GitHubVersions.ItemsSource = new List<string> { "None" };
             GitHubVersions.SelectedItem = "None";
             GitHubVersions.IsEnabled = false;
-        } else
+        }
+        else
         {
             // Let's try to fill up the list of versions from the github link
             UpdateGitVersions();
@@ -178,10 +173,11 @@ public partial class CLMakerWindow : Window
         }
         UpdateAvailableVersion();
 
-        if(customLauncher.isGame)
+        if (customLauncher.isGame)
         {
             ModeSelector.SelectedIndex = 0;
-        } else
+        }
+        else
         {
             ModeSelector.SelectedIndex = 1;
         }

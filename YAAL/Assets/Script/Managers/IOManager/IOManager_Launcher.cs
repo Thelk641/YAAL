@@ -53,11 +53,30 @@ namespace YAAL
                 return launcherCache[launcherName];
             } else
             {
-                CustomLauncher output = new CustomLauncher();
-                output.ReadCache(LoadCacheLauncher(launcherName));
-                launcherCache[launcherName] = output;
-                return output;
+                return LoadLauncher(LoadCacheLauncher(launcherName));
             }
+        }
+
+        public static CustomLauncher LoadLauncher(Cache_CustomLauncher cache)
+        {
+            CustomLauncher output = new CustomLauncher();
+            output.ReadCache(cache);
+            launcherCache[cache.settings[LauncherSettings.launcherName]] = output;
+            return output;
+        }
+
+        public static string RenameLauncher(Cache_DisplayLauncher cache, string newName)
+        {
+            string trueName = FindAvailableLauncherName(newName);
+            string oldPath = Path.Combine(GetSaveLocation(launcher), cache.name);
+            string newPath = Path.Combine(GetSaveLocation(launcher), trueName);
+            if (MoveFile(oldPath, newPath))
+            {
+                cache.cache.settings[LauncherSettings.launcherName] = trueName;
+                SaveCacheLauncher(cache.cache);
+                return trueName;
+            }
+            return cache.name;
         }
 
         public static void DeleteLauncher(string gameName)

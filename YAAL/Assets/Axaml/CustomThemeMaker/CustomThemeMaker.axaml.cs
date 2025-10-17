@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
@@ -68,26 +69,10 @@ public partial class CustomThemeMaker : Window
 
         NewTheme.Click += (_, _) =>
         {
-            Cache_CustomTheme newTheme = ThemeManager.CreateNewTheme();
-            DisableEvents();
-            GenerateThemeList();
-            if(Selector.ItemsSource is ObservableCollection<Cache_CustomTheme> list)
-            {
-                foreach (var item in list)
-                {
-                    if(item.name == newTheme.name)
-                    {
-                        Selector.SelectedItem = item;
-                        break;
-                    }
-                }
-            }
-            
-            LoadTheme();
-            EnableEvents();
+            UpdateAndSelect(ThemeManager.CreateNewTheme().name);
         };
 
-        RemoveTheme.Click += async (_, _) =>
+        RemoveTheme.Click += (_, _) =>
         {
             ConfirmationWindow confirm = new ConfirmationWindow(currentTheme.name);
 
@@ -105,29 +90,23 @@ public partial class CustomThemeMaker : Window
             };
         };
 
+        DuplicateTheme.Click += (_, _) =>
+        {
+            if (currentTheme == null)
+            {
+                return;
+            }
+            SaveTheme();
+            UpdateAndSelect(ThemeManager.DuplicateTheme(currentTheme));
+        };
+
         RenameTheme.Click += (_, _) =>
         {
             if (NamingBox.IsVisible) 
             {
                 if(NamingBox.Text != null && NamingBox.Text != "" && currentTheme != null && currentTheme.name != NamingBox.Text)
                 {
-                    string newSelection = ThemeManager.RenameTheme(currentTheme, NamingBox.Text);
-                    DisableEvents();
-                    loading = true;
-                    GenerateThemeList();
-                    if(Selector.ItemsSource is ObservableCollection<Cache_CustomTheme> list)
-                    {
-                        foreach (var item in list)
-                        {
-                            if(item.name == newSelection)
-                            {
-                                Selector.SelectedItem = item;
-                                break;
-                            }
-                        }
-                    }
-                    loading = false;
-                    EnableEvents();
+                    UpdateAndSelect(ThemeManager.RenameTheme(currentTheme, NamingBox.Text));
                 }
                 
                 NamingBox.IsVisible = false;
@@ -138,6 +117,21 @@ public partial class CustomThemeMaker : Window
                 Selector.IsVisible = false;
             }
         };
+
+        NamingBox.AddHandler(InputElement.KeyDownEvent, (sender, e) => 
+        {
+            if(e.Key == Key.Enter)
+            {
+                if (NamingBox.Text != null && NamingBox.Text != "" && currentTheme != null && currentTheme.name != NamingBox.Text)
+                {
+                    UpdateAndSelect(ThemeManager.RenameTheme(currentTheme, NamingBox.Text));
+                }
+
+                NamingBox.IsVisible = false;
+                Selector.IsVisible = true;
+                e.Handled = true;
+            }
+        }, RoutingStrategies.Tunnel);
 
         EnableEvents();
         GenerateThemeList();
@@ -164,6 +158,27 @@ public partial class CustomThemeMaker : Window
 
         Selector.ItemsSource = list;
         Selector.SelectedIndex = 0;
+        WindowManager.UpdateComboBox(Selector);
+    }
+
+    private void UpdateAndSelect(string target)
+    {
+        DisableEvents();
+        GenerateThemeList();
+        if (Selector.ItemsSource is ObservableCollection<Cache_CustomTheme> list)
+        {
+            foreach (var item in list)
+            {
+                if (item.name == target)
+                {
+                    currentTheme = null;
+                    Selector.SelectedItem = item;
+                    LoadTheme();
+                    break;
+                }
+            }
+        }
+        EnableEvents();
     }
 
     private void DisableEvents()
@@ -305,8 +320,6 @@ public partial class CustomThemeMaker : Window
                 Selector.SelectedItem = currentSelection;
             }
             loading = false;
-            WindowManager.UpdateComboBox(Selector);
-
         }
         EnableEvents();
     }

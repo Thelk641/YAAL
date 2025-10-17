@@ -17,7 +17,7 @@
 	<Border Padding="8" Name="TrueBackground">
 		<Grid RowDefinitions="30,8,276,8,30,8,*">
 			<!-- Selector-->
-			<Grid ColumnDefinitions="30,8,30,8,30,8,30,8,*">
+			<Grid ColumnDefinitions="30,8,30,8,30,8,30,8,30,8,*">
 				<Button
 					Name="NewTheme"
 					Grid.Column="0"
@@ -45,38 +45,54 @@
 							/>
 				</Button>
 				<Button
-					Name="RemoveTheme"
+					Name="DuplicateTheme"
 					Grid.Column="4"
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch"
+					local:AutoIcon.Icon="Duplicate"
+					>
+					<Svg
+						VerticalAlignment="Center"
+						HorizontalAlignment="Center"
+						Width="30"
+						/>
+				</Button>
+				
+				<Button
+					Name="RemoveTheme"
+					Grid.Column="6"
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
 					local:AutoIcon.Icon="Trash"
 					>
 					<Svg
-							VerticalAlignment="Center"
-							HorizontalAlignment="Center"
-							Width="30"
-							/>
+						VerticalAlignment="Center"
+						HorizontalAlignment="Center"
+						Width="30"
+						/>
 				</Button>
 				<Button
 					Name="RenameTheme"
-					Grid.Column="6"
+					Grid.Column="8"
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
 					local:AutoIcon.Icon="Text"
 					>
 					<Svg
-							VerticalAlignment="Center"
-							HorizontalAlignment="Center"
-							Width="30"
-							/>
+						VerticalAlignment="Center"
+						HorizontalAlignment="Center"
+						Width="30"
+						/>
 				</Button>
+				
+				
 				
 				<TextBox
 					Name="NamingBox"
 					VerticalAlignment="Center"
 					HorizontalAlignment="Stretch"
 					HorizontalContentAlignment="Center"
-					Grid.Column="8"
+					Grid.Column="10"
 					IsVisible="False"
 				/>
 				
@@ -85,7 +101,7 @@
 					VerticalAlignment="Center"
 					HorizontalAlignment="Stretch"
 					HorizontalContentAlignment="Center"
-					Grid.Column="8"
+					Grid.Column="10"
 					ToolTip.Tip="Saves the current theme automatically if you select another"
 					IsVisible="True"
 					>
