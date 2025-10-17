@@ -70,14 +70,25 @@
 							Width="30"
 							/>
 				</Button>
+				
+				<TextBox
+					Name="NamingBox"
+					VerticalAlignment="Center"
+					HorizontalAlignment="Stretch"
+					HorizontalContentAlignment="Center"
+					Grid.Column="8"
+					IsVisible="False"
+				/>
+				
 				<ComboBox
-				Name="Selector"
-				VerticalAlignment="Center"
-				HorizontalAlignment="Stretch"
-				HorizontalContentAlignment="Center"
-				Grid.Column="8"
-				ToolTip.Tip="Saves the current theme automatically if you select another"
-				>
+					Name="Selector"
+					VerticalAlignment="Center"
+					HorizontalAlignment="Stretch"
+					HorizontalContentAlignment="Center"
+					Grid.Column="8"
+					ToolTip.Tip="Saves the current theme automatically if you select another"
+					IsVisible="True"
+					>
 					<ComboBox.ItemTemplate>
 						<DataTemplate>
 							<TextBlock

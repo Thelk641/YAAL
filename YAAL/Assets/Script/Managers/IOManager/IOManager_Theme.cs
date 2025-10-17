@@ -90,7 +90,7 @@ namespace YAAL
             }
         }
 
-        public static string RenameTheme(string oldName, string newName)
+        public static string GetAvailableNewThemeName(string oldName, string newName)
         {
             string oldPath = Path.Combine(GetSaveLocation(Themes), oldName);
             string newPath = Path.Combine(GetSaveLocation(Themes), newName);

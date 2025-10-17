@@ -3,6 +3,7 @@ using Avalonia.Controls.Presenters;
 using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
+using Avalonia.Styling;
 using Avalonia.VisualTree;
 using ReactiveUI;
 using System;
@@ -51,6 +52,13 @@ namespace YAAL
             toResize.MinHeight = trueHeight;
             toResize.MaxHeight = trueHeight;
             toResize.Height = trueHeight;
+        }
+
+        public static void UpdateComboBox(ComboBox comboBox)
+        {
+            var template = comboBox.ItemTemplate;
+            comboBox.ItemTemplate = null;
+            comboBox.ItemTemplate = template;
         }
     }
 }

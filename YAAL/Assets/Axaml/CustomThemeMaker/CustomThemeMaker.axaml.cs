@@ -107,7 +107,36 @@ public partial class CustomThemeMaker : Window
 
         RenameTheme.Click += (_, _) =>
         {
-            //TODO
+            if (NamingBox.IsVisible) 
+            {
+                if(NamingBox.Text != null && NamingBox.Text != "" && currentTheme != null && currentTheme.name != NamingBox.Text)
+                {
+                    string newSelection = ThemeManager.RenameTheme(currentTheme, NamingBox.Text);
+                    DisableEvents();
+                    loading = true;
+                    GenerateThemeList();
+                    if(Selector.ItemsSource is ObservableCollection<Cache_CustomTheme> list)
+                    {
+                        foreach (var item in list)
+                        {
+                            if(item.name == newSelection)
+                            {
+                                Selector.SelectedItem = item;
+                                break;
+                            }
+                        }
+                    }
+                    loading = false;
+                    EnableEvents();
+                }
+                
+                NamingBox.IsVisible = false;
+                Selector.IsVisible = true;
+            } else
+            {
+                NamingBox.IsVisible = true;
+                Selector.IsVisible = false;
+            }
         };
 
         EnableEvents();
@@ -276,9 +305,7 @@ public partial class CustomThemeMaker : Window
                 Selector.SelectedItem = currentSelection;
             }
             loading = false;
-            var template = Selector.ItemTemplate;
-            Selector.ItemTemplate = null;
-            Selector.ItemTemplate = template;
+            WindowManager.UpdateComboBox(Selector);
 
         }
         EnableEvents();
@@ -321,6 +348,7 @@ public partial class CustomThemeMaker : Window
         OffsetBottom.Text = currentTheme.bottomOffset.ToString();
 
         ButtonColor.Background = currentTheme.buttonBackground;
+        NamingBox.Text = currentTheme.name;
 
         loading = false;
 

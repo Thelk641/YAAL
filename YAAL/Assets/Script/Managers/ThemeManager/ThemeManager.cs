@@ -73,7 +73,11 @@ namespace YAAL
 
         public static string RenameTheme(Cache_CustomTheme cache, string newName)
         {
-            string trueName = IOManager.RenameTheme(cache.name, newName);
+            if(cache.name == newName)
+            {
+                return newName;
+            }
+            string trueName = IOManager.GetAvailableNewThemeName(cache.name, newName);
             cache.name = trueName;
             SaveTheme(cache);
             return trueName;
