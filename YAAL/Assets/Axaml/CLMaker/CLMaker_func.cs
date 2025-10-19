@@ -56,7 +56,10 @@ public partial class CLMakerWindow : Window
         {
             newList.Add(item.GetInstruction());
         }
-        customLauncher.ResetInstructionList(newList);
+        if(customLauncher != null)
+        {
+            customLauncher.ResetInstructionList(newList);
+        }
     }
 
     public void ReloadLauncherList(bool autoLoad = false)
@@ -68,6 +71,7 @@ public partial class CLMakerWindow : Window
             Cache_DisplayLauncher cache = new Cache_DisplayLauncher();
             cache.name = item;
             cache.cache = IOManager.LoadCacheLauncher(item);
+            list.Add(cache);
         }
 
 
@@ -181,6 +185,11 @@ public partial class CLMakerWindow : Window
         {
             ModeSelector.SelectedIndex = 1;
         }
+        if(LauncherSelector.SelectedItem is Cache_DisplayLauncher display)
+        {
+            NamingBox.Text = display.name;
+        }
+        
         TurnEventsBackOn();
     }
 

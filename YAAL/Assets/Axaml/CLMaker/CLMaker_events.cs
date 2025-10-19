@@ -50,7 +50,6 @@ public partial class CLMakerWindow : Window
                 && newName != "" 
                 && newName != cache.name)
                 {
-                    cache.name = newName;
                     string trueName = IOManager.RenameLauncher(cache, newName);
                     if(trueName == cache.name)
                     {
@@ -145,7 +144,11 @@ public partial class CLMakerWindow : Window
     private void Save(object? sender = null, RoutedEventArgs e = null)
     {
         ReloadLauncher();
-        customLauncher.Save();
+        if(customLauncher != null)
+        {
+            customLauncher.Save();
+        }
+        
     }
 
     public async void DownloadVersion(object? sender, RoutedEventArgs e)
@@ -176,6 +179,33 @@ public partial class CLMakerWindow : Window
         Save();
         NewLauncher launcher = new NewLauncher(this);
         launcher.Show();
+
+        launcher.Closing += (_, _) =>
+        {
+            if (!launcher.create)
+            {
+                return;
+            }
+            Cache_CustomLauncher cache = launcher.launcher;
+            IOManager.SaveCacheLauncher(cache);
+            string launcherName = cache.settings[LauncherSettings.launcherName];
+            TurnEventsOff();
+            ReloadLauncherList(false);
+            if(LauncherSelector.ItemsSource is ObservableCollection<Cache_DisplayLauncher> list)
+            {
+                foreach (var item in list)
+                {
+                    if(item.name == launcherName)
+                    {
+                        LauncherSelector.SelectedItem = item;
+                        LoadLauncher();
+                        return;
+                    }
+                }
+            }
+            Debug.WriteLine("Error : couldn't find the newly created launcher !?");
+            
+        };
     }
 
     public void CreateEmptyLauncher(object? sender = null, RoutedEventArgs e = null)

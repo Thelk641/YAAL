@@ -232,7 +232,7 @@ public partial class App : Application
                 desktop.MainWindow = new MainWindow();
                 //desktop.MainWindow = new UpdateWindow();
             }*/
-            desktop.MainWindow = new CustomThemeMaker();
+            desktop.MainWindow = new CLMakerWindow(launcher);
         }
         base.OnFrameworkInitializationCompleted();
     }

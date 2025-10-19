@@ -11,6 +11,7 @@ namespace YAAL
     {
         File,
         Folder,
+        NewFile,
         Play,
         ToolPlay,
         Settings,

@@ -1,6 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="YAAL.Command_Isolate"
+			 xmlns:local="clr-namespace:YAAL"
              HorizontalAlignment="Stretch"
              Height="108"
              MinWidth="450"
@@ -15,13 +16,51 @@
     HorizontalAlignment="Stretch"
     Background="#AAA"
           >
-      <Grid ColumnDefinitions="30, 8, 120, 8, *" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-		  <Grid RowDefinitions="0, *,8,*,0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="0">
-          <Button Name="MoveUp" Content="↑" Grid.Row="1" Width="30" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-          <Button Name="MoveDown" Content="↓" Grid.Row="3" Width="30" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
-        </Grid>
+      <Grid ColumnDefinitions="30, 8, 100, 8, *" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+		  <Grid
+			RowDefinitions="0,*,8,*,0"
+			VerticalAlignment="Stretch"
+			HorizontalAlignment="Stretch"
+			Grid.Column="0">
 
-		<TextBlock Text="Isolate" FontSize="30" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
+			  <Button
+				  Name="MoveUp"
+				  Width="30"
+				  Height="30"
+				  Grid.Row="1"
+				  HorizontalContentAlignment="Center"
+				  HorizontalAlignment="Left"
+				  VerticalAlignment="Top"
+				  local:AutoIcon.Icon="Up"
+					>
+				  <Svg
+					  VerticalAlignment="Center"
+					  HorizontalAlignment="Center"
+					  Width="30"
+						/>
+			  </Button>
+
+			  <Button
+				  Name="MoveDown"
+				  Height="30"
+				  Grid.Row="3"
+
+				  HorizontalContentAlignment="Center"
+				  HorizontalAlignment="Left"
+				  VerticalAlignment="Bottom"
+				  local:AutoIcon.Icon="Down"
+					>
+				  <Svg
+					  VerticalAlignment="Center"
+					  HorizontalAlignment="Center"
+					  Width="30"
+						/>
+			  </Button>
+
+
+		  </Grid>
+
+		<TextBlock Text="Isolate" FontSize="25" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
 
 
 		  <Grid RowDefinitions="0,*,8,*" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="4">

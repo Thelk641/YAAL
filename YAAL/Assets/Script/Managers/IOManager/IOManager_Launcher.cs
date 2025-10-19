@@ -68,8 +68,8 @@ namespace YAAL
         public static string RenameLauncher(Cache_DisplayLauncher cache, string newName)
         {
             string trueName = FindAvailableLauncherName(newName);
-            string oldPath = Path.Combine(GetSaveLocation(launcher), cache.name);
-            string newPath = Path.Combine(GetSaveLocation(launcher), trueName);
+            string oldPath = Path.Combine(GetSaveLocation(ManagedApworlds), cache.name);
+            string newPath = Path.Combine(GetSaveLocation(ManagedApworlds), trueName);
             if (MoveFile(oldPath, newPath))
             {
                 cache.cache.settings[LauncherSettings.launcherName] = trueName;

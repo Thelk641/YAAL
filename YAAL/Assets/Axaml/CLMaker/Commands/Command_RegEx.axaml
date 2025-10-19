@@ -1,6 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="YAAL.Command_RegEx"
+			 xmlns:local="clr-namespace:YAAL"
              HorizontalAlignment="Stretch"
              Height="140"
              MinWidth="450"
@@ -15,12 +16,54 @@
     HorizontalAlignment="Stretch"
     Background="#FFF"
           >
-    <Grid ColumnDefinitions="30, 8, 120, 8, *" VerticalAlignment="Stretch">
-		<Grid RowDefinitions="0,*,8,*,0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="0">
-			<Button Name="MoveUp" Content="↑" Grid.Row="1" Width="30" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-			<Button Name="MoveDown" Content="↓" Grid.Row="3" Width="30" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+    <Grid 
+		ColumnDefinitions="30, 8, 100, 8, *" 
+		VerticalAlignment="Stretch"
+		>
+		
+		<Grid 
+			RowDefinitions="0,*,8,*,0" 
+			VerticalAlignment="Stretch" 
+			HorizontalAlignment="Stretch" 
+			Grid.Column="0">
+			
+			<Button
+				Name="MoveUp"
+				Width="30"
+				Height="30"
+				Grid.Row="1" 
+				HorizontalContentAlignment="Center"
+				HorizontalAlignment="Left"
+				VerticalAlignment="Top"
+				local:AutoIcon.Icon="Up"
+					>
+				<Svg
+					VerticalAlignment="Center"
+					HorizontalAlignment="Center"
+					Width="30"
+						/>
+			</Button>
+
+			<Button
+				Name="MoveDown"
+				Height="30"
+				Grid.Row="3"
+
+				HorizontalContentAlignment="Center"
+				HorizontalAlignment="Left"
+				VerticalAlignment="Bottom"
+				local:AutoIcon.Icon="Down"
+					>
+				<Svg
+					VerticalAlignment="Center"
+					HorizontalAlignment="Center"
+					Width="30"
+						/>
+			</Button>
+			
+		
 		</Grid>
-        <TextBlock Text="RegEx" FontSize="30" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
+        <TextBlock Text="RegEx" FontSize="25" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
         
 		
 		<Grid RowDefinitions="0,*,8,*,8,*" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="4">
@@ -33,7 +76,7 @@
 				    />
 			    <Grid 
 				    Name="GridInputFile"
-				    ColumnDefinitions="*,8,48"
+				    ColumnDefinitions="*,8,38"
 				    Grid.Column="2"
 				    HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
@@ -48,14 +91,21 @@
 				        ToolTip.Tip="The file containing text that needs replacement"
 				        IsVisible="True"
                             />
-				    <Button 
-					    Name="InputFileButton"
-					    Content="File" 
-					    Grid.Column="2" 
-					    Width="40" 
-					    HorizontalAlignment="Left" 
-					    VerticalAlignment="Center"
-					    />
+
+					<Button
+						Name="InputFileButton"
+						Width="30"
+						Grid.Column="2"
+						HorizontalAlignment="Left"
+						VerticalAlignment="Center"
+						local:AutoIcon.Icon="File"
+						>
+						<Svg
+							VerticalAlignment="Center"
+							HorizontalAlignment="Center"
+							Width="30"
+						/>
+					</Button>
 			    </Grid>
 			    <Grid
 				    Name="GridInputString"
@@ -76,7 +126,14 @@
 					
 			    </Grid>
 
-			    <Button Name="X" Content="X" Grid.Column="5" Width="30" HorizontalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+			    <Button 
+					Name="X" 
+					Content="X" 
+					Grid.Column="5" 
+					Width="30" 
+					HorizontalContentAlignment="Center" 
+					HorizontalAlignment="Right" 
+					VerticalAlignment="Center"/>
             </Grid>
 			
 			
@@ -110,7 +167,7 @@
 				/>
 				<Grid
 					Name="GridOutputFile"
-					ColumnDefinitions="*,8,40"
+					ColumnDefinitions="*,8,30"
 					Grid.Column="2"
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Center"
@@ -124,14 +181,21 @@
 						VerticalAlignment="Center"
 						ToolTip.Tip="The result file"
                         />
+
 					<Button
 						Name="OutputFileButton"
-						Content="File"
+						Width="30"
 						Grid.Column="2"
-						Width="40"
 						HorizontalAlignment="Left"
 						VerticalAlignment="Center"
-					/>
+						local:AutoIcon.Icon="File"
+						>
+						<Svg
+							VerticalAlignment="Center"
+							HorizontalAlignment="Center"
+							Width="30"
+						/>
+					</Button>
 				</Grid>
 				<Grid
 					Name="GridOutputString"

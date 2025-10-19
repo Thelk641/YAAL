@@ -17,6 +17,8 @@ namespace YAAL;
 public partial class NewLauncher : Window
 {
     private CLMakerWindow clmaker;
+    public Cache_CustomLauncher launcher;
+    public bool create = false;
     public NewLauncher()
     {
         InitializeComponent();
@@ -70,17 +72,17 @@ public partial class NewLauncher : Window
         {
             return;
         }
-        Cache_CustomLauncher launcher = new Cache_CustomLauncher();
-        launcher.settings[LauncherSettings.launcherName] = LauncherName.Text ?? "";
-        launcher.settings[LauncherSettings.gameName] = GameName.Text ?? "";
-        launcher.settings[LauncherSettings.githubURL] = GitURL.Text ?? "";
-        launcher.settings[LauncherSettings.filters] = GitFilters.Text ?? "";
-        launcher.settings[LauncherSettings.apworld] = ApworldPath.Text ?? "";
-        launcher.settings[LauncherSettings.Debug_AsyncName] = "Debug_CLMaker_Async";
-        launcher.settings[LauncherSettings.Debug_SlotName] = "Debug_CLMaker_Slot";
-        launcher.settings[LauncherSettings.Debug_Patch] = "";
-        launcher.settings[LauncherSettings.Debug_baseLauncher] = "";
-        launcher.isGame = true;
+        Cache_CustomLauncher cache = new Cache_CustomLauncher();
+        cache.settings[LauncherSettings.launcherName] = LauncherName.Text ?? "";
+        cache.settings[LauncherSettings.gameName] = GameName.Text ?? "";
+        cache.settings[LauncherSettings.githubURL] = GitURL.Text ?? "";
+        cache.settings[LauncherSettings.filters] = GitFilters.Text ?? "";
+        cache.settings[LauncherSettings.apworld] = ApworldPath.Text ?? "";
+        cache.settings[LauncherSettings.Debug_AsyncName] = "Debug_CLMaker_Async";
+        cache.settings[LauncherSettings.Debug_SlotName] = "Debug_CLMaker_Slot";
+        cache.settings[LauncherSettings.Debug_Patch] = "";
+        cache.settings[LauncherSettings.Debug_baseLauncher] = "";
+        cache.isGame = true;
 
 
         if (ApworldPath.Text != null && ApworldPath.Text != "")
@@ -102,13 +104,15 @@ public partial class NewLauncher : Window
             {
                 {"apworldTarget", ApworldPath.Text }
             };
-            launcher.instructions.Add("0-Apworld", instructionSettings);
+            cache.instructions.Add("0-Apworld", instructionSettings);
             IOManager.CreateNewDownloadCache(LauncherName.Text, VersionName.Text);
         }
 
-        IOManager.SaveCacheLauncher(launcher);
-        Window? parentWindow = this.GetVisualRoot() as Window;
-        clmaker.LoadLauncher(launcher);
-        parentWindow.Close();
+        this.launcher = cache;
+        create = true;
+        if(this.GetVisualRoot() is Window parentWindow)
+        {
+            parentWindow.Close();
+        }
     }
 }

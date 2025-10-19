@@ -1,6 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="YAAL.Command_Open"
+			 xmlns:local="clr-namespace:YAAL"
              HorizontalAlignment="Stretch"
              Height="108"
              MinWidth="450"
@@ -15,16 +16,54 @@
     HorizontalAlignment="Stretch"
     Background="#FFF"
           >
-        <Grid ColumnDefinitions="30, 8, 120, 8, *" VerticalAlignment="Stretch">
+        <Grid ColumnDefinitions="30, 8, 100, 8, *" VerticalAlignment="Stretch">
 
-			<Grid RowDefinitions="0, *,8,*" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="0">
-				<Button Name="MoveUp" Content="↑" Grid.Row="1" Width="30" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-				<Button Name="MoveDown" Content="↓" Grid.Row="3" Width="30" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+			<Grid
+			RowDefinitions="0,*,8,*,0"
+			VerticalAlignment="Stretch"
+			HorizontalAlignment="Stretch"
+			Grid.Column="0">
+
+				<Button
+					Name="MoveUp"
+					Width="30"
+					Height="30"
+					Grid.Row="1"
+					HorizontalContentAlignment="Center"
+					HorizontalAlignment="Left"
+					VerticalAlignment="Top"
+					local:AutoIcon.Icon="Up"
+					>
+					<Svg
+						VerticalAlignment="Center"
+						HorizontalAlignment="Center"
+						Width="30"
+						/>
+				</Button>
+
+				<Button
+					Name="MoveDown"
+					Height="30"
+					Grid.Row="3"
+
+					HorizontalContentAlignment="Center"
+					HorizontalAlignment="Left"
+					VerticalAlignment="Bottom"
+					local:AutoIcon.Icon="Down"
+					>
+					<Svg
+						VerticalAlignment="Center"
+						HorizontalAlignment="Center"
+						Width="30"
+						/>
+				</Button>
+
+
 			</Grid>
-          <TextBlock Text="Open" FontSize="30" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
+          <TextBlock Text="Open" FontSize="25" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
           
           <Grid RowDefinitions="0,*,8,*" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="4">
-            <Grid ColumnDefinitions="*,8,116,30" Grid.Row="1">
+            <Grid ColumnDefinitions="*,8,68, 8 ,30" Grid.Row="1">
               <TextBox
                 Name="FilePath"
                 Watermark="File to open"
@@ -33,11 +72,43 @@
                 VerticalAlignment="Stretch"
 				ToolTip.Tip="The file or folder to open"
                   />
-              <Grid ColumnDefinitions="40, 8, 60" Width="108" Grid.Column="2" HorizontalAlignment="Left">
-                <Button Name="File" Content="File" Grid.Column="0" Width="40" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                <Button Name="Folder" Content="Folder" Grid.Column="2" Width="60" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+              <Grid ColumnDefinitions="30, 6, 30" Width="108" Grid.Column="2" HorizontalAlignment="Left">
+
+				  <Button
+						Name="File"
+						Width="30"
+						Height="30"
+						Grid.Column="0"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						local:AutoIcon.Icon="File"
+						ToolTip.Tip="Select a file"
+						>
+					  <Svg
+						  VerticalAlignment="Center"
+						  HorizontalAlignment="Center"
+						  Width="30"
+						/>
+				  </Button>
+
+				  <Button
+						Name="Folder"
+						Width="30"
+						Height="30"
+						Grid.Column="2"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						local:AutoIcon.Icon="Folder"
+						ToolTip.Tip="Select a folder"
+						>
+					  <Svg
+						  VerticalAlignment="Center"
+						  HorizontalAlignment="Center"
+						  Width="20"
+						/>
+				  </Button>
               </Grid>
-				<Button Name="X" Content="X" Grid.Column="3" Width="30" HorizontalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Top"/>
+				<Button Name="X" Content="X" Grid.Column="4" Width="30" Height="30" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
             </Grid>
 
             <Grid ColumnDefinitions="*,8,116,30" Grid.Row="3">

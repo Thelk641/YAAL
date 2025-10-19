@@ -23,7 +23,7 @@
 					Grid.Column="0"
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
-					local:AutoIcon.Icon="File"
+					local:AutoIcon.Icon="NewFile"
 					>
 					<Svg
 						VerticalAlignment="Center"
