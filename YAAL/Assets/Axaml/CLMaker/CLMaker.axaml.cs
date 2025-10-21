@@ -18,6 +18,10 @@ public partial class CLMakerWindow : Window
         InitializeComponent();
         this.Closing += (_, e) =>
         {
+            if(customLauncher == null)
+            {
+                return;
+            }
             if (customLauncher.ReadyToClose()) {
                 _clMakerWindow = null;
                 return;

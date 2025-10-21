@@ -20,6 +20,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Assets\Axaml\CLMaker\VersionManager\VersionManager.axaml.cs">
+      <DependentUpon>VersionManager.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Assets\Axaml\CLMaker\VersionManager\VersionFile.axaml.cs">
+      <DependentUpon>VersionFile.axaml</DependentUpon>
+    </Compile>
     <Compile Update="Assets\Axaml\ColorSelector\ColorSelector.axaml.cs">
       <DependentUpon>ColorSelector.axaml</DependentUpon>
     </Compile>

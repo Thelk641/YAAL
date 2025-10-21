@@ -182,11 +182,16 @@ namespace YAAL
         public static void UpdateLauncherList()
         {
             launcherList = new Cache_LauncherList();
-            foreach (var item in GetLauncherList())
+            var list = GetLauncherList();
+            if(list.Count > 0)
             {
-                Cache_CustomLauncher cache = LoadCacheLauncher(item);
-                launcherList.list[item] = cache.settings[LauncherSettings.gameName];
+                foreach (var item in GetLauncherList())
+                {
+                    Cache_CustomLauncher cache = LoadCacheLauncher(item);
+                    launcherList.list[item] = cache.settings[LauncherSettings.gameName];
+                }
             }
+            
             ReadGameList();
         }
 

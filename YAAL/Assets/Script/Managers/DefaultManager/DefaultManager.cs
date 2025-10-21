@@ -37,6 +37,13 @@ namespace YAAL
                     return userSettings;
                 }
             },
+
+            {
+                typeof(Cache_CustomLauncher), () =>
+                {
+                    return launcher;
+                }
+            },
         };
 
 
@@ -67,6 +74,15 @@ namespace YAAL
             {
                 string json = LoadFile("userSettings.json");
                 return JsonConvert.DeserializeObject<Cache_UserSettings>(json)!;
+            }
+        }
+
+        public static Cache_CustomLauncher launcher
+        {
+            get
+            {
+                string json = LoadFile("launcher.json");
+                return JsonConvert.DeserializeObject<Cache_CustomLauncher>(json)!;
             }
         }
 

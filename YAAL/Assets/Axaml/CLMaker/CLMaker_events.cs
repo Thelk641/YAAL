@@ -208,36 +208,13 @@ public partial class CLMakerWindow : Window
         };
     }
 
-    public void CreateEmptyLauncher(object? sender = null, RoutedEventArgs e = null)
+    public Cache_CustomLauncher CreateDefaultLauncher(object? sender = null, RoutedEventArgs e = null)
     {
-        if(customLauncher != null)
-        {
-            Save();
-        }
-        
-        TurnEventsOff();
-        customLauncher = new CustomLauncher();
+        Cache_CustomLauncher cache = DefaultManager.GetDefault<Cache_CustomLauncher>();
         string trueName = IOManager.FindAvailableLauncherName("NewLauncher");
-        customLauncher.SetSetting(launcherName, trueName);
-        ModeSelector.SelectedIndex = 0;
-
-        AvailableVersions.ItemsSource = new List<string> { "None" };
-        AvailableVersions.SelectedIndex = 0;
-
-        GitHubVersions.ItemsSource = new List<string> { "None" };
-        GitHubVersions.SelectedIndex = 0;
-
-        CommandSelector.ItemsSource = Templates.commandNames;
-        CommandSelector.SelectedIndex = 0;
-
-        foreach (var item in commandList)
-        {
-            item.DeleteComponent(false);
-        }
-        commandList = new List<Command>();
-        Save();
-        ReloadLauncherList();
-        TurnEventsBackOn();
+        cache.settings[LauncherSettings.launcherName] = trueName;
+        IOManager.SaveCacheLauncher(cache);
+        return cache;
     }
 
     public void DuplicateLauncher(object? sender, RoutedEventArgs e)
@@ -265,6 +242,7 @@ public partial class CLMakerWindow : Window
                 if (confirm.confirmed)
                 {
                     TurnEventsOff();
+                    customLauncher = null;
                     IOManager.DeleteLauncher(cache.name);
                     ReloadLauncherList(true);
                     TurnEventsBackOn();

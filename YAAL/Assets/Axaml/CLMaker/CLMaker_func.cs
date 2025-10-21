@@ -87,7 +87,14 @@ public partial class CLMakerWindow : Window
             LoadLauncher(display.cache);
         } else
         {
-            CreateEmptyLauncher();
+            customLauncher = null;
+            Cache_CustomLauncher launcher = CreateDefaultLauncher();
+            Cache_DisplayLauncher newDisplay = new Cache_DisplayLauncher();
+            newDisplay.cache = launcher;
+            newDisplay.name = launcher.settings[LauncherSettings.launcherName];
+            list.Add(newDisplay);
+            LauncherSelector.SelectedItem = newDisplay;
+            LoadLauncher(launcher);
         }
 
         WindowManager.UpdateComboBox(LauncherSelector);
