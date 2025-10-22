@@ -202,7 +202,7 @@ public partial class CLMakerWindow : Window
 
     public void UpdateAvailableVersion()
     {
-        List<string> newList = IOManager.GetDownloadedVersions(customLauncher.GetSetting(launcherName));
+        List<string> newList = IOManager.GetVersions(customLauncher.GetSetting(launcherName));
         if (newList.Count > 0)
         {
             AvailableVersions.ItemsSource = newList;

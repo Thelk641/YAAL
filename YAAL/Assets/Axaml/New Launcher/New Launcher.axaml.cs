@@ -105,7 +105,7 @@ public partial class NewLauncher : Window
                 {"apworldTarget", ApworldPath.Text }
             };
             cache.instructions.Add("0-Apworld", instructionSettings);
-            IOManager.CreateNewDownloadCache(LauncherName.Text, VersionName.Text);
+            IOManager.CreateNewVersionCache(LauncherName.Text, VersionName.Text);
         }
 
         this.launcher = cache;

@@ -35,6 +35,13 @@ public partial class VersionFile : UserControl
         {
             Target.Text = await IOManager.PickFolder(window);
         };
+
+        RemoveVersion.Click += (_, _) => {
+            if(window is VersionManager manager)
+            {
+                manager.RemoveFile(this);
+            }
+        };
     }
 
     public string GetTarget()
@@ -44,5 +51,10 @@ public partial class VersionFile : UserControl
             return output;
         }
         return "";
+    }
+
+    public void SetTarget(string target)
+    {
+        Target.Text = target;
     }
 }

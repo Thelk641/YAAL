@@ -9,7 +9,7 @@ namespace YAAL
     public enum FileSettings
     {
         // lower case, files
-        cache_download,
+        versions,
         userSettings,
         backupList,
         tools,

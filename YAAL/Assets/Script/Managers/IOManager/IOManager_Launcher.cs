@@ -244,7 +244,7 @@ namespace YAAL
                 return cache.toolVersions[toolName];
             } else
             {
-                List<string> versions = GetDownloadedVersions(toolName);
+                List<string> versions = GetVersions(toolName);
                 if (versions.Count > 0) {
                     string selectedVersion = versions[0];
                     SetAsyncToolVersion(asyncName, toolName, selectedVersion);

@@ -80,6 +80,30 @@ public partial class CLMakerWindow : Window
             }
         };
 
+        AddNewVersion.Click += (_, _) =>
+        {
+            if(LauncherSelector.SelectedItem is Cache_DisplayLauncher cache)
+            {
+                VersionManager manager = new VersionManager(cache.name);
+                manager.Closed += (_, _) =>
+                {
+                    UpdateAvailableVersion();
+                };
+            }
+        };
+
+        VersionSetting.Click += (_, _) =>
+        {
+            if(LauncherSelector.SelectedItem is Cache_DisplayLauncher cache && AvailableVersions.SelectedItem is string version && version != "None")
+            {
+                VersionManager manager = new VersionManager(cache.name, version);
+                manager.Closed += (_, _) =>
+                {
+                    UpdateAvailableVersion();
+                };
+            }
+        };
+
         TurnEventsBackOn();
         ReloadLauncherList(autoLoad);
     }
@@ -168,7 +192,7 @@ public partial class CLMakerWindow : Window
         {
             if (confirm.confirmed)
             {
-                IOManager.RemoveDownloadedVersion(customLauncher.GetSetting(launcherName), AvailableVersions.SelectedItem.ToString());
+                IOManager.RemoveVersion(customLauncher.GetSetting(launcherName), AvailableVersions.SelectedItem.ToString());
                 UpdateAvailableVersion();
             }
         };

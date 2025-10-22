@@ -85,7 +85,7 @@ public partial class TestWindow : Window
             this.LauncherSelect.SelectedIndex = 0;
         }
 
-        this.BaseVersionSelect.ItemsSource = IOManager.GetDownloadedVersions(this.LauncherSelect.SelectedItem.ToString());
+        this.BaseVersionSelect.ItemsSource = IOManager.GetVersions(this.LauncherSelect.SelectedItem.ToString());
         if (cache.settings[version] != "")
         {
             try
@@ -226,7 +226,7 @@ public partial class TestWindow : Window
 
         if (launcher.settings[version] == "")
         {
-            List<string> available = IOManager.GetDownloadedVersions(launcher.settings[launcherName]);
+            List<string> available = IOManager.GetVersions(launcher.settings[launcherName]);
             IOManager.SetSlotSetting(asyncName, slotName, version, available[0]);
         }
     }
@@ -274,7 +274,7 @@ public partial class TestWindow : Window
             CustomLauncher baseLauncher = launcher.GetBaseLauncher();
             if (baseLauncher != null)
             {
-                List<string> available = IOManager.GetDownloadedVersions(baseLauncher.settings[launcherName]);
+                List<string> available = IOManager.GetVersions(baseLauncher.settings[launcherName]);
                 if (available.Count == 0)
                 {
                     ErrorManager.AddNewError(

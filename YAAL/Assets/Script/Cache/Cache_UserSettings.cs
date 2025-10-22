@@ -55,7 +55,7 @@ namespace YAAL
             saveLocation[Rendered] = Path.Combine(saveLocation[FileSettings.Assets], Rendered.ToString());
 
             // lowercase, files
-            saveLocation[cache_download] = Path.Combine(saveLocation[ManagedApworlds], cache_download.GetFileName());
+            saveLocation[versions] = Path.Combine(saveLocation[ManagedApworlds], versions.GetFileName());
             saveLocation[backupList] = Path.Combine(saveLocation[ManagedApworlds], backupList.GetFileName());
             saveLocation[tools] = Path.Combine(saveLocation[ManagedApworlds], tools.GetFileName());
             saveLocation[launcherList] = "./" + launcherList.GetFileName();

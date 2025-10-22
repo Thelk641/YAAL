@@ -13,26 +13,6 @@ namespace YAAL
 {
     public static partial class IOManager
     {
-        public static void RemoveDownloadedVersion(string game, string version)
-        {
-            string path = Path.Combine(GetSaveLocation(ManagedApworlds), game, version);
-            if (!Directory.Exists(path))
-            {
-                return;
-            }
-            HardDeleteFile(path);
-            string cacheJson = Path.Combine(GetSaveLocation(ManagedApworlds), game, cache_download.GetFileName());
-            if (File.Exists(cacheJson))
-            {
-                Cache_Download cache = LoadCache<Cache_Download>(cacheJson);
-                if (cache.downloadedInfos.ContainsKey(version))
-                {
-                    cache.downloadedInfos.Remove(version);
-                    SaveCache<Cache_Download>(cacheJson, cache);
-                }
-            }
-        }
-
         public static string FindAvailableDirectoryName(string origin, string baseName)
         {
             if (!Directory.Exists(Path.Combine(origin, baseName)))

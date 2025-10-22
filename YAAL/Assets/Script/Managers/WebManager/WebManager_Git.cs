@@ -295,7 +295,8 @@ public static partial class WebManager
         string folder = Path.Combine(IOManager.GetSaveLocation(ManagedApworlds), gameName, version);
         // ManagedApworlds > launcher name > version
 
-        List<string> downloadedFiles = new List<string>();
+        List<string> downloadedFilesURL = new List<string>();
+        List<string> downloadedFilesPath = new List<string>();
 
         bool hasDownloadedAnything = false;
 
@@ -319,7 +320,8 @@ public static partial class WebManager
                 {
                     if(await DownloadFile(downloadUrl, savePath))
                     {
-                        downloadedFiles.Add(downloadUrl);
+                        downloadedFilesURL.Add(downloadUrl);
+                        downloadedFilesPath.Add(savePath);
                         hasDownloadedAnything = true;
                     } else
                     {
@@ -334,7 +336,7 @@ public static partial class WebManager
 
         if (hasDownloadedAnything)
         {
-            IOManager.UpdateDownloadCache(gameName, version, downloadedFiles);
+            IOManager.AddDownloadedFilesToVersion(gameName, version, downloadedFilesURL, downloadedFilesPath);
         }
 
         return true;

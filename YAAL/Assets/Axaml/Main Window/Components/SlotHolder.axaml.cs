@@ -561,7 +561,7 @@ public partial class SlotHolder : UserControl
         {
             return;
         }
-        List<string> versions = IOManager.GetDownloadedVersions(SelectedLauncher.SelectedItem.ToString());
+        List<string> versions = IOManager.GetVersions(SelectedLauncher.SelectedItem.ToString());
         SelectedVersion.ItemsSource = versions;
 
         var prevSelection = SelectedVersion.SelectedItem;

@@ -35,7 +35,7 @@ public class CustomLauncher
     public event Action DoneRestoring;
 
     // Permanent settings, saved in launcher.json
-    // Defaults set in New Launcher.axaml.cs
+    // Defaults set in DefaultManager
     public Dictionary<LauncherSettings, string> selfsettings = new Dictionary<LauncherSettings, string>();
     public Dictionary<string, string> customSettings = new Dictionary<string, string>();
 
@@ -837,26 +837,6 @@ public class CustomLauncher
         {
             waitingForRestore = false;
             DoneRestoring?.Invoke();
-        }
-    }
-
-    public async Task<string> GetUpdate()
-    {
-        string newLink = selfsettings[githubURL] ?? "";
-        if(newLink == "" || !WebManager.IsValidGitURL(newLink))
-        {
-            return "";
-        }
-
-        List<string> downloadables = await WebManager.GetVersions(newLink);
-        List<string> downloaded = IOManager.GetDownloadedVersions(GetSetting(launcherName));
-
-        if (downloadables[0] == downloadables[0])
-        {
-            return "";
-        } else
-        {
-            return downloadables[0];
         }
     }
 
