@@ -44,15 +44,6 @@ namespace YAAL.Assets.Scripts
 
         public void LoadThemes()
         {
-            themes["General Theme"] = IOManager.GetGeneralTheme();
-            foreach (var item in IOManager.GetLauncherList())
-            {
-                Cache_CustomLauncher cache = IOManager.LoadCacheLauncher(item);
-                if(cache.customTheme != null)
-                {
-                    themes[item] = cache.customTheme;
-                }
-            }
         }
 
         public void SetTheme(string key, Cache_Theme theme)
@@ -61,16 +52,16 @@ namespace YAAL.Assets.Scripts
             ThemeChanged?.Invoke(this, key);
         }
 
-        public Cache_Theme? GetTheme(string key)
+        public Cache_Theme? GetTheme()
         {
-            if (themes.ContainsKey(key))
-            {
-                return themes[key];
-            }
-            else
-            {
-                return null;
-            }
+            Cache_Theme output = new Cache_Theme();
+            return output;
+        }
+
+        public Cache_Theme? GetTheme(string name)
+        {
+            Cache_Theme output = new Cache_Theme();
+            return output;
         }
     }
 }

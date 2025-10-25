@@ -10,70 +10,9 @@
     "Debug_AsyncName": "Debug_CLMaker_Async",
     "Debug_SlotName": "Debug_CLMaker_Slot",
     "Debug_Patch": "",
-    "Debug_baseLauncher": ""
+    "Debug_baseLauncher": "",
+    "customTheme" : "None"
   },
   "customSettings": {},
-  "isGame": true,
-  "customTheme": {
-    "name": null,
-    "offset": 10,
-    "categories": {
-      "backgroundColor": {
-        "isImage": false,
-        "color": {
-          "A": 255,
-          "R": 0,
-          "G": 0,
-          "B": 0
-        },
-        "opacity": 1.0,
-        "imageSource": null,
-        "stretch": 0,
-        "tilemode": 0,
-        "isTransparent": false
-      },
-      "foregroundColor": {
-        "isImage": false,
-        "color": {
-          "A": 255,
-          "R": 49,
-          "G": 49,
-          "B": 49
-        },
-        "opacity": 1.0,
-        "imageSource": null,
-        "stretch": 0,
-        "tilemode": 0,
-        "isTransparent": false
-      },
-      "dropdownColor": {
-        "isImage": false,
-        "color": {
-          "A": 255,
-          "R": 29,
-          "G": 29,
-          "B": 29
-        },
-        "opacity": 1.0,
-        "imageSource": null,
-        "stretch": 0,
-        "tilemode": 0,
-        "isTransparent": false
-      },
-      "buttonColor": {
-        "isImage": false,
-        "color": {
-          "A": 255,
-          "R": 90,
-          "G": 90,
-          "B": 90
-        },
-        "opacity": 1.0,
-        "imageSource": null,
-        "stretch": 0,
-        "tilemode": 0,
-        "isTransparent": false
-      }
-    }
-  }
+  "isGame": true
 }

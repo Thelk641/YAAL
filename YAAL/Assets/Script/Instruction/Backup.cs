@@ -63,7 +63,7 @@ namespace YAAL
 
                 foreach (var item in splitDefault)
                 {
-                    if(item == "")
+                    if(item == "" || item == " ")
                     {
                         trueDefaults.Add("");
                         newSetting += "\" \"";

@@ -310,6 +310,17 @@ public class CustomLauncher
             {
                 return IOManager.FindApworld(this.settings[LauncherSettings.apfolder], text);
             }
+
+            while (text.StartsWith("\""))
+            {
+                text = text.TrimStart('\"');
+            }
+
+            while (text.EndsWith("\""))
+            {
+                text = text.TrimEnd('\"');
+            }
+
             return text;
         }
 

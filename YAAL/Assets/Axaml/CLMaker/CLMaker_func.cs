@@ -196,6 +196,18 @@ public partial class CLMakerWindow : Window
         {
             NamingBox.Text = display.name;
         }
+
+        string theme = "None";
+
+        if (customLauncher.selfsettings.ContainsKey(LauncherSettings.customTheme))
+        {
+            theme = customLauncher.selfsettings[LauncherSettings.customTheme];
+        }
+
+        if(ThemeSelector.ItemsSource is List<string> list && list.Contains(theme))
+        {
+            ThemeSelector.SelectedItem = theme;
+        }
         
         TurnEventsBackOn();
     }

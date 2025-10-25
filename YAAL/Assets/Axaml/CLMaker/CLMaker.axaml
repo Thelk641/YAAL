@@ -279,29 +279,30 @@
     
 		<!-- Bottom of the Window, mode selector, command add, text -->
 		<Grid 
-			ColumnDefinitions="120, 100, *, 246, 8, 100" 
+			ColumnDefinitions="100, 8, 200, *, 246, 8, 100" 
 			VerticalAlignment="Bottom" 
 			Grid.Row="6"
 			>
-			
-			<TextBlock 
-				Text="Launcher mode : "  
-				Grid.Column="0" 
-				VerticalAlignment="Center" 
-				HorizontalAlignment="Left"
-				/>
 		  
 			<ComboBox 
 				Name="ModeSelector"  
-				Grid.Column="1"  
-				Width="100" 
+				Grid.Column="0"  
 				VerticalAlignment="Stretch" 
+				HorizontalAlignment="Stretch"
+				ToolTip.Tip="A slot has a single Game while Tools can be used on any slot"
+				/>
+			<ComboBox
+				Name="ThemeSelector"
+				Grid.Column="2"
+				VerticalAlignment="Stretch"
+				HorizontalAlignment="Stretch"
+				ToolTip.Tip="Custom theme, select 'None' to use the general theme"
 				/>
 			<Button 
 				Name="OpenTestWindow" 
 				Content="Test" 
 				HorizontalContentAlignment="Center" 
-				Grid.Column="5" 
+				Grid.Column="6" 
 				Width="100" 
 				HorizontalAlignment="Left"
 				/>

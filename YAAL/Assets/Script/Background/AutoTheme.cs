@@ -196,7 +196,7 @@ namespace YAAL
 
         private static void ApplyScrollbarTheme(ScrollViewer scrollViewer)
         {
-            IBrush brush = App.Settings.GetTheme("General Theme").categories[ThemeSettings.foregroundColor].GetBrush();
+            IBrush brush = App.Settings.GetTheme().categories[ThemeSettings.foregroundColor].GetBrush();
             var rectangle = scrollViewer.GetVisualDescendants().OfType<Rectangle>().FirstOrDefault();
             if(rectangle != null)
             {

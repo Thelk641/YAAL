@@ -235,7 +235,8 @@ public partial class SlotHolder : UserControl
             {
                 return;
             }
-            if (thisSlot.settings[SlotSettings.patch] == "" && selectedSlot.cache.patchURL != "" && AutomaticPatch.IsVisible)
+            //TODO : No idea why selectedSlot would be null, but it is ?
+            if (thisSlot.settings[SlotSettings.patch] == "" && selectedSlot != null && selectedSlot.cache.patchURL != "" && AutomaticPatch.IsVisible)
             {
                 await AutoDownload();
             }

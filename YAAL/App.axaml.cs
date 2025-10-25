@@ -232,7 +232,8 @@ public partial class App : Application
                 desktop.MainWindow = new MainWindow();
                 //desktop.MainWindow = new UpdateWindow();
             }*/
-            desktop.MainWindow = new CLMakerWindow(launcher);
+            //desktop.MainWindow = new CLMakerWindow(launcher);
+            desktop.MainWindow = new MainWindow();
         }
         base.OnFrameworkInitializationCompleted();
     }

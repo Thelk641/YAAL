@@ -29,6 +29,17 @@ public partial class CLMakerWindow : Window
         CommandSelector.ItemsSource = Templates.commandNames;
         CommandSelector.SelectedIndex = 0;
 
+        List<string> themeList = new List<string> { "None" };
+
+        foreach (var item in IOManager.GetThemeList())
+        {
+            themeList.Add(item);
+        }
+
+        ThemeSelector.ItemsSource = themeList;
+        ThemeSelector.SelectedIndex = 0;
+        WindowManager.UpdateComboBox(ThemeSelector);
+
         this.Closing += OnWindowClosed;
 
         EmptyLauncher.Click += CreateNewLauncher;
@@ -129,6 +140,13 @@ public partial class CLMakerWindow : Window
     {
         ModeSelector.SelectionChanged += ModeSelector_ChangedSelection;
         LauncherSelector.SelectionChanged += LauncherSelector_ChangedSelection;
+        ThemeSelector.SelectionChanged += (_, _) =>
+        {
+            if(customLauncher != null && ThemeSelector.SelectedItem is string selection)
+            {
+                customLauncher.selfsettings[LauncherSettings.customTheme] = selection;
+            }
+        };
     }
 
     private async void TurnEventsBackOn()
