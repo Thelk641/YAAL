@@ -159,7 +159,10 @@ public class CustomLauncher
         // Read all the custom settings, these might override the ones above
         foreach (var item in customSettings)
         {
-            settings[item.Key] = item.Value;
+            if(item.Value != "")
+            {
+                settings[item.Key] = item.Value;
+            }
         }
 
         if (!isGame)

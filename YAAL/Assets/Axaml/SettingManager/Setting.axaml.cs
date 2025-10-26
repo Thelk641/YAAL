@@ -111,14 +111,14 @@ public partial class Setting : UserControl
 
     public string GetValue(out string value)
     {
-        if(realValue == "")
-        {
-            value = SetValue.Text;
-        } else
+        if(Enum.TryParse<HardcodedSettings>(SetName.Text, out HardcodedSettings name))
         {
             value = realValue;
+        } else
+        {
+            value = SetValue.Text!;
         }
-        return SetName.Text;
+        return SetName.Text!;
     }
 
     private void SetupSoftCodedSetting()
