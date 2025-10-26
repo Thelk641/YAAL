@@ -309,11 +309,6 @@ public class CustomLauncher
 
         if (!text.Contains("${"))
         {
-            if (text.Contains(".apworld") && !text.Contains("\\"))
-            {
-                return IOManager.FindApworld(this.settings[LauncherSettings.apfolder], text);
-            }
-
             while (text.StartsWith("\""))
             {
                 text = text.TrimStart('\"');
@@ -322,6 +317,11 @@ public class CustomLauncher
             while (text.EndsWith("\""))
             {
                 text = text.TrimEnd('\"');
+            }
+
+            if (text.Contains(".apworld") && !text.Contains("\\"))
+            {
+                return IOManager.FindApworld(this.settings[LauncherSettings.apfolder], text);
             }
 
             return text;

@@ -60,7 +60,7 @@ namespace YAAL
                     return true;
                 case 1:
                     bool success = IOManager.UpdateFileToVersion(
-                    target,
+                    apworlds[0],
                     this.settings[launcherName],
                     this.settings[SlotSettings.version],
                     this.InstructionSetting[necessaryFile]
