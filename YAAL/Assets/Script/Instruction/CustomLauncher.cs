@@ -845,7 +845,6 @@ public class CustomLauncher
 
     public void NoteRestore(Interface_Instruction instruction)
     {
-        Debug.WriteLine("Done restoring for instruction of type " + instruction.GetInstructionType());
         instructionWaiting.Remove(instruction);
         if(instructionWaiting.Count == 0)
         {

@@ -9,7 +9,9 @@ namespace YAAL
     public enum ApworldSettings
     {
         apworldTarget,
-        necessaryFile
+        necessaryFile,
+        optimize,
+        processName,
     }
 
     public enum BackupSettings

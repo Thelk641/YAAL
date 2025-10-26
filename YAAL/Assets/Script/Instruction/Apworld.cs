@@ -1,16 +1,18 @@
-﻿using System;
+﻿using Avalonia.Platform.Storage;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static YAAL.LauncherSettings;
 using static YAAL.ApworldSettings;
+using static YAAL.LauncherSettings;
 
 namespace YAAL
 {
     public class Apworld : Instruction<ApworldSettings>
     {
         public bool readyToRestore = false;
+        private List<string> apworlds = new List<string>();
 
         public Apworld()
         {
@@ -43,8 +45,40 @@ namespace YAAL
                 }
             }
 
-            //target = customLauncher.ParseTextWithSettings(target);
-            List<string> apworlds = customLauncher.SplitAndParse(target);
+            apworlds = customLauncher.SplitAndParse(target);
+
+            if (this.InstructionSetting[optimize] == true.ToString())
+            {
+                if (!this.InstructionSetting.ContainsKey(processName) || this.InstructionSetting[processName] == "")
+                {
+                    ErrorManager.AddNewError(
+                        "Apworld - Failed to find a restore target",
+                        "If you use 'optimize apworlds', you must provide a variable name. Without one, YAAL would backup your apworlds, but never restore them, which is probably not your intension. If it is, give it a name not used anywhere else and it'll bypass this error."
+                        );
+                    return false;
+                }
+
+                string apLauncher = customLauncher.ParseTextWithSettings("${aplauncher}");
+                if (!IOManager.IsolateApworlds(apLauncher, apworlds))
+                {
+                    ErrorManager.AddNewError(
+                        "Apworld - Failed to isolate apworlds",
+                        "Apworld's optimization threw an error. Please see other errors for more information."
+                        );
+                    IOManager.RestoreApworlds(apLauncher, apworlds);
+                    return false;
+                }
+
+                if(!customLauncher.AttachToClosing(this, this.InstructionSetting[processName]))
+                {
+                    ErrorManager.AddNewError(
+                        "Apworld - Failed to attach to a process",
+                        "Customlauncher failed to parse the variable name. Please see other errors for more information."
+                        );
+                    IOManager.RestoreApworlds(apLauncher, apworlds);
+                    return false;
+                }
+            }
 
             switch (apworlds.Count)
             {
@@ -97,6 +131,12 @@ namespace YAAL
         public string GetTarget()
         {
             return this.InstructionSetting[apworldTarget];
+        }
+
+        public override void ParseProcess(object? sender, EventArgs e)
+        {
+            string apLauncher = customLauncher.ParseTextWithSettings("${aplauncher}");
+            IOManager.RestoreApworlds(apLauncher, apworlds);
         }
     }
 }

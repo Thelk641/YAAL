@@ -3,11 +3,11 @@
              x:Class="YAAL.Command_Apworld"
 			 xmlns:local="clr-namespace:YAAL"
              HorizontalAlignment="Stretch"
-             Height="108"
+             Height="140"
              MinWidth="450"
 			 Name="TrueBackground"
              >
-  <Border 
+    <Border 
     Name="BackgroundColor"
     BorderBrush="Gray"
     BorderThickness="1"
@@ -16,116 +16,146 @@
     Padding="8"
     HorizontalAlignment="Stretch"
     Background="#FFF"
-          >
-    <StackPanel Orientation="Vertical" Height="50" VerticalAlignment="Top">
-      <Grid ColumnDefinitions="30, 8, 100, 8, *">
-		  <Grid
-			  RowDefinitions="0,*,8,*,0"
-			  VerticalAlignment="Stretch"
-			  HorizontalAlignment="Stretch"
-			  Grid.Column="0">
+    >
+        <Grid
+        ColumnDefinitions="30, 8, 100, 8, *"
+        VerticalAlignment="Stretch"
+        >
 
-			  <Button
-				  Name="MoveUp"
-				  Width="30"
-				  Height="30"
-				  Grid.Row="1"
-				  HorizontalContentAlignment="Center"
-				  HorizontalAlignment="Left"
-				  VerticalAlignment="Top"
-				  local:AutoIcon.Icon="Up"
-					>
-				  <Svg
-					  VerticalAlignment="Center"
-					  HorizontalAlignment="Center"
-					  Width="30"
+            <Grid
+            RowDefinitions="0,*,8,*,0"
+            VerticalAlignment="Stretch"
+            HorizontalAlignment="Stretch"
+            Grid.Column="0">
+
+                <Button
+                    Name="MoveUp"
+                    Width="30"
+                    Height="30"
+                    Grid.Row="1"
+                    HorizontalContentAlignment="Center"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    local:AutoIcon.Icon="Up"
+                    >
+                    <Svg
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        Width="30"
+                    />
+                </Button>
+			  
+                <Button
+                    Name="MoveDown"
+                    Height="30"
+                    Grid.Row="3"
+                    HorizontalContentAlignment="Center"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Bottom"
+                    local:AutoIcon.Icon="Down"
+                    >
+                    <Svg
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        Width="30"
+                    />
+                </Button>
+            </Grid>
+		  
+            <TextBlock Text="Apworld" FontSize="25" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
+		
+            <Grid RowDefinitions="0,*,8,*,8,*,8" VerticalAlignment="Top" HorizontalAlignment="Stretch" Grid.Column="4">
+                <Grid ColumnDefinitions="0, 25, 150, 8, 25, 150, *, 30" Grid.Row="1" HorizontalAlignment="Stretch">
+                    <CheckBox
+                        Grid.Column="1"
+                        Name="IsNecessary"
+                        ToolTip.Tip="Do we need to error out if the selected version doesn't countain this ?"
+                        IsChecked="True"
+                        />
+                    <TextBlock
+                        Text="Stricly necessary"
+                        Grid.Column="2"
+                        VerticalAlignment="Center"
+                        FontSize="16"
+                        />
+                    <Button 
+						Name="X" 
+						Content="X" 
+						Grid.Column="7" 
+						Width="30" 
+						HorizontalContentAlignment="Center" 
+						HorizontalAlignment="Right" 
+						VerticalAlignment="Top"
 						/>
-			  </Button>
+                </Grid>
 
-			  <Button
-				  Name="MoveDown"
-				  Height="30"
-				  Grid.Row="3"
+                <Grid ColumnDefinitions="*, 8, 68" Grid.Row="3" HorizontalAlignment="Stretch">
+                    <TextBox
+                    Name="BackupTarget"
+                    Watermark=".apworld or equivalent"
+                    Grid.Column="0"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    />
+                    <Grid ColumnDefinitions="30,8,30" Grid.Column="2" HorizontalAlignment="Right">
+                        <Button
+                            Name="FileTarget"
+                            Width="30"
+                            Height="30"
+                            Grid.Column="0"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            local:AutoIcon.Icon="File"
+                            ToolTip.Tip="Select a file"
+                            >
+                            <Svg
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center"
+                                Width="30"
+                                />
+                        </Button>
 
-				  HorizontalContentAlignment="Center"
-				  HorizontalAlignment="Left"
-				  VerticalAlignment="Top"
-				  local:AutoIcon.Icon="Down"
-					>
-				  <Svg
-					  VerticalAlignment="Center"
-					  HorizontalAlignment="Center"
-					  Width="30"
+                        <Button
+                            Name="FolderTarget"
+                            Width="30"
+                            Height="30"
+                            Grid.Column="2"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            local:AutoIcon.Icon="Folder"
+                            ToolTip.Tip="Select a folder"
+                            >
+                            <Svg
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center"
+                                Width="20"
+                                />
+                        </Button>            
+                    </Grid>
+                </Grid>
+				
+				<Grid Grid.Row="5" ColumnDefinitions="25, 150, 8, *, 116">
+                    <CheckBox
+                        Grid.Column="0"
+                        Name="Optimize"
+                        ToolTip.Tip="Do we need to error out if the selected version doesn't countain this ?"
+                        IsChecked="True"
+                        />
+                    <TextBlock
+                        Text="Optimize apworlds"
+                        Grid.Column="1"
+                        VerticalAlignment="Center"
+                        FontSize="16"
+                        />
+					
+					<TextBox
+						Name="VarName"
+						Grid.Column="4"
+						Watermark="Variable name"
+						ToolTip.Tip="Only used if optimizations are turned on"
 						/>
-			  </Button>
-
-
-		  </Grid>
-        <TextBlock Text="Apworld" FontSize="25" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
-        <Grid RowDefinitions="0, 1*,8,1*,8" VerticalAlignment="Top" HorizontalAlignment="Stretch" Grid.Column="4">
-          <Grid ColumnDefinitions="0, 25, 150, *, 30" Grid.Row="1" HorizontalAlignment="Stretch">
-			  <CheckBox
-				  Grid.Column="1"
-				  Name="IsNecessary"
-				  ToolTip.Tip="Do we need to error out if the selected version doesn't countain this ?"
-				  IsChecked="True"
-				  />
-			  <TextBlock
-				  Text="Stricly necessary"
-				  Grid.Column="2"
-				  VerticalAlignment="Center"
-				  FontSize="16"
-				  />
-			  <Button Name="X" Content="X" Grid.Column="4" Width="30" HorizontalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Top"/>
-          </Grid>
-
-          <Grid ColumnDefinitions="*, 8, 68" Grid.Row="3" HorizontalAlignment="Stretch">
-			  <TextBox
-              Name="BackupTarget"
-              Watermark=".apworld or equivalent"
-              Grid.Column="0"
-              HorizontalAlignment="Stretch"
-              VerticalAlignment="Stretch"
-                  />
-            <Grid ColumnDefinitions="30,8,30" Grid.Column="2" HorizontalAlignment="Right">
-				<Button
-					Name="FileTarget"
-					Width="30"
-					Height="30"
-					Grid.Column="0"
-					HorizontalAlignment="Stretch"
-					VerticalAlignment="Stretch"
-					local:AutoIcon.Icon="File"
-					ToolTip.Tip="Select a file"
-					>
-					<Svg
-						VerticalAlignment="Center"
-						HorizontalAlignment="Center"
-						Width="30"
-						/>
-				</Button>
-
-				<Button
-					  Name="FolderTarget"
-					  Width="30"
-					  Height="30"
-					  Grid.Column="2"
-					  HorizontalAlignment="Stretch"
-					  VerticalAlignment="Stretch"
-					  local:AutoIcon.Icon="Folder"
-					  ToolTip.Tip="Select a folder"
-						>
-					<Svg
-						VerticalAlignment="Center"
-						HorizontalAlignment="Center"
-						Width="20"
-						/>
-				</Button>            
-			</Grid>
-            
-          </Grid>
+                </Grid>
+            </Grid>
         </Grid>
-      </Grid>
-    </StackPanel>
-  </Border>
+    </Border>
 </UserControl>

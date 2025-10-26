@@ -132,7 +132,7 @@ namespace YAAL
                 {
                     ErrorManager.AddNewError(
                         "Patch - Failed to isolate apworlds",
-                        "Patch's optimization threw an error. Most likely, you tried to isolate twice without first restoring, this is not allowed."
+                        "Patch's optimization threw an error. Please see other errors for more information."
                         );
                     IOManager.RestoreApworlds(apLauncher, apworlds);
                     return false;
