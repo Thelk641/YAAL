@@ -267,8 +267,21 @@ public partial class CLMakerWindow : Window
         {
             string trueName = IOManager.FindAvailableLauncherName(cache.name);
             customLauncher.SetSetting(launcherName, trueName);
+            cache.name = trueName;
+            NamingBox.Text = trueName;
+            Save();
+            ReloadLauncherList(false);
+            if(LauncherSelector.ItemsSource is ObservableCollection<Cache_DisplayLauncher> list)
+            {
+                foreach (var item in list)
+                {
+                    if (item.name == trueName) {
+                        LauncherSelector.SelectedItem = item;
+                        break;
+                    }
+                }
+            }
         }
-        Save();
         TurnEventsBackOn();
     }
 

@@ -126,24 +126,41 @@ namespace YAAL
             return "";
         }
 
-        public static List<string> GetLaunchersForGame(string toFind)
+        public static List<Cache_DisplayLauncher> GetLaunchersForGame(string toFind)
         {
-            List<string> output = new List<string>();
+            List<Cache_DisplayLauncher> output = new List<Cache_DisplayLauncher>();
             List<string> otherGames = new List<string>();
+
+            Cache_DisplayLauncher match = new Cache_DisplayLauncher();
+            match.name = "-- Match game";
+            match.isHeader = true;
+            output.Add(match);
+
 
             foreach (var item in launcherList.list)
             {
                 string gameName = item.Value;
                 if (gameName == toFind)
                 {
-                    output.Add(item.Key);
+                    Cache_DisplayLauncher toAdd = new Cache_DisplayLauncher();
+                    toAdd.name = item.Key;
+                    output.Add(toAdd);
+                } else
+                {
+                    otherGames.Add(item.Key);
                 }
-                otherGames.Add(item.Key);
             }
+
+            Cache_DisplayLauncher other = new Cache_DisplayLauncher();
+            other.name = "-- Other games";
+            other.isHeader = true;
+            output.Add(other);
 
             foreach (var item in otherGames)
             {
-                output.Add(item);
+                Cache_DisplayLauncher toAdd = new Cache_DisplayLauncher();
+                toAdd.name = item;
+                output.Add(toAdd);
             }
 
             return output;

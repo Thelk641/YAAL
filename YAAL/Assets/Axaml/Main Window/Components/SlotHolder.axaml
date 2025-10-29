@@ -124,14 +124,11 @@
 						<Grid Grid.Row="1" ColumnDefinitions="*,8,*" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
 							<Grid Grid.Column="0" ColumnDefinitions="30,8,*">
 								<Button
-									Content="Play"
-									Name="FakePlay"
+									Name="DeleteSlot"
+									Grid.Column="0"
 									VerticalAlignment="Stretch"
 									HorizontalAlignment="Stretch"
-									Grid.Column="0"
-									ToolTip.Tip="Launchs the selected game"
-									IsEnabled="False"
-									local:AutoIcon.Icon="Play"
+									local:AutoIcon.Icon="Trash"
 									local:VisibilityHolder.VisibilityHolder="EditMode"
 									Height="30"
 									>
@@ -145,6 +142,7 @@
 									Name="SlotName"
 									VerticalAlignment="Center"
 									HorizontalAlignment="Stretch"
+									HorizontalContentAlignment="Center"
 									Grid.Column="2"
 									ToolTip.Tip="The slot name"
 									Watermark="Slot name"
@@ -154,6 +152,7 @@
 									Name="SlotSelector"
 									VerticalAlignment="Center"
 									HorizontalAlignment="Stretch"
+									HorizontalContentAlignment="Center"
 									Grid.Column="2"
 									IsVisible="True"
 									ItemsSource="{Binding Cache_DisplaySlot}"
@@ -176,7 +175,7 @@
 									</ComboBox.ItemTemplate>
 								</ComboBox>
 							</Grid>
-							<Grid Grid.Column="2" ColumnDefinitions="*,8,30" HorizontalAlignment="Stretch">
+							<Grid Grid.Column="2" ColumnDefinitions="*,8,70,8,30" HorizontalAlignment="Stretch">
 							
 								<Grid Name="ManualPatch" IsVisible="False" ColumnDefinitions="*,8,30" Grid.Column="0">
 									<TextBox
@@ -189,20 +188,21 @@
 									Watermark="/path/to/patch"
 									/>
 									<Button
-									Name="PatchSelect"
-									Content="File"
-									Grid.Column="2"
-									VerticalAlignment="Stretch"
-									HorizontalAlignment="Stretch"
-									local:AutoIcon.Icon="File"
-									local:VisibilityHolder.VisibilityHolder="EditMode"
-									Height="30"
-									>
+										Name="PatchSelect"
+										Width="30"
+										Height="30"
+										Grid.Column="2"
+										HorizontalAlignment="Stretch"
+										VerticalAlignment="Stretch"
+										local:AutoIcon.Icon="File"
+										local:VisibilityHolder.VisibilityHolder="ManualPatch"
+										ToolTip.Tip="Select a file"
+										>
 										<Svg
 											VerticalAlignment="Center"
 											HorizontalAlignment="Center"
 											Width="30"
-									/>
+											/>
 									</Button>
 								</Grid>
 
@@ -210,10 +210,11 @@
 									<Button
 										Name="DownloadPatch"
 										Content="Download patch"
-									VerticalAlignment="Stretch"
-									HorizontalAlignment="Stretch"
+										VerticalAlignment="Stretch"
+										HorizontalAlignment="Stretch"
 										HorizontalContentAlignment="Center"
 										Grid.Column="0"
+										Height="30"
 										/>
 									<Button
 										Name="ReDownloadPatch"
@@ -222,8 +223,27 @@
 										HorizontalAlignment="Stretch"
 										Grid.Column="0"
 										IsVisible="false"
+										Height="30"
 										/>
 								</Grid>
+
+								<Grid Name="ManualAutoButton" Grid.Column="2">
+									<Button
+										Name="ManualPatchButton"
+										Content="Manual"
+										HorizontalAlignment="Stretch"
+										HorizontalContentAlignment="Center"
+										IsVisible="True"
+										/>
+									<Button
+										Name="AutomaticPatchButton"
+										Content="Auto"
+										HorizontalAlignment="Stretch"
+										HorizontalContentAlignment="Center"
+										IsVisible="False"
+										/>
+								</Grid>
+
 
 								<Button
 									Name="DoneEditing"
@@ -260,51 +280,35 @@
 					<Grid Name="EditEmptySpace2" RowDefinitions="0,*,0">
 						<Grid Grid.Row="1" ColumnDefinitions="*,8,*" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 							<ComboBox
-								Name="SelectedLauncher"
+								Name="LauncherSelector"
 								Grid.Column="0"
 								HorizontalAlignment="Stretch"
 								VerticalAlignment="Center"
-								/>
-							<Grid ColumnDefinitions="*,8,70,8,30" Grid.Column="2">
-								<ComboBox
+								HorizontalContentAlignment="Center"
+								>
+								<ComboBox.Styles>
+									<Style Selector="ComboBoxItem">
+										<Setter Property="IsEnabled"
+												Value="{Binding isHeader, Converter={StaticResource BoolInvert}}" />
+										<Setter Property="IsHitTestVisible"
+												Value="{Binding isHeader, Converter={StaticResource BoolInvert}}" />
+									</Style>
+								</ComboBox.Styles>
+								<ComboBox.ItemTemplate>
+									<DataTemplate>
+										<TextBlock
+											Text="{Binding name}"
+											/>
+									</DataTemplate>
+								</ComboBox.ItemTemplate>
+							</ComboBox>
+							<ComboBox
 									Name="SelectedVersion"
-									Grid.Column="0"
+									Grid.Column="2"
 									HorizontalAlignment="Stretch"
 									VerticalAlignment="Center"
-									/>
-								<Button
-									Name="ManualPatchButton"
-									Grid.Column="2"
-									Content="Manual"
-									HorizontalAlignment="Stretch"
 									HorizontalContentAlignment="Center"
-									IsVisible="True"
 									/>
-								<Button
-									Name="AutomaticPatchButton"
-									Grid.Column="2"
-									Content="Auto"
-									HorizontalAlignment="Stretch"
-									HorizontalContentAlignment="Center"
-									IsVisible="False"
-								
-									/>
-								<Button
-									Name="DeleteSlot"
-									Grid.Column="4"
-									VerticalAlignment="Stretch"
-									HorizontalAlignment="Stretch"
-									local:AutoIcon.Icon="Trash"
-									local:VisibilityHolder.VisibilityHolder="EditMode"
-									Height="30"
-									>
-									<Svg
-										VerticalAlignment="Center"
-										HorizontalAlignment="Center"
-										Width="30"
-									/>
-								</Button>
-							</Grid>
 						</Grid>
 					</Grid>
 				</Border>

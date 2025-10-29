@@ -48,13 +48,15 @@ public partial class SlotHolder : UserControl
         thisSlot = slot;
         room = async.room;
 
+        if(LauncherSelector.SelectedItem is Cache_DisplayLauncher cache)
+        {
+            var test = cache.name;
+        }
+
+        UpdateAvailableSlot();
+
         SetupPlayMode();
         SetupEditMode();
-
-        if (room.slots.Count > 0)
-        {
-            UpdateAvailableSlot();
-        }
 
         IOManager.UpdatedLauncher += (string updatedLauncher) =>
         {
@@ -62,7 +64,6 @@ public partial class SlotHolder : UserControl
         };
 
         AutoTheme.SetTheme(Transparent1, ThemeSettings.transparent);
-        _ChangedSlot(null, null);
         EventHandler handler = null;
         handler = (_, _) =>
         {
@@ -135,14 +136,14 @@ public partial class SlotHolder : UserControl
     public void Save()
     {
         Cache_Slot newSlot = new Cache_Slot();
-        if (SelectedLauncher.SelectedItem != null)
+        if (LauncherSelector.SelectedItem is Cache_DisplayLauncher cacheLauncher)
         {
-            newSlot.settings[baseLauncher] = SelectedLauncher.SelectedItem.ToString();
+            newSlot.settings[baseLauncher] = cacheLauncher.name;
         }
 
-        if (SelectedVersion.SelectedItem != null)
+        if (SelectedVersion.SelectedItem is string selectedVersion)
         {
-            newSlot.settings[version] = SelectedVersion.SelectedItem.ToString();
+            newSlot.settings[version] = selectedVersion;
         }
 
         newSlot.settings[patch] = Patch.Text;
@@ -236,7 +237,10 @@ public partial class SlotHolder : UserControl
                 return;
             }
             //TODO : No idea why selectedSlot would be null, but it is ?
-            if (thisSlot.settings[SlotSettings.patch] == "" && selectedSlot != null && selectedSlot.cache.patchURL != "" && AutomaticPatch.IsVisible)
+
+            
+
+            if (thisSlot.settings[SlotSettings.patch] == "" && SlotSelector.SelectedItem is Cache_DisplaySlot selected && selected.cache.patchURL != "" && AutomaticPatch.IsVisible)
             {
                 await AutoDownload();
             }
@@ -295,38 +299,7 @@ public partial class SlotHolder : UserControl
             FinishedEditing?.Invoke();
         };
 
-        List<string> launcherList = IOManager.GetLauncherList();
-
-        if (launcherList.Count > 0)
-        {
-            SelectedLauncher.ItemsSource = launcherList;
-
-            if (launcherList.Contains(thisSlot.settings[baseLauncher]))
-            {
-                SelectedLauncher.SelectedItem = thisSlot.settings[baseLauncher];
-            }
-            else
-            {
-                SelectedLauncher.SelectedIndex = 0;
-            }
-
-            _ChangedLauncher(null, null);
-        }
-        else
-        {
-            SelectedLauncher.ItemsSource = new List<string>()
-            {
-                "None"
-            };
-
-            SelectedVersion.ItemsSource = new List<string>()
-            {
-                "None"
-            };
-
-            SelectedLauncher.SelectedItem = "None";
-            SelectedVersion.SelectedItem = "None";
-        }
+        UpdateAvailableLaunchers();
 
         PatchSelect.Click += async (_, _) =>
         {
@@ -354,7 +327,7 @@ public partial class SlotHolder : UserControl
             };
         };
 
-        SelectedLauncher.SelectionChanged += _ChangedLauncher;
+        LauncherSelector.SelectionChanged += _ChangedLauncher;
         SlotSelector.SelectionChanged += _ChangedSlot;
 
         SlotName.TextChanged += (_, _) =>
@@ -501,6 +474,17 @@ public partial class SlotHolder : UserControl
             }
         }
 
+        if(possibleSlots.Count == 0)
+        {
+            Cache_RoomSlot emptySlot = new Cache_RoomSlot();
+            emptySlot.slotName = "None";
+
+            Cache_DisplaySlot empty = new Cache_DisplaySlot();
+            empty.SetSlot(emptySlot);
+
+            possibleSlots.Add(empty);
+        }
+
         SlotSelector.ItemsSource = possibleSlots;
 
         if (selected != null)
@@ -509,17 +493,83 @@ public partial class SlotHolder : UserControl
         }
         else
         {
-            if (possibleSlots.Count == 0)
+            if(possibleSlots.Count == 1)
             {
                 SlotSelector.SelectedIndex = 0;
-            }
-            else
+            } else
             {
                 SlotSelector.SelectedIndex = 1;
             }
+                
+        }
+    }
+    
+    private void UpdateAvailableLaunchers()
+    {
+        List<string> launcherList = IOManager.GetLauncherList();
+
+        if (launcherList.Count > 0 && SlotSelector.SelectedItem is Cache_DisplaySlot displaySlot)
+        {
+            List<Cache_DisplayLauncher> list = IOManager.GetLaunchersForGame(displaySlot.cache.gameName);
+            LauncherSelector.ItemsSource = list;
+
+            foreach (var item in list)
+            {
+                if (item.name == thisSlot.settings[baseLauncher])
+                {
+                    LauncherSelector.SelectedItem = item;
+                    break;
+                }
+            }
+
+            _ChangedLauncher(null, null);
+        }
+        else
+        {
+            LauncherSelector.ItemsSource = new List<string>()
+            {
+                "None"
+            };
+
+            SelectedVersion.ItemsSource = new List<string>()
+            {
+                "None"
+            };
+
+            LauncherSelector.SelectedItem = "None";
+            SelectedVersion.SelectedItem = "None";
         }
     }
 
+    private void UpdateAvailableVersions()
+    {
+        if(LauncherSelector.SelectedItem is Cache_DisplayLauncher cache)
+        {
+            var prevSelection = SelectedVersion.SelectedItem;
+            List<string> versions = IOManager.GetVersions(cache.name);
+
+            if(versions.Count == 0)
+            {
+                versions.Add("None installed");
+            }
+
+            SelectedVersion.ItemsSource = versions;
+
+            if (versions.Contains(thisSlot.settings[version]))
+            {
+                SelectedVersion.SelectedItem = thisSlot.settings[version];
+            }
+            else
+            {
+                SelectedVersion.SelectedIndex = 0;
+            }
+            if (prevSelection != null)
+            {
+                Save();
+            }
+            currentLauncher = IOManager.LoadCacheLauncher(cache.name);
+        }
+    }
 
     // EVENTS
 
@@ -535,8 +585,7 @@ public partial class SlotHolder : UserControl
         DownloadPatch.IsEnabled = selectedSlot.cache.patchURL != "";
         ReDownloadPatch.IsEnabled = selectedSlot.cache.patchURL != "";
 
-        SelectedLauncher.ItemsSource = IOManager.GetLaunchersForGame(selectedSlot.cache.gameName);
-        SelectedLauncher.SelectedIndex = 0;
+        UpdateAvailableLaunchers();
 
         if (selectedSlot.cache.trackerURL != "")
         {
@@ -558,28 +607,13 @@ public partial class SlotHolder : UserControl
 
     private void _ChangedLauncher(object? sender, SelectionChangedEventArgs e)
     {
-        if (SelectedLauncher.SelectedItem == null)
+        if (LauncherSelector.SelectedItem == null)
         {
             return;
         }
-        List<string> versions = IOManager.GetVersions(SelectedLauncher.SelectedItem.ToString());
-        SelectedVersion.ItemsSource = versions;
 
-        var prevSelection = SelectedVersion.SelectedItem;
-
-        if (versions.Contains(thisSlot.settings[version]))
-        {
-            SelectedVersion.SelectedItem = thisSlot.settings[version];
-        }
-        else
-        {
-            SelectedVersion.SelectedIndex = 0;
-        }
-        if (prevSelection != null)
-        {
-            Save();
-        }
-        currentLauncher = IOManager.LoadCacheLauncher(SelectedLauncher.SelectedItem.ToString());
+        UpdateAvailableVersions();
+        
         SetBackgrounds();
     }
 }

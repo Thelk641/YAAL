@@ -137,12 +137,13 @@ public partial class AsyncHolder : UserControl
     public SlotHolder AddNewSlot(Cache_Slot newSlot)
     {
         SlotHolder toAdd = new SlotHolder(thisAsync, newSlot);
+        Rectangle rect = null;
         
         this.Height += 8; // they're going to switch to edit mode immediately, triggering ChangedHeight with previousHeight=0
 
         if (SlotsContainer.Children.Count > 0)
         {
-            Rectangle rect = new Rectangle();
+            rect = new Rectangle();
             rect.Height = 8;
             SlotsContainer.Children.Add(rect);
         }
@@ -154,6 +155,11 @@ public partial class AsyncHolder : UserControl
         { 
             SlotsContainer.Children.Remove(toAdd);
             this.Height -= toAdd.Height;
+            if(rect != null)
+            {
+                SlotsContainer.Children.Remove(rect);
+                this.Height -= rect.Height;
+            }
         };
 
         toAdd.ChangedHeight += (double previousHeight, double newHeight) =>
