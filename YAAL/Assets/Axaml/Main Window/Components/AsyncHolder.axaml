@@ -1,11 +1,12 @@
 <UserControl
-   xmlns="https://github.com/avaloniaui"
-   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Class="YAAL.AsyncHolder"
-             HorizontalAlignment="Stretch"
-             Height="80"
-			 MinWidth="600"
-             >
+	xmlns="https://github.com/avaloniaui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:local="clr-namespace:YAAL"
+	x:Class="YAAL.AsyncHolder"
+	HorizontalAlignment="Stretch"
+	Height="80"
+	MinWidth="600"
+	>
 	<Border
 	 Name="BackgroundColor"
 	 BorderBrush="Gray"
@@ -20,7 +21,7 @@
 		<Grid RowDefinitions="30, 8, *" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
 			<StackPanel Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
 				<StackPanel Name="PlayMode" IsVisible="True" VerticalAlignment="Center" HorizontalAlignment="Stretch">
-					<Grid ColumnDefinitions="30,*,8,80,8,110,8,50" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+					<Grid ColumnDefinitions="30,*,8,80,8,30,8,30" HorizontalAlignment="Stretch" VerticalAlignment="Center">
 						<TextBlock
 							Name="_AsyncNameBox"
 							Text="This async's name"
@@ -36,27 +37,45 @@
 							HorizontalContentAlignment="Center"
 							VerticalAlignment="Stretch"
 							/>
+
 						<Button
 							Name="ToolVersions"
-							Content="Tool versions"
+							VerticalAlignment="Stretch"
+							HorizontalAlignment="Stretch"
 							Grid.Column="5"
-							HorizontalAlignment="Stretch"
-							HorizontalContentAlignment="Center"
-							VerticalAlignment="Stretch"
+							ToolTip.Tip="Select the versions for tools"
+							local:AutoIcon.Icon="ToolSettings"
+							local:VisibilityHolder.VisibilityHolder="PlayMode"
+							Height="30"
+							>
+							<Svg
+								VerticalAlignment="Center"
+								HorizontalAlignment="Center"
+								Width="30"
 							/>
-						<Button 
+						</Button>
+
+						<Button
 							Name="Edit"
-							Content="Edit"
-							Grid.Column="7"
-							HorizontalAlignment="Stretch"
-							HorizontalContentAlignment="Center"
 							VerticalAlignment="Stretch"
+							HorizontalAlignment="Stretch"
+							Grid.Column="7"
+							ToolTip.Tip="Edit this async"
+							local:AutoIcon.Icon="Settings"
+							local:VisibilityHolder.VisibilityHolder="PlayMode"
+							Height="30"
+							>
+							<Svg
+								VerticalAlignment="Center"
+								HorizontalAlignment="Center"
+								Width="30"
 							/>
+						</Button>
 					</Grid>
 				</StackPanel>
 
 				<StackPanel Name="EditMode" IsVisible="False" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-					<Grid ColumnDefinitions="*,8,*,8,*,8,60,8,50" HorizontalAlignment="Stretch">
+					<Grid ColumnDefinitions="*,8,*,8,*,8,30,8,30" HorizontalAlignment="Stretch">
 						<TextBox 
 							Name="AsyncNameBox"
 							Watermark="Async name"
@@ -79,22 +98,42 @@
 							ToolTip.Tip="This async's password"
 							HorizontalAlignment="Stretch"
 							/>
+
 						<Button
 							Name="DeleteButton"
-							Content="Delete"
+							VerticalAlignment="Stretch"
+							HorizontalAlignment="Stretch"
 							Grid.Column="6"
-							VerticalAlignment="Stretch"
-							HorizontalContentAlignment="Center"
-							HorizontalAlignment="Stretch"
+							ToolTip.Tip="Delete this async"
+							local:AutoIcon.Icon="Trash"
+							local:VisibilityHolder.VisibilityHolder="EditMode"
+							Height="30"
+							>
+							<Svg
+								VerticalAlignment="Center"
+								HorizontalAlignment="Center"
+								Width="30"
 							/>
-						<Button 
+						</Button>
+						
+						
+
+						<Button
 							Name="SaveButton"
-							Content="Save"
-							Grid.Column="8"
 							VerticalAlignment="Stretch"
-							HorizontalContentAlignment="Center"
 							HorizontalAlignment="Stretch"
+							Grid.Column="8"
+							ToolTip.Tip="Save these settings"
+							local:AutoIcon.Icon="Save"
+							local:VisibilityHolder.VisibilityHolder="EditMode"
+							Height="30"
+							>
+							<Svg
+								VerticalAlignment="Center"
+								HorizontalAlignment="Center"
+								Width="30"
 							/>
+						</Button>
 					</Grid>
 				</StackPanel>
 			</StackPanel>

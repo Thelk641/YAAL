@@ -115,7 +115,7 @@ public partial class CLMakerWindow : Window
             }
         };
 
-        TurnEventsBackOn();
+        //TurnEventsBackOn();
         ReloadLauncherList(autoLoad);
     }
 
@@ -189,6 +189,10 @@ public partial class CLMakerWindow : Window
         if(customLauncher != null)
         {
             customLauncher.Save();
+            if (LauncherSelector.ItemsSource is ObservableCollection<Cache_DisplayLauncher> list)
+            {
+                list[previousIndex].cache = customLauncher.WriteCache();
+            }
         }
         
     }
@@ -350,7 +354,9 @@ public partial class CLMakerWindow : Window
     {
         if(LauncherSelector.SelectedItem is Cache_DisplayLauncher cache)
         {
+            Save();
             LoadLauncher(cache.cache);
+            previousIndex = LauncherSelector.SelectedIndex;
         }
     }
 }

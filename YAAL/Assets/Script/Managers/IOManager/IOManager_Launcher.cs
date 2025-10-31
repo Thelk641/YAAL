@@ -17,6 +17,7 @@ namespace YAAL
     {
 
         public static event Action<string> UpdatedLauncher;
+        public static Dictionary<string, Cache_CustomLauncher> libraryCustomLauncher = new Dictionary<string, Cache_CustomLauncher>();
         
         public static void SaveLauncher(CustomLauncher toSave)
         {

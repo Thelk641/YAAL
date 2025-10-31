@@ -236,14 +236,30 @@ public partial class SlotHolder : UserControl
             {
                 return;
             }
-            //TODO : No idea why selectedSlot would be null, but it is ?
+
+            if (currentLauncher.requiresPatch && thisSlot.settings[SlotSettings.patch] == "")
+            {
+                if (SlotSelector.SelectedItem is Cache_DisplaySlot selected && selected.cache.patchURL != "" && AutomaticPatch.IsVisible)
+                {
+                    await AutoDownload();
+                } else
+                {
+                    ErrorManager.ThrowError(
+                        "SlotHolder - No patch selected",
+                        "You tried to launch a game that uses automatic patching, but haven't selected a patch. This is not allowed. Aborting launch.");
+                    return;
+                }
+            }
+
+            if(currentLauncher.requiresVersion && thisSlot.settings[SlotSettings.version] == "None installed")
+            {
+                ErrorManager.ThrowError(
+                        "SlotHolder - No version selected",
+                        "You tried to launch a game that uses automatic versionning or automatic patching, but haven't installed any version yet. This is not allowed. Aborting launch.");
+                return;
+            }
 
             
-
-            if (thisSlot.settings[SlotSettings.patch] == "" && SlotSelector.SelectedItem is Cache_DisplaySlot selected && selected.cache.patchURL != "" && AutomaticPatch.IsVisible)
-            {
-                await AutoDownload();
-            }
             ProcessManager.StartProcess(
                 Environment.ProcessPath!,
                 ("--async " + "\"" + asyncName + "\"" + " --slot " + "\"" + _SlotName.Text + "\""),
@@ -296,6 +312,7 @@ public partial class SlotHolder : UserControl
         Action finished = () =>
         {
             isEditing = false;
+            Save();
             FinishedEditing?.Invoke();
         };
 
@@ -581,7 +598,11 @@ public partial class SlotHolder : UserControl
         }
         selectedSlot = (Cache_DisplaySlot)SlotSelector.SelectedItem;
 
-        SlotName.Text = selectedSlot.slotName;
+        if(selectedSlot.slotName != "None")
+        {
+            SlotName.Text = selectedSlot.slotName;
+        }
+        
         DownloadPatch.IsEnabled = selectedSlot.cache.patchURL != "";
         ReDownloadPatch.IsEnabled = selectedSlot.cache.patchURL != "";
 

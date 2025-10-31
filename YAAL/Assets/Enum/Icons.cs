@@ -15,6 +15,7 @@ namespace YAAL
         Play,
         ToolPlay,
         Settings,
+        ToolSettings,
         Save,
         Trash,
         Up,

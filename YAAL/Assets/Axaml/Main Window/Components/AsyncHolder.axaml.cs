@@ -160,6 +160,12 @@ public partial class AsyncHolder : UserControl
                 SlotsContainer.Children.Remove(rect);
                 this.Height -= rect.Height;
             }
+
+            if (SlotsContainer.Children.Count > 0 && SlotsContainer.Children[0] is Rectangle obsoleteRectangle)
+            {
+                SlotsContainer.Children.Remove(obsoleteRectangle);
+                this.Height -= obsoleteRectangle.Height;
+            }
         };
 
         toAdd.ChangedHeight += (double previousHeight, double newHeight) =>

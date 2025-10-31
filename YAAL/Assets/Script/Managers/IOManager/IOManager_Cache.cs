@@ -53,21 +53,6 @@ namespace YAAL
             SaveFile(path, json);
         }
 
-        public static void SaveCacheLauncher(Cache_CustomLauncher toSave)
-        {
-            if (toSave.settings[launcherName] == null || toSave.settings[launcherName] == "")
-            {
-                ErrorManager.ThrowError(
-                    "IOManager_Cache - Tried to save empty launcher",
-                    "For some reason, SaveCacheLauncher() was asked to save a launcher without a name. This is not allowed."
-                    );
-                return;
-            }
-            string savePath = Path.Combine(GetSaveLocation(ManagedApworlds), toSave.settings[launcherName], "launcher.json");
-            string json = JsonConvert.SerializeObject(toSave, Formatting.Indented);
-            SaveFile(savePath, json);
-        }
-
         public static string SaveCacheError(Cache_ErrorList error)
         {
             string savePath = Path.Combine(GetSaveLocation(Logs), (GetTime() + ".json"));
@@ -130,8 +115,28 @@ namespace YAAL
             }
         }
 
+        public static void SaveCacheLauncher(Cache_CustomLauncher toSave)
+        {
+            if (toSave.settings[launcherName] == null || toSave.settings[launcherName] == "")
+            {
+                ErrorManager.ThrowError(
+                    "IOManager_Cache - Tried to save empty launcher",
+                    "For some reason, SaveCacheLauncher() was asked to save a launcher without a name. This is not allowed."
+                    );
+                return;
+            }
+            string savePath = Path.Combine(GetSaveLocation(ManagedApworlds), toSave.settings[launcherName], "launcher.json");
+            string json = JsonConvert.SerializeObject(toSave, Formatting.Indented);
+            SaveFile(savePath, json);
+            libraryCustomLauncher[toSave.settings[launcherName]] = toSave;
+        }
+
         public static Cache_CustomLauncher LoadCacheLauncher(string launcherName)
         {
+            if (libraryCustomLauncher.ContainsKey(launcherName)){
+                return libraryCustomLauncher[launcherName];
+            }
+
             string savePath = Path.Combine(GetSaveLocation(ManagedApworlds), launcherName, "launcher.json");
             if (!File.Exists(savePath))
             {
@@ -153,6 +158,7 @@ namespace YAAL
                     );
                 Environment.Exit(0);
             }
+            libraryCustomLauncher[launcherName] = output;
             return output;
         }
 

@@ -33,6 +33,8 @@ public class CustomLauncher
     public bool waitingForRestore = false;
     private List<Interface_Instruction> instructionWaiting = new List<Interface_Instruction>();
     public event Action DoneRestoring;
+    public bool requiresPatch = false;
+    public bool requiresVersion = false;
 
     // Permanent settings, saved in launcher.json
     // Defaults set in DefaultManager
@@ -198,8 +200,7 @@ public class CustomLauncher
             listOfInstructions.Add(instruction);
             instruction.SetCustomLauncher(this);
             instruction.SetSettings(item.Value);
-            Apworld apworldInstruction = instruction as Apworld;
-            if (apworldInstruction != null)
+            if (instruction is Apworld apworldInstruction)
             {
                 string target = apworldInstruction.GetTarget();
                 if (target.Contains(";"))
@@ -213,6 +214,11 @@ public class CustomLauncher
                 {
                     this.settings[LauncherSettings.apworld] += "\"" + target + "\";";
                 }
+                requiresVersion = true;
+            } else if (instruction is Patch patchInstruction)
+            {
+                requiresVersion = true;
+                requiresPatch = true;
             }
         }
         this.isGame = cache.isGame;
@@ -230,6 +236,8 @@ public class CustomLauncher
         output.settings = this.selfsettings;
         output.customSettings = this.customSettings;
         output.isGame = this.isGame;
+        output.requiresVersion = this.requiresVersion;
+        output.requiresPatch = this.requiresPatch;
 
         return output;
     }
