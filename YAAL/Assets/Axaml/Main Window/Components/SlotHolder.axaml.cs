@@ -1,19 +1,20 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Media;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using YAAL.Assets.Scripts;
 using static YAAL.ApworldSettings;
-using static YAAL.SlotSettings;
 using static YAAL.AsyncSettings;
-using System.Linq;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using Avalonia;
+using static YAAL.SlotSettings;
 
 namespace YAAL;
 
@@ -31,7 +32,7 @@ public partial class SlotHolder : UserControl
     public event Action SwitchedToSmaller;
     public event Action FinishedEditing;
     public event Action<double,double> ChangedHeight;
-    public int hardCodedHeight = 52;
+    public int hardCodedHeight = 112;
     public double previousHeight = 0;
     public bool isEditing = false;
     private ObservableCollection<string> toolList = new ObservableCollection<string>();
@@ -68,10 +69,12 @@ public partial class SlotHolder : UserControl
         handler = (_, _) =>
         {
             Resize();
+            SetScrollSpeed();
             this.LayoutUpdated -= handler;
         };
         this.LayoutUpdated += handler;
 
+        UpdateItemList();
     }
 
     public void SetAsyncName(string newName)
@@ -95,17 +98,13 @@ public partial class SlotHolder : UserControl
             customTheme = ThemeManager.GetDefaultTheme();
         }
 
-        newHeight += customTheme.topOffset + customTheme.bottomOffset;
+        newHeight += (customTheme.topOffset + customTheme.bottomOffset) * 2;
 
         string combined = customTheme.topOffset.ToString() + ",*," + customTheme.bottomOffset.ToString();
-        PlayEmptySpace.RowDefinitions = new RowDefinitions(combined);
+        PlayEmptySpace1.RowDefinitions = new RowDefinitions(combined);
+        PlayEmptySpace2.RowDefinitions = new RowDefinitions(combined);
         EditEmptySpace1.RowDefinitions = new RowDefinitions(combined);
         EditEmptySpace2.RowDefinitions = new RowDefinitions(combined);
-
-        if (EditMode.IsVisible)
-        {
-            newHeight += hardCodedHeight + 8; // one more line, plus spacing
-        }
 
         this.Height = newHeight;
         ChangedHeight?.Invoke(previousHeight, newHeight);
@@ -189,9 +188,9 @@ public partial class SlotHolder : UserControl
     {
         room = newRoom;
         UpdateAvailableSlot();
-        if (room.slots.Count > 0)
+        if (room.slots.Count == 0)
         {
-            SwitchPatchMode();
+            SwitchPatchMode(true);
         }
 
         if (room.cheeseTrackerURL != "")
@@ -298,6 +297,11 @@ public partial class SlotHolder : UserControl
             }
         };
 
+        UpdateItems.Click += (_, _) =>
+        {
+            UpdateItemList();
+        };
+
         Edit.Click += (source, args) =>
         {
             SwitchMode();
@@ -386,6 +390,35 @@ public partial class SlotHolder : UserControl
         }
     }
 
+    public async void UpdateItemList()
+    {
+        if (!room.slots.TryGetValue(thisSlot.settings[slotName], out Cache_RoomSlot roomSlot) || roomSlot == null){
+            return;
+        }
+
+        UpdateItems.IsEnabled = false;
+        Cache_ItemTracker cache = await WebManager.ParseTrackerItems(roomSlot.trackerURL);
+        TrackerItemHolder.Children.Clear();
+        foreach (var item in cache.items)
+        {
+            TextBox box = new TextBox();
+            box.Text = item;
+            box.IsVisible = true;
+            TrackerItemHolder.Children.Add(box);
+            box.SetValue(AutoTheme.AutoThemeProperty, null);
+            box.Background = new SolidColorBrush(Colors.Transparent);
+
+            int height = 30;
+            box.Height = height;
+            box.MinHeight = height;
+            box.MaxHeight = height;
+            box.TextWrapping = TextWrapping.NoWrap;
+            box.AcceptsReturn = false;
+            box.VerticalContentAlignment = Avalonia.Layout.VerticalAlignment.Center;
+            box.Margin = new Thickness(0, 2, 0, 2);
+        }
+        UpdateItems.IsEnabled = true;
+    }
     public void SwitchMode()
     {
         if (PlayMode.IsVisible)
@@ -398,12 +431,16 @@ public partial class SlotHolder : UserControl
             PlayMode.IsVisible = true;
             EditMode.IsVisible = false;
         }
-        Resize();
     }
 
     public void SwitchPatchMode()
     {
-        if (AutomaticPatch.IsVisible)
+        SwitchPatchMode(AutomaticPatch.IsVisible);
+    }
+
+    public void SwitchPatchMode(bool manual)
+    {
+        if (manual)
         {
             AutomaticPatch.IsVisible = false;
             SlotSelector.IsVisible = false;
@@ -636,5 +673,29 @@ public partial class SlotHolder : UserControl
         UpdateAvailableVersions();
         
         SetBackgrounds();
+    }
+
+    private void SetScrollSpeed()
+    {
+        Viewer.RemoveHandler(ScrollViewer.PointerWheelChangedEvent, AdjustedScrollSpeed);
+
+        Viewer.AddHandler(ScrollViewer.PointerWheelChangedEvent, AdjustedScrollSpeed, RoutingStrategies.Tunnel);
+    }
+
+    private void AdjustedScrollSpeed(object? sender, PointerWheelEventArgs e)
+    {
+        double wheelFactor = 10f * App.Settings.Zoom;
+
+        var sv = (ScrollViewer)sender!;
+        var oldOffset = sv.Offset;                
+        double delta = e.Delta.Y;                  
+
+        double newY = oldOffset.Y - (delta * wheelFactor);
+
+        if (newY < 0) newY = 0;
+
+        sv.Offset = new Vector(oldOffset.X, newY);
+
+        e.Handled = true;
     }
 }

@@ -66,7 +66,7 @@ public partial class ThemeSlot : UserControl
 
         foreach (var item in fakeItemList)
         {
-            TextBox box = new TextBox();
+            TextBlock box = new TextBlock();
             box.Text = item;
             box.IsVisible = true;
             TrackerItemHolder.Children.Add(box);

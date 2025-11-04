@@ -21,7 +21,7 @@
 		<Grid RowDefinitions="30, 8, *" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
 			<StackPanel Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
 				<StackPanel Name="PlayMode" IsVisible="True" VerticalAlignment="Center" HorizontalAlignment="Stretch">
-					<Grid ColumnDefinitions="30,*,8,80,8,30,8,30" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+					<Grid ColumnDefinitions="30,*,200,8,80,8,30,8,30" HorizontalAlignment="Stretch" VerticalAlignment="Center">
 						<TextBlock
 							Name="_AsyncNameBox"
 							Text="This async's name"
@@ -29,10 +29,19 @@
 							HorizontalAlignment="Left"
 							Grid.Column="1"
 							/>
+						<TextBlock
+							Name="ReadingRoom"
+							Text="(updating room, please wait)"
+							Grid.Column="2"
+							VerticalAlignment="Center"
+							HorizontalAlignment="Left"
+							IsVisible="False"
+							/>
+						
 						<Button 
 							Name="NewSlot"
 							Content="New Slot"
-							Grid.Column="3"
+							Grid.Column="4"
 							HorizontalAlignment="Stretch"
 							HorizontalContentAlignment="Center"
 							VerticalAlignment="Stretch"
@@ -42,7 +51,7 @@
 							Name="ToolVersions"
 							VerticalAlignment="Stretch"
 							HorizontalAlignment="Stretch"
-							Grid.Column="5"
+							Grid.Column="6"
 							ToolTip.Tip="Select the versions for tools"
 							local:AutoIcon.Icon="ToolSettings"
 							local:VisibilityHolder.VisibilityHolder="PlayMode"
@@ -59,7 +68,7 @@
 							Name="Edit"
 							VerticalAlignment="Stretch"
 							HorizontalAlignment="Stretch"
-							Grid.Column="7"
+							Grid.Column="8"
 							ToolTip.Tip="Edit this async"
 							local:AutoIcon.Icon="Settings"
 							local:VisibilityHolder.VisibilityHolder="PlayMode"

@@ -9,7 +9,7 @@
         x:Class="YAAL.UpdateWindow"
         Title="Find Updates">
 	<Border Margin="8" HorizontalAlignment="Stretch">
-		<Grid RowDefinitions="88, 8, *, 8, 50" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+		<Grid RowDefinitions="60, 8, *, 8, 50" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 			<!-- First block, warning and check button -->
 			<Border
 				Grid.Row="0"
@@ -21,25 +21,14 @@
 				Padding="8"
 				HorizontalAlignment="Stretch"
 				>
-					<Grid RowDefinitions="40,40" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-						<TextBlock
-							Grid.Row="0"
-							Text="Download files ONLY from trusted sources. YAAL is not responsible for the consequence of your downloads."
-							HorizontalAlignment="Stretch"
-							VerticalAlignment="Top"
-							TextWrapping="Wrap"
-							TextAlignment="Center"
-							/>
-						<Button
-							Name="CheckUpdates"
-							Content="Check for Updates"
-							Grid.Row="2"
-							HorizontalAlignment="Stretch"
-							HorizontalContentAlignment="Center"
-							VerticalAlignment="Top"
-							IsEnabled="False"
-							/>
-					</Grid>
+				<TextBlock
+					Grid.Row="0"
+					Text="Download files ONLY from trusted sources. YAAL is not responsible for the consequences of your downloads."
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Center"
+					TextWrapping="Wrap"
+					TextAlignment="Center"
+					/>
 			</Border>
 
 			<!-- Second Block, main content-->

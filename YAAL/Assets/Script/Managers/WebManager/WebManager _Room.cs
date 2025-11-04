@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Newtonsoft.Json.Linq;
+using ReactiveUI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -30,8 +31,6 @@ public static partial class WebManager
         }
 
         output.IP = "archipelago.gg";
-
-        Debug.WriteLine(roomURL);
 
         HttpRequestMessage request = new HttpRequestMessage()
         {
@@ -111,7 +110,11 @@ public static partial class WebManager
         }
         catch (Exception e)
         {
-            Debug.WriteLine("Exception while trying to get tracker : " + e.Message);
+            ErrorManager.ThrowError(
+                "WebManager_Room - Exception while trying to get room",
+                "Trying to parse URL " + roomURL + " triggered the following exception : " + e.Message
+                );
+            return new Cache_Room();
         }
 
         output = await GetRoomPort(output);
@@ -159,6 +162,87 @@ public static partial class WebManager
         }
 
         return "";
+    }
+
+    public static async Task<Cache_ItemTracker> ParseTrackerItems(string trackerURL)
+    {
+        Cache_ItemTracker output = new Cache_ItemTracker();
+        Dictionary<string, string> parsed = new Dictionary<string, string>();
+
+        HttpRequestMessage request = new HttpRequestMessage()
+        {
+            RequestUri = new Uri(trackerURL),
+            Method = HttpMethod.Get,
+        };
+
+        request.Headers.Add("User-Agent", "YAAL");
+
+
+        try
+        {
+            HttpResponseMessage response = await client.SendAsync(request);
+            string html = await response.Content.ReadAsStringAsync();
+            string[] lines = html.Split('\n');
+
+            int i = 0;
+
+            foreach (var item in lines)
+            {
+                if (item.Contains("received-table"))
+                {
+                    break;
+                }
+                ++i;
+            }
+
+            i += 12;
+
+            for (int j = i; j < lines.Length; j += 5)
+            {
+                string cleaned = lines[j].Trim();
+                if (cleaned.StartsWith("<td>"))
+                {
+                    string itemName = cleaned.Replace("<td>", "").Replace("</td>", "");
+                    string itemNbr = lines[j + 2].Trim().Replace("<td>", "").Replace("</td>", "");
+                    parsed[itemNbr] = itemName;
+                } else
+                {
+                    break;
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            ErrorManager.ThrowError(
+                "WebManager_Room - Exception while trying to get items from tracker",
+                "Trying to get items from URL " + trackerURL + " triggered the following exception : " + e.Message
+                );
+            return new Cache_ItemTracker();
+        }
+
+        List<int> numbers = new List<int>();
+        foreach (var item in parsed)
+        {
+            if(int.TryParse(item.Key, out int trueNbr))
+            {
+                numbers.Add(trueNbr);
+            }
+        }
+        numbers.Sort();
+        List<int> invertedNumbers = new List<int>();
+
+
+        for (int i = numbers.Count - 1; i > -1; i--)
+        {
+            invertedNumbers.Add(numbers[i]);
+        }
+
+        foreach (var item in invertedNumbers)
+        {
+            output.items.Add(item + " - " + parsed[item.ToString()]);
+        }
+
+        return output;
     }
 
     public static async Task<Cache_Room> GetCheeseTrackerURL(Cache_Room output)

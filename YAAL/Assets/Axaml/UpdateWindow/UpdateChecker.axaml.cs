@@ -36,7 +36,14 @@ public partial class UpdateChecker : UserControl
     public UpdateChecker(string launcher, UpdateWindow window) : this()
     {
         launcherName.Text = launcher;
-        Downloaded.Text = IOManager.GetDownloadedVersions(launcher)[0];
+        List<string> donwloadedVersions = IOManager.GetDownloadedVersions(launcher);
+        if( donwloadedVersions.Count > 0)
+        {
+            Downloaded.Text = IOManager.GetDownloadedVersions(launcher)[0];
+        } else
+        {
+            Downloaded.Text = "None";
+        }
         mainWindow = window;
     }
 

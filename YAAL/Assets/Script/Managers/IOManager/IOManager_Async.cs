@@ -242,23 +242,40 @@ namespace YAAL
 
         public static void DeleteSlot(string asyncName, string slotName)
         {
-            Cache_Async cache = GetAsync(asyncName);
-            Cache_Slot slot = null;
-            foreach (var item in cache.slots)
+            try
             {
-                if (item.settings[SlotSettings.slotName] == slotName)
+
+                Cache_Async cache = GetAsync(asyncName);
+                Cache_Slot slot = null;
+                foreach (var item in cache.slots)
                 {
-                    slot = item;
-                    break;
+                    if (item.settings[SlotSettings.slotName] == slotName)
+                    {
+                        slot = item;
+                        break;
+                    }
+                }
+
+                if (slot != null)
+                {
+                    cache.slots.Remove(slot);
+                    SaveCache<Cache_Async>(Path.Combine(GetSaveLocation(Async), cache.settings[AsyncSettings.asyncName], multiworld.GetFileName()), cache);
+                    SoftDeleteFile(Path.Combine(GetSaveLocation(Async), cache.settings[AsyncSettings.asyncName], slotName));
                 }
             }
-
-            if(slot != null)
+            catch (Exception e)
             {
-                cache.slots.Remove(slot);
-                SaveCache<Cache_Async>(Path.Combine(GetSaveLocation(Async), cache.settings[AsyncSettings.asyncName], multiworld.GetFileName()), cache);
-                SoftDeleteFile(Path.Combine(GetSaveLocation(Async), cache.settings[AsyncSettings.asyncName], slotName));
+                ErrorManager.ThrowError(
+                    "IOManager_Async - Deleting a slot threw an error", 
+                    "Please report this. Trying to delete slot " + slotName + " from async " + asyncName + " threw the following error : " + e.Message);
             }
+
+        }
+
+        public static bool CheckExistance (string asyncName, string slotName)
+        {
+            string path = Path.Combine(GetSaveLocation(Async), asyncName, slotName);
+            return Directory.Exists(path);
         }
     }
 }

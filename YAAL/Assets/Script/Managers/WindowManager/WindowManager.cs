@@ -46,6 +46,41 @@ namespace YAAL
             mainWindow.IsVisible = true;
         }
 
+        public static Window OpenWindow(WindowType windowType, Window source)
+        {
+            // This will need adjusting once everything is a scalable window
+            Window window;
+            switch (windowType)
+            {
+                case WindowType.CLMaker:
+                    window = CLMakerWindow.GetCLMakerWindow();
+                    break;
+                case WindowType.CustomThemeMaker:
+                    window = new CustomThemeMaker();
+                    break;
+                case WindowType.NewLauncher:
+                    window = new NewLauncher();
+                    break;
+                case WindowType.TestWindow:
+                    window = new TestWindow();
+                    break;
+                case WindowType.UpdateWindow:
+                    window = new UpdateWindow();
+                    break;
+                default:
+                    window = new MainWindow();
+                    break;
+            }
+
+            window.IsVisible = true;
+            window.Closing += (_, _) =>
+            {
+                source.Topmost = true;
+                source.Topmost = false;
+            };
+            return window;
+        }
+
         public static void ChangeHeight(Window toResize, int newHeight)
         {
             double trueHeight = newHeight * App.Settings.Zoom;
@@ -60,5 +95,10 @@ namespace YAAL
             comboBox.ItemTemplate = null;
             comboBox.ItemTemplate = template;
         }
+    }
+
+    public enum MyEnum
+    {
+        CustomThemeMaker
     }
 }

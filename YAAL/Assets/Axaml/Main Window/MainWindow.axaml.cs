@@ -29,13 +29,7 @@ public partial class MainWindow : Window
         AutoTheme.SetTheme(AsyncBackground, ThemeSettings.backgroundColor);
         CLMakerButton.Click += (_, _) =>
         {
-            CLMakerWindow window = CLMakerWindow.GetCLMakerWindow();
-            window.IsVisible = true;
-            window.Closing += (_, _) =>
-            {
-                this.Topmost = true;
-                this.Topmost = false;
-            };
+            WindowManager.OpenWindow(WindowType.CLMaker, this);
         };
 
         AddNewAsync.Click += (_, _) =>
@@ -61,7 +55,12 @@ public partial class MainWindow : Window
 
         ThemeButton.Click += (_, _) =>
         {
-            // TODO : open custom theme maker ! 
+            WindowManager.OpenWindow(WindowType.CustomThemeMaker, this);
+        };
+
+        UpdateButton.Click += (_, _) =>
+        {
+            WindowManager.OpenWindow(WindowType.UpdateWindow, this);
         };
 
 

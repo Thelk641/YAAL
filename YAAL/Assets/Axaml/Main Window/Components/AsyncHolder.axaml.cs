@@ -35,10 +35,22 @@ public partial class AsyncHolder : UserControl
 
         SetupPlayMode();
         SetupEditMode();
+        string asyncName = thisAsync.settings[AsyncSettings.asyncName];
+        string slotName = "";
 
         foreach (var item in thisAsync.slots)
         {
-            AddNewSlot(item);
+            slotName = item.settings[SlotSettings.slotName];
+            if (IOManager.CheckExistance(asyncName, slotName))
+            {
+                AddNewSlot(item);
+            } else
+            {
+                // Sometime for some reason we get slots only half-deleted,
+                // can't seem to find what triggers this, so let's just 
+                // make sure we actually nuke them as they're not meant to exists
+                IOManager.DeleteSlot(asyncName, slotName);
+            }
         }
 
         UpdatePort();
@@ -111,11 +123,12 @@ public partial class AsyncHolder : UserControl
     
     public async void UpdateSlotsRoom()
     {
-        if(RoomBox.Text == "" || RoomBox.Text == thisAsync.room.URL)
+        if (RoomBox.Text == "" || RoomBox.Text == thisAsync.room.URL)
         {
             return;
         }
 
+        ReadingRoom.IsVisible = true;
         if (RoomBox.Text.Contains("archipelago.gg/room/"))
         {
             thisAsync.room = await WebManager.ParseRoomURL(RoomBox.Text);
@@ -132,6 +145,7 @@ public partial class AsyncHolder : UserControl
         }
 
         Save();
+        ReadingRoom.IsVisible = false;
     }
 
     public SlotHolder AddNewSlot(Cache_Slot newSlot)
