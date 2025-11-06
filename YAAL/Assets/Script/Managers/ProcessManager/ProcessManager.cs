@@ -11,7 +11,7 @@ namespace YAAL
     public static class ProcessManager
     {
         public static List<Cache_Process> keyedProcesses = new List<Cache_Process>();
-        public static Process StartProcess(string path, string args, bool autoStart = true, bool catchOutput = true)
+        public static Process StartProcess(string path, string args, bool autoStart = true)
         {
             Process process = new Process();
 
@@ -40,9 +40,9 @@ namespace YAAL
                 // read the output
                 process.StartInfo.FileName = truePath;
                 process.StartInfo.Arguments = args;
-                process.StartInfo.UseShellExecute = !catchOutput;
-                process.StartInfo.RedirectStandardOutput = catchOutput;
-                process.StartInfo.RedirectStandardError = catchOutput;
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.RedirectStandardOutput = true;
+                process.StartInfo.RedirectStandardError = true;
                 process.EnableRaisingEvents = true;
             } else
             {
@@ -52,6 +52,8 @@ namespace YAAL
                 process.StartInfo.Arguments = args;
                 process.StartInfo.UseShellExecute = true;
             }
+
+            Debug.WriteLine($"Running: {truePath} {args}");
 
             // We might want to setup the process, but start it at a later time,
             // when we're sure everything is setup (see KeyedProcess)
@@ -63,9 +65,9 @@ namespace YAAL
             return process;
         }
 
-        public static Cache_Process StartKeyedProcess(string path, string args, bool redirectOutput)
+        public static Cache_Process StartKeyedProcess(string path, string args)
         {
-            Cache_Process process = new Cache_Process(StartProcess(path, args, false, redirectOutput));
+            Cache_Process process = new Cache_Process(StartProcess(path, args, false));
             if(process == null)
             {
                 ErrorManager.AddNewError(

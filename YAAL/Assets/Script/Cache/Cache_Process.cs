@@ -17,14 +17,13 @@ namespace YAAL
             process = newProcess;
         }
 
-        public void Start(bool redirectOutput)
+        public void Start()
         {
             process.Start();
-            if (ProcessManager.IsExecutable(process.StartInfo.FileName) && redirectOutput) 
+            if (ProcessManager.IsExecutable(process.StartInfo.FileName)) 
             {
                 process.BeginOutputReadLine();
             }
-
         } 
         
 

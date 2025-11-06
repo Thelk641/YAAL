@@ -28,7 +28,6 @@ public class Open : Instruction<OpenSettings>
         }
 
 
-        bool redirectOutput = this.InstructionSetting[OpenSettings.redirectOutput] == true.ToString();
         List<string> splitPath = customLauncher.SplitAndParse(this.InstructionSetting[OpenSettings.path]);
         List<string> splitArgs = customLauncher.SplitAndParse(this.InstructionSetting[OpenSettings.args]);
         List<string> splitKeys = customLauncher.SplitAndParse(this.InstructionSetting[OpenSettings.processName]);
@@ -98,7 +97,7 @@ public class Open : Instruction<OpenSettings>
             try
             {
 
-                Cache_Process keyedProcess = ProcessManager.StartKeyedProcess(path, args, redirectOutput);
+                Cache_Process keyedProcess = ProcessManager.StartKeyedProcess(path, args);
                 if (keyedProcess == null)
                 {
                     ErrorManager.AddNewError(
@@ -123,7 +122,7 @@ public class Open : Instruction<OpenSettings>
                         break;
                 }
 
-                keyedProcess.Start(redirectOutput);
+                keyedProcess.Start();
 
                 if(key != "")
                 {

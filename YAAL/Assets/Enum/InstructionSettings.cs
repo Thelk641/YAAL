@@ -36,8 +36,7 @@ namespace YAAL
     {
         args,
         processName,
-        path,
-        redirectOutput
+        path
     }
 
     public enum PatchSettings

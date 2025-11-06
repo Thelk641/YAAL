@@ -390,6 +390,11 @@ public class CustomLauncher
             text = text.Replace("${apworld}", apworldList);
         }
 
+        if (text.Contains("Client"))
+        {
+            Debug.WriteLine("now !");
+        }
+
         int i = 0;
         while(text.Contains("${") && i < 10)
         {
@@ -419,9 +424,9 @@ public class CustomLauncher
                         continue;
                     }
 
-                    cleaned = item.Trim();
+                    cleaned = item;
 
-                    if (cleaned.StartsWith("\"") || cleaned.EndsWith("\""))
+                    if (item.Trim().StartsWith("\"") || item.Trim().EndsWith("\""))
                     {
 
                         do
