@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 using YAAL;
 using YAAL.Assets.Script.Cache;
@@ -18,6 +19,7 @@ namespace YAAL
 
         public static event Action<string> UpdatedLauncher;
         public static Dictionary<string, Cache_CustomLauncher> libraryCustomLauncher = new Dictionary<string, Cache_CustomLauncher>();
+        public static List<Cache_DisplayLauncher> libraryTools = new List<Cache_DisplayLauncher>();
         
         public static void SaveLauncher(CustomLauncher toSave)
         {
@@ -36,6 +38,11 @@ namespace YAAL
             SaveCache<Cache_LauncherList>(GetSaveLocation(FileSettings.launcherList), launcherList);
             UpdateLauncherList();
             UpdatedLauncher?.Invoke(toSave.selfsettings[LauncherSettings.launcherName]);
+
+            if (!cache.isGame)
+            {
+                UpdateToolList();
+            }
         }
 
         public static CustomLauncher LoadLauncher(string launcherName)
@@ -85,7 +92,7 @@ namespace YAAL
             SoftDeleteFile(Path.Combine(GetSaveLocation(ManagedApworlds), gameName));
         }
 
-        public static List<string> GetLauncherList()
+        public static List<string> GetLauncherList(bool includeHidden = false)
         {
             List<string> output = new List<string>();
             string managedApworlds = GetSaveLocation(ManagedApworlds);
@@ -94,6 +101,12 @@ namespace YAAL
             foreach (var item in Directory.GetDirectories(managedApworlds))
             {
                 DirectoryInfo dir = new DirectoryInfo(item);
+
+                if((dir.Attributes & FileAttributes.Hidden) != 0 && !includeHidden)
+                {
+                    continue;
+                }
+
                 if (File.Exists(Path.Combine(item, launcher.GetFileName())))
                 {
                     output.Add(dir.Name);
@@ -269,12 +282,8 @@ namespace YAAL
                     return selectedVersion;
                 }
             }
-            ErrorManager.ThrowError(
-                "IOManager_Launcher - Couldn't find a version for a tool",
-                "Tool " + toolName + " doesn't appear to have any versions installed. Please install one or, if you already have, report this issue."
-                );
 
-            return "";
+            return "None";
         }
 
         public static void AddTool(CustomLauncher toAdd)
@@ -283,11 +292,24 @@ namespace YAAL
             string name = toAdd.GetSetting(LauncherSettings.launcherName.ToString());
             Cache_Tools cache = LoadCache<Cache_Tools>(path);
 
-            if (!cache.toolList.Contains(name))
+            Cache_DisplayLauncher display = new Cache_DisplayLauncher();
+            display.isHeader = false;
+            display.name = name;
+            display.cache = toAdd.WriteCache();
+
+            foreach (var item in cache.customTools)
             {
-                cache.toolList.Add(name);
-                SaveCache<Cache_Tools>(path, cache);
+                if(item.name == name)
+                {
+                    item.cache = display.cache;
+                    SaveCache<Cache_Tools>(path, cache);
+                    return;
+                }
             }
+
+            cache.customTools.Add(display);
+            SaveCache<Cache_Tools>(path, cache);
+            UpdateToolList();
         }
 
         public static void RemoveTool(CustomLauncher toRemove)
@@ -295,18 +317,76 @@ namespace YAAL
             string path = GetSaveLocation(tools);
             string name = toRemove.GetSetting(LauncherSettings.launcherName.ToString());
             Cache_Tools cache = LoadCache<Cache_Tools>(path);
+            Cache_DisplayLauncher? displayToRemove = null;
 
-            if (cache.toolList.Contains(name))
+            foreach (var item in cache.customTools)
             {
-                cache.toolList.Remove(name);
+                if(item.name == name)
+                {
+                    displayToRemove = item;
+                    break;
+                }
+            }
+
+            if(displayToRemove != null)
+            {
+                cache.customTools.Remove(displayToRemove);
                 SaveCache<Cache_Tools>(path, cache);
+                UpdateToolList();
             }
         }
 
-        public static List<string> GetToolList()
+        public async static Task UpdateToolList()
         {
+            List<Cache_DisplayLauncher> output = new List<Cache_DisplayLauncher>();
             Cache_Tools cache = LoadCache<Cache_Tools>(GetSaveLocation(tools));
-            return cache.toolList;
+
+            if (cache.customTools.Count > 0)
+            {
+                foreach (var item in cache.customTools)
+                {
+                    output.Add(item);
+                }
+                Cache_DisplayLauncher header = new Cache_DisplayLauncher();
+                header.name = "-- Default Tools";
+                header.isHeader = true;
+                output.Add(header);
+            }
+
+            foreach (var item in cache.defaultTools)
+            {
+                output.Add(item);
+            }
+
+            libraryTools = output;
+            if(WindowManager.GetMainWindow() is MainWindow window)
+            {
+                window.UpdateToolList();
+            } else
+            {
+                var tcs = new TaskCompletionSource();
+
+                void Handler()
+                {
+                    WindowManager.DoneStarting -= Handler;
+                    tcs.TrySetResult();
+                }
+
+                WindowManager.DoneStarting += Handler;
+
+                await tcs.Task;
+
+                WindowManager.GetMainWindow()!.UpdateToolList();
+            }
+        }
+
+        public async static Task<List<Cache_DisplayLauncher>> GetToolList()
+        {
+            if(libraryTools.Count == 0)
+            {
+                await UpdateToolList();
+            }
+            return libraryTools;
         }
 
         public static bool AddDefaultVersion(string launcherName, string versionName, string apworldPath)

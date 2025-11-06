@@ -193,21 +193,6 @@ public partial class SlotHolder : UserControl
             SwitchPatchMode(true);
         }
 
-        if (room.cheeseTrackerURL != "")
-        {
-            if (!toolList.Contains("Cheesetracker"))
-            {
-                ListSorter.AddSorted(toolList, "Cheesetracker");
-            }
-        }
-        else
-        {
-            if (toolList.Contains("Cheesetracker"))
-            {
-                toolList.Remove("Cheesetracker");
-            }
-        }
-
         ToolSelect.SelectedIndex = 0;
     }
 
@@ -215,18 +200,17 @@ public partial class SlotHolder : UserControl
     {
         _SlotName.Text = thisSlot.settings[slotName];
 
-        foreach (var item in IOManager.GetToolList())
+        if(WindowManager.GetMainWindow() is MainWindow window)
         {
-            toolList.Add(item);
+            UpdateToolList();
+        } else
+        {
+            WindowManager.DoneStarting += () =>
+            {
+                UpdateToolList();
+            };
         }
 
-        if (toolList.Count == 0)
-        {
-            toolList.Add("None");
-        }
-
-        ToolSelect.ItemsSource = toolList;
-        ToolSelect.SelectedIndex = 0;
 
 
         RealPlay.Click += async (_, _) =>
@@ -241,7 +225,8 @@ public partial class SlotHolder : UserControl
                 if (SlotSelector.SelectedItem is Cache_DisplaySlot selected && selected.cache.patchURL != "" && AutomaticPatch.IsVisible)
                 {
                     await AutoDownload();
-                } else
+                }
+                else
                 {
                     ErrorManager.ThrowError(
                         "SlotHolder - No patch selected",
@@ -250,7 +235,7 @@ public partial class SlotHolder : UserControl
                 }
             }
 
-            if(currentLauncher.requiresVersion && thisSlot.settings[SlotSettings.version] == "None installed")
+            if (currentLauncher.requiresVersion && thisSlot.settings[SlotSettings.version] == "None installed")
             {
                 ErrorManager.ThrowError(
                         "SlotHolder - No version selected",
@@ -258,7 +243,7 @@ public partial class SlotHolder : UserControl
                 return;
             }
 
-            
+
             ProcessManager.StartProcess(
                 Environment.ProcessPath!,
                 ("--async " + "\"" + asyncName + "\"" + " --slot " + "\"" + _SlotName.Text + "\""),
@@ -651,6 +636,7 @@ public partial class SlotHolder : UserControl
             {
                 ListSorter.AddSorted(toolList, "Tracker");
             }
+            thisSlot.settings[SlotSettings.slotTrackerURL] = selectedSlot.cache.trackerURL;
         }
         else
         {
@@ -658,9 +644,24 @@ public partial class SlotHolder : UserControl
             {
                 toolList.Remove("Tracker");
             }
+            thisSlot.settings[SlotSettings.slotTrackerURL] = "";
         }
 
         ToolSelect.SelectedIndex = 0;
+
+        UpdateItemList();
+
+        if (LauncherSelector.SelectedItem == null && LauncherSelector.ItemsSource is List<Cache_DisplayLauncher> list)
+        {
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (!list[i].isHeader)
+                {
+                    LauncherSelector.SelectedItem = list[i];
+                    break;
+                }
+            }
+        }
     }
 
     private void _ChangedLauncher(object? sender, SelectionChangedEventArgs e)
@@ -697,5 +698,11 @@ public partial class SlotHolder : UserControl
         sv.Offset = new Vector(oldOffset.X, newY);
 
         e.Handled = true;
+    }
+
+    public async void UpdateToolList()
+    {
+        ToolSelect.ItemsSource = IOManager.GetToolList().Result;
+        ToolSelect.SelectedIndex = 0;
     }
 }

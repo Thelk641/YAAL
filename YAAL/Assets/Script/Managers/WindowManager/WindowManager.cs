@@ -18,7 +18,9 @@ namespace YAAL
 {
     public static class WindowManager 
     {
-        public static MainWindow mainWindow;
+        static bool doneStarting = true;
+        public static MainWindow? mainWindow;
+        public static Action? DoneStarting;
         public static Vector2 GetWindowSize()
         {
             return new Vector2(700, 400);
@@ -95,10 +97,25 @@ namespace YAAL
             comboBox.ItemTemplate = null;
             comboBox.ItemTemplate = template;
         }
-    }
 
-    public enum MyEnum
-    {
-        CustomThemeMaker
+        public static MainWindow? GetMainWindow()
+        {
+            if (!doneStarting)
+            {
+                return null;
+            }
+
+            if (mainWindow == null)
+            {
+                doneStarting = false;
+                mainWindow = new MainWindow();
+                mainWindow.Show();
+                mainWindow.IsVisible = true;
+                doneStarting = true;
+                DoneStarting?.Invoke();
+            }
+
+            return mainWindow;
+        }
     }
 }

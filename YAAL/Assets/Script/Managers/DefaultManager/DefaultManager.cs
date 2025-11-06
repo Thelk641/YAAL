@@ -86,6 +86,26 @@ namespace YAAL
             }
         }
 
+        public static Cache_CustomLauncher GetDefaultLauncher(DefaultTools name)
+        {
+            string json = "";
+
+            switch (name)
+            {
+                case DefaultTools.cheeseTracker:
+                    json = LoadFile("cheesetracker.json");
+                    break;
+                case DefaultTools.textClient:
+                    json = LoadFile("textClient.json");
+                    break;
+                case DefaultTools.webTracker:
+                    json = LoadFile("webTracker.json");
+                    break;
+            }
+
+            return JsonConvert.DeserializeObject<Cache_CustomLauncher>(json)!;
+        }
+
         private static string LoadFile(string fileName)
         {
             var assembly = Assembly.GetExecutingAssembly();

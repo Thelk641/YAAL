@@ -22,6 +22,8 @@ public partial class AsyncHolder : UserControl
     private Cache_Async thisAsync = new Cache_Async();
     public event Action? RequestRemoval;
     public event Action? DoneClosing;
+    public event Action? DoneSaving;
+    public bool isSaving = false;
     private Dictionary<SlotHolder, double> previousHeight = new Dictionary<SlotHolder, double>();
     public AsyncHolder()
     {
@@ -89,7 +91,6 @@ public partial class AsyncHolder : UserControl
         PasswordBox.Text = thisAsync.settings[password];
         SaveButton.Click += (_, _) =>
         {
-            Save();
             SwitchMode();
         };
 
@@ -106,10 +107,14 @@ public partial class AsyncHolder : UserControl
             };
         };
 
+        AsyncNameBox.TextChanged += (_, _) =>
+        {
+            Debouncer.Debounce(() => { Save(); }, 0.2f);
+        };
+
         RoomBox.TextChanged += (_, _) =>
         {
-            Debouncer.Debounce(UpdateSlotsRoom, 1);
-            
+            Debouncer.Debounce(UpdateSlotsRoom, 0.2f);
         };
     }
 
@@ -118,6 +123,7 @@ public partial class AsyncHolder : UserControl
         thisAsync.room = await WebManager.GetRoomPort(thisAsync.room);
         thisAsync.settings[roomIP] = thisAsync.room.IP;
         thisAsync.settings[roomPort] = thisAsync.room.port;
+        thisAsync.settings[cheeseURL] = thisAsync.room.cheeseTrackerURL;
         Save();
     }
     
@@ -132,6 +138,9 @@ public partial class AsyncHolder : UserControl
         if (RoomBox.Text.Contains("archipelago.gg/room/"))
         {
             thisAsync.room = await WebManager.ParseRoomURL(RoomBox.Text);
+            thisAsync.settings[roomIP] = thisAsync.room.IP;
+            thisAsync.settings[roomPort] = thisAsync.room.port;
+            thisAsync.settings[cheeseURL] = thisAsync.room.cheeseTrackerURL;
         }
 
         //UpdatePort();
@@ -212,6 +221,18 @@ public partial class AsyncHolder : UserControl
 
     public async Task Save()
     {
+        /*Action action = null;
+        if (isSaving)
+        {
+            action = () => {
+                Save();
+                DoneSaving -= action;
+            };
+            DoneSaving += action;
+            return;
+        }*/
+
+        isSaving = true;
         Edit.IsEnabled = false;
         Cache_Async toSave = new Cache_Async();
         toSave.settings[asyncName] = AsyncNameBox.Text;
@@ -220,6 +241,8 @@ public partial class AsyncHolder : UserControl
         toSave.settings[roomIP] = thisAsync.settings[roomIP];
         toSave.settings[roomPort] = thisAsync.settings[roomPort];
         toSave.room = thisAsync.room;
+
+        Debug.WriteLine(toSave.settings[asyncName] + " / " + toSave.settings[roomURL] + " / " + toSave.settings[roomIP] + " / " + toSave.settings[roomPort]);
 
         foreach (var item in SlotsContainer.Children)
         {
@@ -245,6 +268,8 @@ public partial class AsyncHolder : UserControl
         thisAsync.settings[roomURL] = toSave.room.URL;
 
         Edit.IsEnabled = true;
+        isSaving = false;
+        DoneSaving?.Invoke();
     }
 
     public async void ClosingSave()
@@ -261,5 +286,16 @@ public partial class AsyncHolder : UserControl
             await Save();
         }
         DoneClosing?.Invoke();
+    }
+
+    public void UpdateToolList()
+    {
+        foreach (var item in SlotsContainer.Children)
+        {
+            if (item is SlotHolder slot)
+            {
+                slot.UpdateToolList();
+            }
+        }
     }
 }

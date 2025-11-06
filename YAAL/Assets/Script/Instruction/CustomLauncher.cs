@@ -419,9 +419,9 @@ public class CustomLauncher
                         continue;
                     }
 
-                    cleaned = item;
+                    cleaned = item.Trim();
 
-                    if (item.StartsWith("\"") || item.EndsWith("\""))
+                    if (cleaned.StartsWith("\"") || cleaned.EndsWith("\""))
                     {
 
                         do
@@ -439,8 +439,10 @@ public class CustomLauncher
                         if (settings.Has(split[0]))
                         {
                             output = output + settings[split[0]].Trim();
-                        }
-                        else
+                        } else if (split[0] == "apDebug" && settings.Has(GeneralSettings.aplauncher))
+                        {
+                            output = output + IOManager.ToDebug(settings[GeneralSettings.aplauncher]);
+                        } else
                         {
                             output = output + split[0];
                         }

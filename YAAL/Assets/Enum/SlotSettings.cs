@@ -13,6 +13,7 @@ namespace YAAL
         slotInfo,
         rom,
         version,
-        baseLauncher
+        baseLauncher,
+        slotTrackerURL
     };
 }

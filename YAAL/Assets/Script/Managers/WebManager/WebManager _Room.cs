@@ -310,6 +310,7 @@ public static partial class WebManager
             {
                 string jsonString = await response.Content.ReadAsStringAsync();
                 Cache_RoomStatus status = JsonSerializer.Deserialize<Cache_RoomStatus>(jsonString);
+                Debug.WriteLine("port : " + status.last_port.ToString());
                 output.port = status.last_port.ToString();
             }
         }

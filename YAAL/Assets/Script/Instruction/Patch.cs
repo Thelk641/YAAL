@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using static YAAL.LauncherSettings;
 using static YAAL.PatchSettings;
 using static YAAL.SlotSettings;
+using System.Globalization;
 
 namespace YAAL
 {
@@ -97,8 +98,9 @@ namespace YAAL
         private bool ApplyPatch()
         {
             string apLauncher = customLauncher.ParseTextWithSettings("${aplauncher}");
-            string folder = Path.Combine(Path.GetDirectoryName(apLauncher), "ArchipelagoLauncherDebug.exe");
+            string folder = IOManager.ToDebug(customLauncher.ParseTextWithSettings("${aplauncher}"));
 
+            
             
 
             if (!File.Exists(Path.Combine(Path.GetDirectoryName(apLauncher), "custom_worlds", "YAAL.apworld")))

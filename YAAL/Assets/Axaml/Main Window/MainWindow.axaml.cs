@@ -136,4 +136,15 @@ public partial class MainWindow : Window
         };
         return holder;
     }
+
+    public void UpdateToolList()
+    {
+        foreach (var item in AsyncContainer.Children)
+        {
+            if(item is AsyncHolder async)
+            {
+                async.UpdateToolList();
+            }
+        }
+    }
 }

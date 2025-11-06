@@ -13,6 +13,7 @@ namespace YAAL
         password,
         roomIP,
         roomPort,
-        isHidden
+        isHidden,
+        cheeseURL,
     };
 }

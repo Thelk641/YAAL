@@ -1,5 +1,8 @@
-using YAAL;
+using Avalonia.Controls;
+using Avalonia.Media.Imaging;
+using Avalonia.Platform.Storage;
 using Newtonsoft.Json;
+using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -7,12 +10,10 @@ using System.IO;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Xml.Linq;
+using YAAL;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 using static YAAL.FileSettings;
 using static YAAL.GeneralSettings;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using Avalonia.Media.Imaging;
-using Avalonia.Controls;
-using ReactiveUI;
 
 namespace YAAL
 {
@@ -30,7 +31,12 @@ namespace YAAL
         {
             string baseDirectory = AppContext.BaseDirectory;
             settings = LoadCache<Cache_UserSettings>(userSettings.GetFullPath());
-            settings.SetDefaultPath();
+            if(settings.saveLocation.Count == 0)
+            {
+                settings.SetDefaultPath();
+                SaveCache<Cache_UserSettings>(userSettings.GetFullPath(), settings);
+            }
+            
             UpdateLauncherList();
         }
 
@@ -65,6 +71,9 @@ namespace YAAL
             }
 
             Directory.CreateDirectory(targetFolder);
+
+            DirectoryInfo dir = new DirectoryInfo(targetFolder);
+            dir.Attributes |= FileAttributes.Hidden;
 
             string archipelagoFolder = GetApFolder();
 
@@ -160,6 +169,18 @@ namespace YAAL
             }
 
             return "./" + relativePath.Replace("\\", "/");
+        }
+
+        public static string ToDebug(string archipelago)
+        {
+            string? directory = Path.GetDirectoryName(archipelago);
+            if (directory != null)
+            {
+                return Path.Combine(directory, "ArchipelagoLauncherDebug.exe");
+            } else
+            {
+                return archipelago;
+            }
         }
     }
 }

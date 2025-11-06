@@ -50,8 +50,13 @@ public partial class App : Application
         Settings.LoadThemes();
         var args = Environment.GetCommandLineArgs().Skip(1).ToArray();
 
+        if(args.Length == 0)
+        {
+            //args = new string[5] {"--restore", "--async", "FFX Test", "--slot", "Masaru_Of_Season" };
+            args = new string[1] { "--restore" };
+        }
+
         //var args = new string[2] { "--async PatchTest", "--slot Slot 2" };
-        //var args = new string[7]{"--restore", "--launcher", "The Legend of Zelda - Oracle of Seasons", "--async", "Debug_CLMaker_Async", "--slot", "Debug_CLMaker_Slot"};
         //var args = new string[2]{"--error ", "D:\\Unity\\Avalonia port\\YAAL\\Logs\\31-07-2025-22-27-27.json" };
         //var args = new string[2]{"--restore", "--exit" };
         //var args = new string[4] { "--async", "\"Debug_CLMaker_Async\"", "--slot\"Debug_CLMaker_Slot\"", "--launcher\"Universal Tracker\"" };
@@ -233,7 +238,7 @@ public partial class App : Application
                 //desktop.MainWindow = new UpdateWindow();
             }*/
             //desktop.MainWindow = new CLMakerWindow(launcher);
-            desktop.MainWindow = new MainWindow();
+            desktop.MainWindow = WindowManager.GetMainWindow();
         }
         base.OnFrameworkInitializationCompleted();
     }

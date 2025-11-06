@@ -74,7 +74,23 @@
 									VerticalContentAlignment="Center"
 									Grid.Column="0"
 									Height="30"
-									/>
+									>
+									<ComboBox.Styles>
+										<Style Selector="ComboBoxItem">
+											<Setter Property="IsEnabled"
+													Value="{Binding isHeader, Converter={StaticResource BoolInvert}}" />
+											<Setter Property="IsHitTestVisible"
+													Value="{Binding isHeader, Converter={StaticResource BoolInvert}}" />
+										</Style>
+									</ComboBox.Styles>
+									<ComboBox.ItemTemplate>
+										<DataTemplate>
+											<TextBlock
+												Text="{Binding name}"
+											/>
+										</DataTemplate>
+									</ComboBox.ItemTemplate>
+								</ComboBox>
 								<Button
 									Name="StartTool"
 									VerticalAlignment="Stretch"

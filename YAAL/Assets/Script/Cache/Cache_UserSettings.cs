@@ -34,12 +34,7 @@ namespace YAAL
 
         public void SetDefaultPath()
         {
-            if (saveLocation.ContainsKey(ManagedApworlds))
-            {
-                //We've just read User Settings, no need for defaults
-                return;
-            }
-
+            // TODO : this is dbeug
             Set(aplauncher, "C:\\ProgramData\\Archipelago\\ArchipelagoLauncher.exe");
             Set("bizhawk", "I:\\Emulators\\Bizhawk\\EmuHawk.exe");
 
@@ -68,6 +63,31 @@ namespace YAAL
             Directory.CreateDirectory(IOManager.ProcessLocalPath(saveLocation[Themes]));
             Directory.CreateDirectory(IOManager.ProcessLocalPath(saveLocation[Images]));
             Directory.CreateDirectory(IOManager.ProcessLocalPath(saveLocation[Rendered]));
+
+            Cache_Tools cacheTools = new Cache_Tools();
+            List<Cache_CustomLauncher> list = new List<Cache_CustomLauncher>();
+
+            list.Add(DefaultManager.GetDefaultLauncher(DefaultTools.cheeseTracker));
+            list.Add(DefaultManager.GetDefaultLauncher(DefaultTools.textClient));
+            list.Add(DefaultManager.GetDefaultLauncher(DefaultTools.webTracker));
+
+            string fulldir = IOManager.ProcessLocalPath(saveLocation[ManagedApworlds]);
+
+            foreach (var item in list)
+            {
+                IOManager.SaveCacheLauncher(item);
+
+                DirectoryInfo trueDir = new DirectoryInfo(Path.Combine(fulldir, item.settings[LauncherSettings.launcherName]));
+                trueDir.Attributes |= FileAttributes.Hidden;
+
+                Cache_DisplayLauncher display = new Cache_DisplayLauncher();
+                display.cache = item;
+                display.name = item.settings[LauncherSettings.launcherName];
+
+                cacheTools.defaultTools.Add(display);
+            }
+
+            IOManager.SaveCache<Cache_Tools>(IOManager.ProcessLocalPath(saveLocation[tools]), cacheTools);
         }
 
         public string? this[string key]

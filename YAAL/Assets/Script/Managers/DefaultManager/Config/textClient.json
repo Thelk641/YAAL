@@ -1,0 +1,46 @@
+{
+  "instructions": {
+    "0-Open": {
+      "args": "-- \"Text Client\" --connect ${slotInfo}",
+      "processName": "",
+      "path": "\"C:\\ProgramData\\Archipelago\\ArchipelagoLauncher.exe\";",
+      "redirectOutput": "False"
+    }
+  },
+  "settings": {
+    "gameName": "",
+    "githubURL": "",
+    "filters": "",
+    "apfolder": "",
+    "apworld": "",
+    "launcherName": "Text Client",
+    "lua_adventure": "",
+    "lua_bizhawk": "",
+    "lua_ff1": "",
+    "lua_ladx": "",
+    "lua_mmbn3": "",
+    "lua_oot": "",
+    "lua_tolz": "",
+    "Debug_AsyncName": "Debug_CLMaker_Async",
+    "Debug_SlotName": "Debug_CLMaker_Slot",
+    "Debug_Patch": "",
+    "Debug_baseLauncher": ""
+  },
+  "customSettings": {
+    "asyncName": "",
+    "password": "",
+    "patch": "",
+    "previous_async": "",
+    "previous_slot": "",
+    "rom": "",
+    "room": "",
+    "roomIP": "",
+    "roomPort": "",
+    "slotInfo": "",
+    "slotName": "",
+    "version": ""
+  },
+  "isGame": false,
+  "requiresPatch": false,
+  "requiresVersion": false
+}
