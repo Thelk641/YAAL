@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace YAAL;
 
-public partial class CLMakerWindow : Window
+public partial class CLMakerWindow : ScalableWindow
 {
     private static CLMakerWindow? _clMakerWindow;
     public CLMakerWindow()

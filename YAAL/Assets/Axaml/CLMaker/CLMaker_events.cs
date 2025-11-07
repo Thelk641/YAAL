@@ -13,7 +13,7 @@ using System.Collections.ObjectModel;
 
 namespace YAAL;
 
-public partial class CLMakerWindow : Window
+public partial class CLMakerWindow : ScalableWindow
 {
     private void SetEvents(bool autoLoad)
     {

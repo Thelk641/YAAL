@@ -13,12 +13,10 @@ using YAAL.Assets.Scripts;
 
 namespace YAAL;
 
-public partial class ColorSelector : Window
+public partial class ColorSelector : ScalableWindow
 {
-    public event Action ChangedColor;
-    public event Action CancelSelection;
-    private Avalonia.Controls.ColorView wtf;
-    private ColorView gnya;
+    public event Action? ChangedColor;
+    public event Action? CancelSelection;
     public ColorSelector()
     {
         InitializeComponent();

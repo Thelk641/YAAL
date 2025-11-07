@@ -15,7 +15,7 @@ using YAAL.Assets.Scripts;
 
 namespace YAAL;
 
-public partial class MainWindow : Window
+public partial class MainWindow : ScalableWindow
 {
     List<AsyncHolder> waitingToClose = new List<AsyncHolder>();
     private bool readyToClose = false;
@@ -49,6 +49,10 @@ public partial class MainWindow : Window
                 IOManager.SetUserSettings(newGeneralSettings, newCustomSetting);
                 this.Topmost = true;
                 this.Topmost = false;
+                if(newGeneralSettings.ContainsKey(GeneralSettings.zoom) && float.TryParse(newGeneralSettings[GeneralSettings.zoom], out float newZoom))
+                {
+                    App.Settings.Zoom = newZoom;
+                }
             };
             manager.IsVisible = true;
         };

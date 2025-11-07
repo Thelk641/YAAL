@@ -21,6 +21,13 @@ namespace YAAL
         static bool doneStarting = true;
         public static MainWindow? mainWindow;
         public static Action? DoneStarting;
+        public static Cache_Windows windowsData;
+
+        static WindowManager()
+        {
+            windowsData = IOManager.GetWindowSettings();
+        }
+
         public static Vector2 GetWindowSize()
         {
             return new Vector2(700, 400);
@@ -40,12 +47,6 @@ namespace YAAL
             float mathedX = (float)(baseSize.X - (38 * App.Settings.Zoom)); //38 is the spacing for the "update" button
             float mathedY = (float)(baseSize.Y / 2);
             return new Vector2(mathedX, mathedY);
-        }
-
-        public static void OpenWindow()
-        {
-            mainWindow = new MainWindow();
-            mainWindow.IsVisible = true;
         }
 
         public static Window OpenWindow(WindowType windowType, Window source)
@@ -79,7 +80,19 @@ namespace YAAL
             {
                 source.Topmost = true;
                 source.Topmost = false;
+                windowsData.positions[windowType] = window.Position;
+                Vector2 size = new Vector2((float)window.Width, (float)window.Height);
+                windowsData.size[windowType] = size;
+                IOManager.SetWindowSettings(windowsData);
             };
+
+            if (windowsData.positions.ContainsKey(windowType))
+            {
+                window.Position = windowsData.positions[windowType];
+                window.Width = windowsData.size[windowType].X;
+                window.Height = windowsData.size[windowType].Y;
+            }
+
             return window;
         }
 
@@ -112,6 +125,21 @@ namespace YAAL
                 mainWindow.Show();
                 mainWindow.IsVisible = true;
                 doneStarting = true;
+                if (windowsData.positions.ContainsKey(WindowType.MainWindow))
+                {
+                    mainWindow.Position = windowsData.positions[WindowType.MainWindow];
+                    mainWindow.Width = windowsData.size[WindowType.MainWindow].X;
+                    mainWindow.Height = windowsData.size[WindowType.MainWindow].Y;
+                }
+
+                mainWindow.Closing += (_, _) =>
+                {
+                    windowsData.positions[WindowType.MainWindow] = mainWindow.Position;
+                    Vector2 size = new Vector2((float)mainWindow.Width, (float)mainWindow.Height);
+                    windowsData.size[WindowType.MainWindow] = size;
+                    IOManager.SetWindowSettings(windowsData);
+                };
+
                 DoneStarting?.Invoke();
             }
 

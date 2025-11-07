@@ -14,9 +14,9 @@ using System.Threading.Tasks;
 
 namespace YAAL;
 
-public partial class ErrorWindow : Window
+public partial class ErrorWindow : ScalableWindow
 {
-    private Separator lastSeparator;
+    private Separator? lastSeparator;
     public ErrorWindow()
     {
         InitializeComponent();

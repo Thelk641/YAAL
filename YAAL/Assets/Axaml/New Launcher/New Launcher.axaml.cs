@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace YAAL;
 
-public partial class NewLauncher : Window
+public partial class NewLauncher : ScalableWindow
 {
     private CLMakerWindow clmaker;
     public Cache_CustomLauncher launcher;

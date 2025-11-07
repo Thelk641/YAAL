@@ -6,6 +6,7 @@
 		Height="400"
 		Width="400"
         >
+	<LayoutTransformControl x:Name="Controller">
   <Border 
     Name="BackgroundColor"
     BorderBrush="Gray"
@@ -45,6 +46,7 @@
 		  </Grid>
 	  </Grid>
   </Border>
+		</LayoutTransformControl>
 </Window>
 
 <!-- SizeToContent="WidthAndHeight" 

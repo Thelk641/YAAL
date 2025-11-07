@@ -7,6 +7,7 @@
         Height="120"
         x:Class="YAAL.ConfirmationWindow"
         Title="Confirmation window">
+	<LayoutTransformControl x:Name="Controller">
 	<Border Margin="8" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 		<Grid RowDefinitions="*,8,*,8,*">
 			<TextBlock
@@ -42,4 +43,5 @@
 			</Grid>
 		</Grid>
 	</Border>
+		</LayoutTransformControl>
 </Window>

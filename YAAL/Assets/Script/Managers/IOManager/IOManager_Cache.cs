@@ -256,5 +256,15 @@ namespace YAAL
 
             SaveCache<Cache_UserSettings>(Path.Combine(userSettings.GetFullPath()), settings);
         }
+
+        public static Cache_Windows GetWindowSettings()
+        {
+            return LoadCache<Cache_Windows>(GetSaveLocation(windows));
+        }
+
+        public static void SetWindowSettings(Cache_Windows newSettings)
+        {
+            SaveCache<Cache_Windows>(GetSaveLocation(windows), newSettings);
+        }
     }
 }

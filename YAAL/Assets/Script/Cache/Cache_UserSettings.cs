@@ -55,6 +55,7 @@ namespace YAAL
             saveLocation[tools] = Path.Combine(saveLocation[ManagedApworlds], tools.GetFileName());
             saveLocation[launcherList] = "./" + launcherList.GetFileName();
             saveLocation[userSettings] = "./" + userSettings.GetFileName();
+            saveLocation[windows] = "./" + windows.GetFileName();
 
             Directory.CreateDirectory(IOManager.ProcessLocalPath(saveLocation[ManagedApworlds]));
             Directory.CreateDirectory(IOManager.ProcessLocalPath(saveLocation[Async]));

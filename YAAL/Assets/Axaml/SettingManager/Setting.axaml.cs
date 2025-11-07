@@ -87,6 +87,20 @@ public partial class Setting : UserControl
         BackgroundSetter.Set(SpecialMode);
     }
 
+    public void IsZoom()
+    {
+        CustomValue.TextChanged += (_, _) =>
+        {
+            if (float.TryParse(CustomValue.Text, out float newZoom))
+            {
+                Debouncer.Debounce(
+                    () => { App.Settings.Zoom = newZoom; },
+                    0.5f
+                    );
+            }
+        };
+    }
+
     public void SwitchToSpecialMode(string value)
     {
         if (SetValue.Text == true.ToString() || SetValue.Text == false.ToString())

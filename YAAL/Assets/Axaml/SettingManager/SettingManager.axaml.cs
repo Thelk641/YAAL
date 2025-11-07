@@ -204,6 +204,11 @@ public partial class SettingManager : ScalableWindow
 
             Setting newSetting = new Setting(item.Key.ToString(), item.Value, false);
             GeneralSettingContainer.Children.Add(newSetting);
+
+            if (item.Key == zoom)
+            {
+                newSetting.IsZoom();
+            }
         }
         SortOtherSettings();
         HideEmptyCategories();

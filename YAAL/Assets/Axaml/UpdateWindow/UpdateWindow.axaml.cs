@@ -18,9 +18,9 @@ using static YAAL.SlotSettings;
 
 namespace YAAL;
 
-public partial class UpdateWindow : Window
+public partial class UpdateWindow : ScalableWindow
 {
-    private static UpdateWindow _updateWindow;
+    private static UpdateWindow? _updateWindow;
     private List<UpdateChecker> waitingForUpdate = new List<UpdateChecker>();
     private List<UpdateChecker> waitingForDownload = new List<UpdateChecker>();
     private List<UpdateChecker> checkers = new List<UpdateChecker>();
@@ -81,15 +81,16 @@ public partial class UpdateWindow : Window
 
     private void NoteDoneDownloading(object? source, EventArgs e)
     {
-        UpdateChecker checker = source as UpdateChecker;
-        waitingForDownload.Remove(checker);
-        if (waitingForDownload.Count == 0 && mustThrow)
+        if(source is UpdateChecker checker)
         {
-            
-            ErrorManager.ThrowError(
-                "UpdateWindow - Failed to update some files",
-                "Something went wrong while downloading update, please check other error for more information."
-                );
+            waitingForDownload.Remove(checker);
+            if (waitingForDownload.Count == 0 && mustThrow)
+            {
+                ErrorManager.ThrowError(
+                    "UpdateWindow - Failed to update some files",
+                    "Something went wrong while downloading update, please check other error for more information."
+                    );
+            }
         }
     }
 

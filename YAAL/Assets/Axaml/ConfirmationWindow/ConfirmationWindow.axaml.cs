@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace YAAL;
 
-public partial class ConfirmationWindow : Window
+public partial class ConfirmationWindow : ScalableWindow
 {
     public bool confirmed = false;
     public ConfirmationWindow()

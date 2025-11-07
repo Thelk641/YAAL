@@ -10,6 +10,7 @@
         MinWidth="700"
         Name="mainWindow"
         >
+	<LayoutTransformControl x:Name="Controller">
 	<Border Name="BackgroundColor" Padding="8">
 	<Grid RowDefinitions="30, 8, *, 8, 48, 8, 30">
     
@@ -309,6 +310,7 @@
 		</Grid>
 	  </Grid>
 	</Border>
+		</LayoutTransformControl>
 </Window>
 
 

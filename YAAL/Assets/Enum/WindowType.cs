@@ -13,6 +13,7 @@ namespace YAAL
         ConfirmationWindow,
         CustomThemeMaker,
         ErrorWindow,
+        MainWindow,
         NewLauncher,
         SettingManager,
         TestWindow,

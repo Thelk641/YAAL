@@ -18,6 +18,7 @@ namespace YAAL
         multiworld,
         launcherList,
         customTheme,
+        windows,
 
         // upper case, directories
         ManagedApworlds,

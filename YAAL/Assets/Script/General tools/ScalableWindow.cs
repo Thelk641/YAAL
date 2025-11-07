@@ -7,15 +7,16 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Xml.Linq;
 
-namespace YAAL.Assets.Scripts
+namespace YAAL
 {
-    public class ScalableWindow : Window
+    public class ScalableWindow : Avalonia.Controls.Window
     {
         public double baseMinHeight;
         public double baseMaxHeight;

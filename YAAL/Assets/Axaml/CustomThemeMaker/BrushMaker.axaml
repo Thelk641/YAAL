@@ -13,6 +13,7 @@
 	<Window.Resources>
 		<local:BoolInvert x:Key="BoolInvert"/>
 	</Window.Resources>
+	<LayoutTransformControl x:Name="Controller">
 	<Border Margin="8" HorizontalAlignment="Stretch" Name="TrueBackground">
 		<Grid RowDefinitions="48, 8, 124,8,86,8,238" HorizontalAlignment="Stretch">
 			
@@ -529,4 +530,5 @@
 
 		</Grid>
 	</Border>
+		</LayoutTransformControl>
 </Window>

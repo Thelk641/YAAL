@@ -18,7 +18,7 @@ using static YAAL.SlotSettings;
 
 namespace YAAL;
 
-public partial class TestWindow : Window
+public partial class TestWindow : ScalableWindow
 {
     private CustomLauncher launcher;
     private static TestWindow _testWindow;

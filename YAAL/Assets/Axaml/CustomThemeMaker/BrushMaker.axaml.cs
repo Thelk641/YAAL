@@ -25,7 +25,7 @@ using static YAAL.SlotSettings;
 
 namespace YAAL;
 
-public partial class BrushMaker : Window
+public partial class BrushMaker : ScalableWindow
 {
     public Cached_Layer brush;
     public event PropertyChangedEventHandler? SettingChanged;

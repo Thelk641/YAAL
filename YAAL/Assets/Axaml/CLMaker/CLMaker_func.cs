@@ -13,7 +13,7 @@ using static YAAL.LauncherSettings;
 
 namespace YAAL;
 
-public partial class CLMakerWindow : Window
+public partial class CLMakerWindow : ScalableWindow
 {
     public CustomLauncher? customLauncher;
     public SettingManager? settingManager;

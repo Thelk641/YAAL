@@ -7,6 +7,7 @@
         Height="460"
         x:Class="YAAL.TestWindow"
         Title="Test a custom launcher">
+	<LayoutTransformControl x:Name="Controller">
 	<Border Margin="8" HorizontalAlignment="Stretch" Name="TrueBackground">
 		<Grid RowDefinitions="48, 4, 1, 4, 48, 8, 48, 8, 48, 8 48, 8, 48, 8, 48, 4, 1, 4, 30" HorizontalAlignment="Stretch">
 			
@@ -220,4 +221,5 @@
 
 		</Grid>
 	</Border>
+		</LayoutTransformControl>
 </Window>

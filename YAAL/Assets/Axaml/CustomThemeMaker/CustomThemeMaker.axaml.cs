@@ -25,7 +25,7 @@ using static YAAL.ThemeSettings;
 
 namespace YAAL;
 
-public partial class CustomThemeMaker : Window
+public partial class CustomThemeMaker : ScalableWindow
 {
     private string previousSelection = "General Theme";
     private Cache_CustomTheme currentTheme;
