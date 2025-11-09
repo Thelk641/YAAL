@@ -160,7 +160,7 @@ namespace YAAL
             string backedupFile = Path.Combine(backupDir, pathName);
             string tempBackedupFile = GetTemporaryFilePath(path);
 
-            if(IsAlreadyBackedUp(path) && !File.Exists(tempBackedupFile))
+            if(IsAlreadyBackedUp(path) && (!File.Exists(tempBackedupFile) && !Directory.Exists(tempBackedupFile)))
             {
                 ErrorManager.AddNewError(
                     "IOManager_FileCore - Backedup file doesn't appear to exists",
@@ -206,7 +206,7 @@ namespace YAAL
                 NoteRestore(pathToBackup);
             }
 
-            if (!File.Exists(tempBackedupFile))
+            if (!File.Exists(tempBackedupFile) && !Directory.Exists(tempBackedupFile))
             {
                 // If we don't use a default file and don't have a pre-existing file,
                 // we only need to restore our own slot's backup, and then we're done

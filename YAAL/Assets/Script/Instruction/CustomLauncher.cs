@@ -289,17 +289,17 @@ public class CustomLauncher
         return selfsettings[key];
     }
 
-    public List<string> ParseTextWithSettings(List<string> input)
+    public List<string> ParseTextWithSettings(List<string> input, bool clearQuote = true)
     {
         List<string> output = new List<string>();
         foreach (var item in input)
         {
-            output.Add(ParseTextWithSettings(item));
+            output.Add(ParseTextWithSettings(item, clearQuote));
         }
         return output;
     }
     
-    public string ParseTextWithSettings(string text)
+    public string ParseTextWithSettings(string text, bool clearQuote = true)
     {
         if(text == null)
         {
@@ -317,12 +317,12 @@ public class CustomLauncher
 
         if (!text.Contains("${"))
         {
-            while (text.StartsWith("\""))
+            while (text.StartsWith("\"") && clearQuote)
             {
                 text = text.TrimStart('\"');
             }
 
-            while (text.EndsWith("\""))
+            while (text.EndsWith("\"") && clearQuote)
             {
                 text = text.TrimEnd('\"');
             }
@@ -390,11 +390,6 @@ public class CustomLauncher
             text = text.Replace("${apworld}", apworldList);
         }
 
-        if (text.Contains("Client"))
-        {
-            Debug.WriteLine("now !");
-        }
-
         int i = 0;
         while(text.Contains("${") && i < 10)
         {
@@ -443,7 +438,24 @@ public class CustomLauncher
                     {
                         if (settings.Has(split[0]))
                         {
-                            output = output + settings[split[0]].Trim();
+                            if (split[0] == SlotSettings.slotInfo.ToString())
+                            {
+                                output = 
+                                    output 
+                                    + "\"" 
+                                    + settings[slotName].Trim() 
+                                    + ":" 
+                                    + settings[AsyncSettings.password] 
+                                    + "@" 
+                                    + settings[AsyncSettings.roomIP] 
+                                    + ":"
+                                    + settings[roomPort]
+                                    + "\"";
+                            } else
+                            {
+                                output = output + settings[split[0]].Trim();
+                            }
+                                
                         } else if (split[0] == "apDebug" && settings.Has(GeneralSettings.aplauncher))
                         {
                             output = output + IOManager.ToDebug(settings[GeneralSettings.aplauncher]);
@@ -478,24 +490,28 @@ public class CustomLauncher
         return text;
     }
 
-    public List<string> SplitAndParse(string input)
+    public List<string> SplitAndParse(string input, bool clearQuote = true)
     {
-        string parsed = ParseTextWithSettings(input);
-
-        if (parsed.Contains(";"))
+        if(input.Contains("FF map.png"))
         {
-            List<string> parsedSplit = SplitString(parsed);
-            foreach (var item in parsedSplit)
-            {
-                if (item.Contains("${"))
-                {
-                    return ParseTextWithSettings(parsedSplit);
-                }
-            }
-            return parsedSplit;
+            Debug.Write("gnya");
         }
 
         List<string> output = new List<string>();
+
+        if (input.Contains(";"))
+        {
+            List<string> parsedSplit = SplitString(input);
+            foreach (var item in parsedSplit)
+            {
+                output.Add(ParseTextWithSettings(item, clearQuote));
+            }
+            return output;
+        }
+
+        string parsed = ParseTextWithSettings(input, clearQuote);
+
+        
         if(parsed == "\" \"")
         {
             output.Add("");

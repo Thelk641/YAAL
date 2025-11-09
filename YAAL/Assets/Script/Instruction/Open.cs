@@ -29,7 +29,7 @@ public class Open : Instruction<OpenSettings>
 
 
         List<string> splitPath = customLauncher.SplitAndParse(this.InstructionSetting[OpenSettings.path]);
-        List<string> splitArgs = customLauncher.SplitAndParse(this.InstructionSetting[OpenSettings.args]);
+        List<string> splitArgs = customLauncher.SplitAndParse(this.InstructionSetting[OpenSettings.args], false);
         List<string> splitKeys = customLauncher.SplitAndParse(this.InstructionSetting[OpenSettings.processName]);
 
         if(splitKeys.Count == 1 && splitKeys[0] == "")

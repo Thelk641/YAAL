@@ -24,6 +24,7 @@ public partial class AsyncHolder : UserControl
     public event Action? DoneClosing;
     public event Action? DoneSaving;
     public bool isSaving = false;
+    public bool waitingToSave = false;
     private Dictionary<SlotHolder, double> previousHeight = new Dictionary<SlotHolder, double>();
     public AsyncHolder()
     {
@@ -109,7 +110,8 @@ public partial class AsyncHolder : UserControl
 
         AsyncNameBox.TextChanged += (_, _) =>
         {
-            Debouncer.Debounce(() => { Save(); }, 0.2f);
+            waitingToSave = true;
+            Debouncer.Debounce(() => { waitingToSave = false; Save(); }, 1f);
         };
 
         RoomBox.TextChanged += (_, _) =>
@@ -132,6 +134,11 @@ public partial class AsyncHolder : UserControl
         if (RoomBox.Text == "" || RoomBox.Text == thisAsync.room.URL)
         {
             return;
+        }
+
+        if (waitingToSave)
+        {
+            Save();
         }
 
         ReadingRoom.IsVisible = true;
@@ -242,7 +249,6 @@ public partial class AsyncHolder : UserControl
         toSave.settings[roomPort] = thisAsync.settings[roomPort];
         toSave.room = thisAsync.room;
 
-        Debug.WriteLine(toSave.settings[asyncName] + " / " + toSave.settings[roomURL] + " / " + toSave.settings[roomIP] + " / " + toSave.settings[roomPort]);
 
         foreach (var item in SlotsContainer.Children)
         {
@@ -260,6 +266,8 @@ public partial class AsyncHolder : UserControl
                 slotHolder.SetRoom(toSave.room);
             }
         }
+
+
 
         thisAsync = IOManager.SaveAsync(thisAsync, toSave);
         _AsyncNameBox.Text = thisAsync.settings[asyncName];

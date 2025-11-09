@@ -47,52 +47,78 @@ namespace YAAL
                 return false;
             }
 
-            if(splitDefault.Count > 0)
+            switch (splitDefault.Count)
             {
-                if(splitTarget.Count != splitDefault.Count)
-                {
-                    ErrorManager.AddNewError(
-                        "Backup - Invalid number of default file",
-                        "Backup was asked to backup " + splitTarget.Count + " files or folders, but was only given only " + splitDefault.Count + " default files. Either provide one (and only one) default for each file / folder, or provide none."
-                        );
-                    return false;
-                }
-                List<string> trueDefaults = new List<string>();
-                string newDefault;
-                string newSetting = "";
-
-                foreach (var item in splitDefault)
-                {
-                    if(item == "" || item == " ")
+                case 0:
+                    foreach (var item in splitTarget)
                     {
-                        trueDefaults.Add("");
-                        newSetting += "\" \"";
-                        continue;
+                        BackupAndDefault[item] = "";
                     }
-                    if (!IOManager.CopyToDefault(customLauncher.GetSetting(launcherName), item, out newDefault))
+                    break;
+                case 1:
+                    if (splitDefault[0].Trim() == "")
+                    {
+                        foreach (var item in splitTarget)
+                        {
+                            BackupAndDefault[item] = "";
+                        }
+                        break;
+                    }
+
+                    if (!IOManager.CopyToDefault(customLauncher.GetSetting(launcherName), splitDefault[0], out string singleDefault))
                     {
                         ErrorManager.AddNewError(
                             "Backup - Failed to copy defaults",
                             "Something went wrong while trying to copy new default : " + this.InstructionSetting[defaultFile]);
                         return false;
                     }
-                    trueDefaults.Add(newDefault);
-                    newSetting += "\"" + newDefault + "\"; ";
-                }
+                    this.InstructionSetting[defaultFile] = singleDefault.Trim().Trim(';');
+                    customLauncher.Save();
+                    for (int i = 0; i < splitTarget.Count; i++)
+                    {
+                        BackupAndDefault[splitTarget[i]] = singleDefault;
+                    }
+                    break;
+                default:
+                    if (splitTarget.Count != splitDefault.Count)
+                    {
+                        ErrorManager.AddNewError(
+                            "Backup - Invalid number of default file",
+                            "Backup was asked to backup " + splitTarget.Count + " files or folders, but was only given only " + splitDefault.Count + " default files. Either provide one (and only one) default for each file / folder, or provide none."
+                            );
+                        return false;
+                    }
+                    List<string> trueDefaults = new List<string>();
+                    string newDefault;
+                    string newSetting = "";
 
-                this.InstructionSetting[defaultFile] = newSetting.Trim().Trim(';');
-                customLauncher.Save();
+                    foreach (var item in splitDefault)
+                    {
+                        if (item == "" || item == " ")
+                        {
+                            trueDefaults.Add("");
+                            newSetting += "\" \"";
+                            continue;
+                        }
+                        if (!IOManager.CopyToDefault(customLauncher.GetSetting(launcherName), item, out newDefault))
+                        {
+                            ErrorManager.AddNewError(
+                                "Backup - Failed to copy defaults",
+                                "Something went wrong while trying to copy new default : " + this.InstructionSetting[defaultFile]);
+                            return false;
+                        }
+                        trueDefaults.Add(newDefault);
+                        newSetting += "\"" + newDefault + "\"; ";
+                    }
 
-                for (int i = 0; i < splitTarget.Count; i++)
-                {
-                    BackupAndDefault[splitTarget[i]] = trueDefaults[i];
-                }
-            } else
-            {
-                foreach (var item in splitTarget)
-                {
-                    BackupAndDefault[item] = "";
-                }
+                    this.InstructionSetting[defaultFile] = newSetting.Trim().Trim(';');
+                    customLauncher.Save();
+
+                    for (int i = 0; i < splitTarget.Count; i++)
+                    {
+                        BackupAndDefault[splitTarget[i]] = trueDefaults[i];
+                    }
+                    break;
             }
 
 
