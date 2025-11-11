@@ -21,5 +21,20 @@ namespace YAAL
             slotName = cache.slotName;
             isHeader = false;
         }
+
+        public override bool Equals(object? obj)
+        {
+            bool output = false;
+            if(obj is Cache_DisplaySlot toCompare)
+            {
+                if(this.slotName == toCompare.slotName 
+                    && isHeader == toCompare.isHeader
+                    && this.cache == toCompare.cache)
+                {
+                    output = true;
+                }
+            }
+            return output;
+        }
     }
 }

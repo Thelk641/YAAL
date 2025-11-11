@@ -20,7 +20,12 @@ namespace YAAL
 
     public static partial class IOManager
     {
-        private static string baseDirectory = "I:\\Emulators\\vba\\rom\\OOS rando\\YAAL - dev";
+        #if DEBUG
+                private static string baseDirectory = "I:\\Emulators\\vba\\rom\\OOS rando\\YAAL - dev";
+        #else
+                private static string baseDirectory = AppContext.BaseDirectory;
+        #endif
+
         //private static string baseDirectory = AppContext.BaseDirectory;
         public static Cache_UserSettings settings;
         public static List<string> games;
@@ -29,7 +34,6 @@ namespace YAAL
 
         static IOManager()
         {
-            string baseDirectory = AppContext.BaseDirectory;
             settings = LoadCache<Cache_UserSettings>(userSettings.GetFullPath());
             if(settings.saveLocation.Count == 0)
             {

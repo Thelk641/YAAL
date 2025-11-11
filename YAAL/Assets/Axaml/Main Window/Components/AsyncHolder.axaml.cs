@@ -167,7 +167,8 @@ public partial class AsyncHolder : UserControl
 
     public SlotHolder AddNewSlot(Cache_Slot newSlot)
     {
-        SlotHolder toAdd = new SlotHolder(thisAsync, newSlot);
+        Debouncer.ForceDebounce(Save);
+        SlotHolder toAdd = new SlotHolder(thisAsync, newSlot, this);
         Rectangle rect = null;
         
         this.Height += 8; // they're going to switch to edit mode immediately, triggering ChangedHeight with previousHeight=0
@@ -229,6 +230,7 @@ public partial class AsyncHolder : UserControl
 
     public void Save()
     {
+        // TODO : implement "equal" so we can check if toSave is identical to thisAsync and not waste time saving file
         waitingToSave = false;
         isSaving = true;
         Edit.IsEnabled = false;
@@ -296,5 +298,17 @@ public partial class AsyncHolder : UserControl
                 slot.UpdateToolList();
             }
         }
+    }
+
+    public void UpdateSlotSelection(SlotHolder source)
+    {
+        foreach (var item in SlotsContainer.Children)
+        {
+            if(item is SlotHolder holder && holder != source)
+            {
+                holder.UpdateAvailableSlot();
+            }
+        }
+        Debouncer.Debounce(Save, 1f);
     }
 }

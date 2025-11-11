@@ -22,6 +22,7 @@ public partial class SlotHolder : UserControl
 {
     private string asyncName;
     private Cache_Slot thisSlot;
+    private AsyncHolder holder;
     public Cache_Slot Slot { get { return thisSlot; } }
     private Cache_Room room;
     private List<Cache_RoomSlot> availableGames;
@@ -43,13 +44,14 @@ public partial class SlotHolder : UserControl
         InitializeComponent();
     }
 
-    public SlotHolder(Cache_Async async, Cache_Slot slot) : this()
+    public SlotHolder(Cache_Async async, Cache_Slot slot, AsyncHolder holder) : this()
     {
         asyncName = async.settings[AsyncSettings.asyncName];
         thisSlot = slot;
         room = async.room;
+        this.holder = holder;
 
-        if(LauncherSelector.SelectedItem is Cache_DisplayLauncher cache)
+        if (LauncherSelector.SelectedItem is Cache_DisplayLauncher cache)
         {
             var test = cache.name;
         }
@@ -373,6 +375,8 @@ public partial class SlotHolder : UserControl
         {
             SwitchPatchMode();
         }
+
+        _ChangedSlot(null, null);
     }
 
     public async void UpdateItemList()
@@ -447,7 +451,6 @@ public partial class SlotHolder : UserControl
 
     public void UpdateAvailableSlot()
     {
-        // TODO : needs to check that this actually works, not sure it does
         List<Cache_RoomSlot> filteredSlots = new List<Cache_RoomSlot>();
         List<Cache_RoomSlot> unfilteredSlots = new List<Cache_RoomSlot>();
         List<string> games = IOManager.GetGameList();
@@ -524,6 +527,19 @@ public partial class SlotHolder : UserControl
             possibleSlots.Add(empty);
         }
 
+        if(SlotSelector.ItemsSource is List<Cache_DisplaySlot> oldList)
+        {
+            
+            if(oldList.SequenceEqual(possibleSlots))
+            {
+                // if slot A changes, it triggers slot B to update its slot list to hide slot A's slot from the list
+                // this, in return, triggers _changedSlot
+                // which triggers slot A to update its slot list, which would restart the loop
+                // this is a bad way to solve this, but it works, so good enough
+                return;
+            }
+        }
+
         SlotSelector.ItemsSource = possibleSlots;
 
         if (selected != null)
@@ -538,9 +554,9 @@ public partial class SlotHolder : UserControl
             } else
             {
                 SlotSelector.SelectedIndex = 1;
-            }
-                
+            }   
         }
+
     }
     
     private void UpdateAvailableLaunchers()
@@ -662,6 +678,8 @@ public partial class SlotHolder : UserControl
                 }
             }
         }
+
+        holder.UpdateSlotSelection(this);
     }
 
     private void _ChangedLauncher(object? sender, SelectionChangedEventArgs e)
