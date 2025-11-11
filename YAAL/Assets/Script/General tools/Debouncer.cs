@@ -104,5 +104,14 @@ namespace YAAL.Assets.Scripts
             boxOrigin[box] = origin;
             isDone = false;
         }
+
+        public static void ForceDebounce(Action debouncedFunction)
+        {
+            if (countdown.ContainsKey(debouncedFunction))
+            {
+                countdown.Remove(debouncedFunction);
+            }
+            debouncedFunction.Invoke();
+        }
     }
 }

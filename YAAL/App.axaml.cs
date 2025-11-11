@@ -52,7 +52,7 @@ public partial class App : Application
 
         if(args.Length == 0)
         {
-            args = new string[5] {"--restore", "--async", "Pingu ER", "--slot", "Masaru Mengsk" };
+            //args = new string[5] {"--restore", "--async", "Pingu ER", "--slot", "Masaru Mengsk" };
             //args = new string[1] { "--restore" };
         }
 

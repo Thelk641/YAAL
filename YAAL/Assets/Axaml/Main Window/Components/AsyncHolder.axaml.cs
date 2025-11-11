@@ -74,7 +74,7 @@ public partial class AsyncHolder : UserControl
             settingManager.OnClosing += async () =>
             {
                 thisAsync.toolVersions = settingManager.OutputSettings("Tools");
-                await Save();
+                Debouncer.Debounce(Save, 1f);
             };
             settingManager.IsVisible = true;
         };
@@ -92,6 +92,7 @@ public partial class AsyncHolder : UserControl
         PasswordBox.Text = thisAsync.settings[password];
         SaveButton.Click += (_, _) =>
         {
+            Debouncer.ForceDebounce(Save);
             SwitchMode();
         };
 
@@ -111,12 +112,12 @@ public partial class AsyncHolder : UserControl
         AsyncNameBox.TextChanged += (_, _) =>
         {
             waitingToSave = true;
-            Debouncer.Debounce(() => { waitingToSave = false; Save(); }, 1f);
+            Debouncer.Debounce(Save, 1f);
         };
 
         RoomBox.TextChanged += (_, _) =>
         {
-            Debouncer.Debounce(UpdateSlotsRoom, 0.2f);
+            Debouncer.Debounce(UpdateSlotsRoom, 0.5f);
         };
     }
 
@@ -126,7 +127,7 @@ public partial class AsyncHolder : UserControl
         thisAsync.settings[roomIP] = thisAsync.room.IP;
         thisAsync.settings[roomPort] = thisAsync.room.port;
         thisAsync.settings[cheeseURL] = thisAsync.room.cheeseTrackerURL;
-        Save();
+        Debouncer.ForceDebounce(Save);
     }
     
     public async void UpdateSlotsRoom()
@@ -138,7 +139,7 @@ public partial class AsyncHolder : UserControl
 
         if (waitingToSave)
         {
-            Save();
+            Debouncer.ForceDebounce(Save);
         }
 
         ReadingRoom.IsVisible = true;
@@ -160,7 +161,7 @@ public partial class AsyncHolder : UserControl
             }
         }
 
-        Save();
+        Debouncer.ForceDebounce(Save);
         ReadingRoom.IsVisible = false;
     }
 
@@ -226,19 +227,9 @@ public partial class AsyncHolder : UserControl
         }
     }
 
-    public async Task Save()
+    public void Save()
     {
-        /*Action action = null;
-        if (isSaving)
-        {
-            action = () => {
-                Save();
-                DoneSaving -= action;
-            };
-            DoneSaving += action;
-            return;
-        }*/
-
+        waitingToSave = false;
         isSaving = true;
         Edit.IsEnabled = false;
         Cache_Async toSave = new Cache_Async();
@@ -291,7 +282,7 @@ public partial class AsyncHolder : UserControl
         }
         if (!PlayMode.IsVisible)
         {
-            await Save();
+            Debouncer.ForceDebounce(Save);
         }
         DoneClosing?.Invoke();
     }
