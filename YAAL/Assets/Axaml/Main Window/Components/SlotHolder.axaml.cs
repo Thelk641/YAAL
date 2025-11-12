@@ -153,6 +153,7 @@ public partial class SlotHolder : UserControl
         newSlot.settings[patch] = Patch.Text;
         newSlot.settings[slotName] = SlotName.Text;
         newSlot.settings[rom] = thisSlot.settings[rom];
+        newSlot.settings[slotTrackerURL] = thisSlot.settings[slotTrackerURL];
         string newName = IOManager.SaveSlot(asyncName, newSlot, thisSlot);
 
         newSlot.settings[slotName] = newName;
@@ -199,6 +200,10 @@ public partial class SlotHolder : UserControl
         }
 
         ToolSelect.SelectedIndex = 0;
+        if (newRoom.slots.ContainsKey(thisSlot.settings[slotName]) && !thisSlot.settings.ContainsKey(slotTrackerURL))
+        {
+            thisSlot.settings[slotTrackerURL] = newRoom.slots[thisSlot.settings[slotName]].trackerURL;
+        }
     }
 
     public void SetupPlayMode()
@@ -370,12 +375,26 @@ public partial class SlotHolder : UserControl
 
     public async void UpdateItemList()
     {
-        if (!room.slots.TryGetValue(thisSlot.settings[slotName], out Cache_RoomSlot roomSlot) || roomSlot == null){
+        if (starting || !room.slots.TryGetValue(thisSlot.settings[slotName], out Cache_RoomSlot roomSlot) || roomSlot == null){
             return;
         }
 
         UpdateItems.IsEnabled = false;
-        Cache_ItemTracker cache = await WebManager.ParseTrackerItems(roomSlot.trackerURL);
+        Cache_ItemTracker cache;
+        if (thisSlot.settings.ContainsKey(slotTrackerURL))
+        {
+            cache = await WebManager.ParseTrackerItems(thisSlot.settings[slotTrackerURL]);
+        }
+        else
+        {
+            cache = await WebManager.ParseTrackerItems(roomSlot.trackerURL);
+        }
+
+        if (!thisSlot.settings.ContainsKey(slotTrackerURL) || thisSlot.settings[slotTrackerURL] != cache.trackerURL)
+        {
+            thisSlot.settings[slotTrackerURL] = cache.trackerURL;
+            Save();
+        }
         TrackerItemHolder.Children.Clear();
         foreach (var item in cache.items)
         {
@@ -634,23 +653,6 @@ public partial class SlotHolder : UserControl
         ReDownloadPatch.IsEnabled = selectedSlot.cache.patchURL != "";
 
         UpdateAvailableLaunchers();
-
-        if (selectedSlot.cache.trackerURL != "")
-        {
-            if (!toolList.Contains("Tracker"))
-            {
-                ListSorter.AddSorted(toolList, "Tracker");
-            }
-            thisSlot.settings[SlotSettings.slotTrackerURL] = selectedSlot.cache.trackerURL;
-        }
-        else
-        {
-            if (toolList.Contains("Tracker"))
-            {
-                toolList.Remove("Tracker");
-            }
-            thisSlot.settings[SlotSettings.slotTrackerURL] = "";
-        }
 
         ToolSelect.SelectedIndex = 0;
 

@@ -188,6 +188,12 @@ public static partial class WebManager
 
             foreach (var item in lines)
             {
+                if (item.Contains("Switch To Generic Tracker"))
+                {
+                    string trueURL = trackerURL.Replace("tracker", "generic_tracker");
+                    return await ParseTrackerItems(trueURL);
+                }
+
                 if (item.Contains("received-table"))
                 {
                     break;
@@ -242,6 +248,7 @@ public static partial class WebManager
             output.items.Add(item + " - " + parsed[item.ToString()]);
         }
 
+        output.trackerURL = trackerURL;
         return output;
     }
 

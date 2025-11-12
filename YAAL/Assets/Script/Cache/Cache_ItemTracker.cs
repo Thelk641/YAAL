@@ -10,6 +10,7 @@ namespace YAAL
 {
     public class Cache_ItemTracker
     {
+        public string trackerURL = "";
         public List<string> items = new List<string>();
     }
 }

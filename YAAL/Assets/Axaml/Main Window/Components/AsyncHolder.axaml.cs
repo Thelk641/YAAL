@@ -8,6 +8,7 @@ using DynamicData;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using YAAL.Assets.Scripts;
 using static YAAL.ApworldSettings;
@@ -26,6 +27,7 @@ public partial class AsyncHolder : UserControl
     public bool isSaving = false;
     public bool waitingToSave = false;
     private Dictionary<SlotHolder, double> previousHeight = new Dictionary<SlotHolder, double>();
+    private bool starting = true;
     public AsyncHolder()
     {
         InitializeComponent();
@@ -55,6 +57,7 @@ public partial class AsyncHolder : UserControl
                 IOManager.DeleteSlot(asyncName, slotName);
             }
         }
+        starting = false;
 
         UpdatePort();
     }
@@ -230,6 +233,11 @@ public partial class AsyncHolder : UserControl
 
     public void Save()
     {
+        if (starting)
+        {
+            return;
+        }
+
         // TODO : implement "equal" so we can check if toSave is identical to thisAsync and not waste time saving file
         waitingToSave = false;
         isSaving = true;
@@ -240,6 +248,7 @@ public partial class AsyncHolder : UserControl
         toSave.settings[password] = PasswordBox.Text;
         toSave.settings[roomIP] = thisAsync.settings[roomIP];
         toSave.settings[roomPort] = thisAsync.settings[roomPort];
+        toSave.settings[cheeseURL] = thisAsync.settings[cheeseURL];
         toSave.room = thisAsync.room;
 
 
