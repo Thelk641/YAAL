@@ -52,8 +52,8 @@ public partial class App : Application
 
         if(args.Length == 0)
         {
-            //args = new string[5] {"--restore", "--async", "Pingu ER", "--slot", "Masaru Mengsk" };
-            //args = new string[1] { "--restore" };
+            //args = new string[5] { "--restore", "--async", "Pingu ER", "--slot", "Masaru_FF" };
+            //args = new string[7] {"--restore", "--async", "Pingu ER", "--slot", "Masaru_FF", "--launcher", "\"Text Client\"" };
         }
 
         //var args = new string[2] { "--async PatchTest", "--slot Slot 2" };
@@ -111,8 +111,12 @@ public partial class App : Application
             Environment.Exit(1);
         }
 
+        async = async.Trim().Trim('\"').Trim();
+        slot = slot.Trim().Trim('\"').Trim();
+        launcher = launcher.Trim().Trim('\"').Trim();
 
-        if (launcher != "" && !IOManager.GetLauncherList().Contains(launcher))
+
+        if (launcher != "" && !IOManager.GetLauncherList(true).Contains(launcher))
         {
             ErrorManager.ThrowError(
                 "App - Invalid launcher name",
@@ -178,6 +182,7 @@ public partial class App : Application
                 return;
             } else
             {
+
                 base.OnFrameworkInitializationCompleted();
                 ErrorManager.ThrowError();
                 Environment.Exit(0);

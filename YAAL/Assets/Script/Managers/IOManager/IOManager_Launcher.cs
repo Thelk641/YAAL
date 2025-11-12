@@ -47,9 +47,9 @@ namespace YAAL
 
         public static CustomLauncher LoadLauncher(string launcherName)
         {
-            if (!GetLauncherList().Contains(launcherName)) 
+            if (!GetLauncherList(true).Contains(launcherName)) 
             {
-                ErrorManager.AddNewError(
+                ErrorManager.ThrowError(
                     "IOManager_Launcher - Invalid launcher name",
                     "IOManager was asked to load " + launcherName + " but there doesn't appear to be a folder in /ManagedApworlds with this name containing a launcher.json"
                     );

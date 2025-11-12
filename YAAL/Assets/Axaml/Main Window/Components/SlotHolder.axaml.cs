@@ -37,7 +37,8 @@ public partial class SlotHolder : UserControl
     public double previousHeight = 0;
     public bool isEditing = false;
     private ObservableCollection<string> toolList = new ObservableCollection<string>();
-    private string previousTheme = "";
+    private string previousName = "";
+    private bool starting = true;
     
     public SlotHolder()
     {
@@ -50,11 +51,7 @@ public partial class SlotHolder : UserControl
         thisSlot = slot;
         room = async.room;
         this.holder = holder;
-
-        if (LauncherSelector.SelectedItem is Cache_DisplayLauncher cache)
-        {
-            var test = cache.name;
-        }
+        previousName = slot.settings[SlotSettings.slotName];
 
         UpdateAvailableSlot();
 
@@ -77,6 +74,7 @@ public partial class SlotHolder : UserControl
         this.LayoutUpdated += handler;
 
         UpdateItemList();
+        starting = false;
     }
 
     public void SetAsyncName(string newName)
@@ -136,6 +134,11 @@ public partial class SlotHolder : UserControl
 
     public void Save()
     {
+        if (starting)
+        {
+            return;
+        }
+
         Cache_Slot newSlot = new Cache_Slot();
         if (LauncherSelector.SelectedItem is Cache_DisplayLauncher cacheLauncher)
         {
@@ -259,28 +262,14 @@ public partial class SlotHolder : UserControl
                 return;
             }
 
-            switch (ToolSelect.SelectedItem.ToString())
+            if(ToolSelect.SelectedItem is Cache_DisplayLauncher cache && !cache.isHeader)
             {
-                case "None":
-                    return;
-                case "Tracker":
-                    if (selectedSlot.cache.trackerURL != "")
-                    {
-                        ProcessManager.StartProcess(selectedSlot.cache.trackerURL, "", true);
-                    }
-                    break;
-                case "Cheesetracker":
-                    if (room.cheeseTrackerURL != "")
-                    {
-                        ProcessManager.StartProcess(room.cheeseTrackerURL, "", true);
-                    }
-                    break;
-                default:
-                    ProcessManager.StartProcess(
+                ProcessManager.StartProcess(
                         Environment.ProcessPath!,
-                        ("--async " + "\"" + asyncName + "\"" + " --slot " + "\"" + _SlotName.Text + "\"" + " --launcher " + "\"" + ToolSelect.SelectedItem.ToString() + "\""),
+                        ("--async " + "\"" + asyncName 
+                        + "\"" + " --slot " + "\"" + _SlotName.Text 
+                        + "\"" + " --launcher " + "\"" + cache.name + "\""),
                         true);
-                    break;
             }
         };
 
@@ -678,8 +667,12 @@ public partial class SlotHolder : UserControl
                 }
             }
         }
+        if (!starting)
+        {
+            holder.UpdateSlotSelection(this);
+        }
 
-        holder.UpdateSlotSelection(this);
+        Save();
     }
 
     private void _ChangedLauncher(object? sender, SelectionChangedEventArgs e)

@@ -212,18 +212,21 @@ namespace YAAL
 
             if (toRemove != null)
             {
-                if (toRemove.settings[slotName] != newSlot.settings[slotName])
-                {
-                    string asyncDir = Path.Combine(GetSaveLocation(Async), async);
-                    string oldDir = Path.Combine(asyncDir, toRemove.settings[slotName]);
-
-                    string newName = FindAvailableDirectoryName(asyncDir, newSlot.settings[slotName]);
-                    MoveFile(oldDir, Path.Combine(asyncDir, newName));
-                    newSlot.settings[slotName] = newName;
-                    output = newName;
-                }
                 newCache.slots.Remove(toRemove);
             }
+
+            if (oldSlot.settings[slotName] != newSlot.settings[slotName])
+            {
+                string asyncDir = Path.Combine(GetSaveLocation(Async), async);
+                string oldDir = Path.Combine(asyncDir, oldSlot.settings[slotName]);
+
+                string newName = FindAvailableDirectoryName(asyncDir, newSlot.settings[slotName]);
+                MoveFile(oldDir, Path.Combine(asyncDir, newName));
+                newSlot.settings[slotName] = newName;
+                output = newName;
+            }
+
+
             newCache.slots.Add(newSlot);
 
             if (newSlot.settings[patch] != oldSlot.settings[patch]) {
