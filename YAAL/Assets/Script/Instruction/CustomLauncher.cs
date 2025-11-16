@@ -438,23 +438,51 @@ public class CustomLauncher
                     {
                         if (settings.Has(split[0]))
                         {
-                            if (split[0] == SlotSettings.slotInfo.ToString())
+                            try
                             {
-                                output = 
-                                    output 
-                                    + "\"" 
-                                    + settings[slotName].Trim() 
-                                    + ":" 
-                                    + settings[AsyncSettings.password] 
-                                    + "@" 
-                                    + settings[AsyncSettings.roomIP] 
-                                    + ":"
-                                    + settings[roomPort]
-                                    + "\"";
-                            } else
-                            {
-                                output = output + settings[split[0]].Trim();
+                                if (split[0] == slotInfo.ToString())
+                                {
+                                    output =
+                                        output
+                                        + "\""
+                                        + settings[slotName].Trim()
+                                        + ":"
+                                        + settings[password]
+                                        + "@"
+                                        + settings[roomIP]
+                                        + ":"
+                                        + settings[roomPort]
+                                        + "\"";
+                                }
+                                else if (split[0] == HardcodedSettings.connect.ToString())
+                                {
+                                    output =
+                                        output
+                                        + "\""
+                                        + "--connect "
+                                        + settings[slotName].Trim()
+                                        + ":"
+                                        + settings[password]
+                                        + "@"
+                                        + settings[roomIP]
+                                        + ":"
+                                        + settings[roomPort]
+                                        + "\"";
+                                }
+                                else
+                                {
+                                    output = output + settings[split[0]].Trim();
+                                }
                             }
+                            catch (Exception e)
+                            {
+                                ErrorManager.AddNewError(
+                                    "CustomLauncher - Missing settings",
+                                    "Trying to parse " + split[0] + " lead to the following exception : " + e.Message
+                                    );
+                                return text;
+                            }
+                            
                                 
                         } else if (split[0] == "apDebug" && settings.Has(GeneralSettings.aplauncher))
                         {

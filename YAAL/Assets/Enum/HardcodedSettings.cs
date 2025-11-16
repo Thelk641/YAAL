@@ -24,6 +24,7 @@ namespace YAAL
         password,
 
         //cache_slot
+        connect,
         slotName,
         slotInfo,
         patch,
