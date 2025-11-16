@@ -76,7 +76,6 @@ namespace YAAL
             {apfolder, "Set automatically" },
             {lua_adventure, "Set automatically" },
             {lua_bizhawk, "Set automatically" },
-            {lua_ff1, "Set automatically" },
             {lua_ladx, "Set automatically" },
             {lua_mmbn3, "Set automatically" },
             {lua_oot, "Set automatically" },
