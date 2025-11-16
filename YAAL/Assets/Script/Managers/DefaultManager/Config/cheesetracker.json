@@ -4,7 +4,7 @@
       "args": "",
       "processName": "",
       "path": "${cheeseURL}",
-      "redirectOutput": ""
+      "redirectOutput": "False"
     }
   },
   "settings": {

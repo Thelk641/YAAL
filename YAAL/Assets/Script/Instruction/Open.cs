@@ -96,8 +96,12 @@ public class Open : Instruction<OpenSettings>
             }
             try
             {
-
-                Cache_Process keyedProcess = ProcessManager.StartKeyedProcess(path, args);
+                bool redirectOutput = true;
+                if (InstructionSetting.ContainsKey(OpenSettings.redirectOutput))
+                {
+                    redirectOutput = InstructionSetting[OpenSettings.redirectOutput] == true.ToString();
+                }
+                Cache_Process keyedProcess = ProcessManager.StartKeyedProcess(path, args, redirectOutput);
                 if (keyedProcess == null)
                 {
                     ErrorManager.AddNewError(

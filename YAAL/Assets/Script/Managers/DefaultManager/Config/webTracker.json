@@ -4,7 +4,7 @@
       "args": "",
       "processName": "",
       "path": "${slotTrackerURL}",
-      "redirectOutput": ""
+      "redirectOutput": "False"
     }
   },
   "settings": {

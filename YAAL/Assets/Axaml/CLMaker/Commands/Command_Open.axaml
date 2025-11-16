@@ -3,7 +3,7 @@
              x:Class="YAAL.Command_Open"
 			 xmlns:local="clr-namespace:YAAL"
              HorizontalAlignment="Stretch"
-             Height="108"
+             Height="140"
              MinWidth="450"
              >     
   <Border 
@@ -62,7 +62,7 @@
 			</Grid>
           <TextBlock Text="Open" FontSize="25" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
           
-          <Grid RowDefinitions="0,*,8,*" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="4">
+          <Grid RowDefinitions="0,*,8,*,8,*" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="4">
             <Grid ColumnDefinitions="*,8,68, 8 ,30" Grid.Row="1">
               <TextBox
                 Name="FilePath"
@@ -111,7 +111,7 @@
 				<Button Name="X" Content="X" Grid.Column="4" Width="30" Height="30" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
             </Grid>
 
-            <Grid ColumnDefinitions="*,8,116,30" Grid.Row="3">
+            <Grid ColumnDefinitions="*,8,*" Grid.Row="3" HorizontalAlignment="Stretch">
               <TextBox
                 Name="FileArgs"
                 Watermark="Arguments"
@@ -130,6 +130,17 @@
 				ToolTip.Tip="Key used to filter process (see Backup)"
                   />
             </Grid>
+			  <Grid ColumnDefinitions="30,*" Grid.Row="5" HorizontalAlignment="Stretch">
+				  <CheckBox
+					  Name="RedirectOutput"
+					  Grid.Column="0"
+						/>
+				  <TextBlock
+					  Grid.Column="1"
+					  Text="Redirect process output"
+					  VerticalAlignment="Center"
+						/>
+			  </Grid>
           </Grid>
         </Grid>
   </Border>

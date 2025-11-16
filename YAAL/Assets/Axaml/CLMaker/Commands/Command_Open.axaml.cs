@@ -33,6 +33,7 @@ public partial class Command_Open : Command
         FilePath.Text = this.linkedInstruction.GetSetting(path.ToString());
         FileArgs.Text = this.linkedInstruction.GetSetting(args.ToString());
         VarName.Text = this.linkedInstruction.GetSetting(processName.ToString());
+        RedirectOutput.IsChecked = this.linkedInstruction.GetSetting(redirectOutput.ToString()) == true.ToString();
         TurnEventsBackOn();
     }
 
@@ -52,6 +53,7 @@ public partial class Command_Open : Command
         FilePath.TextChanged -= _TextChanged;
         FileArgs.TextChanged -= _TextChanged;
         VarName.TextChanged -= _TextChanged;
+        RedirectOutput.Click -= Clicked;
     }
 
     protected override void TurnEventsOn()
@@ -59,5 +61,17 @@ public partial class Command_Open : Command
         FilePath.TextChanged += _TextChanged;
         FileArgs.TextChanged += _TextChanged;
         VarName.TextChanged += _TextChanged;
+        RedirectOutput.Click += Clicked;
+    }
+
+    private void Clicked(object? sender, RoutedEventArgs e)
+    {
+        if(RedirectOutput.IsChecked is bool clicked)
+        {
+            this.linkedInstruction.SetSetting(redirectOutput.ToString(), clicked.ToString());
+        } else
+        {
+            this.linkedInstruction.SetSetting(redirectOutput.ToString(), false.ToString());
+        }
     }
 }

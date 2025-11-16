@@ -10,6 +10,7 @@ namespace YAAL
     public class Cache_Process
     {
         public string key = "";
+        public bool redirectOutput = false;
         private Process process;
 
         public Cache_Process(Process newProcess)
@@ -20,7 +21,7 @@ namespace YAAL
         public void Start()
         {
             process.Start();
-            if (ProcessManager.IsExecutable(process.StartInfo.FileName)) 
+            if (ProcessManager.IsExecutable(process.StartInfo.FileName) && redirectOutput) 
             {
                 process.BeginOutputReadLine();
             }

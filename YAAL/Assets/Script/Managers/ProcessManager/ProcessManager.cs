@@ -11,7 +11,7 @@ namespace YAAL
     public static class ProcessManager
     {
         public static List<Cache_Process> keyedProcesses = new List<Cache_Process>();
-        public static Process StartProcess(string path, string args, bool autoStart = true)
+        public static Process StartProcess(string path, string args, bool autoStart = true, bool redirectOutput = true)
         {
             Process process = new Process();
 
@@ -40,9 +40,9 @@ namespace YAAL
                 // read the output
                 process.StartInfo.FileName = truePath;
                 process.StartInfo.Arguments = args;
-                process.StartInfo.UseShellExecute = false;
-                process.StartInfo.RedirectStandardOutput = true;
-                process.StartInfo.RedirectStandardError = true;
+                process.StartInfo.UseShellExecute = !redirectOutput;
+                process.StartInfo.RedirectStandardOutput = redirectOutput;
+                process.StartInfo.RedirectStandardError = redirectOutput;
                 process.EnableRaisingEvents = true;
             } else
             {
@@ -65,9 +65,10 @@ namespace YAAL
             return process;
         }
 
-        public static Cache_Process StartKeyedProcess(string path, string args)
+        public static Cache_Process StartKeyedProcess(string path, string args, bool redirectOutput)
         {
-            Cache_Process process = new Cache_Process(StartProcess(path, args, false));
+            Cache_Process process = new Cache_Process(StartProcess(path, args, false, redirectOutput));
+            process.redirectOutput = redirectOutput;
             if(process == null)
             {
                 ErrorManager.AddNewError(
