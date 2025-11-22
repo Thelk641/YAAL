@@ -20,6 +20,8 @@ public partial class App : Application
     string async = "";
     string slot = "";
     bool hasErroredOut = false;
+    bool logDebug = false;
+    DebugManager logger = new DebugManager();
 
     public static UISettings Settings { get; } = new UISettings();
 
@@ -35,6 +37,8 @@ public partial class App : Application
             Formatting = Newtonsoft.Json.Formatting.Indented,
             Converters = { new CachedBrushConverter() }
         };
+
+        Trace.Listeners.Add(logger);
 
         /*if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
@@ -54,6 +58,7 @@ public partial class App : Application
         {
             //args = new string[5] { "--restore", "--async", "Pingu ER", "--slot", "Masaru_FF" };
             //args = new string[7] {"--restore", "--async", "Pingu ER", "--slot", "Masaru_FF", "--launcher", "\"Text Client\"" };
+            args = new string[1] { "--debug" };
         }
 
         //var args = new string[2] { "--async PatchTest", "--slot Slot 2" };
@@ -244,6 +249,14 @@ public partial class App : Application
             }*/
             //desktop.MainWindow = new CLMakerWindow(launcher);
             desktop.MainWindow = WindowManager.GetMainWindow();
+            
+            if (logDebug && desktop.MainWindow is Avalonia.Controls.Window window)
+            {
+                window.Closing += (_, _) =>
+                {
+                    logger.Save();
+                };
+            }
         }
         base.OnFrameworkInitializationCompleted();
     }
@@ -255,6 +268,7 @@ public partial class App : Application
             case "error":
                 if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
                 {
+                    ErrorManager.isError = true;
                     ErrorManager.ReadError(value, desktop);
                 }
                 return false;
@@ -272,6 +286,9 @@ public partial class App : Application
                 break;
             case "exit":
                 Environment.Exit(0);
+                break;
+            case "debug":
+                logDebug = true;
                 break;
             default:
                 ErrorManager.AddNewError(

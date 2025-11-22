@@ -53,9 +53,15 @@ namespace YAAL
             SaveFile(path, json);
         }
 
+        public static void SaveCacheLogs(string toSave)
+        {
+            string savePath = Path.Combine(GetSaveLocation(Logs), ("Debug log " + GetTime() + ".txt"));
+            File.WriteAllText(savePath, toSave);
+        }
+
         public static string SaveCacheError(Cache_ErrorList error)
         {
-            string savePath = Path.Combine(GetSaveLocation(Logs), (GetTime() + ".json"));
+            string savePath = Path.Combine(GetSaveLocation(Logs), ("Error log " + GetTime() + ".txt"));
 
             string readableLog = "";
 

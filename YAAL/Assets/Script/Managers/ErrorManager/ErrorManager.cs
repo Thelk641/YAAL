@@ -17,6 +17,7 @@ namespace YAAL
     public static class ErrorManager
     {
         private static Cache_ErrorList cache = new Cache_ErrorList();
+        public static bool isError = false;
 
         public static void AddNewError(string name, string content)
         {
@@ -35,7 +36,7 @@ namespace YAAL
 
         public static void ThrowError()
         {
-            if(cache.errors.Count == 0)
+            if(cache.errors.Count == 0 || isError)
             {
                 return;
             }

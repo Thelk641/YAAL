@@ -4,7 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
-    <UseAvalonia>true</UseAvalonia> <!-- This line is missing and crucial -->
+    <UseAvalonia>true</UseAvalonia>
   </PropertyGroup>
 
   <ItemGroup>
