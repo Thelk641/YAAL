@@ -5,12 +5,13 @@
 	x:Class="YAAL.EmptySlot"
 	HorizontalAlignment="Stretch"
 	Height="112"
+	Width="112"
 	>
 	<UserControl.Resources>
 		<local:BoolInvert x:Key="BoolInvert"/>
 	</UserControl.Resources>
 
-	<Border Name="Back" local:ThemeCategory.ThemeCategory="BackgroundColor">
+	<Border Name="Back">
 		<Grid RowDefinitions="*" VerticalAlignment="Stretch">
 			<Border
 				Name="PlayMode"
@@ -20,15 +21,11 @@
 				Padding="6"
 				HorizontalAlignment="Stretch"
 				VerticalAlignment="Stretch"
-				Background="#FFF"
-				IsVisible="True"
-				Grid.RowSpan="3"
 				>
 				<Grid Name="PlayEmptySpace" RowDefinitions="0,*,0">
 					<Grid RowDefinitions="*,8,*" Grid.Row="1">
 						<Grid ColumnDefinitions="*,8,30" Grid.Row="2">
-							<Border Name="Foreground">
-							</Border>
+							<Border Name="Foreground" />
 						</Grid>
 					</Grid>
 				</Grid>

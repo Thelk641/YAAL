@@ -178,6 +178,8 @@ namespace YAAL
                 File.Delete(path);
             }
 
+            Directory.CreateDirectory(GetSaveLocation(Images));
+
             using var fileStream = File.Create(path);
             image.Save(fileStream);
         }

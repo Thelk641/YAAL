@@ -75,6 +75,8 @@ public partial class SlotHolder : UserControl
 
         UpdateItemList();
         starting = false;
+
+        Dispatcher.UIThread.Post(() =>  { UpdateTheme(); });
     }
 
     public void SetAsyncName(string newName)
@@ -161,11 +163,6 @@ public partial class SlotHolder : UserControl
         _SlotName.Text = newName;
 
         thisSlot = newSlot;
-    }
-
-    public void SetBackgrounds()
-    {
-        //TODO
     }
 
     public void SetRoom(Cache_Room newRoom)
@@ -686,7 +683,7 @@ public partial class SlotHolder : UserControl
 
         UpdateAvailableVersions();
         
-        SetBackgrounds();
+        UpdateTheme();
     }
 
     private void SetScrollSpeed()
@@ -717,5 +714,63 @@ public partial class SlotHolder : UserControl
     {
         ToolSelect.ItemsSource = IOManager.GetToolList().Result;
         ToolSelect.SelectedIndex = 0;
+    }
+
+    public void UpdateTheme()
+    {
+        if (starting)
+        {
+            return;
+        }
+
+        if(currentLauncher != null && currentLauncher.settings.ContainsKey(LauncherSettings.customTheme))
+        {
+            string themeName = currentLauncher.settings[LauncherSettings.customTheme];
+            //ThemeManager.ApplyTheme(ThemeHolder, themeName);
+            //ThemeManager.ApplyTheme(PlayMode, themeName);
+            ThemeManager.ApplyTheme(this, themeName);
+        } else
+        {
+            ThemeManager.ApplyTheme(ThemeHolder, "");
+        }
+    }
+
+    public Border GetPlayMode()
+    {
+        return PlayMode;
+    }
+
+    public Border GetEditMode()
+    {
+        return EditMode;
+    }
+
+    public List<Button> GetButtons()
+    {
+        return new List<Button>() 
+        {
+            RealPlay,
+            StartTool,
+            Edit,
+            UpdateItems,
+            DeleteSlot,
+            PatchSelect,
+            DownloadPatch,
+            ReDownloadPatch,
+            ManualPatchButton,
+            AutomaticPatchButton,
+            DoneEditing
+        };
+    }
+
+    public List<ComboBox> GetComboBox()
+    {
+        return new List<ComboBox>()
+        {
+            ToolSelect,
+            SlotSelector,
+            LauncherSelector,
+            SelectedVersion
+        };
     }
 }

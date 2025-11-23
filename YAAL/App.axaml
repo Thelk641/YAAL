@@ -25,13 +25,7 @@
 			<Setter Property="BorderBrush" Value="Transparent" />
 		</Style>
 
-		<Style Selector="Border:not(UserControl)">
-			<Setter Property="local:AutoTheme.AutoTheme">
-				<Setter.Value>
-					<local:Cache_ThemeInfo/>
-				</Setter.Value>
-			</Setter>
-		</Style>
+		
 
 		<Style Selector="Window">
 			<Setter Property="local:AutoTheme.AutoTheme">

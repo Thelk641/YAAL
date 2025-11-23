@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
@@ -132,6 +133,19 @@ public partial class CustomThemeMaker : ScalableWindow
                 e.Handled = true;
             }
         }, RoutingStrategies.Tunnel);
+
+        ButtonColor.Click += async (_, _) =>
+        {
+            var output = await ColorSelector.PickColor(this, AutoColor.ColorToHex((ButtonColor.Background as SolidColorBrush)!.Color));
+
+            if (output != null)
+            {
+                var newColor = AutoColor.HexToColor(output);
+                ButtonColor.Background = new SolidColorBrush(newColor);
+                currentTheme.buttonColor = newColor;
+                ComputeButton();
+            }
+        };
 
         EnableEvents();
         GenerateThemeList();

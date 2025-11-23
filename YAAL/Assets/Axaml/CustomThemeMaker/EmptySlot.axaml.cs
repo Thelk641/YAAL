@@ -26,5 +26,6 @@ public partial class EmptySlot : UserControl
     public EmptySlot()
     {
         InitializeComponent();
+        Back.SetValue(AutoTheme.AutoThemeProperty, null);
     }
 }
