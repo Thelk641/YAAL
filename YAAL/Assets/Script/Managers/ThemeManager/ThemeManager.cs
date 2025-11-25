@@ -41,6 +41,9 @@ namespace YAAL
         private static ThemeHolder? slotBackground;
         private static ThemeHolder? slotForeground;
 
+        public static Dictionary<string, Cache_RenderedTheme> renderedThemes = new Dictionary<string, Cache_RenderedTheme>();
+        public static Dictionary<Cache_RenderedTheme, List<SlotHolder>> themedSlots = new Dictionary<Cache_RenderedTheme, List<SlotHolder>>();
+
         static ThemeManager()
         {
             // TODO : this shouldn't be hardcoded
@@ -80,8 +83,17 @@ namespace YAAL
             }
             themes.Remove(cache.name);
             string trueName = IOManager.RenameTheme(cache.name, newName);
+            foreach (var item in themedSlots)
+            {
+                if(item.Key.themeName == cache.name)
+                {
+                    item.Key.themeName = trueName;
+                }
+            }
+
             cache.name = trueName;
             SaveTheme(cache);
+            
             return trueName;
         }
 
@@ -102,6 +114,77 @@ namespace YAAL
             }
             IOManager.SaveCustomTheme(cache);
             themes[cache.name] = cache;
+
+            UpdateSlots(cache);
+        }
+
+        public static async Task UpdateSlots(Cache_CustomTheme cache)
+        {
+            foreach (var item in themedSlots)
+            {
+                if (item.Key.themeName == cache.name)
+                {
+                    await RenderTheme(cache);
+                    foreach (var slot in item.Value)
+                    {
+                        await ApplyTheme(slot, cache.name);
+                    }
+                }
+            }
+
+
+        }
+
+        public static async Task<Cache_RenderedTheme> LoadRenderedTheme(string name)
+        {
+            if (renderedThemes.ContainsKey(name))
+            {
+                return renderedThemes[name];
+            }
+
+            Cache_RenderedTheme output = new Cache_RenderedTheme();
+            Cache_CustomTheme? loadedTheme = IOManager.LoadCustomTheme(name);
+            
+            if(loadedTheme == null)
+            {
+                //TODO : this should build a customTheme based on the default one
+                loadedTheme = new Cache_CustomTheme();
+            }
+
+            output.themeName = name;
+            output.button = loadedTheme.buttonBackground;
+            output.topOffset = loadedTheme.topOffset;
+            output.bottomOffset = loadedTheme.bottomOffset;
+
+            Bitmap? background = IOManager.GetRender(loadedTheme, ThemeSettings.backgroundColor);
+            var backgroundSize = WindowManager.GetSlotSize();
+
+            Bitmap? foreground = IOManager.GetRender(loadedTheme, ThemeSettings.foregroundColor);
+            var foregroundSize = WindowManager.GetSlotForegroundSize();
+
+            if (background == null 
+                || background.Size.Width != backgroundSize.X 
+                || background.Size.Height != backgroundSize.Y
+                || foreground == null
+                || foreground.Size.Width != foregroundSize.X
+                || foreground.Size.Height != foregroundSize.Y
+                )
+            {
+                Dictionary<ThemeSettings, Bitmap> render = await RenderTheme(loadedTheme);
+                if (!render.ContainsKey(ThemeSettings.backgroundColor))
+                {
+                    return output;
+                }
+                background = render[ThemeSettings.backgroundColor];
+                background = render[ThemeSettings.foregroundColor];
+            }
+
+            output.background = new WeakReference<Bitmap>(background);
+            output.foreground = new WeakReference<Bitmap>(foreground);
+
+            renderedThemes[name] = output;
+
+            return output;
         }
 
         public static Cache_CustomTheme LoadTheme(string name)
@@ -139,101 +222,61 @@ namespace YAAL
             return DefaultManager.theme;
         }
 
-        public static void ApplyTheme(SlotHolder slot, string theme)
+        public static async Task ApplyTheme(SlotHolder slot, string theme)
         {
             if(theme == "")
             {
                 theme = defaultTheme;
             }
 
+            Cache_RenderedTheme cache = await LoadRenderedTheme(theme);
+
+            if(cache.background.TryGetTarget(out Bitmap backgroundImage) && backgroundImage != null)
+            {
+                ImageBrush backgroundBrush = new ImageBrush(backgroundImage);
+                backgroundBrush.AlignmentX = AlignmentX.Center;
+                backgroundBrush.AlignmentY = AlignmentY.Center;
+                backgroundBrush.Stretch = Stretch.Fill;
+                slot.GetBackgrounds().Background = backgroundBrush;
+            }
+
+            if(cache.foreground.TryGetTarget(out Bitmap foregroundImage) && foregroundImage != null)
+            {
+                ImageBrush foregroundBrush = new ImageBrush(foregroundImage);
+                foregroundBrush.AlignmentX = AlignmentX.Center;
+                foregroundBrush.AlignmentY = AlignmentY.Center;
+                foregroundBrush.Stretch = Stretch.Fill;
+
+                foreach (var item in slot.GetForegrounds())
+                {
+                    item.Background = foregroundBrush;
+                }
+            }
+
+
             foreach (var item in slot.GetButtons())
             {
-                ApplyTheme(item, theme);
+                item.Background = cache.button;
             }
 
             foreach (var item in slot.GetComboBox())
             {
-                ApplyTheme(item, theme);
-            }
-
-            ApplyTheme(slot.GetPlayMode(), theme);
-            ApplyTheme(slot.GetEditMode(), theme, true);
-            
-        }
-
-
-        public static async void ApplyTheme(Control container, string theme, bool isEditMode = false)
-        {
-            ThemeSettings category = ThemeCategory.GetThemeCategory(container);
-            Cache_CustomTheme cache = LoadTheme(theme);
-
-            switch (container)
-            {
-                case Button button:
-                    button.Background = cache.buttonBackground;
-                    return;
-                case ComboBox comboBox:
-                    SolidColorBrush brush = cache.buttonBackground;
-                    comboBox.Background = cache.buttonBackground;
-                    if (comboBox.GetVisualDescendants().OfType<ContentPresenter>().FirstOrDefault() is ContentPresenter presenter)
-                    {
-                        presenter.Background = new SolidColorBrush(AutoColor.Darken(brush.Color));
-                    }
-                    return;
-                case Border border:
-                    Bitmap? fetchBackground = await GetBackgroundImage(theme, isEditMode);
-                    if (fetchBackground is Bitmap newBackground)
-                    {
-                        ImageBrush backgroundBrush = new ImageBrush(newBackground);
-                        backgroundBrush.AlignmentX = AlignmentX.Center;
-                        backgroundBrush.AlignmentY = AlignmentY.Center;
-                        backgroundBrush.Stretch = Stretch.Fill;
-                        border.Background = backgroundBrush;
-                        return;
-                    }
-                    return;
-            }
-
-            ErrorManager.ThrowError(
-                "ThemeManager - Tried to apply theme to invalid object type",
-                "ApplyTheme was called on object " + container + " which isn't Button, ComboBox or Panel. Please report this."
-                );
-        }
-
-        public static async Task<Bitmap?> GetBackgroundImage(string themeName, bool isEditMode = false)
-        {
-            if (!themes.ContainsKey(themeName))
-            {
-                return null;
-            }
-
-            // Have we tried to access this recently ?
-            if (images.TryGetValue(themeName, out var oldRef) && oldRef.TryGetTarget(out var oldRender))
-            {
-                Vector2 slotSize = WindowManager.GetSlotSize();
-                if(oldRender.Size.Width == slotSize.X && oldRender.Size.Height == slotSize.Y)
+                item.Background = cache.button;
+                if (item.GetVisualDescendants().OfType<ContentPresenter>().FirstOrDefault() is ContentPresenter presenter)
                 {
-                    return oldRender;
+                    presenter.Background = new SolidColorBrush(AutoColor.Darken(cache.button.Color));
                 }
             }
 
-            // Have we already rendered this theme at these dimensions ?
-            Bitmap? preRender = IOManager.GetRender(themeName);
-            if(preRender is Bitmap toOutput)
+            if (!themedSlots.ContainsKey(cache))
             {
-                return toOutput;
+                themedSlots[cache] = new List<SlotHolder>();
             }
 
-            // Let's render it at these new dimensions !
-            Bitmap? render = await RenderTheme(themeName);
-            if(render is Bitmap newImage)
+            if (!themedSlots[cache].Contains(slot))
             {
-                images[themeName] = new WeakReference<Bitmap>(render);
-                return newImage;
+                themedSlots[cache].Add(slot);
             }
-
-            // Something went wrong, nope out of there
-            return null;
         }
 
         public static Cache_CustomTheme GetDefaultTheme()
@@ -361,19 +404,20 @@ namespace YAAL
             return renderer;
         }
 
-        public async static Task<Bitmap?> RenderTheme(string themeName)
+        public async static Task<Dictionary<ThemeSettings, Bitmap>> RenderTheme(Cache_CustomTheme cache)
         {
-            if (!themes.ContainsKey(themeName))
+            Dictionary<ThemeSettings, Bitmap> output = new Dictionary<ThemeSettings, Bitmap>();
+            if (themes.ContainsKey(cache.name))
             {
-                ErrorManager.ThrowError(
-                    "ThemeManager - Couldn't find a theme",
-                    "Tried to render theme " + themeName + " but it doesn't appear to exist."
-                    );
-                return null;
+                themes.Remove(cache.name);
             }
 
+            if (renderedThemes.ContainsKey(cache.name))
+            {
+                renderedThemes.Remove(cache.name);
+            }
 
-            if(slotBackground != null)
+            if (slotBackground != null)
             {
                 slotBackground.Close();
                 slotBackground = null;
@@ -385,35 +429,22 @@ namespace YAAL
                 slotForeground = null;
             }
 
-            Cache_CustomTheme cache = themes[themeName];
-            Bitmap background = await UpdateTheme(cache.background, themeName, ThemeSettings.backgroundColor, true);
-            Bitmap foreground = await UpdateTheme(cache.foreground, themeName, ThemeSettings.foregroundColor, true);
+            Bitmap background = await UpdateTheme(cache.background, cache.name, ThemeSettings.backgroundColor, true);
+            Bitmap foreground = await UpdateTheme(cache.foreground, cache.name, ThemeSettings.foregroundColor, true);
 
-            EmptySlot holder = new EmptySlot();
-            Vector2 slotSize = WindowManager.GetSlotSize();
-            holder.Width = slotSize.X;
-            holder.Height = slotSize.Y;
+            output[ThemeSettings.backgroundColor] = background;
+            output[ThemeSettings.foregroundColor] = foreground;
 
-            ImageBrush backgroundBrush = new ImageBrush(background);
-            backgroundBrush.AlignmentX = AlignmentX.Center;
-            backgroundBrush.AlignmentY = AlignmentY.Center;
-            backgroundBrush.Stretch = Stretch.Fill;
-
-            ImageBrush foregroundBrush = new ImageBrush(foreground);
-            foregroundBrush.AlignmentX = AlignmentX.Center;
-            foregroundBrush.AlignmentY = AlignmentY.Center;
-            foregroundBrush.Stretch = Stretch.Fill;
-
-            holder.Back.Background = backgroundBrush;
-            holder.Foreground.Background = foregroundBrush;
-
-            Bitmap output = Render(holder.Back, themeName, ThemeSettings.rendered, true);
             return output;
         }
 
         public async static Task<Bitmap> UpdateTheme(Cache_LayeredBrush brush, string themeName, ThemeSettings setting, bool save = true)
         {
-            Cache_CustomTheme theme = LoadTheme(themeName);
+            return await UpdateTheme(brush, LoadTheme(themeName), setting, save);
+        }
+
+        public async static Task<Bitmap> UpdateTheme(Cache_LayeredBrush brush, Cache_CustomTheme theme, ThemeSettings setting, bool save = true)
+        {
             Canvas holder;
             Canvas container;
             Vector2 temporarySize;
@@ -506,7 +537,7 @@ namespace YAAL
             }
 
 
-            Bitmap output = Render(holder, themeName, setting, save);
+            Bitmap output = Render(holder, theme.name, setting, save);
             return output;
         }
 

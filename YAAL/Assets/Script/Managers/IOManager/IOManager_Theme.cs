@@ -199,10 +199,24 @@ namespace YAAL
             image.Save(fileStream);
         }
 
-        public static Bitmap? GetRender(string themeName)
+        public static Bitmap? GetRender(Cache_CustomTheme theme, ThemeSettings setting)
         {
-            Vector2 slotSize = WindowManager.GetSlotSize();
-            string fullname = themeName + "_" + slotSize.X + "_" + slotSize.Y + ".png";
+            Vector2 slotSize = new Vector2();
+            float offset = theme.topOffset + theme.bottomOffset;
+            string fullname = "";
+
+            switch (setting)
+            {
+                case ThemeSettings.backgroundColor:
+                    slotSize = WindowManager.GetSlotSize();
+                    fullname = theme.name + "_" + "backgroundColor" + "_" + slotSize.X + "_" + (slotSize.Y + offset) + ".png";
+                    break;
+                case ThemeSettings.foregroundColor:
+                    slotSize = WindowManager.GetSlotForegroundSize();
+                    fullname = theme.name + "_" + "foregroundColor" + "_" + slotSize.X + "_" + slotSize.Y + ".png";
+                    break;
+            }
+
             string path = Path.Combine(GetSaveLocation(Images), fullname);
 
             if (File.Exists(path))

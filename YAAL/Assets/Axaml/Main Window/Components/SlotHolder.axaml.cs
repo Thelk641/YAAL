@@ -731,8 +731,18 @@ public partial class SlotHolder : UserControl
             ThemeManager.ApplyTheme(this, themeName);
         } else
         {
-            ThemeManager.ApplyTheme(ThemeHolder, "");
+            ThemeManager.ApplyTheme(this, "");
         }
+    }
+
+    public Border GetBackgrounds()
+    {
+        return ThemeHolder;
+    }
+
+    public List<Border> GetForegrounds()
+    {
+        return new List<Border>() { Foreground, EditRow1, EditRow2 };
     }
 
     public Border GetPlayMode()
