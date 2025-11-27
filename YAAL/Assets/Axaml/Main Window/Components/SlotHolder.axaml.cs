@@ -4,6 +4,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Threading;
+using Avalonia.Utilities;
 using Avalonia.VisualTree;
 using System;
 using System.Collections.Generic;
@@ -100,17 +101,22 @@ public partial class SlotHolder : UserControl
             customTheme = ThemeManager.GetDefaultTheme();
         }
 
-        newHeight += (customTheme.topOffset + customTheme.bottomOffset) * 2;
+        newHeight += (customTheme.topOffset + customTheme.bottomOffset);
 
         string combined = customTheme.topOffset.ToString() + ",*," + customTheme.bottomOffset.ToString();
-        PlayEmptySpace1.RowDefinitions = new RowDefinitions(combined);
-        PlayEmptySpace2.RowDefinitions = new RowDefinitions(combined);
-        EditEmptySpace1.RowDefinitions = new RowDefinitions(combined);
-        EditEmptySpace2.RowDefinitions = new RowDefinitions(combined);
+        PlayEmptySpace.RowDefinitions = new RowDefinitions(combined);
+        EditEmptySpace.RowDefinitions = new RowDefinitions(combined);
 
         this.Height = newHeight;
         ChangedHeight?.Invoke(previousHeight, newHeight);
         previousHeight = newHeight;
+        //Debug.WriteLine("New height : " + newHeight);
+        ThemeHolder.InvalidateArrange();
+        ThemeHolder.InvalidateMeasure();
+        ThemeHolder.Measure(new Size(0, newHeight));
+        ThemeHolder.Arrange(new Rect(0, 0, 0, newHeight));
+        //Debug.WriteLine("ThemeHolder : " + ThemeHolder.Bounds);
+        
     }
 
     public async Task AutoDownload(bool overridePatch = false)

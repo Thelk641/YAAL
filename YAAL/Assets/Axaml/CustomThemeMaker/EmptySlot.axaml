@@ -4,8 +4,6 @@
 	xmlns:local="clr-namespace:YAAL"
 	x:Class="YAAL.EmptySlot"
 	HorizontalAlignment="Stretch"
-	Height="112"
-	Width="112"
 	>
 	<UserControl.Resources>
 		<local:BoolInvert x:Key="BoolInvert"/>

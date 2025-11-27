@@ -1,4 +1,5 @@
 ﻿using Avalonia;
+using Avalonia.Animation;
 using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
 using Avalonia.LogicalTree;
@@ -120,19 +121,26 @@ namespace YAAL
 
         public static async Task UpdateSlots(Cache_CustomTheme cache)
         {
+            List<SlotHolder> toUpdate = new List<SlotHolder>();
+
             foreach (var item in themedSlots)
             {
                 if (item.Key.themeName == cache.name)
                 {
-                    await RenderTheme(cache);
-                    foreach (var slot in item.Value)
-                    {
-                        await ApplyTheme(slot, cache.name);
-                    }
+                    toUpdate = item.Value;
+                    break;
                 }
             }
 
-
+            if(toUpdate.Count > 0)
+            {
+                await RenderTheme(cache);
+                foreach (var slot in toUpdate)
+                {
+                    slot.Resize();
+                    await ApplyTheme(slot, cache.name);
+                }
+            }
         }
 
         public static async Task<Cache_RenderedTheme> LoadRenderedTheme(string name)
@@ -157,7 +165,9 @@ namespace YAAL
             output.bottomOffset = loadedTheme.bottomOffset;
 
             Bitmap? background = IOManager.GetRender(loadedTheme, ThemeSettings.backgroundColor);
-            var backgroundSize = WindowManager.GetSlotSize();
+            var slotsize = WindowManager.GetSlotSize();
+            var backgroundSize = new Vector2(slotsize.X, slotsize.Y + output.topOffset + output.bottomOffset);
+
 
             Bitmap? foreground = IOManager.GetRender(loadedTheme, ThemeSettings.foregroundColor);
             var foregroundSize = WindowManager.GetSlotForegroundSize();
@@ -238,6 +248,9 @@ namespace YAAL
                 backgroundBrush.AlignmentY = AlignmentY.Center;
                 backgroundBrush.Stretch = Stretch.Fill;
                 slot.GetBackgrounds().Background = backgroundBrush;
+                //Debug.WriteLine("-- Background");
+                //Debug.WriteLine(slot.GetBackgrounds().Name + " / " + backgroundImage.Size);
+                //Debug.WriteLine("-- Foregrounds");
             }
 
             if(cache.foreground.TryGetTarget(out Bitmap foregroundImage) && foregroundImage != null)
@@ -249,6 +262,7 @@ namespace YAAL
 
                 foreach (var item in slot.GetForegrounds())
                 {
+                    //Debug.WriteLine(item.Name + " / " + foregroundImage.Size);
                     item.Background = foregroundBrush;
                 }
             }
@@ -373,7 +387,15 @@ namespace YAAL
             {
                 case ThemeSettings.rendered:
                 case ThemeSettings.backgroundColor:
-                    defaultSize = WindowManager.GetSlotSize();
+                    Cache_CustomTheme? cacheTheme = IOManager.LoadCustomTheme(themeName);
+                    float offset = 0f;
+                    if(cacheTheme != null)
+                    {
+                        offset = cacheTheme.topOffset + cacheTheme.bottomOffset;
+                    }
+
+                    var slotSize = WindowManager.GetSlotSize();
+                    defaultSize = new Vector2(slotSize.X, slotSize.Y + offset);
                     break;
                 case ThemeSettings.foregroundColor:
                     defaultSize = WindowManager.GetSlotForegroundSize();
@@ -445,6 +467,7 @@ namespace YAAL
 
         public async static Task<Bitmap> UpdateTheme(Cache_LayeredBrush brush, Cache_CustomTheme theme, ThemeSettings setting, bool save = true)
         {
+            Debug.WriteLine("Updating theme");
             Canvas holder;
             Canvas container;
             Vector2 temporarySize;
@@ -462,10 +485,14 @@ namespace YAAL
                     else
                     {
                         slotBackground.ExampleBackgroundContainer.Children.Clear();
+                        slotBackground.AdjustSize(false, theme.topOffset, theme.bottomOffset);
                     }
+
                     holder = slotBackground!.ExampleBackgroundContainer;
                     container = slotBackground.Back;
-                    temporarySize = WindowManager.GetSlotSize();
+                    //temporarySize = WindowManager.GetSlotSize();
+                    temporarySize = new Vector2((float)slotBackground.Width, (float)slotBackground.Height);
+                    Debug.WriteLine(temporarySize);
                     break;
                 case ThemeSettings.foregroundColor:
                     if (slotForeground == null)
@@ -515,6 +542,9 @@ namespace YAAL
                     size = new Vector2(width, height);
                 } else
                 {
+                    float originalWidth = (float)layer.width;
+                    float originalHeight = (float)layer.height;
+
                     float width = (float)layer.width;
                     if (!layer.widthAbsolute)
                     {
@@ -528,12 +558,18 @@ namespace YAAL
                     
                     size = new Vector2((float)Math.Round(width), (float)Math.Round(height));
                 }
+                
                 sizes[border] = size;
+                border.Height = size.Y;
+                border.Width = size.X;
             }
+
+            
 
             foreach (var item in centers)
             {
-                await SetCenter(item.Key, item.Value, theme.topOffset, container, setting, sizes[item.Key]);
+                await SetCenter(item.Key, item.Value, theme.topOffset, theme.bottomOffset, container, setting, sizes[item.Key]);
+                //Debug.WriteLine(item.Key.Name + " / " + item.Key.Bounds);
             }
 
 
@@ -623,43 +659,55 @@ namespace YAAL
             return output;
         }
 
-        public static async Task SetCenter(Control ctrl, string centerName, int topOffset, Canvas container, ThemeSettings setting, Vector2 realSize)
+        public static async Task SetCenter(Control ctrl, string centerName, int topOffset, int bottomOffset, Canvas container, ThemeSettings setting, Vector2 realSize)
         {
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
-                Point baseCenter = GetCenter(centerName);
+                Point baseCenter = GetCenter(centerName, topOffset, bottomOffset);
 
                 if(setting == ThemeSettings.foregroundColor)
                 {
-                    baseCenter = new Point(baseCenter.X, GetCenter("Tracker").Y);
+                    baseCenter = new Point(baseCenter.X, GetCenter("Tracker", topOffset, bottomOffset).Y);
                 }
 
-                Point offsetCenter = new Point(baseCenter.X, baseCenter.Y + topOffset);
+                Point offsetCenter = new Point(baseCenter.X, baseCenter.Y);
                 double X = offsetCenter.X - (realSize.X / 2);
                 double Y = offsetCenter.Y - (realSize.Y / 2);
                 Point transformedPoint = ComputePoint(new Point(X, Y), container, (ctrl.Parent as Canvas)!);
                 Canvas.SetLeft(ctrl, transformedPoint.X);
                 Canvas.SetTop(ctrl, transformedPoint.Y);
+                Debug.WriteLine("Bounds : " 
+                    + Canvas.GetLeft(ctrl) + "/"
+                    + Canvas.GetRight(ctrl) + "/"
+                    + Canvas.GetTop(ctrl) + "/"
+                    + Canvas.GetBottom(ctrl));
             }, DispatcherPriority.Loaded);
         }
 
-        public static Point GetCenter(string name)
+        public static Point GetCenter(string name, int topOffset, int bottomOffset)
         {
             if(name == "Default")
             {
                 Vector2 slotSize = WindowManager.GetSlotSize();
+                Point output = new Point(slotSize.X / 2, (slotSize.Y + topOffset) / 2);
+                //Debug.WriteLine("Point : " + output);
+                return output;
+            } else if (name == "True center")
+            {
+                Vector2 defaultSlotSize = WindowManager.GetSlotSize();
+                Vector2 slotSize = new Vector2(defaultSlotSize.X, defaultSlotSize.Y + topOffset + bottomOffset);
                 Point output = new Point(slotSize.X / 2, slotSize.Y / 2);
                 return output;
             }
 
-            if(playCenters.TryGetValue(name, out Point play))
+            if (playCenters.TryGetValue(name, out Point play))
             {
-                return play;
+                return new Point(play.X, play.Y + topOffset);
             }
 
             if(editCenters.TryGetValue(name, out Point edit))
             {
-                return edit;
+                return new Point(edit.X, edit.Y + topOffset);
             }
 
             return new Point(0, 0);
@@ -672,9 +720,14 @@ namespace YAAL
                 return centers;
             }
 
+            Combo_Centers defaultCenter = new Combo_Centers();
+            defaultCenter.SetName("Default");
+            centers.Add(defaultCenter);
+
             Combo_Centers center = new Combo_Centers();
-            center.SetName("Default");
+            center.SetName("True center");
             centers.Add(center);
+
 
             Combo_Centers playHeader = new Combo_Centers();
             playHeader.centerName = "-- Play Mode";
