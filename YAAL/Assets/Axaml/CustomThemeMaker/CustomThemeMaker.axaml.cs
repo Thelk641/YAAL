@@ -53,6 +53,11 @@ public partial class CustomThemeMaker : ScalableWindow
         Collumn_Foreground.SetCategory(ThemeSettings.foregroundColor);
         Collumn_Foreground.SetWindow(this);
 
+        this.Closing += (_, _) =>
+        {
+            SaveTheme();
+        };
+
         SaveButton.Click += (_, _) =>
         {
             SaveTheme();

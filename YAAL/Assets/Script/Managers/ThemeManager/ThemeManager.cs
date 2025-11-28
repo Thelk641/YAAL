@@ -569,7 +569,7 @@ namespace YAAL
             foreach (var item in centers)
             {
                 await SetCenter(item.Key, item.Value, theme.topOffset, theme.bottomOffset, container, setting, sizes[item.Key]);
-                //Debug.WriteLine(item.Key.Name + " / " + item.Key.Bounds);
+
             }
 
 
@@ -663,11 +663,11 @@ namespace YAAL
         {
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
-                Point baseCenter = GetCenter(centerName, topOffset, bottomOffset);
+                Point baseCenter = GetCenter(centerName, topOffset, bottomOffset, setting);
 
                 if(setting == ThemeSettings.foregroundColor)
                 {
-                    baseCenter = new Point(baseCenter.X, GetCenter("Tracker", topOffset, bottomOffset).Y);
+                    baseCenter = new Point(baseCenter.X, GetCenter("Tracker", topOffset, bottomOffset, setting).Y);
                 }
 
                 Point offsetCenter = new Point(baseCenter.X, baseCenter.Y);
@@ -684,13 +684,21 @@ namespace YAAL
             }, DispatcherPriority.Loaded);
         }
 
-        public static Point GetCenter(string name, int topOffset, int bottomOffset)
+        public static Point GetCenter(string name, int topOffset, int bottomOffset, ThemeSettings setting)
         {
             if(name == "Default")
             {
-                Vector2 slotSize = WindowManager.GetSlotSize();
+                Vector2 slotSize;
+                if (setting == ThemeSettings.foregroundColor)
+                {
+                    slotSize = WindowManager.GetSlotForegroundSize();
+                } else
+                {
+                    slotSize = WindowManager.GetSlotSize();
+                }
+
                 Point output = new Point(slotSize.X / 2, (slotSize.Y + topOffset) / 2);
-                //Debug.WriteLine("Point : " + output);
+                
                 return output;
             } else if (name == "True center")
             {
