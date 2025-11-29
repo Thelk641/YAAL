@@ -17,7 +17,6 @@ namespace YAAL.Assets.Scripts
     public class UISettings : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
-        public event Action? ThemeUpdated;
         public bool IsReadingError = false;
 
         // Zoom setting
@@ -33,35 +32,6 @@ namespace YAAL.Assets.Scripts
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Zoom)));
                 }
             }
-        }
-
-        // -----------------------------
-
-        // Better Theme
-        private Dictionary<string, Cache_Theme> themes = new Dictionary<string, Cache_Theme>();
-
-        public event EventHandler<string>? ThemeChanged;
-
-        public void LoadThemes()
-        {
-        }
-
-        public void SetTheme(string key, Cache_Theme theme)
-        {
-            themes[key] = theme;
-            ThemeChanged?.Invoke(this, key);
-        }
-
-        public Cache_Theme? GetTheme()
-        {
-            Cache_Theme output = new Cache_Theme();
-            return output;
-        }
-
-        public Cache_Theme? GetTheme(string name)
-        {
-            Cache_Theme output = new Cache_Theme();
-            return output;
         }
     }
 }

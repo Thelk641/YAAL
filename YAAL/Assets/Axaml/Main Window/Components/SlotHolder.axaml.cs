@@ -741,7 +741,7 @@ public partial class SlotHolder : UserControl
         }
     }
 
-    public Border GetBackground()
+    public Border GetBackgrounds()
     {
         return ThemeHolder;
     }

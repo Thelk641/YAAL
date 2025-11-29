@@ -20,18 +20,6 @@ namespace YAAL
 
     public static partial class IOManager
     {
-        public static Cache_Theme GetGeneralTheme()
-        {
-            return settings.generalTheme;
-        }
-
-        public static void SetGeneralTheme(Cache_Theme newTheme)
-        {
-            settings.generalTheme = newTheme;
-            App.Settings.SetTheme("General Theme", newTheme);
-            SaveCache<Cache_UserSettings>(ProcessLocalPath(userSettings.GetFullPath()), settings);
-        }
-
         public static Bitmap? ReadImage(string imageName)
         {
             if (File.Exists(imageName))

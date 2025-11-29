@@ -238,7 +238,7 @@ namespace YAAL
                 backgroundBrush.AlignmentX = AlignmentX.Center;
                 backgroundBrush.AlignmentY = AlignmentY.Center;
                 backgroundBrush.Stretch = Stretch.Fill;
-                var slotBackground = slot.GetBackground();
+                var slotBackground = slot.GetBackgrounds();
                 AutoTheme.SetTheme(slotBackground, ThemeSettings.off);
                 slotBackground.Background = backgroundBrush;
 
@@ -253,6 +253,7 @@ namespace YAAL
 
                 foreach (var item in slot.GetForegrounds())
                 {
+                    //Debug.WriteLine(item.Name + " / " + foregroundImage.Size);
                     AutoTheme.SetTheme(item, ThemeSettings.off);
                     item.Background = foregroundBrush;
                 }

@@ -15,6 +15,7 @@ public partial class Command_Apworld : Command
     public Command_Apworld()
     {
         InitializeComponent();
+
         SetDebouncedEvents();
         linkedInstruction = new Apworld();
         TurnEventsOn();

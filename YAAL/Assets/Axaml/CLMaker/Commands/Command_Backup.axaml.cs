@@ -22,7 +22,6 @@ public partial class Command_Backup : Command
     public Command_Backup()
     {
         InitializeComponent();
-        BackgroundSetter.Set(BackgroundColor, GeneralSettings.foregroundColor);
         linkedInstruction = new Backup();
         SetDebouncedEvents();
         TurnEventsOn();
@@ -33,6 +32,7 @@ public partial class Command_Backup : Command
         BackupFolderButton.Click += _FolderExplorer;
         DefaultFileButton.Click += _FileExplorer;
         DefaultFolderButton.Click += _FolderExplorer;
+        AutoTheme.SetTheme(BackgroundColor, ThemeSettings.foregroundColor);
     }
 
     public override void SetDebouncedEvents()

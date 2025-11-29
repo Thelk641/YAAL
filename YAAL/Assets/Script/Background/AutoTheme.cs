@@ -76,56 +76,26 @@ namespace YAAL
 
         private static void ApplyTheme(Control ctrl, ThemeSettings themeInfo)
         {
-            if (themeInfo == ThemeSettings.transparent)
-            {
-                IBrush brush = new SolidColorBrush(Avalonia.Media.Colors.Transparent);
+            Color color;
 
-                switch (ctrl)
-                {
-                    case Window window:
-                        window.Background = brush;
-                        break;
-                    case Button button:
-                        button.Background = brush;
-                        break;
-                    case ComboBox comboBox:
-                        comboBox.Background = brush;
-                        if (comboBox.GetVisualDescendants().OfType<ContentPresenter>().FirstOrDefault() is ContentPresenter presenter)
-                        {
-                            if (brush is SolidColorBrush solid)
-                            {
-                                presenter.Background = new SolidColorBrush(AutoColor.Darken(solid.Color));
-                            } else
-                            {
-                                presenter.Background = new SolidColorBrush(Colors.Transparent);
-                            }
-                        }
-                        break;
-                    case Border border:
-                        border.Background = brush;
-                        break;
-                    case TemplatedControl templated:
-                        templated.Background = brush;
-                        break;
-                }
-            }
-            else
+            if(themeInfo == ThemeSettings.transparent)
             {
-                if(ctrl is TemplatedControl templated)
-                {
-                    Color color = ThemeManager.GetGeneralTheme(themeInfo);
-                    templated.Background = new SolidColorBrush(color);
-                    if(templated is ComboBox combo)
-                    {
-                        if (combo.GetVisualDescendants().OfType<ContentPresenter>().FirstOrDefault() is ContentPresenter presenter)
-                        {
-                            presenter.Background = new SolidColorBrush(AutoColor.Darken(color));
-                        }
-                    }
-                } else
-                {
-                    Debug.WriteLine("ctrl is not templated !? " + ctrl.Name);
-                }
+                color = Colors.Transparent;
+            } else
+            {
+                color = ThemeManager.GetGeneralTheme(themeInfo);
+            }
+
+            IBrush brush = new SolidColorBrush(color);
+
+            var background = ctrl.GetType().GetProperty("Background", typeof(IBrush));
+
+            if (background != null && background.CanWrite)
+            {
+                background.SetValue(ctrl, brush);
+            } else
+            {
+                Debug.WriteLine("No background property for : " + ctrl.Name + " of type " + ctrl.GetType());
             }
         }
 

@@ -10,7 +10,7 @@
 		<local:BoolInvert x:Key="BoolInvert"/>
 	</UserControl.Resources>
 
-	<Border Name="Back" local:ThemeCategory.ThemeCategory="BackgroundColor">
+	<Border Name="Back">
 		<Grid RowDefinitions="*" VerticalAlignment="Stretch">
 			<Border
 				Name="PlayMode"

@@ -33,7 +33,7 @@ namespace YAAL
         static Dictionary<int, IBrush> previousValue = new Dictionary<int, IBrush>();
 
         public static readonly AttachedProperty<bool> AutoTextProperty =
-        AvaloniaProperty.RegisterAttached<Control, bool>("AutoText", typeof(BackgroundSetter));
+        AvaloniaProperty.RegisterAttached<Control, bool>("AutoText", typeof(AutoText));
 
         public static void SetAutoText(AvaloniaObject element, bool value) =>
             element.SetValue(AutoTextProperty, value);
@@ -56,11 +56,6 @@ namespace YAAL
         private static void EnableAutoText(Control ctrl)
         {
             var backgroundColor = FindNearestBackground(ctrl, out IBrush brush);
-
-            if (ctrl is TextBlock text && text.Text != null && text.Text.Contains("Masaru"))
-            {
-                //Debug.Write("For the text, the background is on : " + backgroundColor);
-            }
 
             if (backgroundColor == null)
             {
@@ -150,10 +145,6 @@ namespace YAAL
 
         private static void AutoComboBox(ComboBox comboBox)
         {
-            /*if (boxDictionary.TryGetValue(comboBox, out EventHandler? oldHandler))
-            {
-                comboBox.DropDownOpened -= oldHandler;
-            }*/
 
             EventHandler? handler = null;
 

@@ -52,7 +52,6 @@ public partial class App : Application
         //TODO : this is debug
         //ParseBuildErrors();
         //return;
-        Settings.LoadThemes();
         var args = Environment.GetCommandLineArgs().Skip(1).ToArray();
 
         if(args.Length == 0)

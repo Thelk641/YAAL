@@ -21,7 +21,6 @@ public partial class Command_Isolate : Command
     public Command_Isolate()
     {
         InitializeComponent();
-        BackgroundSetter.Set(BackgroundColor, GeneralSettings.foregroundColor);
         linkedInstruction = new Isolate();
         SetDebouncedEvents();
         TurnEventsOn();

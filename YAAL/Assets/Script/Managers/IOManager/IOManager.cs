@@ -134,6 +134,17 @@ namespace YAAL
             return output;
         }
 
+        public static void SetSetting(GeneralSettings name, string value)
+        {
+            settings.generalSettings[name] = value;
+            if(name == backgroundColor
+                || name == foregroundColor
+                || name == buttonColor)
+            {
+                ThemeManager.UpdateGeneralTheme();
+            }
+        }
+
         public static string GetSetting(GeneralSettings name)
         {
             try

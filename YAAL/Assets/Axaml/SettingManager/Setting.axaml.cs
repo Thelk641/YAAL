@@ -53,10 +53,6 @@ public partial class Setting : UserControl
         {
             CustomValue.Text = await IOManager.PickFile(this.FindAncestorOfType<Window>());
         };
-        BackgroundSetter.Set(File);
-        BackgroundSetter.Set(SpecialMode);
-        BackgroundSetter.Set(SliderModeOff);
-        BackgroundSetter.Set(ColorContainer, GeneralSettings.backgroundColor);
     }
 
     private void Setup(string name, string value)
@@ -83,9 +79,6 @@ public partial class Setting : UserControl
         {
             SwitchToSpecialMode(CustomValue.Text);
         };
-
-        BackgroundSetter.Set(File);
-        BackgroundSetter.Set(SpecialMode);
     }
 
     public void IsZoom()
@@ -167,7 +160,6 @@ public partial class Setting : UserControl
 
     private void TurnOnRemovalButton()
     {
-        BackgroundSetter.Set(removeComponent);
         Grid.SetColumnSpan(displayedValue, 1);
         removeComponent.IsVisible = true;
         removeComponent.IsEnabled = true;
@@ -223,7 +215,12 @@ public partial class Setting : UserControl
                 {
                     CustomValue.Text = output;
                     ColorValue.Background = new SolidColorBrush(AutoColor.HexToColor(CustomValue.Text));
-                    this.FindAncestorOfType<SettingManager>().ChangedColor(this, SetName.Text, CustomValue.Text);
+                    if(SetName.Text is string name && Enum.TryParse<GeneralSettings>(name, out GeneralSettings setting))
+                    {
+                        // The only color in GeneralSettings are the general theme
+                        // this lets us update it in real time
+                        IOManager.SetSetting(setting, output);
+                    }
                 }
 
             };
@@ -234,8 +231,6 @@ public partial class Setting : UserControl
                 oldDisplay.IsVisible = true;
                 displayedValue = CustomValueContainer;
             };
-
-            BackgroundSetter.Set(ColorModeOff);
 
             firstTimeColor = false;
         }
@@ -297,8 +292,6 @@ public partial class Setting : UserControl
             CustomValueContainer.IsVisible = true;
             displayedValue = CustomValueContainer;
         };
-
-        BackgroundSetter.Set(SliderModeOff);
 
         if (SetName.Text == GeneralSettings.zoom.ToString())
         {

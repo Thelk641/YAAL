@@ -17,7 +17,6 @@ namespace YAAL
         public Dictionary<FileSettings, string> saveLocation = new Dictionary<FileSettings, string>();
         public Dictionary<GeneralSettings, string> generalSettings = new Dictionary<GeneralSettings, string>();
         public Dictionary<string, string> customSettings = new Dictionary<string, string>();
-        public Cache_Theme generalTheme = new Cache_Theme() { name = "General Theme" };
 
         public void SetDefaultSettings()
         {

@@ -403,19 +403,4 @@ public partial class SettingManager : ScalableWindow
 
         return output;
     }
-
-    public void ChangedColor(Setting origin, string name, string value)
-    {
-        if(origin.FindAncestorOfType<SettingManager>() != _general)
-        {
-            return;
-        }
-        if (Enum.TryParse<GeneralSettings>(name, out GeneralSettings setting))
-        {
-            if (setting == backgroundColor || setting == foregroundColor || setting == dropdownColor || setting == buttonColor)
-            {
-                BackgroundSetter.UpdateBackground(setting, value);
-            }
-        }
-    }
 }

@@ -19,7 +19,6 @@ namespace YAAL
     {
         public Interface_Instruction linkedInstruction;
         public CLMakerWindow clMaker;
-        protected Border background;
 
         protected Dictionary<string, Action> debouncedEvents = new();
         protected Dictionary<TextBox, string> debouncedSettings = new();

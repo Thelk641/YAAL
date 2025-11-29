@@ -15,7 +15,6 @@
     Margin="8"
     Padding="8"
     HorizontalAlignment="Stretch"
-    Background="#FFF"
     >
         <Grid
         ColumnDefinitions="30, 8, 100, 8, *"

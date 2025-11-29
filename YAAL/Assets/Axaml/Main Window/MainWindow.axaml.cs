@@ -22,8 +22,6 @@ public partial class MainWindow : ScalableWindow
 
     public MainWindow()
     {
-        BackgroundSetter.Set(this);
-        
         InitializeComponent();
         AutoTheme.SetTheme(BackgroundColor, ThemeSettings.backgroundColor);
         AutoTheme.SetTheme(AsyncBackground, ThemeSettings.backgroundColor);

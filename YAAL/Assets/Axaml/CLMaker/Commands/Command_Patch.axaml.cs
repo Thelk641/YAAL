@@ -20,7 +20,6 @@ public partial class Command_Patch : Command
         SetDebouncedEvents();
         Optimize.IsChecked = true;
         linkedInstruction = new Patch();
-        BackgroundSetter.Set(BackgroundColor, GeneralSettings.foregroundColor);
         Target.Text = "";
         TurnEventsOn();
 
