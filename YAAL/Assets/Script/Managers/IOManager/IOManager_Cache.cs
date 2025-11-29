@@ -261,6 +261,7 @@ namespace YAAL
             }
 
             SaveCache<Cache_UserSettings>(Path.Combine(userSettings.GetFullPath()), settings);
+            ThemeManager.UpdateGeneralTheme();
         }
 
         public static Cache_Windows GetWindowSettings()

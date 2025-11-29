@@ -5,6 +5,9 @@
     "aplauncher": "",
     "scaleModifier": "1",
     "zoom": "1",
+    "backgroundColor": "#FF000000",
+    "foregroundColor": "#FF454545",
+    "buttonColor": "#FF262626"
   },
   "customSettings": {
   },

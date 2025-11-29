@@ -18,7 +18,7 @@ namespace YAAL.Assets.Scripts
     {
         public event PropertyChangedEventHandler? PropertyChanged;
         public event Action? ThemeUpdated;
-
+        public bool IsReadingError = false;
 
         // Zoom setting
         private double _zoom = 1.0;

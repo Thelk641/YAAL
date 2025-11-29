@@ -41,11 +41,8 @@ public partial class CustomThemeMaker : ScalableWindow
     public CustomThemeMaker()
     {
         InitializeComponent();
-
-        BackgroundExample.SetValue(AutoTheme.AutoThemeProperty, null);
-        BackgroundExample.Background = new SolidColorBrush(Colors.Transparent);
-        ForegroundExample.SetValue(AutoTheme.AutoThemeProperty, null);
-        ForegroundExample.Background = new SolidColorBrush(Colors.Transparent);
+        AutoTheme.SetTheme(BackgroundExample, ThemeSettings.transparent);
+        AutoTheme.SetTheme(ForegroundExample, ThemeSettings.transparent);
         EditMode.SwitchMode();
 
         Collumn_Background.SetCategory(ThemeSettings.backgroundColor);
@@ -165,7 +162,7 @@ public partial class CustomThemeMaker : ScalableWindow
 
         if (themeList.Count == 0)
         {
-            list.Add(DefaultManager.theme);
+            list.Add(DefaultManager.launcherTheme);
         }
         else
         {

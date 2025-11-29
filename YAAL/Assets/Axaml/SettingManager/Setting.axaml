@@ -112,22 +112,14 @@
 					Grid.ColumnSpan="3"
 					IsVisible="False"
 					>
-					<Border
-					Name="ColorBackground"
-					Height="30"
-					Padding="4"
-					HorizontalAlignment="Stretch"
-					VerticalAlignment="Stretch"
-					Background="Black"
-					>
-						<Button
+					<Button
 							Name="ColorValue"
+							Height="30"
 							Grid.Column="0"
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Stretch"
 							Background="Blue"
 						/>
-					</Border>
 					<Button
 						Name="ColorModeOff"
 							Grid.Column="2"

@@ -405,7 +405,7 @@ public partial class SlotHolder : UserControl
             box.Text = item;
             box.IsVisible = true;
             TrackerItemHolder.Children.Add(box);
-            box.SetValue(AutoTheme.AutoThemeProperty, null);
+            AutoTheme.SetTheme(box, ThemeSettings.off);
             box.Background = new SolidColorBrush(Colors.Transparent);
 
             int height = 30;
@@ -741,7 +741,7 @@ public partial class SlotHolder : UserControl
         }
     }
 
-    public Border GetBackgrounds()
+    public Border GetBackground()
     {
         return ThemeHolder;
     }

@@ -132,6 +132,7 @@ namespace YAAL
                     "AutoColor - pointOnScreen is null",
                     "Found a way to call NeedsWhite too early. Please report."
                     );
+                return true;
             }
 
             Bitmap bitmap = (brush.Source as Bitmap);

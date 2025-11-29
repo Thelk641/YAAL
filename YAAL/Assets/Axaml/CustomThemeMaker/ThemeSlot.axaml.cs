@@ -70,8 +70,7 @@ public partial class ThemeSlot : UserControl
             box.Text = item;
             box.IsVisible = true;
             TrackerItemHolder.Children.Add(box);
-            box.SetValue(AutoTheme.AutoThemeProperty, null);
-            box.Background = new SolidColorBrush(Colors.Transparent);
+            AutoTheme.SetTheme(box, ThemeSettings.transparent);
         }
 
         Cache_DisplaySlot display = new Cache_DisplaySlot();

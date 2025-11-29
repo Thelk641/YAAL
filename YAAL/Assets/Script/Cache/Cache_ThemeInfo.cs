@@ -9,10 +9,10 @@ using Avalonia.Media;
 
 namespace YAAL
 {
-    public class Cache_ThemeInfo
+    /*public class Cache_ThemeInfo
     {
         public bool isThemed { get; set; } = true;
         public string theme { get; set; } = "General Theme";
         public ThemeSettings? category { get; set; }
-    }
+    }*/
 }

@@ -109,7 +109,7 @@ public partial class Setting : UserControl
         }
         else if (Color.TryParse(value, out Color color))
         {
-            SwitchToColor();
+            SwitchToColor(color);
         }
         else
         {
@@ -202,13 +202,14 @@ public partial class Setting : UserControl
         
     }
 
-    private void SwitchToColor()
+    private void SwitchToColor(Color color)
     {
         displayedValue.IsVisible = false;
         ColorContainer.IsVisible = true;
         displayedValue = ColorContainer;
 
-        ColorValue.Background = new SolidColorBrush(AutoColor.HexToColor(SetValue.Text));
+        AutoTheme.SetTheme(ColorValue, ThemeSettings.off);
+        ColorValue.Background = new SolidColorBrush(color);
 
         if (firstTimeColor)
         {

@@ -15,7 +15,6 @@
     Margin="8"
     Padding="8"
     HorizontalAlignment="Stretch"
-    Background="#FFF"
           >
 	  <Grid RowDefinitions="*, 8, 30">
 		  <ColorView

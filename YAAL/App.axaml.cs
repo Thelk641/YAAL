@@ -39,6 +39,7 @@ public partial class App : Application
         };
 
         Trace.Listeners.Add(logger);
+        ThemeManager.UpdateGeneralTheme();
 
         /*if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
@@ -266,9 +267,9 @@ public partial class App : Application
         switch (name)
         {
             case "error":
+                App.Settings.IsReadingError = true;
                 if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
                 {
-                    ErrorManager.isError = true;
                     ErrorManager.ReadError(value, desktop);
                 }
                 return false;

@@ -26,12 +26,10 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace YAAL
 {
-    public static class ThemeManager 
+    public static partial class ThemeManager 
     {
         public static Dictionary<string, Cache_CustomTheme> themes = new Dictionary<string, Cache_CustomTheme>();
         public static Dictionary<string, WeakReference<Bitmap>> images = new Dictionary<string, WeakReference<Bitmap>>();
-        public static Dictionary<string, List<Control>> themedControl = new Dictionary<string, List<Control>>();
-        public static Dictionary<Control, Grid> themeContainers = new Dictionary<Control, Grid>();
         public static string defaultTheme = "General Theme";
 
         public static Dictionary<string, Point> playCenters = new Dictionary<string, Point>();
@@ -44,13 +42,6 @@ namespace YAAL
 
         public static Dictionary<string, Cache_RenderedTheme> renderedThemes = new Dictionary<string, Cache_RenderedTheme>();
         public static Dictionary<Cache_RenderedTheme, List<SlotHolder>> themedSlots = new Dictionary<Cache_RenderedTheme, List<SlotHolder>>();
-
-        static ThemeManager()
-        {
-            // TODO : this shouldn't be hardcoded
-            themes["General Theme"] = DefaultManager.theme;
-            UpdateCenters();
-        }
 
         public static Cache_CustomTheme CreateNewTheme()
         {
@@ -229,7 +220,7 @@ namespace YAAL
                 "Couldn't find theme " + name + " nor default theme named " + defaultTheme + ". Did you manually delete or rename them maybe ?"
                 );
 
-            return DefaultManager.theme;
+            return DefaultManager.launcherTheme;
         }
 
         public static async Task ApplyTheme(SlotHolder slot, string theme)
@@ -247,10 +238,10 @@ namespace YAAL
                 backgroundBrush.AlignmentX = AlignmentX.Center;
                 backgroundBrush.AlignmentY = AlignmentY.Center;
                 backgroundBrush.Stretch = Stretch.Fill;
-                slot.GetBackgrounds().Background = backgroundBrush;
-                //Debug.WriteLine("-- Background");
-                //Debug.WriteLine(slot.GetBackgrounds().Name + " / " + backgroundImage.Size);
-                //Debug.WriteLine("-- Foregrounds");
+                var slotBackground = slot.GetBackground();
+                AutoTheme.SetTheme(slotBackground, ThemeSettings.off);
+                slotBackground.Background = backgroundBrush;
+
             }
 
             if(cache.foreground.TryGetTarget(out Bitmap foregroundImage) && foregroundImage != null)
@@ -262,7 +253,7 @@ namespace YAAL
 
                 foreach (var item in slot.GetForegrounds())
                 {
-                    //Debug.WriteLine(item.Name + " / " + foregroundImage.Size);
+                    AutoTheme.SetTheme(item, ThemeSettings.off);
                     item.Background = foregroundBrush;
                 }
             }
@@ -270,11 +261,13 @@ namespace YAAL
 
             foreach (var item in slot.GetButtons())
             {
+                AutoTheme.SetTheme(item, ThemeSettings.off);
                 item.Background = cache.button;
             }
 
             foreach (var item in slot.GetComboBox())
             {
+                AutoTheme.SetTheme(item, ThemeSettings.off);
                 item.Background = cache.button;
                 if (item.GetVisualDescendants().OfType<ContentPresenter>().FirstOrDefault() is ContentPresenter presenter)
                 {

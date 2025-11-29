@@ -21,6 +21,7 @@ public partial class ColorSelector : ScalableWindow
     {
         InitializeComponent();
         AutoTheme.SetTheme(BackgroundColor, ThemeSettings.backgroundColor);
+        AutoTheme.SetTheme(View, ThemeSettings.foregroundColor);
         View.ColorChanged += (_, _) => ChangedColor?.Invoke();
     }
 
@@ -29,6 +30,7 @@ public partial class ColorSelector : ScalableWindow
         
         InitializeComponent();
         AutoTheme.SetTheme(BackgroundColor, ThemeSettings.backgroundColor);
+        AutoTheme.SetTheme(View, ThemeSettings.foregroundColor);
         SetColor(hex);
         OK.Click += (_, _) =>
         {

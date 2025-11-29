@@ -16,31 +16,21 @@
 		</Style>
 
 		<Style Selector="Button">
-			<Setter Property="local:AutoTheme.AutoTheme">
-				<Setter.Value>
-					<local:Cache_ThemeInfo/>
-				</Setter.Value>
-			</Setter>
+			<Setter Property="local:AutoTheme.AutoTheme" Value="buttonColor"/>
 			<Setter Property="local:AutoText.AutoText" Value="True"/>
 			<Setter Property="BorderBrush" Value="Transparent" />
 		</Style>
 
-		
-
 		<Style Selector="Window">
-			<Setter Property="local:AutoTheme.AutoTheme">
-				<Setter.Value>
-					<local:Cache_ThemeInfo/>
-				</Setter.Value>
-			</Setter>
+			<Setter Property="local:AutoTheme.AutoTheme" Value="backgroundColor" />
+		</Style>
+
+		<Style Selector="Border">
+			<Setter Property="local:AutoTheme.AutoTheme" Value="foregroundColor" />
 		</Style>
 
 		<Style Selector="ComboBox">
-			<Setter Property="local:AutoTheme.AutoTheme">
-				<Setter.Value>
-					<local:Cache_ThemeInfo/>
-				</Setter.Value>
-			</Setter>
+			<Setter Property="local:AutoTheme.AutoTheme" Value="buttonColor" />
 			<Setter Property="local:AutoText.AutoText" Value="True"/>
 		</Style>
     </Application.Styles>

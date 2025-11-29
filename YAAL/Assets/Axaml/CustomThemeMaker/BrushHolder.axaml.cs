@@ -48,7 +48,7 @@ public partial class BrushHolder : UserControl
     {
         InitializeComponent();
 
-        BrushOptions.SetValue(AutoTheme.AutoThemeProperty, null);
+        AutoTheme.SetTheme(BrushOptions, ThemeSettings.off);
 
         Up.Click += (_, _) => MoveUp?.Invoke();
         Down.Click += (_, _) => MoveDown?.Invoke();

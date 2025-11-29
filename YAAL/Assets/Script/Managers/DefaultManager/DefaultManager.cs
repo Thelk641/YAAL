@@ -22,9 +22,9 @@ namespace YAAL
         private static Dictionary<Type, Func<object>> Factory = new Dictionary<Type, Func<object>>
         {
             {
-                typeof(Cache_CustomTheme), () =>
+                typeof(Cache_GeneralTheme), () =>
                 {
-                    return theme;
+                    return generalTheme;
                 }
 
             },
@@ -57,14 +57,21 @@ namespace YAAL
             return new T();
         }
 
-
-
-        public static Cache_CustomTheme theme
+        public static Cache_CustomTheme launcherTheme
         {
             get
             {
-                string json = LoadFile("theme.json");
+                string json = LoadFile("launcherTheme.json");
                 return JsonConvert.DeserializeObject<Cache_CustomTheme>(json)!;
+            }
+        }
+
+        public static Cache_GeneralTheme generalTheme
+        {
+            get
+            {
+                string json = LoadFile("generalTheme.json");
+                return JsonConvert.DeserializeObject<Cache_GeneralTheme>(json)!;
             }
         }
 
@@ -116,6 +123,10 @@ namespace YAAL
             {
                 if (stream == null)
                 {
+                    ErrorManager.ThrowError(
+                        "DefaultManager - File Not Found",
+                        $"Embedded resource '{trueName}' not found."
+                        );
                     throw new FileNotFoundException($"Embedded resource '{trueName}' not found.");
                 }  
 

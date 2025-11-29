@@ -283,7 +283,7 @@ namespace YAAL
 
 
             Border output = new Border();
-            output.SetValue(AutoTheme.AutoThemeProperty!, null);
+            AutoTheme.SetTheme(output, ThemeSettings.off);
             ImageBrush brush = new ImageBrush();
             brush.Source = ThemeManager.GetImage(imageSource, (int)trueWidth, (int)trueHeight);
             brush.Stretch = stretch;
@@ -327,7 +327,7 @@ namespace YAAL
         public override Border GetRawLayer()
         {
             Border output = new Border();
-            output.SetValue(AutoTheme.AutoThemeProperty!, null);
+            AutoTheme.SetTheme(output, ThemeSettings.off);
             SolidColorBrush brush = new SolidColorBrush();
             brush.Color = color;
             brush.Opacity = 1;
