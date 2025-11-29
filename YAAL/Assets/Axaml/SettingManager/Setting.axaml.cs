@@ -40,6 +40,7 @@ public partial class Setting : UserControl
         {
             SetupSoftCodedSetting();
         }
+        SwitchToSpecialMode(value);
     }
 
     public Setting(string name, string value, string displayedText)
@@ -71,7 +72,7 @@ public partial class Setting : UserControl
 
         displayedValue = SetValue;
 
-        SwitchToSpecialMode(value);
+        //SwitchToSpecialMode(value);
 
         File.Click += async (_, _) =>
         {
@@ -204,6 +205,7 @@ public partial class Setting : UserControl
 
     private void SwitchToColor(Color color)
     {
+        var oldDisplay = displayedValue;
         displayedValue.IsVisible = false;
         ColorContainer.IsVisible = true;
         displayedValue = ColorContainer;
@@ -229,8 +231,8 @@ public partial class Setting : UserControl
             ColorModeOff.Click += (_, _) =>
             {
                 ColorContainer.IsVisible = false;
-                CustomValue.IsVisible = true;
-                displayedValue = CustomValue;
+                oldDisplay.IsVisible = true;
+                displayedValue = CustomValueContainer;
             };
 
             BackgroundSetter.Set(ColorModeOff);

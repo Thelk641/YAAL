@@ -71,6 +71,7 @@
 						HorizontalAlignment="Stretch" 
 						VerticalAlignment="Stretch"
 						local:AutoIcon.Icon="File"
+						local:VisibilityHolder.VisibilityHolder="CustomValueContainer"
 						>
 						<Svg Path="avares://YAAL/Assets/Icons/File_dark.svg"
 							VerticalAlignment="Center"
@@ -85,6 +86,7 @@
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"
 						local:AutoIcon.Icon="Settings"
+							local:VisibilityHolder.VisibilityHolder="CustomValueContainer"
 						>
 						<Svg Path="avares://YAAL/Assets/Icons/Settings_dark.svg"
 							VerticalAlignment="Center"
