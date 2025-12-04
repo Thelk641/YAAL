@@ -16,7 +16,8 @@ namespace YAAL
             {slotInfo, "${slotName}:${password}@${roomIP}:${roomPort}"},
             {rom, "" },
             {version, "" },
-            {baseLauncher, "" }
+            {baseLauncher, "" },
+            {slotTrackerURL, "" }
         };
 
         public object Clone()

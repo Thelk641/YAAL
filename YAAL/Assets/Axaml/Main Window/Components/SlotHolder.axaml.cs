@@ -98,7 +98,7 @@ public partial class SlotHolder : UserControl
             customTheme = ThemeManager.LoadTheme(themeName);
         } else
         {
-            customTheme = ThemeManager.GetDefaultTheme();
+            customTheme = new Cache_CustomTheme();
         }
 
         newHeight += (customTheme.topOffset + customTheme.bottomOffset);
@@ -228,39 +228,48 @@ public partial class SlotHolder : UserControl
 
         RealPlay.Click += async (_, _) =>
         {
-            if (_SlotName.Text == "")
+            try
             {
-                return;
-            }
-
-            if (currentLauncher.settings[LauncherSettings.requiresPatch] == true.ToString() && thisSlot.settings[SlotSettings.patch] == "")
-            {
-                if (SlotSelector.SelectedItem is Cache_DisplaySlot selected && selected.cache.patchURL != "" && AutomaticPatch.IsVisible)
+                if (_SlotName.Text == "")
                 {
-                    await AutoDownload();
-                }
-                else
-                {
-                    ErrorManager.ThrowError(
-                        "SlotHolder - No patch selected",
-                        "You haven't selected a patch. By default every launcher is set to require one, you can change this in the launcher's settings.");
                     return;
                 }
-            }
 
-            if (currentLauncher.settings[LauncherSettings.requiresVersion] == true.ToString() && thisSlot.settings[SlotSettings.version] == "None installed")
-            {
-                ErrorManager.ThrowError(
+                if (currentLauncher.settings[LauncherSettings.requiresPatch] == true.ToString() && thisSlot.settings[SlotSettings.patch] == "")
+                {
+                    if (SlotSelector.SelectedItem is Cache_DisplaySlot selected && selected.cache.patchURL != "" && AutomaticPatch.IsVisible)
+                    {
+                        await AutoDownload();
+                    }
+                    else
+                    {
+                        ErrorManager.ThrowError(
+                            "SlotHolder - No patch selected",
+                            "You haven't selected a patch. By default every launcher is set to require one, you can change this in the launcher's settings.");
+                        return;
+                    }
+                }
+
+                if (currentLauncher.settings[LauncherSettings.requiresVersion] == true.ToString() && thisSlot.settings[SlotSettings.version] == "None installed")
+                {
+                    ErrorManager.ThrowError(
                         "SlotHolder - No version selected",
                         "You haven't installed a version. By default every launcher is set to require one, you can change this in the launcher's settings.");
-                return;
+                    return;
+                }
+
+
+                ProcessManager.StartProcess(
+                    Environment.ProcessPath!,
+                    ("--async " + "\"" + asyncName + "\"" + " --slot " + "\"" + _SlotName.Text + "\""),
+                    true);
             }
-
-
-            ProcessManager.StartProcess(
-                Environment.ProcessPath!,
-                ("--async " + "\"" + asyncName + "\"" + " --slot " + "\"" + _SlotName.Text + "\""),
-                true);
+            catch (Exception e)
+            {
+                ErrorManager.ThrowError(
+                    "SlotHolder - Trying to launch game raised an exception",
+                    "Trying to open slot " + _SlotName.Text + " raised the following exception : " + e.Message);
+            }
         };
 
         StartTool.Click += (_, _) =>

@@ -30,7 +30,6 @@ namespace YAAL
     {
         public static Dictionary<string, Cache_CustomTheme> themes = new Dictionary<string, Cache_CustomTheme>();
         public static Dictionary<string, WeakReference<Bitmap>> images = new Dictionary<string, WeakReference<Bitmap>>();
-        public static string defaultTheme = "General Theme";
 
         public static Dictionary<string, Point> playCenters = new Dictionary<string, Point>();
         public static Dictionary<string, Point> editCenters = new Dictionary<string, Point>();
@@ -220,7 +219,29 @@ namespace YAAL
         {
             if(theme == "")
             {
-                theme = defaultTheme;
+                AutoTheme.SetTheme(slot.GetBackgrounds(), ThemeSettings.backgroundColor);
+                
+                foreach (var item in slot.GetForegrounds())
+                {
+                    AutoTheme.SetTheme(item, ThemeSettings.foregroundColor);
+                }
+
+                foreach (var item in slot.GetButtons())
+                {
+                    AutoTheme.SetTheme(item, ThemeSettings.buttonColor);
+                }
+
+                foreach (var item in slot.GetComboBox())
+                {
+                    AutoTheme.SetTheme(item, ThemeSettings.buttonColor);
+                    if (item.GetVisualDescendants().OfType<ContentPresenter>().FirstOrDefault() is ContentPresenter presenter
+                        && item.Background is SolidColorBrush brush)
+                    {
+                        presenter.Background = new SolidColorBrush(AutoColor.Darken(brush.Color));
+                    }
+                }
+
+                return;
             }
 
             Cache_RenderedTheme cache = await LoadRenderedTheme(theme);
@@ -278,28 +299,6 @@ namespace YAAL
             {
                 themedSlots[cache].Add(slot);
             }
-        }
-
-        public static Cache_CustomTheme GetDefaultTheme()
-        {
-            if (themes.TryGetValue(defaultTheme, out var defaultResult))
-            {
-                return defaultResult;
-            }
-
-            Cache_CustomTheme? output = IOManager.LoadCustomTheme(defaultTheme);
-            if (output != null)
-            {
-                themes[defaultTheme] = output;
-                return output;
-            }
-
-            ErrorManager.ThrowError(
-                "ThemeManager - Couldn't find default theme",
-                "Couldn't find default theme named" + defaultTheme + ". Did you manually delete or rename it maybe ?"
-                );
-
-            return new Cache_CustomTheme();
         }
 
         public static Bitmap? GetImage(string name, int imageWidth = 0, int imageHeight = 0)

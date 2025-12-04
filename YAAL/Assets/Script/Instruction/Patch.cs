@@ -116,7 +116,7 @@ namespace YAAL
 
             if (this.InstructionSetting[optimize] == true.ToString())
             {
-                apworlds = customLauncher.SplitAndParse("${apworld}");
+                apworlds = customLauncher.GetApworlds();
                 bool addedYAAL = false;
                 foreach (var item in apworlds)
                 {

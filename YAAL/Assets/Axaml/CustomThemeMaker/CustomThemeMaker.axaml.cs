@@ -494,7 +494,7 @@ public partial class CustomThemeMaker : ScalableWindow
     public void ComputeWindowBackground()
     {
         currentTheme.background = Collumn_Background.GetBrush();
-        if (Selector.SelectedItem == null || Selector.SelectedItem.ToString() != ThemeManager.GetDefaultTheme().name)
+        if (Selector.SelectedItem == null || Selector.SelectedItem.ToString() == "")
         {
             return;
         }
@@ -542,7 +542,7 @@ public partial class CustomThemeMaker : ScalableWindow
     {
         currentTheme.foreground = Collumn_Foreground.GetBrush();
 
-        if (Selector.SelectedItem == null || Selector.SelectedItem.ToString() != ThemeManager.GetDefaultTheme().name)
+        if (Selector.SelectedItem == null || Selector.SelectedItem.ToString() == "")
         {
             return;
         }

@@ -55,12 +55,14 @@ public partial class App : Application
         //return;
         var args = Environment.GetCommandLineArgs().Skip(1).ToArray();
 
+#if DEBUG
         if(args.Length == 0)
         {
-            args = new string[5] { "--restore", "--async", "Pingu ER", "--slot", "Masaru_FF" };
+            args = new string[5] { "--restore", "--async", "Test", "--slot", "Masaru" };
             //args = new string[7] {"--restore", "--async", "Pingu ER", "--slot", "Masaru_FF", "--launcher", "\"Text Client\"" };
             //args = new string[1] { "--debug" };
         }
+#endif
 
         //var args = new string[2] { "--async PatchTest", "--slot Slot 2" };
         //var args = new string[2]{"--error ", "D:\\Unity\\Avalonia port\\YAAL\\Logs\\31-07-2025-22-27-27.json" };

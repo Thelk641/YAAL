@@ -519,11 +519,6 @@ public class CustomLauncher
 
     public List<string> SplitAndParse(string input, bool clearQuote = true)
     {
-        if(input.Contains("FF map.png"))
-        {
-            Debug.Write("gnya");
-        }
-
         List<string> output = new List<string>();
 
         if (input.Contains(";"))
