@@ -124,7 +124,8 @@ namespace YAAL
                 {
                     if (CopyFolder(defaultFile, path))
                     {
-                        
+                        NoteBackup(backupToTarget);
+                        return true;
                     }
                     ErrorManager.AddNewError(
                         "IOManager_FileCore - Copying default folder failed",

@@ -95,7 +95,7 @@ public partial class CLMakerWindow : ScalableWindow
         {
             if(LauncherSelector.SelectedItem is Cache_DisplayLauncher cache)
             {
-                VersionManager manager = new VersionManager(cache.name);
+                VersionManager manager = WindowManager.OpenVersionWindow(cache.name);
                 manager.Closed += (_, _) =>
                 {
                     UpdateAvailableVersion();
@@ -107,7 +107,7 @@ public partial class CLMakerWindow : ScalableWindow
         {
             if(LauncherSelector.SelectedItem is Cache_DisplayLauncher cache && AvailableVersions.SelectedItem is string version && version != "None")
             {
-                VersionManager manager = new VersionManager(cache.name, version);
+                VersionManager manager = WindowManager.OpenVersionWindow(cache.name, version);
                 manager.Closed += (_, _) =>
                 {
                     UpdateAvailableVersion();

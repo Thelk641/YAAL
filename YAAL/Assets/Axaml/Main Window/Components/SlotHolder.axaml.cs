@@ -233,7 +233,7 @@ public partial class SlotHolder : UserControl
                 return;
             }
 
-            if (currentLauncher.requiresPatch && thisSlot.settings[SlotSettings.patch] == "")
+            if (currentLauncher.settings[LauncherSettings.requiresPatch] == true.ToString() && thisSlot.settings[SlotSettings.patch] == "")
             {
                 if (SlotSelector.SelectedItem is Cache_DisplaySlot selected && selected.cache.patchURL != "" && AutomaticPatch.IsVisible)
                 {
@@ -243,16 +243,16 @@ public partial class SlotHolder : UserControl
                 {
                     ErrorManager.ThrowError(
                         "SlotHolder - No patch selected",
-                        "You tried to launch a game that uses automatic patching, but haven't selected a patch. This is not allowed. Aborting launch.");
+                        "You haven't selected a patch. By default every launcher is set to require one, you can change this in the launcher's settings.");
                     return;
                 }
             }
 
-            if (currentLauncher.requiresVersion && thisSlot.settings[SlotSettings.version] == "None installed")
+            if (currentLauncher.settings[LauncherSettings.requiresVersion] == true.ToString() && thisSlot.settings[SlotSettings.version] == "None installed")
             {
                 ErrorManager.ThrowError(
                         "SlotHolder - No version selected",
-                        "You tried to launch a game that uses automatic versionning or automatic patching, but haven't installed any version yet. This is not allowed. Aborting launch.");
+                        "You haven't installed a version. By default every launcher is set to require one, you can change this in the launcher's settings.");
                 return;
             }
 

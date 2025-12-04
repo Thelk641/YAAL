@@ -47,6 +47,7 @@ public class CustomLauncher
     public CustomLauncher()
     {
         settings[LauncherSettings.launcherName] = "New Launcher";
+        DoneRestoring += () => { Debug.WriteLine("Done restoring !"); };
     }
 
 
@@ -236,8 +237,6 @@ public class CustomLauncher
         output.settings = this.selfsettings;
         output.customSettings = this.customSettings;
         output.isGame = this.isGame;
-        output.requiresVersion = this.requiresVersion;
-        output.requiresPatch = this.requiresPatch;
 
         return output;
     }

@@ -1,4 +1,5 @@
-﻿using Avalonia.Controls;
+﻿using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
 using Avalonia.LogicalTree;
 using Avalonia.Media;
@@ -93,6 +94,40 @@ namespace YAAL
                 window.Height = windowsData.size[windowType].Y;
             }
 
+            return window;
+        }
+
+        public static VersionManager OpenVersionWindow(string gameName)
+        {
+            VersionManager window = new VersionManager(gameName);
+
+            if (windowsData.positions.ContainsKey(WindowType.CLMaker))
+            {
+                float X = windowsData.positions[WindowType.CLMaker].X + (windowsData.size[WindowType.CLMaker].X / 2);
+                float Y = windowsData.positions[WindowType.CLMaker].Y + (windowsData.size[WindowType.CLMaker].Y / 2);
+                PixelPoint truePosition = new PixelPoint((int)X, (int)Y);
+                window.Position = truePosition;
+            }
+
+            window.IsVisible = true;
+            return window;
+        }
+
+        
+
+        public static VersionManager OpenVersionWindow(string gameName, string versionName)
+        {
+            VersionManager window = new VersionManager(gameName, versionName);
+
+            if (windowsData.positions.ContainsKey(WindowType.CLMaker))
+            {
+                float X = windowsData.positions[WindowType.CLMaker].X + (windowsData.size[WindowType.CLMaker].X / 2);
+                float Y = windowsData.positions[WindowType.CLMaker].Y + (windowsData.size[WindowType.CLMaker].Y / 2);
+                PixelPoint truePosition = new PixelPoint((int)X, (int)Y);
+                window.Position = truePosition;
+            }
+
+            window.IsVisible = true;
             return window;
         }
 

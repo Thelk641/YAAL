@@ -24,7 +24,6 @@ public partial class VersionManager : ScalableWindow
     public VersionManager()
     {
         InitializeComponent();
-        this.IsVisible = true;
 
         AddFile.Click += (_, _) =>
         {

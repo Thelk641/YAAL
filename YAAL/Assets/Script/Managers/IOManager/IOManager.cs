@@ -40,8 +40,6 @@ namespace YAAL
                 settings.SetDefaultPath();
                 SaveCache<Cache_UserSettings>(userSettings.GetFullPath(), settings);
             }
-            
-            UpdateLauncherList();
         }
 
         public static string GetSaveLocation(FileSettings key)

@@ -33,7 +33,13 @@ namespace YAAL
         public static Action? GeneralThemeUpdated;
         static ThemeManager()
         {
-            Dispatcher.UIThread.Post(() => UpdateCenters());
+            Dispatcher.UIThread.Post(
+                () => {
+                    if(WindowManager.mainWindow != null)
+                    {
+                        UpdateCenters();
+                    }
+            });
         }
 
         public static void UpdateGeneralTheme()

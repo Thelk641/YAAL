@@ -11,7 +11,9 @@
     "Debug_SlotName": "Debug_CLMaker_Slot",
     "Debug_Patch": "",
     "Debug_baseLauncher": "",
-    "customTheme" : "None"
+    "customTheme": "None",
+    "requiresPatch": "True",
+    "requiresVersion": "True"
   },
   "customSettings": {},
   "isGame": true

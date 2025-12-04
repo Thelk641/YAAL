@@ -19,8 +19,9 @@ public partial class App : Application
     string launcher = "";
     string async = "";
     string slot = "";
-    bool hasErroredOut = false;
+    bool hasReadLauncher = false;
     bool logDebug = false;
+    bool hasErroredOut = false;
     DebugManager logger = new DebugManager();
 
     public static UISettings Settings { get; } = new UISettings();
@@ -56,9 +57,9 @@ public partial class App : Application
 
         if(args.Length == 0)
         {
-            //args = new string[5] { "--restore", "--async", "Pingu ER", "--slot", "Masaru_FF" };
+            args = new string[5] { "--restore", "--async", "Pingu ER", "--slot", "Masaru_FF" };
             //args = new string[7] {"--restore", "--async", "Pingu ER", "--slot", "Masaru_FF", "--launcher", "\"Text Client\"" };
-            args = new string[1] { "--debug" };
+            //args = new string[1] { "--debug" };
         }
 
         //var args = new string[2] { "--async PatchTest", "--slot Slot 2" };
@@ -114,11 +115,16 @@ public partial class App : Application
         {
             ErrorManager.ThrowError();
             Environment.Exit(1);
+        } else
+        {
+            IOManager.UpdateLauncherList();
+            hasReadLauncher = true;
         }
 
-        async = async.Trim().Trim('\"').Trim();
+            async = async.Trim().Trim('\"').Trim();
         slot = slot.Trim().Trim('\"').Trim();
         launcher = launcher.Trim().Trim('\"').Trim();
+
 
 
         if (launcher != "" && !IOManager.GetLauncherList(true).Contains(launcher))
@@ -235,19 +241,13 @@ public partial class App : Application
 
     private void Start()
     {
+        if (!hasReadLauncher)
+        {
+            IOManager.UpdateLauncherList();
+        }
+
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            /*if (launcher != "")
-            {
-                CLMakerWindow clmaker = new CLMakerWindow(launcher);
-                desktop.MainWindow = clmaker;
-            }
-            else
-            {
-                desktop.MainWindow = new MainWindow();
-                //desktop.MainWindow = new UpdateWindow();
-            }*/
-            //desktop.MainWindow = new CLMakerWindow(launcher);
             desktop.MainWindow = WindowManager.GetMainWindow();
             
             if (logDebug && desktop.MainWindow is Avalonia.Controls.Window window)

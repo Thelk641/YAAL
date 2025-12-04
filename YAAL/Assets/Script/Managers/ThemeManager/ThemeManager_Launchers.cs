@@ -147,7 +147,7 @@ namespace YAAL
             if(loadedTheme == null)
             {
                 //TODO : this should build a customTheme based on the default one
-                loadedTheme = new Cache_CustomTheme();
+                loadedTheme = generalTheme.theme;
             }
 
             output.themeName = name;
@@ -202,22 +202,15 @@ namespace YAAL
                 return output;
             }
 
-            if (themes.TryGetValue(defaultTheme, out var defaultResult))
+            if(generalTheme != null)
             {
-                return defaultResult;
-            }
-
-            output = IOManager.LoadCustomTheme(defaultTheme);
-            if (output != null)
-            {
-                themes[defaultTheme] = output;
-                return output;
+                return generalTheme.theme;
             }
 
 
             ErrorManager.ThrowError(
                 "ThemeManager - Couldn't find themes",
-                "Couldn't find theme " + name + " nor default theme named " + defaultTheme + ". Did you manually delete or rename them maybe ?"
+                "Couldn't find theme " + name + ". Did you manually delete or rename them maybe ?"
                 );
 
             return DefaultManager.launcherTheme;

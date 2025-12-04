@@ -12,7 +12,5 @@ namespace YAAL
         public Dictionary<LauncherSettings, string> settings = new();
         public Dictionary<string, string> customSettings = new();
         public bool isGame = true;
-        public bool requiresPatch = false;
-        public bool requiresVersion = false;
     }
 }
