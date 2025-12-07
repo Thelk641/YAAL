@@ -17,6 +17,7 @@ namespace YAAL
         NewLauncher,
         SettingManager,
         TestWindow,
-        UpdateWindow
+        UpdateWindow,
+        DisplayWindow
     };
 }

@@ -1,0 +1,15 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        x:Class="YAAL.DisplayWindow"
+        Title="YAAL display">
+	<LayoutTransformControl x:Name="Controller">
+		<Border Name="BackgroundColor" Padding="8" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+			<ScrollViewer Name="Viewer" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+				<StackPanel x:Name="InfoContainer" />
+			</ScrollViewer>
+		</Border>
+	</LayoutTransformControl>
+</Window>

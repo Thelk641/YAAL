@@ -128,11 +128,11 @@ namespace YAAL
 
             if(pointOnScreen == null)
             {
-                ErrorManager.ThrowError(
+                /*ErrorManager.ThrowError(
                     "AutoColor - pointOnScreen is null",
                     "Found a way to call NeedsWhite too early. Please report."
-                    );
-                return true;
+                    );*/
+                return false;
             }
 
             Bitmap bitmap = (brush.Source as Bitmap);

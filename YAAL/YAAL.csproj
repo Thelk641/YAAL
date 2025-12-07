@@ -20,6 +20,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Assets\Axaml\CLMaker\Commands\Command_Display.axaml.cs">
+      <DependentUpon>Command_Display.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Assets\Axaml\DisplayWindow\Info.axaml.cs">
+      <DependentUpon>Info.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Assets\Axaml\DisplayWindow\Display Window.axaml.cs">
+      <DependentUpon>Display Window.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Assets\Axaml\CLMaker\Commands\Display Info.axaml.cs">
+      <DependentUpon>Display Info.axaml</DependentUpon>
+    </Compile>
     <Compile Update="Assets\Axaml\CLMaker\VersionManager\VersionManager.axaml.cs">
       <DependentUpon>VersionManager.axaml</DependentUpon>
     </Compile>

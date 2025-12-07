@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media.TextFormatting.Unicode;
@@ -58,7 +59,7 @@ public partial class App : Application
 #if DEBUG
         if(args.Length == 0)
         {
-            //args = new string[5] { "--restore", "--async", "Test", "--slot", "Masaru" };
+            //args = new string[5] { "--restore", "--async", "Pingu ER", "--slot", "Masaru The Drago" };
             //args = new string[7] {"--restore", "--async", "Pingu ER", "--slot", "Masaru_FF", "--launcher", "\"Text Client\"" };
             //args = new string[1] { "--debug" };
         }
@@ -184,6 +185,13 @@ public partial class App : Application
 
         if (launcher != "" && async != "" && slot != "")
         {
+            if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+            {
+                //desktop.MainWindow = new Window { IsVisible = false };
+                //desktop.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+                base.OnFrameworkInitializationCompleted();
+            }
+
             // for some reason, the instruction are not set to this launcher !?
             CustomLauncher customLauncher = IOManager.LoadLauncher(launcher);
             customLauncher.ReadSettings(async, slot);
@@ -191,12 +199,9 @@ public partial class App : Application
             if (customLauncher.waitingForRestore)
             {
                 _ = WaitForRestore(customLauncher);
-                base.OnFrameworkInitializationCompleted();
                 return;
             } else
             {
-
-                base.OnFrameworkInitializationCompleted();
                 ErrorManager.ThrowError();
                 Environment.Exit(0);
             }
@@ -261,6 +266,15 @@ public partial class App : Application
             }
         }
         base.OnFrameworkInitializationCompleted();
+    }
+
+    public void OpenMainWindow(Avalonia.Controls.Window window)
+    {
+        if(ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            desktop.MainWindow = window;
+            window.Show();
+        }
     }
 
     private bool ParseArgs(string name, string value)

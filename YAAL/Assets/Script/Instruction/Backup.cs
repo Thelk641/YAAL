@@ -177,7 +177,7 @@ namespace YAAL
                 case "timer":
                     time = float.Parse(this.InstructionSetting[timer], CultureInfo.InvariantCulture.NumberFormat) * 0.1f;
                     Debouncer.timer.Tick += Timer;
-                    customLauncher.NoteBackup(this);
+                    customLauncher.AddWait(this);
                     return true;
                 default:
                     ErrorManager.AddNewError(
@@ -274,7 +274,7 @@ namespace YAAL
                 }
             }
 
-            customLauncher.NoteRestore(this);
+            customLauncher.RemoveWait(this);
             return success;
         }
     }

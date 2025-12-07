@@ -14,6 +14,7 @@ namespace YAAL
         {
             {"Apworld", typeof(Command_Apworld)},
             {"Backup", typeof(Command_Backup) },
+            {"Display", typeof(Command_Display) },
             {"Isolate", typeof(Command_Isolate) },
             {"Open", typeof(Command_Open) },
             {"Patch", typeof(Command_Patch) },
@@ -24,6 +25,7 @@ namespace YAAL
         {
             {"Apworld", typeof(Apworld)},
             {"Backup", typeof(Backup) },
+            {"Display", typeof(Display) },
             {"Isolate", typeof(Isolate) },
             {"Open", typeof(Open) },
             {"Patch", typeof(Patch) },
@@ -34,6 +36,7 @@ namespace YAAL
         {
             "Apworld",
             "Backup",
+            "Display",
             "Isolate",
             "Open",
             "Patch",

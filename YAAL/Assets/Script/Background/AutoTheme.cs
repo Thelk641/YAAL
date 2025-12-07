@@ -58,7 +58,7 @@ namespace YAAL
                 ThemeManager.GeneralThemeUpdated -= oldhandler;
             }
 
-            if (themeInfo == null || themeInfo == ThemeSettings.off || ctrl.TemplatedParent != null)
+            if (themeInfo == null || themeInfo == ThemeSettings.off)
             {
                 return;
             }

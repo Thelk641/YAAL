@@ -22,9 +22,11 @@ public abstract class Instruction<TEnum> : Interface_Instruction where TEnum : s
         }
     }
 
-    public void SetSetting(string key, string value) {
+    public virtual void SetSetting(string key, string value) {
         if (Enum.TryParse<TEnum>(key, out var enumKey))
+        {
             InstructionSetting[enumKey] = value;
+        }
     }
 
     public void SetSettings(Dictionary<string, string> settings)
@@ -43,8 +45,10 @@ public abstract class Instruction<TEnum> : Interface_Instruction where TEnum : s
     public string GetSetting(string key)
     {
         if (Enum.TryParse<TEnum>(key, out var enumKey))
+        {
             return InstructionSetting[enumKey];
-
+        }
+            
         return "";
     }
 

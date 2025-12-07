@@ -24,6 +24,11 @@ namespace YAAL
         defaultFile
     }
 
+    public enum DisplaySettings
+    {
+        displayList
+    }
+
     public enum IsolateSettings
     {
         processName,

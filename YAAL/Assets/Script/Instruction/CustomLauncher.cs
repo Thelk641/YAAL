@@ -719,7 +719,7 @@ public class CustomLauncher
             try
             {
                 instructionAttachedToClosing[instruction].Add(cleaned);
-                NoteBackup(instruction);
+                AddWait(instruction);
             }
             catch (Exception e)
             {
@@ -805,7 +805,7 @@ public class CustomLauncher
             try
             {
                 instructionAttachedToOutput[instruction].Add(cleaned);
-                NoteBackup(instruction);
+                AddWait(instruction);
             }
             catch (Exception e)
             {
@@ -886,7 +886,7 @@ public class CustomLauncher
         listOfProcess.Add(cache);
     }
 
-    public void NoteBackup(Interface_Instruction instruction)
+    public void AddWait(Interface_Instruction instruction)
     {
         if (instructionWaiting.Contains(instruction))
         {
@@ -896,7 +896,7 @@ public class CustomLauncher
         waitingForRestore = true;
     }
 
-    public void NoteRestore(Interface_Instruction instruction)
+    public void RemoveWait(Interface_Instruction instruction)
     {
         instructionWaiting.Remove(instruction);
         if(instructionWaiting.Count == 0)

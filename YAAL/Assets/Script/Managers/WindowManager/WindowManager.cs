@@ -1,10 +1,12 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Controls.Presenters;
 using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Styling;
+using Avalonia.Threading;
 using Avalonia.VisualTree;
 using ReactiveUI;
 using System;
@@ -50,7 +52,7 @@ namespace YAAL
             return new Vector2(mathedX, mathedY);
         }
 
-        public static Window OpenWindow(WindowType windowType, Window source)
+        public static Window OpenWindow(WindowType windowType, Window? source)
         {
             // This will need adjusting once everything is a scalable window
             Window window;
@@ -71,16 +73,22 @@ namespace YAAL
                 case WindowType.UpdateWindow:
                     window = new UpdateWindow();
                     break;
+                case WindowType.DisplayWindow:
+                    window = new DisplayWindow();
+                    break;
                 default:
                     window = new MainWindow();
                     break;
             }
 
-            window.IsVisible = true;
+            
             window.Closing += (_, _) =>
             {
-                source.Topmost = true;
-                source.Topmost = false;
+                if(source != null)
+                {
+                    source.Topmost = true;
+                    source.Topmost = false;
+                }
                 windowsData.positions[windowType] = window.Position;
                 Vector2 size = new Vector2((float)window.Width, (float)window.Height);
                 windowsData.size[windowType] = size;
@@ -92,6 +100,17 @@ namespace YAAL
                 window.Position = windowsData.positions[windowType];
                 window.Width = windowsData.size[windowType].X;
                 window.Height = windowsData.size[windowType].Y;
+            }
+
+            if(mainWindow != null)
+            {
+                window.Show();
+            } else
+            {
+                Dispatcher.UIThread.Post(() =>
+                {
+                    window.Show();
+                }, DispatcherPriority.Background);
             }
 
             return window;

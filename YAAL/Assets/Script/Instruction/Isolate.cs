@@ -142,7 +142,7 @@ namespace YAAL
                     outputToLookFor = customLauncher.SplitString(this.InstructionSetting[IsolateSettings.outputToLookFor]);
                     return true;
                 case "timer":
-                    customLauncher.NoteBackup(this);
+                    customLauncher.AddWait(this);
                     time = float.Parse(this.InstructionSetting[timer], CultureInfo.InvariantCulture.NumberFormat) * 0.1f;
                     Debouncer.timer.Tick += Timer;
                     return true;
@@ -218,7 +218,7 @@ namespace YAAL
             {
                 if(IOManager.RestoreApworlds(settings[aplauncher], targets))
                 {
-                    customLauncher.NoteRestore(this);
+                    customLauncher.RemoveWait(this);
                     return true;
                 }
                 return false;

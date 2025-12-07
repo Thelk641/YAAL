@@ -1,0 +1,43 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+		xmlns:local="clr-namespace:YAAL"
+        x:Class="YAAL.DisplayInfo">
+	<Grid RowDefinitions="*,8" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+		<Grid ColumnDefinitions="*,8,*,8,30" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+			<TextBox
+				Name="Tag"
+				Grid.Column="0"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				HorizontalContentAlignment="Center"
+				VerticalContentAlignment="Center"
+			/>
+			<TextBox
+				Name="Value"
+				Grid.Column="2"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				HorizontalContentAlignment="Center"
+				VerticalContentAlignment="Center"
+			/>
+			<Button
+				Name="Remove"
+				Grid.Column="4"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				local:AutoIcon.Icon="Minus"
+				Height="30"
+			>
+				<Svg
+					VerticalAlignment="Center"
+					HorizontalAlignment="Center"
+					Width="30"
+					/>
+			</Button>
+
+		</Grid>
+	</Grid>
+</UserControl>

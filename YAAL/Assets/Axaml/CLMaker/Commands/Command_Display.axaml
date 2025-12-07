@@ -1,0 +1,127 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="YAAL.Command_Display"
+			 xmlns:local="clr-namespace:YAAL"
+             HorizontalAlignment="Stretch"
+             Height="180"
+             MinWidth="450"
+             >     
+  <Border 
+    Name="BackgroundColor"
+    BorderBrush="Gray"
+    BorderThickness="1"
+    CornerRadius="4"
+    Margin="8"
+    Padding="8"
+    HorizontalAlignment="Stretch"
+          >
+        <Grid ColumnDefinitions="30, 8, 100, 8, *">
+			<Grid
+			RowDefinitions="0,*,8,*,0"
+			VerticalAlignment="Stretch"
+			HorizontalAlignment="Stretch"
+			Grid.Column="0">
+
+				<Button
+					Name="MoveUp"
+					Width="30"
+					Height="30"
+					Grid.Row="1"
+					HorizontalContentAlignment="Center"
+					HorizontalAlignment="Left"
+					VerticalAlignment="Top"
+					local:AutoIcon.Icon="Up"
+					>
+					<Svg
+						VerticalAlignment="Center"
+						HorizontalAlignment="Center"
+						Width="30"
+						/>
+				</Button>
+
+				<Button
+					Name="MoveDown"
+					Height="30"
+					Grid.Row="3"
+
+					HorizontalContentAlignment="Center"
+					HorizontalAlignment="Left"
+					VerticalAlignment="Bottom"
+					local:AutoIcon.Icon="Down"
+					>
+					<Svg
+						VerticalAlignment="Center"
+						HorizontalAlignment="Center"
+						Width="30"
+						/>
+				</Button>
+
+
+			</Grid>
+			<TextBlock Text="Display" FontSize="25" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
+			
+			<Grid ColumnDefinitions="*,8,30" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="4">
+				<Grid RowDefinitions="30,8,*">
+					<Grid ColumnDefinitions="*,8,*" Grid.Row="0">
+						<TextBlock 
+							Text="Tag"
+							HorizontalAlignment="Center"
+							VerticalAlignment="Center"
+							/>
+						<TextBlock 
+							Text="Value"
+							HorizontalAlignment="Center"
+							VerticalAlignment="Center"
+							Grid.Column="2"
+							/>
+					</Grid>
+					<Border
+						Name="ContainerBorder"
+						BorderBrush="Black"
+						BorderThickness="2"
+						Grid.Row="3"
+						Padding="4"
+						HorizontalAlignment="Stretch" 
+						VerticalAlignment="Stretch"
+						>
+						<ScrollViewer HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="3">
+							<Border Margin="0,0,15,0">
+								<StackPanel
+								Name="InfoContainer"
+								HorizontalAlignment="Stretch"
+								VerticalAlignment="Stretch"
+								/>
+							</Border>
+
+						</ScrollViewer>
+					</Border>
+
+				</Grid>
+				<Grid RowDefinitions="30,*,30" Grid.Column="2" VerticalAlignment="Stretch">
+				  <Button Name="X" Content="X" Grid.Row="0" Width="30" HorizontalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Top"/>
+				  <Button
+						Name="Add"
+						Width="30"
+						Height="30"
+						Grid.Row="2"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Bottom"
+						local:AutoIcon.Icon="Plus"
+						ToolTip.Tip="Add a display"
+						>
+					  <Svg
+						  VerticalAlignment="Center"
+						  HorizontalAlignment="Center"
+						  Width="30"
+					/>
+				  </Button>
+			  </Grid>
+          </Grid>
+        </Grid>
+  </Border>
+</UserControl>
+
+<!-- SizeToContent="WidthAndHeight" 
+
+Width="800"
+Height="200" -->

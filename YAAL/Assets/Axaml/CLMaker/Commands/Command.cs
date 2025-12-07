@@ -149,7 +149,7 @@ namespace YAAL
             }
         }
 
-        public Interface_Instruction GetInstruction()
+        public virtual Interface_Instruction GetInstruction()
         {
             return linkedInstruction;
         }
