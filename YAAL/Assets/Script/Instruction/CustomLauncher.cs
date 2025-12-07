@@ -111,7 +111,9 @@ public class CustomLauncher
             previousAsync = this.settings[asyncName] ?? "",
             previousSlot = this.settings[slotName] ?? "",
             previousPatch = this.settings[patch] ?? "",
-            previousVersion = this.settings[version] ?? ""
+            previousVersion = this.settings[version] ?? "",
+            previousRoom = this.settings[roomIP] ?? "" + ":" + this.settings[roomPort] ?? "",
+            previousPort = this.settings[roomPort] ?? ""
         };
 
         IOManager.UpdateLastAsync(this.settings[gameName] ?? "", newSlot);

@@ -12,5 +12,7 @@ namespace YAAL.Assets.Script.Cache
         public string previousSlot;
         public string previousVersion;
         public string previousPatch;
+        public string previousRoom;
+        public string previousPort;
     }
 }

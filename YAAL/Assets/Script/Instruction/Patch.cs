@@ -187,10 +187,12 @@ namespace YAAL
         private bool CopyPatch()
         {
             Cache_PreviousSlot cache = new Cache_PreviousSlot();
-            cache.previousPatch = this.settings[patch];
-            cache.previousAsync = this.settings[AsyncSettings.asyncName];
-            cache.previousSlot = this.settings[slotName];
-            cache.previousVersion = this.settings[version];
+            cache.previousPatch = this.settings[patch] ?? "";
+            cache.previousAsync = this.settings[AsyncSettings.asyncName] ?? "";
+            cache.previousSlot = this.settings[slotName] ?? "";
+            cache.previousVersion = this.settings[version] ?? "";
+            cache.previousRoom = this.settings[AsyncSettings.roomIP] ?? "" + ":" + this.settings[AsyncSettings.roomPort] ?? "";
+            cache.previousPort = this.settings[AsyncSettings.roomPort] ?? "";
 
             List<string> splitTarget = customLauncher.SplitString(this.InstructionSetting[target]);
 
