@@ -54,8 +54,6 @@ public partial class SlotHolder : UserControl
         this.holder = holder;
         previousName = slot.settings[SlotSettings.slotName];
 
-        UpdateAvailableSlot();
-
         SetupPlayMode();
         SetupEditMode();
 
@@ -74,9 +72,8 @@ public partial class SlotHolder : UserControl
         };
         this.LayoutUpdated += handler;
 
-        UpdateItemList();
         starting = false;
-
+        
         Dispatcher.UIThread.Post(() =>  { UpdateTheme(); });
     }
 
@@ -151,17 +148,36 @@ public partial class SlotHolder : UserControl
         if (LauncherSelector.SelectedItem is Cache_DisplayLauncher cacheLauncher)
         {
             newSlot.settings[baseLauncher] = cacheLauncher.name;
+        } else
+        {
+            newSlot.settings[baseLauncher] = thisSlot.settings[baseLauncher];
         }
 
         if (SelectedVersion.SelectedItem is string selectedVersion)
         {
             newSlot.settings[version] = selectedVersion;
+        } else
+        {
+            newSlot.settings[version] = thisSlot.settings[version];
         }
 
-        newSlot.settings[patch] = Patch.Text;
-        newSlot.settings[slotName] = SlotName.Text;
+
+
+        newSlot.settings[patch] = Patch.Text ?? "";
+        newSlot.settings[slotName] = SlotName.Text ?? "";
+
+        if(selectedSlot != null)
+        {
+            newSlot.settings[slotTrackerURL] = selectedSlot.cache.trackerURL;
+        } else
+        {
+            newSlot.settings[slotTrackerURL] = thisSlot.settings[slotTrackerURL];
+        }
+
+        // if the patch changes, the rom will be updated somewhere else
         newSlot.settings[rom] = thisSlot.settings[rom];
-        newSlot.settings[slotTrackerURL] = thisSlot.settings[slotTrackerURL];
+
+
         string newName = IOManager.SaveSlot(asyncName, newSlot, thisSlot);
 
         newSlot.settings[slotName] = newName;
@@ -469,6 +485,44 @@ public partial class SlotHolder : UserControl
         }
     }
 
+    public void UpdateSlotInfo()
+    {
+        selectedSlot = (Cache_DisplaySlot)SlotSelector.SelectedItem;
+
+
+        if (selectedSlot.slotName != "None")
+        {
+            SlotName.Text = selectedSlot.slotName;
+        }
+
+        DownloadPatch.IsEnabled = selectedSlot.cache.patchURL != "";
+        ReDownloadPatch.IsEnabled = selectedSlot.cache.patchURL != "";
+
+        UpdateAvailableLaunchers();
+
+        ToolSelect.SelectedIndex = 0;
+
+        TrackerItemHolder.Children.Clear();
+
+        if (LauncherSelector.SelectedItem == null && LauncherSelector.ItemsSource is List<Cache_DisplayLauncher> list)
+        {
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (!list[i].isHeader)
+                {
+                    LauncherSelector.SelectedItem = list[i];
+                    break;
+                }
+            }
+        }
+        if (!starting)
+        {
+            holder.UpdateSlotSelection(this);
+        }
+
+        Save();
+    }
+
     public void UpdateAvailableSlot()
     {
         List<Cache_RoomSlot> filteredSlots = new List<Cache_RoomSlot>();
@@ -574,9 +628,8 @@ public partial class SlotHolder : UserControl
             } else
             {
                 SlotSelector.SelectedIndex = 1;
-            }   
+            }
         }
-
     }
     
     private void UpdateAvailableLaunchers()
@@ -650,43 +703,11 @@ public partial class SlotHolder : UserControl
 
     private void _ChangedSlot(object? sender, SelectionChangedEventArgs e)
     {
-        if (SlotSelector.SelectedItem == null)
+        if (SlotSelector.SelectedItem == null || starting)
         {
             return;
         }
-        selectedSlot = (Cache_DisplaySlot)SlotSelector.SelectedItem;
-
-        if(selectedSlot.slotName != "None")
-        {
-            SlotName.Text = selectedSlot.slotName;
-        }
-        
-        DownloadPatch.IsEnabled = selectedSlot.cache.patchURL != "";
-        ReDownloadPatch.IsEnabled = selectedSlot.cache.patchURL != "";
-
-        UpdateAvailableLaunchers();
-
-        ToolSelect.SelectedIndex = 0;
-
-        UpdateItemList();
-
-        if (LauncherSelector.SelectedItem == null && LauncherSelector.ItemsSource is List<Cache_DisplayLauncher> list)
-        {
-            for (int i = 0; i < list.Count; i++)
-            {
-                if (!list[i].isHeader)
-                {
-                    LauncherSelector.SelectedItem = list[i];
-                    break;
-                }
-            }
-        }
-        if (!starting)
-        {
-            holder.UpdateSlotSelection(this);
-        }
-
-        Save();
+        UpdateSlotInfo();
     }
 
     private void _ChangedLauncher(object? sender, SelectionChangedEventArgs e)
@@ -725,7 +746,7 @@ public partial class SlotHolder : UserControl
         e.Handled = true;
     }
 
-    public async void UpdateToolList()
+    public void UpdateToolList()
     {
         ToolSelect.ItemsSource = IOManager.GetToolList().Result;
         ToolSelect.SelectedIndex = 0;
