@@ -4,7 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         x:Class="YAAL.Error">
-	<Border Margin="8" HorizontalAlignment="Stretch">
+	<Border Name="TrueBackground" Margin="8" HorizontalAlignment="Stretch">
 		<Grid RowDefinitions="35,8,*">
 			<Border
 				Grid.Row="0"

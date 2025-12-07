@@ -20,30 +20,15 @@ public partial class Error : UserControl
     public Error()
     {
         InitializeComponent();
-        SetBackground();
+        AutoTheme.SetTheme(TrueBackground, ThemeSettings.transparent);
     }
 
     public Error(string name, string content, string stackTrace)
     {
         InitializeComponent();
-        SetBackground();
+        AutoTheme.SetTheme(TrueBackground, ThemeSettings.transparent);
         ErrorName.Text = name;
         ErrorContent.Text = content;
         this.stackTrace = stackTrace;
-    }
-
-    public void SetBackground()
-    {
-        var theme = Application.Current.ActualThemeVariant;
-        if (theme == ThemeVariant.Dark)
-        {
-            Background_0.Background = new SolidColorBrush(Color.Parse("#454545"));
-            Background_1.Background = new SolidColorBrush(Color.Parse("#454545"));
-        }
-        else
-        {
-            Background_0.Background = new SolidColorBrush(Color.Parse("#AAA"));
-            Background_1.Background = new SolidColorBrush(Color.Parse("#AAA"));
-        }
     }
 }
