@@ -72,17 +72,12 @@ public partial class NewLauncher : ScalableWindow
         {
             return;
         }
-        Cache_CustomLauncher cache = new Cache_CustomLauncher();
+        Cache_CustomLauncher cache = DefaultManager.launcher;
         cache.settings[LauncherSettings.launcherName] = LauncherName.Text ?? "";
         cache.settings[LauncherSettings.gameName] = GameName.Text ?? "";
         cache.settings[LauncherSettings.githubURL] = GitURL.Text ?? "";
         cache.settings[LauncherSettings.filters] = GitFilters.Text ?? "";
         cache.settings[LauncherSettings.apworld] = ApworldPath.Text ?? "";
-        cache.settings[LauncherSettings.Debug_AsyncName] = "Debug_CLMaker_Async";
-        cache.settings[LauncherSettings.Debug_SlotName] = "Debug_CLMaker_Slot";
-        cache.settings[LauncherSettings.Debug_Patch] = "";
-        cache.settings[LauncherSettings.Debug_baseLauncher] = "";
-        cache.isGame = true;
 
 
         if (ApworldPath.Text != null && ApworldPath.Text != "")

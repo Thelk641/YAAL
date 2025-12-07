@@ -58,7 +58,7 @@ public partial class App : Application
 #if DEBUG
         if(args.Length == 0)
         {
-            args = new string[5] { "--restore", "--async", "Test", "--slot", "Masaru" };
+            //args = new string[5] { "--restore", "--async", "Test", "--slot", "Masaru" };
             //args = new string[7] {"--restore", "--async", "Pingu ER", "--slot", "Masaru_FF", "--launcher", "\"Text Client\"" };
             //args = new string[1] { "--debug" };
         }
