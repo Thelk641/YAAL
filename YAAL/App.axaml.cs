@@ -268,15 +268,6 @@ public partial class App : Application
         base.OnFrameworkInitializationCompleted();
     }
 
-    public void OpenMainWindow(Avalonia.Controls.Window window)
-    {
-        if(ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-        {
-            desktop.MainWindow = window;
-            window.Show();
-        }
-    }
-
     private bool ParseArgs(string name, string value)
     {
         switch (name)
@@ -285,8 +276,10 @@ public partial class App : Application
                 App.Settings.IsReadingError = true;
                 if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
                 {
+                    base.OnFrameworkInitializationCompleted();
                     ErrorManager.ReadError(value, desktop);
                 }
+
                 return false;
             case "launcher":
                 launcher = value;
