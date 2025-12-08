@@ -4,9 +4,9 @@ Using the "Settings" button in the CLMaker window, you can set some launcher-spe
 
 - launcherName : This is what you'll see on the main window, it's used to identify this particular launcher and can be set to anything that you'd find meaningfull
 
-- gameName : This should be set to the game's name as it appears in yaml. Right now, this is only used if you want to copy a patch (for example, for Factorio, the patch is a mod you need to copy in two different folders), if you do, the launcher will go through every launcher and, if they share this gameName, tell them that a new patch has been put there, letting them know that if they want to open, they'll need to remove it first (this can be useful if, for example, a game's apworld has two completely different version, like a normal one and someone's fork, and you've set two different launchers to each of those branches)
+- gameName : This should be set to the game's name as it appears in yaml. This is used to filter launchers on the main window, but also to ensure two launchers for the same game are aware of each other : if you want to copy a patch (for example, for Factorio, the patch is a mod you need to copy in two different folders) the launcher will go through every launcher and, if they share this gameName, tell them that a new patch has been put there, letting them know that if they want to open, they'll need to remove it first (this can be useful if, for example, a game's apworld has two completely different version, like a normal one and someone's fork, and you've set two different launchers to each of those branches)
 
-- githubURL : Set this to the /releases page of this game's apworld's dev to be able to automatically check for update and download said update
+- githubURL : Set this to the /releases page of this game's apworld's dev to be able to automatically check for updates
 
 - filters : This lets you define what, in a release, you'll want to download, instead of downloading every single file. There are two ways to define a filter, you can put the full filename (ex : S3AP.zip) or extensions (ex : .apworld)
 
