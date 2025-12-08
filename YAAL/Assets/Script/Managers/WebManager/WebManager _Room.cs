@@ -166,6 +166,11 @@ public static partial class WebManager
 
     public static async Task<Cache_ItemTracker> ParseTrackerItems(string trackerURL)
     {
+        if (!IsValidURL(trackerURL))
+        {
+            return new Cache_ItemTracker();
+        }
+
         Cache_ItemTracker output = new Cache_ItemTracker();
         Dictionary<string, string> parsed = new Dictionary<string, string>();
 
