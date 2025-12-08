@@ -1,6 +1,8 @@
 # Settings are variable
 
-From a code point of view this is obvious, but it's also true from a user point of view. In an instruction, if you write ${settingName} and settingName does exists, it will be replaced by its value when the launcher is executed. This is done recursively, so you can have settings containing other settings and in fact, one of the default one is already setup that way.
+From a code point of view this is obvious, but it's also true from a user point of view. In an instruction, if you write ${settingName} and settingName does exists, it will be replaced by its value when the launcher is executed. This is done recursively, so you should be able to have settings containing other settings if you want to.
+
+While writting text may be the best way to input most settings, for some YAAL can switch to better input method, by pressing the cogwheel icon next to a setting it'll try to find said better input (true/false method or color input). Pick "Manual" to go back to text from binary, click the cogwheel again to go back to it from the color input mode.
 
 # Type of Settings and read order
 
@@ -21,24 +23,42 @@ These are all used somewhere in YAAL's code, and therefore can't be erased or re
 
 ### General Settings
 
-- apfolder : automatically set when aplauncher is changed
-- aplauncher
+- aplauncher : necessary for the Patch command to work
+- sharpness multiplier : used by the custom theme maker
+- zoom : scales every window, defaults to 1
+
+- backgroundColor : used for the entire app's theme
+- foregroundColor : used for the entire app's theme
+- buttonColor : used for the entire app's theme
+
+These are all shortcuts automatically set for you. Every "lua_" shortcut is replaced by "--lua="apfolder/data/lua/connector_name.lua""
+- apfolder : set when aplauncher is changed
+- lua_adventure
+- lua_bizhawk
+- lua_ladx
+- lua_mmbn3
+- lua_oot
+- lua_tloz
 
 ### Async Settings
 
 - asyncName
+- cheeseURL : if you set a roomURL, automatically provides the cheesetracker link for that room
 - password : default to None, which works if no password was set
-- room
-- roomIP : set when room setting is changed (if the room is "archipelago.gg:12345", this will be "archipelago.gg")
+- room : "archipelago.gg:12345"
+- roomAddress : set when room setting is changed (if the room is "archipelago.gg:12345", this will be "archipelago.gg")
 - roomPort : set when room setting is changed (if the room is "archipelago.gg:12345", this will be "12345")
+- roomURL
 
 ### Slot Settings
 
 - baseLauncher (see Tools.md)
+- connect : gets automatically replaced by "--connect slotName:password@roomAddress:roomPort"
 - patch
 - rom : set by the Patch instruction
 - slotName
-- slotInfo : defaults to "${slotName}:${password}@${room}"
+- slotInfo : automatically replaced by "slotname:password@roomAddress:roomPort"
+- slotTracker : if the roomURL is set, contains the link to the webtracker for this slot
 - version
 
 ### Launcher Settings
