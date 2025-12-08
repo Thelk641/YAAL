@@ -13,7 +13,7 @@
 		Name="Window"
 		>
 	<LayoutTransformControl x:Name="Controller">
-		<Border Margin="8" Padding="8" Name="TrueBackground">
+		<Border Padding="8" Name="TrueBackground">
 			<Grid RowDefinitions="30,8,2,8,*">
 				<Grid Grid.Row="0" ColumnDefinitions="*,8,30,8,30">
 					<TextBox

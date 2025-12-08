@@ -60,6 +60,7 @@ public partial class SlotHolder : UserControl
         IOManager.UpdatedLauncher += (string updatedLauncher) =>
         {
             UpdateAvailableSlot();
+            UpdateAvailableVersions();
         };
 
         AutoTheme.SetTheme(Transparent1, ThemeSettings.transparent);

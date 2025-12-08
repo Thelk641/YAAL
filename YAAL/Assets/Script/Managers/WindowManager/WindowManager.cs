@@ -54,7 +54,6 @@ namespace YAAL
 
         public static Window OpenWindow(WindowType windowType, Window? source)
         {
-            // This will need adjusting once everything is a scalable window
             Window window;
             switch (windowType)
             {

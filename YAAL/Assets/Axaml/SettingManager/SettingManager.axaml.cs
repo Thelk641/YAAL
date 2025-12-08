@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.CompilerServices;
 using YAAL.Assets.Scripts;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using static YAAL.GeneralSettings;
@@ -92,6 +93,7 @@ public partial class SettingManager : ScalableWindow
         }
         _clmaker.ParseSettings(launcherSettings);
         _clmaker.ParseSettings(customSettings);
+        _clmaker.CustomSettings.IsVisible = true;
         return _clmaker;
     }
 
@@ -148,10 +150,6 @@ public partial class SettingManager : ScalableWindow
         if (LauncherSettingContainer.Children.Count == 0)
         {
             LauncherSettings.IsVisible = false;
-        }
-        if (CustomSettingContainer.Children.Count == 0)
-        {
-            CustomSettings.IsVisible = false;
         }
         if (OtherSettingContainer.Children.Count == 0)
         {

@@ -291,7 +291,6 @@ public partial class CLMakerWindow : ScalableWindow
 
     public void DeleteLauncher(object? sender, RoutedEventArgs e)
     {
-        //TODO : this needs looking at, cf Pingu async feedback
         if(LauncherSelector.SelectedItem is Cache_DisplayLauncher cache)
         {
             ConfirmationWindow confirm = new ConfirmationWindow(cache.name);

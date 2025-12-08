@@ -36,6 +36,7 @@ namespace YAAL
             }
 
             SaveCache<Cache_LauncherList>(GetSaveLocation(FileSettings.launcherList), launcherList);
+            libraryCustomLauncher[toSave.selfsettings[LauncherSettings.launcherName]] = cache;
             UpdateLauncherList();
             UpdatedLauncher?.Invoke(toSave.selfsettings[LauncherSettings.launcherName]);
 

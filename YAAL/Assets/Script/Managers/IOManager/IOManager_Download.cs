@@ -88,6 +88,8 @@ namespace YAAL
                 }
                 CopyVersionToWorkingDirectory(newCache, gameName, version);
             }
+
+            UpdatedLauncher?.Invoke(gameName);
         }
 
         public static void UpdateVersion(string gameName, string version, List<string> files)

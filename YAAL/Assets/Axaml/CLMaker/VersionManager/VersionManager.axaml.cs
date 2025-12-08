@@ -24,6 +24,7 @@ public partial class VersionManager : ScalableWindow
     public VersionManager()
     {
         InitializeComponent();
+        AutoTheme.SetTheme(TrueBackground, ThemeSettings.backgroundColor);
 
         AddFile.Click += (_, _) =>
         {
@@ -49,10 +50,6 @@ public partial class VersionManager : ScalableWindow
         VersionFile firstVersion = new VersionFile(this);
         filesToAdd.Add(firstVersion);
         FileHolder.Children.Add(firstVersion);
-
-        VersionFile secondVersion = new VersionFile(this);
-        filesToAdd.Add(secondVersion);
-        FileHolder.Children.Add(secondVersion);
     }
 
     public VersionManager(string game, string versionName) : this()
