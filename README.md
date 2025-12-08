@@ -12,7 +12,9 @@ Finally, remember that, while having these features in another software is *(in 
 
 ## Now that you're ready, how do you use YAAL ?
 
-Here's a few docs to teach you everything this software can do :
+If you don't know where to start : [here's the quick guide](https://github.com/Thelk641/YAAL/blob/master/Docs/Quick%20start)
+
+If you want to go farther, here's the rest of the documentation :
 - [Command line arguments](https://github.com/Thelk641/YAAL/blob/master/Docs/Command%20line%20arguments.md)
 - [Custom Launchers](https://github.com/Thelk641/YAAL/blob/master/Docs/Custom%20Launcher.md)
 - [Settings](https://github.com/Thelk641/YAAL/blob/master/Docs/Settings.md)
