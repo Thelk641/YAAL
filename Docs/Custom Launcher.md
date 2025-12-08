@@ -57,6 +57,16 @@ You are allowed to :
 - Set as many keys to look for as you want, it will attach to all process with each of the selected key
 - Set as many outputs to look for as you want, the first one to be found will trigger the auto-restore
 
+## - Display
+### Function
+Lets you show any text (including setting value). "Tag" are just showed as text, "value" are showed as a button that puts its text into your copy/paste buffer. Both the "tag" and "value" field are parsed with settings, so if you put something like ${slotInfo} in there it will be replaced with that slot's information.
+
+### Options and notes
+None.
+
+### List limitations
+None.
+
 ## - Isolate
 
 ### Function
@@ -80,6 +90,8 @@ The "Variable name" field lets you create a keyed process. These process can be 
 This comes with a few limitations :
 - if you're trying to open a URL, you can just give it in the first field, without any args, and it'll open. Be aware that, while this will work, it requires the OS to resolve it, which means you can't read its output, and I'm not sure you can look for process exit either, so just to be safe, I've added an error if you try to do so. **This can fail silently**, so, if you want to open a URL and use it as a keyed process to trigger auto-restores, give it the path to a browser and give the URL as an argument instead
 - .lnk files are allowed only on Windows, these files are Windows-only anyway, but they're a pain to work with on non-Windows OS so for now, the only solution I've found is to ban you from opening them with YAAL, one day I plan on solving this, but it'll have to wait
+
+Finally, you can ask it to redirect the output of whatever you're opening. This is only useful if you're using a Backup command reading said output, and only works with windowed application as opening anything that isn't an application requires the OS to handle it (and therefore be responsible for the output). In 99% of cases you won't need it.
 
 ### List limitations
 If you provide more than one key, you must provide one key per file to open.
@@ -107,8 +119,8 @@ Lets you edit variable or files using Regular Expressions
 
 ### Options and notes
 Pretty explicit. Here are two useful patterns to get you started :
-- "^.*\\([^\\]+)\.gbc$" => will find and extract the fileName before the .gbc extension, set replacement to $1.SaveRAM to get bizhawk's save name, or add the full path to bizhawk's save folder before that and you'll get the full path, ready to be used with Backup to ensure a corrupted save doesn't force you to do it all again
-- "localhost|archipelago\.gg:\d+" => will find the room IP, be it "localhost" or "archipelago.gg:12345", in case you need to find and replace this in a mod file
+- "^.*\\([^\\]+)\.gbc$" => will find and extract the fileName before the .gbc extension, set replacement to "$1.SaveRAM" to get bizhawk's save name, or add the full path to bizhawk's save folder before that and you'll get the full path, ready to be used with Backup to ensure a corrupted save doesn't force you to do it all again
+- "localhost|archipelago\.gg:\d+" => will find the room address, be it "localhost" or "archipelago.gg:12345", in case you need to find and replace this in a mod file
 
 ### List limitations
 You are allowed to :
