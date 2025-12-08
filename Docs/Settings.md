@@ -1,8 +1,8 @@
 # Settings are variable
 
-From a code point of view this is obvious, but it's also true from a user point of view. In an instruction, if you write ${settingName} and settingName does exists, it will be replaced by its value when the launcher is executed. This is done recursively, so you should be able to have settings containing other settings if you want to.
+From a code point of view this is obvious, but it's also true from a user point of view. In an instruction, if you write ${settingName} and settingName does exist, it will be replaced by its value when the launcher is executed. This is done recursively, so you should be able to have settings containing other settings if you want to.
 
-While writting text may be the best way to input most settings, for some YAAL can switch to better input method, by pressing the cogwheel icon next to a setting it'll try to find said better input (true/false method or color input). Pick "Manual" to go back to text from binary, click the cogwheel again to go back to it from the color input mode.
+While writing text may be the best way to input most settings, for some YAAL can switch to better input method, by pressing the cogwheel icon next to a setting it'll try to find said better input (true/false method or color input). Pick "Manual" to go back to text from binary, click the cogwheel again to go back to it from the color input mode.
 
 # Type of Settings and read order
 
@@ -13,7 +13,7 @@ In YAAL, settings are divided in four groups :
 - Launcher Settings, using the "Settings" button in the CLMaker window 
 - Temporary Settings, via the RegEx instruction in a launcher
 
-Before executing a custom launcher, the first three category will be read, **in that order**. This means that if you set a Launcher Setting to the same name as a General Setting, it will override it, letting you for example define a general aplauncher, and then define a different one in a launcher that is using a different Archipelago version. 
+Before executing a custom launcher, the first three categories will be read, **in that order**. This means that if you set a Launcher Setting to the same name as a General Setting, it will override it, letting you for example define a general aplauncher, and then define a different one in a launcher that is using a different Archipelago version. 
 
 If you create a new setting in the general settings manager, it'll be treated as a General Setting, while if you do it on the launcher settings manager, it'll be treated as a Launcher Setting. Settings set by the RegEx instruction override everything else.
 
