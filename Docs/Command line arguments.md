@@ -2,7 +2,7 @@ YAAL comes with a few useful command line arguments. They each follow the same p
 
 ### "--restore"
 
-Automatically restores both apworlds and any backedup file. Very useful if you somehow got an error during Backup or set it wrong. Note that this doesn't stop the normal launch process, so you can integrate it with the next arguments if you want to restore only on launch, or just use it on its own to automatically restore and then open YAAL normally.
+Automatically restores both apworlds and any backed-up file. Very useful if you somehow got an error during Backup or set it wrong. Note that this doesn't stop the normal launch process, so you can integrate it with the next arguments if you want to restore only on launch, or just use it on its own to automatically restore and then open YAAL normally.
 
 ### "--slot *slotName*" and "--async *asyncName*"
 
