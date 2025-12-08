@@ -1,4 +1,6 @@
-# Custom Launcher settings
+# General Information
+
+## Settings
 
 Using the "Settings" button in the CLMaker window, you can set some launcher-specific settings. These will be read after the General and Async / Slot Settings, and will override them. Launchers comes with the following settings by default :
 
@@ -12,15 +14,21 @@ Using the "Settings" button in the CLMaker window, you can set some launcher-spe
 
 You can also set custom variable. Do note that, if you set a variable to "True" or "False", the next time you open the Settings Manager, the text field will be replaced by a dropdown. If that happens and wasn't intended, go into YAAL/ManagedApworlds/LauncherName/launcher.json and edit that setting manually.
 
-# Game or tool ?
+## Game or tool ?
 
 At the bottom left of the CLMaker window is a setting to note if a launcher is a game or a tool. Each slot is meant to have only one game, called its base launcher (ex : Minecraft, Factorio etc.), while tools are meant as things that can be openned on any slot (ex : Text Client, Universal Tracker etc.). For more information on tools, see Tools.md.
 
-# Optimisation
+## Optimisation
 
 In my experience, some apworld tend to make opening client or patching a rom very slow, for that reason I've added a way to optimize your folders : they're renamed and only the necessary file are copied back to a temporary folder. YAAL should be clever enough to just stack multiple optimization on top of each other, and only restore your original folders when the last optimization is finished. If a custom launcher breaks, it should auto-restore to ensure that it doesn't do any damage, but, in case it fails to do so, your folders can be found in your Archipelago folder, just renamed as custom_world_old and worlds_old.
 
-# Security
+## Conditions and more advanced features
+
+Sadly, YAAL was made as a purely linear tool, instruction A is done, if it succeeds, instruction B is done and so on. There's no conditions, no fork, no jump, it's way easier to make it work like that but YAAL comes with one feature that would let you do this if you wanted to : whenever you open a game, YAAL just launches another instance of itself with the right command line arguments, which you also can do.
+
+I know that "if you want it, do it yourself" is not exactly the answer you might be looking for, but it's sadly the best one I can provide.
+
+## Security
 
 YAAL is not allowed to delete file unless it's to replace them instantly. If you ask it to delete an async for example, it won't, it'll just move it to its "Trash" folder, same thing for slots or versions. That doesn't mean you should trust me or my code : especially when trying a new launcher, please backup your files manually before letting YAAL play with them.
 
