@@ -16,13 +16,23 @@ You can also set custom variable. Do note that, if you set a variable to "True" 
 
 At the bottom left of the CLMaker window is a setting to note if a launcher is a game or a tool. Each slot is meant to have only one game, called its base launcher (ex : Minecraft, Factorio etc.), while tools are meant as things that can be openned on any slot (ex : Text Client, Universal Tracker etc.). For more information on tools, see Tools.md.
 
+# Optimisation
+
+In my experience, some apworld tend to make opening client or patching a rom very slow, for that reason I've added a way to optimize your folders : they're renamed and only the necessary file are copied back to a temporary folder. YAAL should be clever enough to just stack multiple optimization on top of each other, and only restore your original folders when the last optimization is finished. If a custom launcher breaks, it should auto-restore to ensure that it doesn't do any damage, but, in case it fails to do so, your folders can be found in your Archipelago folder, just renamed as custom_world_old and worlds_old.
+
+# Security
+
+YAAL is not allowed to delete file unless it's to replace them instantly. If you ask it to delete an async for example, it won't, it'll just move it to its "Trash" folder, same thing for slots or versions. That doesn't mean you should trust me or my code : especially when trying a new launcher, please backup your files manually before letting YAAL play with them.
+
+Also, it's been said before but : launchers are a simple json file, they're easy to share, but, if you use someone else's launchers, at least take the time to ensure that you know what it does so you avoid nasty surprises.
+
 # Instructions
 
 If an instruction has a text field, it can take multiple inputs, written as "item1";"item2" and so on. You can add space in-between them, it'll clear them out. If you want to add an empty input, add a space in-between the quotes, " ", or it might bug out (the space will be removed during during run time).
 
 ## - Apworld
 ### Function
-Defines and apply versionning to a file (including but not limited to .apworld)
+Defines and apply versionning to a file (including but not limited to .apworld) until a condition is met
 
 ### Options and notes
 The "Stricly necessary" tickbox is only relevant if the file can't be found. If ticked, the launcher will error out, if not, it'll ignore this file and move on.
@@ -109,6 +119,8 @@ This instruction has two modes :
 - CopyPatch will first check if a patch exists in the target folder(s), and delete them if they do, ensuring that you only ever have one patch copies there. The information of "what is the last patch copied to X ?" will be saved and transmitted to every other Custom Launcher that share this launcher's gameName, so if you have multiple launchers for the same game, they won't bug each other out.
 
 The option to rename the patch is there for Bizhawk : if you wanted to backup your rom game save (just in case they got corrupted at some point), you'd need to get the name of the save, but annoyingly Bizhawk saves names are not always one-to-one with rom names (in particular, it replaces dashes with spaces). Using RegEx to solve this is a solution, but then you'll need to apply it only to the filename and then use another RegEx to put them back together, instead, YAAL lets you automatically renames them. Sadly, some game don't tolerate you renaming the patch, so for this, just leave it empty and it won't rename them.
+
+If you use the "optimize" option, it will only optimize your apworld folders for the duration of the patch, they'll be restored as soon as it's done.
 
 ### List limitations
 None.
