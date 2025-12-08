@@ -173,6 +173,7 @@ public partial class SettingManager : ScalableWindow
             {
                 newSetting = new Setting(item.Key, item.Value, canBeEdited);
                 GeneralSettingContainer.Children.Add(newSetting);
+                newSetting.RequestRemoval += () => { GeneralSettingContainer.Children.Remove(newSetting); };
                 continue;
             }
 
@@ -180,11 +181,13 @@ public partial class SettingManager : ScalableWindow
             {
                 newSetting = new Setting(item.Key, item.Value, canBeEdited);
                 LauncherSettingContainer.Children.Add(newSetting);
+                newSetting.RequestRemoval += () => { LauncherSettingContainer.Children.Remove(newSetting); };
                 continue;
             }
 
             newSetting = new Setting(item.Key, item.Value);
             CustomSettingContainer.Children.Add(newSetting);
+            newSetting.RequestRemoval += () => { CustomSettingContainer.Children.Remove(newSetting); };
         }
         SortOtherSettings();
         HideEmptyCategories();
@@ -297,12 +300,9 @@ public partial class SettingManager : ScalableWindow
             }
         }
 
-        Debug.WriteLine("Children count : " + OtherSettingContainer.Children.Count + " / Ordered count : " + orderedList.Count);
-
         for (int i = 0; i < orderedList.Count; i++)
         {
             int index = OtherSettingContainer.Children.IndexOf(orderedList[i]);
-            Debug.WriteLine("Old : " + index + " / New : " + i);
             OtherSettingContainer.Children.Move(OtherSettingContainer.Children.IndexOf(orderedList[i]), i);
         }
     }
