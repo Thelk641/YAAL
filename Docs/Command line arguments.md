@@ -16,5 +16,6 @@ Used on its own, this will open the CLMaker window directly set on this particul
 
 Closes the software as soon as its read. Useful if you want to --restore and then immediately quit.
 
+### "--debug"
 
-
+Prints all my debug.WriteLine() to a file. Might be useful down the line ?
