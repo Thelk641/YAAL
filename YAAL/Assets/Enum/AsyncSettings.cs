@@ -11,7 +11,7 @@ namespace YAAL
         asyncName,
         roomURL,
         password,
-        roomIP,
+        roomAddress,
         roomPort,
         isHidden,
         cheeseURL,

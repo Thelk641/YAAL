@@ -29,6 +29,7 @@
 					Content="Theme editor"
 					HorizontalAlignment="Stretch"
 					HorizontalContentAlignment="Center"
+					IsVisible="False"
 					/>
 				<Button
 					Grid.Column="4"

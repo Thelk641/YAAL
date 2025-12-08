@@ -15,7 +15,7 @@ namespace YAAL
             {asyncName, "" },
             {roomURL, ""},
             {password, "None" },
-            {roomIP, "" },
+            {roomAddress, "" },
             {roomPort, "" },
             {isHidden, false.ToString() }
         };
@@ -39,16 +39,16 @@ namespace YAAL
 
             if (match.Success)
             {
-                settings[roomIP] = match.Groups["host"].Value;
+                settings[roomAddress] = match.Groups["host"].Value;
                 settings[roomPort] = match.Groups["port"].Value;
             }
             else
             {
-                settings[roomIP] = room;
+                settings[roomAddress] = room;
                 settings[roomPort] = "";
             }
 
-            if (settings[roomIP] == "localhost")
+            if (settings[roomAddress] == "localhost")
             {
                 // this is the default port
                 settings[roomPort] = "38281";

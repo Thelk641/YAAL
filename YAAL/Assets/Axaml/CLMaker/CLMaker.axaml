@@ -298,6 +298,7 @@
 				VerticalAlignment="Stretch"
 				HorizontalAlignment="Stretch"
 				ToolTip.Tip="Custom theme, select 'None' to use the general theme"
+				IsVisible="False"
 				/>
 			<Button 
 				Name="OpenTestWindow" 

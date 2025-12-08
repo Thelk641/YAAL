@@ -191,7 +191,7 @@ namespace YAAL
             cache.previousAsync = this.settings[AsyncSettings.asyncName] ?? "";
             cache.previousSlot = this.settings[slotName] ?? "";
             cache.previousVersion = this.settings[version] ?? "";
-            cache.previousRoom = this.settings[AsyncSettings.roomIP] ?? "" + ":" + this.settings[AsyncSettings.roomPort] ?? "";
+            cache.previousRoom = this.settings[AsyncSettings.roomAddress] ?? "" + ":" + this.settings[AsyncSettings.roomPort] ?? "";
             cache.previousPort = this.settings[AsyncSettings.roomPort] ?? "";
 
             List<string> splitTarget = customLauncher.SplitString(this.InstructionSetting[target]);

@@ -112,7 +112,7 @@ public class CustomLauncher
             previousSlot = this.settings[slotName] ?? "",
             previousPatch = this.settings[patch] ?? "",
             previousVersion = this.settings[version] ?? "",
-            previousRoom = this.settings[roomIP] ?? "" + ":" + this.settings[roomPort] ?? "",
+            previousRoom = this.settings[roomAddress] ?? "" + ":" + this.settings[roomPort] ?? "",
             previousPort = this.settings[roomPort] ?? ""
         };
 
@@ -450,7 +450,7 @@ public class CustomLauncher
                                         + ":"
                                         + settings[password]
                                         + "@"
-                                        + settings[roomIP]
+                                        + settings[roomAddress]
                                         + ":"
                                         + settings[roomPort]
                                         + "\"";
@@ -465,7 +465,7 @@ public class CustomLauncher
                                         + ":"
                                         + settings[password]
                                         + "@"
-                                        + settings[roomIP]
+                                        + settings[roomAddress]
                                         + ":"
                                         + settings[roomPort]
                                         + "\"";
