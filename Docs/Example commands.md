@@ -5,6 +5,7 @@ Remember that Open treats both its "file to open" and "arguments" field as a sin
 ## Archipelago clients
 
 *${aplauncher} -- "client name" ${connect}*
+
 (write the client name as it's shown on the Archipelago Launcher, so "Bizhawk Client", "Starcraft 2 Client" etc.)
 
 ## Bizhawk (generic)
