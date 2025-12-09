@@ -4,9 +4,9 @@
 
 Using the "Settings" button in the CLMaker window, you can set some launcher-specific settings. These will be read after the General and Async / Slot Settings, and will override them. Launchers comes with the following settings by default :
 
-- launcherName : This is what you'll see on the main window, it's used to identify this particular launcher and can be set to anything that you'd find meaningfull
+- launcherName : This is what you'll see on the main window, it's used to identify this particular launcher and can be set to anything that you'd find meaningful
 
-- gameName : This should be set to the game's name as it appears in yaml. This is used to filter launchers on the main window, but also to ensure two launchers for the same game are aware of each other : if you want to copy a patch (for example, for Factorio, the patch is a mod you need to copy in two different folders) the launcher will go through every launcher and, if they share this gameName, tell them that a new patch has been put there, letting them know that if they want to open, they'll need to remove it first (this can be useful if, for example, a game's apworld has two completely different version, like a normal one and someone's fork, and you've set two different launchers to each of those branches)
+- gameName : This should be set to the game's name as it appears in yaml. This is used to filter launchers on the main window, but also to ensure two launchers for the same game are aware of each other : if you want to copy a patch (for example, for Factorio, the patch is a mod you need to copy in two different folders) the launcher will go through every launcher and, if they share this gameName, tell them that a new patch has been put there, letting them know that if they want to open, they'll need to remove it first (this can be useful if, for example, a game's apworld has two completely different versions, like a normal one and someone's fork, and you've set two different launchers to each of those branches)
 
 - githubURL : Set this to the /releases page of this game's apworld's dev to be able to automatically check for updates
 
@@ -16,7 +16,7 @@ You can also set custom variable. Do note that, if you set a variable to "True" 
 
 ## Game or tool ?
 
-At the bottom left of the CLMaker window is a setting to note if a launcher is a game or a tool. Each slot is meant to have only one game, called its base launcher (ex : Minecraft, Factorio etc.), while tools are meant as things that can be openned on any slot (ex : Text Client, Universal Tracker etc.). For more information on tools, see Tools.md.
+At the bottom left of the CLMaker window is a setting to note if a launcher is a game or a tool. Each slot is meant to have only one game, called its base launcher (ex : Minecraft, Factorio etc.), while tools are meant as things that can be opened on any slot (ex : Text Client, Universal Tracker etc.). For more information on tools, see Tools.md.
 
 ## Optimisation
 
@@ -24,7 +24,7 @@ In my experience, some apworld tend to make opening client or patching a rom ver
 
 ## Conditions and more advanced features
 
-Sadly, YAAL was made as a purely linear tool, instruction A is done, if it succeeds, instruction B is done and so on. There's no conditions, no fork, no jump, it's way easier to make it work like that but YAAL comes with one feature that would let you do this if you wanted to : whenever you open a game, YAAL just launches another instance of itself with the right command line arguments, which you also can do.
+Sadly, YAAL was made as a purely linear tool, instruction A is done, if it succeeds, instruction B is done and so on. There are no conditions, no fork, no jump, it's way easier to make it work like that but YAAL comes with one feature that would let you do this if you wanted to : whenever you open a game, YAAL just launches another instance of itself with the right command line arguments, which you also can do.
 
 I know that "if you want it, do it yourself" is not exactly the answer you might be looking for, but it's sadly the best one I can provide.
 
@@ -36,14 +36,14 @@ Also, it's been said before but : launchers are a simple json file, they're easy
 
 # Instructions
 
-If an instruction has a text field, it can take multiple inputs, written as "item1";"item2" and so on. You can add space in-between them, it'll clear them out. If you want to add an empty input, add a space in-between the quotes, " ", or it might bug out (the space will be removed during during run time).
+If an instruction has a text field, it can take multiple inputs, written as "item1";"item2" and so on. You can add space in-between them, it'll clear them out. If you want to add an empty input, add a space in-between the quotes, " ", or it might bug out (the space will be removed during run time).
 
 ## - Apworld
 ### Function
-Defines and apply versionning to a file (including but not limited to .apworld) until a condition is met
+Defines and apply versioning to a file (including but not limited to .apworld) until a condition is met
 
 ### Options and notes
-The "Stricly necessary" tickbox is only relevant if the file can't be found. If ticked, the launcher will error out, if not, it'll ignore this file and move on.
+The "Strictly necessary" tickbox is only relevant if the file can't be found. If ticked, the launcher will error out, if not, it'll ignore this file and move on.
 
 Do note that, when replacing a file to the Slot's version, it will delete the file that was there before. This is the only instruction allowed to do that, and it will only do that to replace a file, it won't ever delete a file it can't immediately replace.
 
@@ -109,7 +109,7 @@ This comes with a few limitations :
 - if you're trying to open a URL, you can just give it in the first field, without any args, and it'll open. Be aware that, while this will work, it requires the OS to resolve it, which means you can't read its output, and I'm not sure you can look for process exit either, so just to be safe, I've added an error if you try to do so. **This can fail silently**, so, if you want to open a URL and use it as a keyed process to trigger auto-restores, give it the path to a browser and give the URL as an argument instead
 - .lnk files are allowed only on Windows, these files are Windows-only anyway, but they're a pain to work with on non-Windows OS so for now, the only solution I've found is to ban you from opening them with YAAL, one day I plan on solving this, but it'll have to wait
 
-Finally, you can ask it to redirect the output of whatever you're opening. This is only useful if you're using a Backup command reading said output, and only works with windowed application as opening anything that isn't an application requires the OS to handle it (and therefore be responsible for the output). In 99% of cases you won't need it.
+Finally, you can ask it to redirect the output of whatever you're opening. This is only useful if you're using a Backup command reading said output, and only works with windowed applications as opening anything that isn't an application requires the OS to handle it (and therefore be responsible for the output). In 99% of case you won't need it.
 
 ### List limitations
 If you provide more than one key, you must provide one key per file to open.
@@ -122,7 +122,7 @@ Apply or copys patch files
 ### Options and notes
 This instruction has two modes :
 
-- Applying the patch uses the YAAL.apworld, which you must put in custom_worlds for this to work (it will error out if you don't). The "Isolate apworlds" tickbox does the same thing as the Isolate instruction does, except if you tik it, it'll auto-restore as soon as the patching is done, doesn't matter if it is successfull or not.
+- Applying the patch uses the YAAL.apworld, which you must put in custom_worlds for this to work (it will error out if you don't). The "Isolate apworlds" tickbox does the same thing as the Isolate instruction does, except if you tik it, it'll auto-restore as soon as the patching is done, doesn't matter if it is successful or not.
 
 - CopyPatch will first check if a patch exists in the target folder(s), and delete them if they do, ensuring that you only ever have one patch copies there. The information of "what is the last patch copied to X ?" will be saved and transmitted to every other Custom Launcher that share this launcher's gameName, so if you have multiple launchers for the same game, they won't bug each other out.
 
@@ -150,4 +150,4 @@ You are allowed to :
 - Give 1 output file, or at least one per source (if you give more than that, they'll be ignored)
 - Give 1 output variable, or at least one per source (if you give more than that, they'll be ignored)
 
-If you give more than one input and either a single output, or repeat the output multiple time, they'll be simply concatenated with a semicolon (";") in-between each result. Do note that this doesn't automatically adds quotes ("") around results, so if you want to chain them and need them to stay split (for example, reading two different files, making the same edit twice, then making a difference edit on each of them and saving them separatly) you must output to different variable as the concatenated result won't match the criteria for automatic split.
+If you give more than one input and either a single output, or repeat the output multiple time, they'll be simply concatenated with a semicolon (";") in-between each result. Do note that this doesn't automatically adds quotes ("") around results, so if you want to chain them and need them to stay split (for example, reading two different files, making the same edit twice, then making a difference edit on each of them and saving them separately) you must output to different variable as the concatenated result won't match the criteria for automatic split.
