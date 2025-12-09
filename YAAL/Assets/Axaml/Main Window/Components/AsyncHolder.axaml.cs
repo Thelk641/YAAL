@@ -129,6 +129,7 @@ public partial class AsyncHolder : UserControl
         thisAsync.room = await WebManager.GetRoomPort(thisAsync.room);
         thisAsync.settings[roomAddress] = thisAsync.room.IP;
         thisAsync.settings[roomPort] = thisAsync.room.port;
+        thisAsync.settings[room] = thisAsync.room.IP + ":" + thisAsync.room.port;
         thisAsync.settings[cheeseURL] = thisAsync.room.cheeseTrackerURL;
         Debouncer.ForceDebounce(Save);
     }
@@ -249,6 +250,7 @@ public partial class AsyncHolder : UserControl
         toSave.settings[roomAddress] = thisAsync.settings[roomAddress];
         toSave.settings[roomPort] = thisAsync.settings[roomPort];
         toSave.settings[cheeseURL] = thisAsync.settings[cheeseURL];
+        toSave.settings[room] = thisAsync.settings[room];
         toSave.room = thisAsync.room;
 
 

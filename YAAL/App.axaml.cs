@@ -59,7 +59,7 @@ public partial class App : Application
 #if DEBUG
         if(args.Length == 0)
         {
-            //args = new string[5] { "--restore", "--async", "Pingu ER", "--slot", "Masaru The Drago" };
+            //args = new string[5] { "--restore", "--async", "New async", "--slot", "Masaru_linked" };
             //args = new string[7] {"--restore", "--async", "Pingu ER", "--slot", "Masaru_FF", "--launcher", "\"Text Client\"" };
             //args = new string[1] { "--debug" };
         }

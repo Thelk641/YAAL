@@ -553,6 +553,17 @@ public partial class SlotHolder : UserControl
         List<Cache_DisplaySlot> possibleSlots = new List<Cache_DisplaySlot>();
         Cache_DisplaySlot selected = null;
 
+        if (room.slots.Count == 0) {
+            Cache_RoomSlot emptySlot = new Cache_RoomSlot();
+            emptySlot.slotName = "None";
+
+            Cache_DisplaySlot empty = new Cache_DisplaySlot();
+            empty.SetSlot(emptySlot);
+
+            possibleSlots.Add(empty);
+            return;
+        }
+
         if (filteredSlots.Count > 0)
         {
             Cache_DisplaySlot header = new Cache_DisplaySlot();
@@ -589,17 +600,6 @@ public partial class SlotHolder : UserControl
             {
                 selected = toAdd;
             }
-        }
-
-        if(possibleSlots.Count == 0)
-        {
-            Cache_RoomSlot emptySlot = new Cache_RoomSlot();
-            emptySlot.slotName = "None";
-
-            Cache_DisplaySlot empty = new Cache_DisplaySlot();
-            empty.SetSlot(emptySlot);
-
-            possibleSlots.Add(empty);
         }
 
         if(SlotSelector.ItemsSource is List<Cache_DisplaySlot> oldList)

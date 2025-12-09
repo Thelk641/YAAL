@@ -162,13 +162,24 @@ namespace YAAL
 
         public static string ProcessLocalPath(string originalPath)
         {
-            if (originalPath.StartsWith("./"))
+            try
             {
-                string relativePath = originalPath.Substring(2);
-                string fullPath = Path.GetFullPath(relativePath, baseDirectory);
-                return fullPath;
-            } else
+                if (originalPath.StartsWith("./"))
+                {
+                    string relativePath = originalPath.Substring(2);
+                    string fullPath = Path.GetFullPath(relativePath, baseDirectory);
+                    return fullPath;
+                }
+                else
+                {
+                    return originalPath;
+                }
+            }
+            catch (Exception e)
             {
+                ErrorManager.ThrowError(
+                        "IOManager - Failed to parse local path",
+                        "Trying to parse local path raised the following exception : " + e.Message);
                 return originalPath;
             }
         }
