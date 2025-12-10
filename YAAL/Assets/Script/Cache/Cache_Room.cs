@@ -11,7 +11,7 @@ namespace YAAL
     public class Cache_Room
     {
         public string URL = "";
-        public string IP = "";
+        public string address = "";
         public string port = "";
         public string cheeseTrackerURL = "";
         public string trackerPageURL = "";

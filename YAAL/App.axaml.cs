@@ -61,6 +61,7 @@ public partial class App : Application
         {
             //args = new string[5] { "--restore", "--async", "New async", "--slot", "Masaru_linked" };
             //args = new string[7] {"--restore", "--async", "Pingu ER", "--slot", "Masaru_FF", "--launcher", "\"Text Client\"" };
+            //args = new string[7] {"--restore", "--async", "_temporary", "--slot", "_temporary", "--launcher", "\"Dice\"" };
             //args = new string[1] { "--debug" };
         }
 #endif
@@ -291,7 +292,7 @@ public partial class App : Application
                 slot = value;
                 break;
             case "restore":
-                Restore();
+                IOManager.RestoreAll();
                 break;
             case "exit":
                 Environment.Exit(0);
@@ -307,29 +308,6 @@ public partial class App : Application
                 break;
         }
         return true;
-    }
-
-    private void Restore()
-    {
-        if (!IOManager.RestoreApworlds())
-        {
-            ErrorManager.ThrowError(
-                    "App - Failed to restore apworlds",
-                    "Something went wrong while trying to restore apworlds directly."
-                    );
-            return;
-        }
-
-        if (!IOManager.RestoreBackups())
-        {
-            ErrorManager.ThrowError(
-                    "App - Failed to restore backups",
-                    "Something went wrong while trying to restore backups directly."
-                    );
-            return;
-        }
-
-        IOManager.ResetBackupList();
     }
 
     static async Task WaitForRestore(CustomLauncher launcher)

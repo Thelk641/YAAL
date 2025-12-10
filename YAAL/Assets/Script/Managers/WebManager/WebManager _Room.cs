@@ -25,12 +25,12 @@ public static partial class WebManager
         output.URL = roomURL;
         if (roomURL == "localhost")
         {
-            output.IP = "localhost";
+            output.address = "localhost";
             output.port = "38281";
             return output;
         }
 
-        output.IP = "archipelago.gg";
+        output.address = "archipelago.gg";
 
         HttpRequestMessage request = new HttpRequestMessage()
         {

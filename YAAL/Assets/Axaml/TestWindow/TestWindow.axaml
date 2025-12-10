@@ -2,19 +2,19 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:local="clr-namespace:YAAL"
         mc:Ignorable="d"
 		Width="300"
-        Height="460"
+        Height="282"
         x:Class="YAAL.TestWindow"
         Title="Test a custom launcher">
 	<LayoutTransformControl x:Name="Controller">
-	<Border Margin="8" HorizontalAlignment="Stretch" Name="TrueBackground">
-		<Grid RowDefinitions="48, 4, 1, 4, 48, 8, 48, 8, 48, 8 48, 8, 48, 8, 48, 4, 1, 4, 30" HorizontalAlignment="Stretch">
+	<Border Padding="8" HorizontalAlignment="Stretch" Name="TrueBackground">
+		<Grid RowDefinitions="30, 4, 1, 4, 120, 8, 46, 4, 1, 4, 30" HorizontalAlignment="Stretch">
 			
 			<Border 
 				Grid.Row="0" 
 				Name="Background_0" 
-				Background="#AAA"
 				BorderBrush="Gray"
 				BorderThickness="1"
 				CornerRadius="4"
@@ -31,177 +31,147 @@
 			</Border>
 			
 			<Separator Grid.Row="2"/>
+
+			<Border 
+				Name="TemporaryAsync" 
+				Grid.Row="4"
+				BorderBrush="Gray"
+				BorderThickness="1"
+				CornerRadius="4"
+				Padding="8"
+				IsVisible="True"
+				>
+				<Grid RowDefinitions="30,8,30,8,30">
+					<Button
+						Name="Temporary"
+						Content="Temporary async"
+						HorizontalAlignment="Center"
+						Grid.Row="0"/>
+
+					<Grid ColumnDefinitions="80,*" Grid.Row="2">
+						<TextBlock 
+							Text="RoomURL : "
+							HorizontalAlignment="Left"
+							VerticalAlignment="Center"
+							/>
+						
+						<TextBox 
+							Name="RoomURL"
+							Grid.Column="1"
+							HorizontalAlignment="Stretch"
+							VerticalAlignment="Center"
+							/>
+					</Grid>
+
+					<Grid ColumnDefinitions="80,*,8,30" Grid.Row="4">
+						<TextBlock
+							Text="Patch : "
+							HorizontalAlignment="Left"
+							VerticalAlignment="Center"
+							/>
+
+						<TextBox
+							Name="Patch"
+							Grid.Column="1"
+							HorizontalAlignment="Stretch"
+							VerticalAlignment="Center"
+							/>
+
+						<Button
+							Name="File"
+							Grid.Column="3"
+							HorizontalAlignment="Stretch"
+							VerticalAlignment="Stretch"
+							local:AutoIcon.Icon="File"
+							local:VisibilityHolder.VisibilityHolder="TemporaryAsync"
+							>
+							<Svg
+								VerticalAlignment="Center"
+								HorizontalAlignment="Center"
+								Width="30"
+							/>
+						</Button>
+					</Grid>
+					
+					
+				</Grid>
+			</Border>
+
+			<Border
+				Name="ExistingAsync"
+				Grid.Row="4"
+				BorderBrush="Gray"
+				BorderThickness="1"
+				CornerRadius="4"
+				Padding="8"
+				IsVisible="False"
+				>
+				<Grid RowDefinitions="30,8,30,8,30">
+					<Button
+						Name="Existing"
+						Content="Existing async"
+						HorizontalAlignment="Center"
+						Grid.Row="0"/>
+
+					<Grid ColumnDefinitions="80,*" Grid.Row="2">
+						<TextBlock
+							Text="Async : "
+							HorizontalAlignment="Left"
+							VerticalAlignment="Center"
+							/>
+
+						<ComboBox 
+							Name="AsyncSelector"
+							HorizontalAlignment="Stretch"
+							Grid.Column="1"
+							/>
+					</Grid>
+
+					<Grid ColumnDefinitions="80,*" Grid.Row="4">
+						<TextBlock
+							Text="Slot : "
+							HorizontalAlignment="Left"
+							VerticalAlignment="Center"
+							/>
+						<ComboBox
+							Name="SlotSelector"
+							HorizontalAlignment="Stretch"
+							Grid.Column="1"
+							/>
+						
+					</Grid>
+
+						
+
+
+				</Grid>
+			</Border>
 			
-			<Border 				
-				Grid.Row="4" 
-				Name="Background_1" 
-				Background="#AAA"
-				BorderBrush="Gray"
-				BorderThickness="1"
-				CornerRadius="4"
-				Padding="8"
-				HorizontalAlignment="Stretch"
-				VerticalAlignment="Stretch"
-				>
-				<Grid ColumnDefinitions="110, 4, *" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-					<TextBlock
-					  Name="_AsyncName"
-					  Text="Async name :"
-					  Grid.Column="0"
-					  VerticalAlignment="Center"
-					  HorizontalAlignment="Left"
-				  />
-					<TextBox
-					  Name="AsyncName"
-					  Grid.Column="2"
-					  VerticalAlignment="Center"
-				  />
-				</Grid>
-			</Border>
-			
-			<Border 				
-				Grid.Row="6" 
-				Name="Background_2" 
-				Background="#AAA"
-				BorderBrush="Gray"
-				BorderThickness="1"
-				CornerRadius="4"
-				Padding="8"
-				HorizontalAlignment="Stretch"
-				VerticalAlignment="Stretch"
-				>
-				<Grid ColumnDefinitions="110, 4, *" VerticalAlignment="Center" HorizontalAlignment="Stretch">
-					<TextBlock
-						Name="_SlotName"
-						Text="Slot's name :"
-						Grid.Column="0"
-						VerticalAlignment="Center"
-						/>
-					<TextBox
-						Name="SlotName"
-						Grid.Column="2"
-						VerticalAlignment="Center"
-						ToolTip.Tip="This should match the 'game' option in the yaml"
-						/>
-				</Grid>
-			</Border>
-
 			<Border
-				Grid.Row="8"
-				Name="Background_3"
-				Background="#AAA"
+				Grid.Row="6"
 				BorderBrush="Gray"
 				BorderThickness="1"
 				CornerRadius="4"
 				Padding="8"
-				HorizontalAlignment="Stretch"
-				VerticalAlignment="Stretch"
 				>
-				<Grid ColumnDefinitions="110, 4, *" VerticalAlignment="Center" HorizontalAlignment="Stretch">
-					<TextBlock
-						Name="_VersionSelect"
-						Text="Version :"
-						Grid.Column="0"
+				<Grid ColumnDefinitions="80,*">
+					<TextBlock 
+						Text="Versions :"
 						VerticalAlignment="Center"
 						/>
-					<ComboBox
-						Name="VersionSelect"
-						Grid.Column="2"
-						VerticalAlignment="Center"
+					
+					<ComboBox 
+						Name="VersionSelector"
 						HorizontalAlignment="Stretch"
+						HorizontalContentAlignment="Center"
+						Grid.Column="1"
 						/>
 				</Grid>
 			</Border>
 
-			<Border
-				Grid.Row="10"
-				Name="Background_4"
-				Background="#AAA"
-				BorderBrush="Gray"
-				BorderThickness="1"
-				CornerRadius="4"
-				Padding="8"
-				HorizontalAlignment="Stretch"
-				VerticalAlignment="Stretch"
-				>
-				<Grid ColumnDefinitions="110, 4, *, 8, 40" VerticalAlignment="Center" HorizontalAlignment="Stretch">
-					<TextBlock
-						Name="_Patch"
-						Text="Patch :"
-						Grid.Column="0"
-						VerticalAlignment="Center"
-						/>
-					<TextBox
-						Name="Patch"
-						Grid.Column="2"
-						VerticalAlignment="Center"
-						ToolTip.Tip="Temporarily overrides the slot's patch"
-						/>
-					<Button 
-						Name="File"
-						Content="File"
-						Grid.Column="4"
-						/>
-				</Grid>
-			</Border>
+			<Separator Grid.Row="8"/>
 
-			<Border
-				Grid.Row="12"
-				Name="Background_LauncherSelect"
-				Background="#AAA"
-				BorderBrush="Gray"
-				BorderThickness="1"
-				CornerRadius="4"
-				Padding="8"
-				HorizontalAlignment="Stretch"
-				VerticalAlignment="Stretch"
-				>
-				<Grid ColumnDefinitions="110, 4, *" VerticalAlignment="Center" HorizontalAlignment="Stretch">
-					<TextBlock
-						Name="_LauncherSelect"
-						Text="Base launcher :"
-						Grid.Column="0"
-						VerticalAlignment="Center"
-						/>
-					<ComboBox
-						Name="LauncherSelect"
-						Grid.Column="2"
-						VerticalAlignment="Center"
-						HorizontalAlignment="Stretch"
-						/>
-				</Grid>
-			</Border>
-
-			<Border
-				Grid.Row="14"
-				Name="Background_BaseVersion"
-				Background="#AAA"
-				BorderBrush="Gray"
-				BorderThickness="1"
-				CornerRadius="4"
-				Padding="8"
-				HorizontalAlignment="Stretch"
-				VerticalAlignment="Stretch"
-				>
-				<Grid ColumnDefinitions="110, 4, *" VerticalAlignment="Center" HorizontalAlignment="Stretch">
-					<TextBlock
-						Name="_BaseVersion"
-						Text="Base Version :"
-						Grid.Column="0"
-						VerticalAlignment="Center"
-						/>
-					<ComboBox
-						Name="BaseVersionSelect"
-						Grid.Column="2"
-						VerticalAlignment="Center"
-						HorizontalAlignment="Stretch"
-						/>
-				</Grid>
-			</Border>
-
-			<Separator Grid.Row="16"/>
-
-			<Grid ColumnDefinitions="*, 8, *" Grid.Row="18" HorizontalAlignment="Stretch">
+			<Grid ColumnDefinitions="*, 8, *" Grid.Row="10" HorizontalAlignment="Stretch">
 				<Button
 				Name="Launch"
 				Content="Try to launch"

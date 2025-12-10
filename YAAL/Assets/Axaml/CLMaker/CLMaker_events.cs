@@ -176,11 +176,21 @@ public partial class CLMakerWindow : ScalableWindow
         }
         customLauncher.ResetInstructionList(instructions);
         Save();
-        string version = GetLatestAvailableVersion();
 
-        TestWindow testWindow = TestWindow.GetTestWindow();
-        testWindow.Setup(customLauncher, AvailableVersions.ItemsSource);
-        testWindow.IsVisible = true;
+        if(LauncherSelector.SelectedItem is Cache_DisplayLauncher display)
+        {
+            TestWindow testWindow = TestWindow.GetTestWindow(this);
+            if (AvailableVersions.ItemsSource is List<string> list)
+            {
+                testWindow.Setup(display.cache.settings[launcherName], list);
+            }
+            else
+            {
+                Debug.WriteLine("AvailableVersions isn't a list of string !?");
+                testWindow.Setup(display.cache.settings[launcherName], new List<string>());
+            }
+            testWindow.IsVisible = true;
+        }
     }
 
     private void Save(object? sender = null, RoutedEventArgs e = null)

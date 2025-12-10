@@ -270,6 +270,29 @@ namespace YAAL
             SaveCache<Cache_BackupList>(GetSaveLocation(FileSettings.backupList), cache);
         }
 
+        public static void RestoreAll()
+        {
+            if (!RestoreApworlds())
+            {
+                ErrorManager.ThrowError(
+                        "App - Failed to restore apworlds",
+                        "Something went wrong while trying to restore apworlds directly."
+                        );
+                return;
+            }
+
+            if (!RestoreBackups())
+            {
+                ErrorManager.ThrowError(
+                        "App - Failed to restore backups",
+                        "Something went wrong while trying to restore backups directly."
+                        );
+                return;
+            }
+
+            ResetBackupList();
+        }
+
         private static bool StartIsolating(string archipelagoFolder, string customWorlds, string old_customWorlds, string worlds, string old_worlds, out Cache_BackupList cache)
         {
             cache = LoadCache<Cache_BackupList>(GetSaveLocation(FileSettings.backupList));

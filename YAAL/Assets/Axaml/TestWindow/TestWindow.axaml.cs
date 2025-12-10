@@ -15,287 +15,172 @@ using System.IO;
 using System.Threading.Tasks;
 using static YAAL.LauncherSettings;
 using static YAAL.SlotSettings;
+using System.Collections;
+using Avalonia.Platform;
 
 namespace YAAL;
 
 public partial class TestWindow : ScalableWindow
 {
-    private CustomLauncher launcher;
-    private static TestWindow _testWindow;
+    private Cache_Async? temporaryAsync;
+    private static TestWindow? _testWindow;
     public TestWindow()
     {
         InitializeComponent();
-        SetBackground();
-        this.Closing += _Save;
-        this.File.Click += _FileSelect;
-        this.Launch.Click += _Launch;
-        this.Restore.Click += _Restore;
-        _testWindow = this;
-        this.Closed += (sender, args) => { _testWindow = null; };
         AutoTheme.SetTheme(TrueBackground, ThemeSettings.backgroundColor);
+
+        Launch.Click += (_, _) => { LaunchTest(); };
+        
+        Restore.Click += (_, _) => { IOManager.RestoreAll(); };
+
+        Temporary.Click += _SwitchMode;
+        Existing.Click += _SwitchMode;
+
+        this.Closing += (_,_) =>
+        {
+            if(temporaryAsync != null)
+            {
+                IOManager.DeleteAsync(temporaryAsync.settings[AsyncSettings.asyncName]);
+            }
+        };
+
+        List<string> asyncList = IOManager.GetAsyncList();
+
+        if(asyncList.Count == 0)
+        {
+            asyncList.Add("None available");
+        }
+
+        AsyncSelector.ItemsSource = asyncList;
+
+        AsyncSelector.SelectionChanged += (_, _) =>
+        {
+            if(AsyncSelector.SelectedItem is string asyncName)
+            {
+                List<string> slotList = new List<string>();
+
+                if (asyncName != "None available")
+                {
+                    slotList = IOManager.GetSlotList(asyncName);
+                }
+
+                if(slotList.Count == 0)
+                {
+                    slotList.Add("None available");
+                }
+
+                SlotSelector.ItemsSource = slotList;
+                SlotSelector.SelectedIndex = 0;
+            }
+        };
+
+        AsyncSelector.SelectedIndex = 0;
     }
 
-    public static TestWindow GetTestWindow()
+    public static TestWindow GetTestWindow(Window source)
     {
         if (_testWindow == null)
         {
-            return new TestWindow();
+            if(WindowManager.OpenWindow(WindowType.TestWindow, source) is TestWindow newWindow)
+            {
+                _testWindow = newWindow;
+            } else
+            {
+                Debug.WriteLine("The new window isn't a test window. What !?");
+                _testWindow = new TestWindow();
+            }
         }
         else
         {
             _testWindow.Activate();
             _testWindow.Topmost = true;
             _testWindow.Topmost = false;
-            return _testWindow;
         }
+
+        return _testWindow;
     }
 
-    private static void RemoveWindow(object? sender, EventArgs e)
+    public void Setup(string name, List<string> newVersions)
     {
-        _testWindow = null;
+        LauncherName.Text = name;
+        VersionSelector.ItemsSource = newVersions;
+        VersionSelector.SelectedIndex = 0;
     }
 
-    public void Setup(CustomLauncher newLauncher, System.Collections.IEnumerable versions)
+    private async void LaunchTest()
     {
-        this.launcher = newLauncher;
-        this.LauncherName.Text = newLauncher.GetSetting(launcherName);
-        this.AsyncName.Text = newLauncher.GetSetting(Debug_AsyncName);
-        this.SlotName.Text = newLauncher.GetSetting(Debug_SlotName);
-        this.Patch.Text = newLauncher.GetSetting(Debug_Patch);
-        this.VersionSelect.ItemsSource = versions;
-        this.VersionSelect.SelectedIndex = 0;
-        this.LauncherSelect.ItemsSource = IOManager.GetLauncherList();
-        this.Background_LauncherSelect.IsVisible = !newLauncher.isGame;
-        this.Background_BaseVersion.IsVisible = !newLauncher.isGame;
+        Cache_Async async;
+        Cache_Slot slot;
 
-        Cache_Slot cache = IOManager.GetSlot(newLauncher.GetSetting(Debug_AsyncName), newLauncher.GetSetting(Debug_SlotName));
-        if (cache.settings[baseLauncher] != "")
+        if (TemporaryAsync.IsVisible)
         {
-            try
-            {
-                this.LauncherSelect.SelectedItem = cache.settings[baseLauncher];
-            }
-            catch (Exception)
-            {
-                this.LauncherSelect.SelectedIndex = 0;
-            }
-        }
-        else
-        {
-            this.LauncherSelect.SelectedIndex = 0;
-        }
+            bool needToCreateSlot = false;
 
-        this.BaseVersionSelect.ItemsSource = IOManager.GetVersions(this.LauncherSelect.SelectedItem.ToString());
-        if (cache.settings[version] != "")
-        {
-            try
+            if(temporaryAsync == null)
             {
-                this.BaseVersionSelect.SelectedItem = cache.settings[version];
+                temporaryAsync = IOManager.CreateNewAsync("_temporary");
+                needToCreateSlot = true;
             }
-            catch (Exception)
+
+            if(RoomURL.Text != "")
             {
-                this.BaseVersionSelect.SelectedIndex = 0;
+                temporaryAsync.settings[AsyncSettings.roomURL] = RoomURL.Text!;
+                temporaryAsync.room = await WebManager.ParseRoomURL(RoomURL.Text!);
+                temporaryAsync.settings[AsyncSettings.roomAddress] = temporaryAsync.room.address;
+                temporaryAsync.settings[AsyncSettings.roomPort] = temporaryAsync.room.port;
+                temporaryAsync.settings[AsyncSettings.room] = temporaryAsync.room.address + ":" + temporaryAsync.room.port;
+                temporaryAsync.settings[AsyncSettings.cheeseURL] = temporaryAsync.room.cheeseTrackerURL;
             }
+
+            IOManager.SaveAsync(temporaryAsync, temporaryAsync);
+
+            Cache_Slot temporarySlot;
+
+            if (needToCreateSlot)
+            {
+                temporarySlot = IOManager.CreateNewSlot(temporaryAsync, "_temporary");
+            } else
+            {
+                temporarySlot = temporaryAsync.slots[0];
+            }
+
+            temporarySlot.settings[SlotSettings.patch] = Patch.Text ?? "";
+
+            IOManager.SaveAsync(temporaryAsync, temporaryAsync);
+
+            async = temporaryAsync;
+            slot = temporarySlot;
         } else
         {
-            this.BaseVersionSelect.SelectedIndex = 0;
-        }
-        
-        string savedLauncher = newLauncher.GetSetting(Debug_baseLauncher);
-
-        if (savedLauncher != "")
-        {
-            int i = 0;
-            foreach (var item in this.LauncherSelect.ItemsSource)
+            if(AsyncSelector.SelectedItem is string asyncName && asyncName != "None available" && SlotSelector.SelectedItem is string slotName && slotName != "None available")
             {
-                if (item.ToString() == savedLauncher)
-                {
-                    this.LauncherSelect.SelectedIndex = i;
-                }
-                ++i;
-            }
-        }
-
-    }
-
-    public void SetBackground()
-    {
-        var theme = Application.Current.ActualThemeVariant;
-        if (theme == ThemeVariant.Dark)
-        {
-            Background_0.Background = new SolidColorBrush(Color.Parse("#454545"));
-            Background_1.Background = new SolidColorBrush(Color.Parse("#454545"));
-            Background_2.Background = new SolidColorBrush(Color.Parse("#454545"));
-            Background_3.Background = new SolidColorBrush(Color.Parse("#454545"));
-            Background_4.Background = new SolidColorBrush(Color.Parse("#454545"));
-            Background_LauncherSelect.Background = new SolidColorBrush(Color.Parse("#454545"));
-            Background_BaseVersion.Background = new SolidColorBrush(Color.Parse("#454545"));
-        }
-        else
-        {
-            Background_0.Background = new SolidColorBrush(Color.Parse("#AAA"));
-            Background_1.Background = new SolidColorBrush(Color.Parse("#AAA"));
-            Background_2.Background = new SolidColorBrush(Color.Parse("#AAA"));
-            Background_3.Background = new SolidColorBrush(Color.Parse("#AAA"));
-            Background_4.Background = new SolidColorBrush(Color.Parse("#AAA"));
-            Background_LauncherSelect.Background = new SolidColorBrush(Color.Parse("#AAA"));
-            Background_BaseVersion.Background = new SolidColorBrush(Color.Parse("#AAA"));
-        }
-    }
-
-    public void Save()
-    {
-        string asyncName = this.AsyncName.Text;
-        string slotName = this.SlotName.Text;
-
-        if(asyncName == "")
-        {
-            asyncName = "Debug_CLMaker_Async";
-        }
-
-        if(slotName == "")
-        {
-            slotName = "Debug_CLMaker_Slot";
-        }
-
-
-        launcher.SetSetting(Debug_AsyncName, asyncName);
-        launcher.SetSetting(Debug_SlotName, slotName);
-        launcher.SetSetting(Debug_Patch, this.Patch.Text);
-
-        if (!launcher.isGame)
-        {
-            launcher.SetSetting(Debug_baseLauncher, this.LauncherSelect.SelectedItem.ToString());
-        }
-        launcher.Save();
-    }
-
-    // -- events
-
-    // on closing
-    private void _Save(object? sender, WindowClosingEventArgs e)
-    {
-        Save();
-    }
-
-    // on button pushed
-    private void _Launch(object? sender, RoutedEventArgs e)
-    {
-        Save();
-        string asyncName = launcher.GetSetting(Debug_AsyncName);
-        string slotName = launcher.GetSetting(Debug_SlotName);
-        launcher.ReadSettings(asyncName, slotName);
-
-        if (launcher.isGame)
-        {
-            SetGameSettings(asyncName, slotName);
-        } else
-        {
-            if(!SetToolSettings(asyncName, slotName))
+                async = IOManager.GetAsync(asyncName);
+                slot = IOManager.GetSlot(asyncName, slotName);
+            } else
             {
-                ErrorManager.ThrowError();
                 return;
             }
         }
 
-        Cache_PreviousSlot cache = IOManager.GetLastAsync(launcher.GetSetting(launcherName));
-        string debugPatch = launcher.GetSetting(Debug_Patch);
-
-        if (cache.previousPatch != debugPatch)
+        if(VersionSelector.SelectedItem is string version)
         {
-            launcher.settings[rom] = "";
+            Cache_Slot oldSlot = new Cache_Slot();
+            oldSlot.settings[SlotSettings.slotName] = slot.settings[SlotSettings.slotName];
+
+            slot.settings[SlotSettings.version] = version;
+            slot.settings[SlotSettings.baseLauncher] = LauncherName.Text ?? "";
+            IOManager.SaveSlot(async.settings[AsyncSettings.asyncName], slot, oldSlot);
         }
 
-        launcher.settings[patch] = debugPatch;
-        launcher.settings[version] = this.VersionSelect.SelectedItem.ToString();
-        if (!launcher.isGame)
-        {
-            launcher.settings[baseLauncher] = this.LauncherSelect.SelectedItem.ToString();
-        }
-        launcher.Execute();
-        this.Patch.Text = launcher.GetSetting(Debug_Patch);
+        string args = "--async " + async.settings[AsyncSettings.asyncName] + " --slot " + slot.settings[SlotSettings.slotName] + " --launcher " + LauncherName.Text;
+
+        ProcessManager.StartProcess(Environment.ProcessPath, args, true, false);
     }
 
-    public void SetGameSettings(string asyncName, string slotName)
+    private void _SwitchMode(object? sender, RoutedEventArgs e)
     {
-        if (launcher.settings[baseLauncher] == "")
-        {
-            IOManager.SetSlotSetting(asyncName, slotName, baseLauncher, launcher.selfsettings[launcherName]);
-            launcher.settings[baseLauncher] = launcher.settings[launcherName];
-        }
-
-        if (launcher.settings[version] == "")
-        {
-            List<string> available = IOManager.GetVersions(launcher.settings[launcherName]);
-            IOManager.SetSlotSetting(asyncName, slotName, version, available[0]);
-        }
-    }
-
-    public bool SetToolSettings(string asyncName, string slotName)
-    {
-        CustomLauncher thisBaseLauncher = launcher.GetBaseLauncher();
-        if(thisBaseLauncher == null)
-        {
-            return false;
-        }
-        thisBaseLauncher.settings[version] = BaseVersionSelect.SelectedItem.ToString();
-
-        if (launcher.settings[baseLauncher] == "")
-        {
-            List<string> launcherList = IOManager.GetLauncherList();
-            if (launcherList.Count > 0)
-            {
-                CustomLauncher firstLauncher;
-                int i = 0;
-                do
-                {
-                    firstLauncher = IOManager.LoadLauncher(launcherList[i]);
-                    ++i;
-                } while (!firstLauncher.isGame && i < launcherList.Count);
-
-                if (firstLauncher != null)
-                {
-                    IOManager.SetSlotSetting(asyncName, slotName, baseLauncher, firstLauncher.selfsettings[launcherName]);
-                    launcher.settings[baseLauncher] = firstLauncher.selfsettings[launcherName];
-                }
-                else
-                {
-                    ErrorManager.AddNewError(
-                        "TestWindow - Couldn't find a non-tool launcher",
-                        "Tried to test in slot " + slotName + " from async " + asyncName + ", which doesn't have a baseLauncher set. Couldn't set one automatically, because no non-tool launcher exist. This is not allowed."
-                        );
-                    return false;
-                }
-            }
-        }
-
-        if (launcher.settings[version] == "")
-        {
-            CustomLauncher baseLauncher = launcher.GetBaseLauncher();
-            if (baseLauncher != null)
-            {
-                List<string> available = IOManager.GetVersions(baseLauncher.settings[launcherName]);
-                if (available.Count == 0)
-                {
-                    ErrorManager.AddNewError(
-                        "TestWindow - Couldn't find a version",
-                        "Tried to test in slot " + slotName + " from async " + asyncName + ", which doesn't have a version set. Couldn't set one automatically, because the (maybe automatically ?) selected baseLauncher, " + baseLauncher.selfsettings[launcherName] + ", doesn't have any available version."
-                        );
-                    return false;
-                }
-                else
-                {
-                    IOManager.SetSlotSetting(asyncName, slotName, version, available[0]);
-                }
-            }
-        }
-
-        return true;
-    }
-
-    private void _Restore(object? sender, RoutedEventArgs e)
-    {
-        ProcessManager.StartProcess(Environment.ProcessPath, ("--restore --exit"));
+        TemporaryAsync.IsVisible = !TemporaryAsync.IsVisible;
+        ExistingAsync.IsVisible = !ExistingAsync.IsVisible;
     }
 
     private async void _FileSelect(object? sender, RoutedEventArgs e)

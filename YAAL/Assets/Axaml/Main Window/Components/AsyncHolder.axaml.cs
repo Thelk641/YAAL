@@ -127,9 +127,9 @@ public partial class AsyncHolder : UserControl
     public async void UpdatePort()
     {
         thisAsync.room = await WebManager.GetRoomPort(thisAsync.room);
-        thisAsync.settings[roomAddress] = thisAsync.room.IP;
+        thisAsync.settings[roomAddress] = thisAsync.room.address;
         thisAsync.settings[roomPort] = thisAsync.room.port;
-        thisAsync.settings[room] = thisAsync.room.IP + ":" + thisAsync.room.port;
+        thisAsync.settings[room] = thisAsync.room.address + ":" + thisAsync.room.port;
         thisAsync.settings[cheeseURL] = thisAsync.room.cheeseTrackerURL;
         Debouncer.ForceDebounce(Save);
     }
@@ -150,8 +150,9 @@ public partial class AsyncHolder : UserControl
         if (RoomBox.Text.Contains("archipelago.gg/room/"))
         {
             thisAsync.room = await WebManager.ParseRoomURL(RoomBox.Text);
-            thisAsync.settings[roomAddress] = thisAsync.room.IP;
+            thisAsync.settings[roomAddress] = thisAsync.room.address;
             thisAsync.settings[roomPort] = thisAsync.room.port;
+            thisAsync.settings[room] = thisAsync.room.address + ":" + thisAsync.room.port;
             thisAsync.settings[cheeseURL] = thisAsync.room.cheeseTrackerURL;
         }
 
