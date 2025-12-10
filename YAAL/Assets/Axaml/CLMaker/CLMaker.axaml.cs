@@ -16,6 +16,9 @@ public partial class CLMakerWindow : ScalableWindow
     public CLMakerWindow()
     {
         InitializeComponent();
+
+        SaveLauncher.Click += (_, _) => { Save(); };
+
         this.Closing += (_, e) =>
         {
             if(customLauncher == null)

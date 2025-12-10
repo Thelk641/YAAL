@@ -17,7 +17,7 @@
 		<!-- Top of the Window, most of the controls -->
 		<Grid RowDefinitions="30, 8, 45" VerticalAlignment="Top" Grid.Row="0">
 			<Grid ColumnDefinitions="*,*" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-				<Grid ColumnDefinitions="30, 8, 30, 8, 30, 8, 30, 8,30" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+				<Grid ColumnDefinitions="30, 8, 30, 8, 30, 8, 30, 8, 30, 8,30" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 					<Button
 						Name="EmptyLauncher"
 						Grid.Column="0"
@@ -33,8 +33,22 @@
 					</Button>
 
 					<Button
-						Name="Duplicate"
+						Name="SaveLauncher"
 						Grid.Column="2"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						local:AutoIcon.Icon="Save"
+						>
+						<Svg
+							VerticalAlignment="Center"
+							HorizontalAlignment="Center"
+							Width="30"
+							/>
+					</Button>
+
+					<Button
+						Name="Duplicate"
+						Grid.Column="4"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"
 						local:AutoIcon.Icon="Duplicate"
@@ -48,7 +62,7 @@
 
 					<Button
 						Name="Delete"
-						Grid.Column="4"
+						Grid.Column="6"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"
 						local:AutoIcon.Icon="Trash"
@@ -62,7 +76,7 @@
 
 					<Button
 						Name="Settings"
-						Grid.Column="6"
+						Grid.Column="8"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"
 						local:AutoIcon.Icon="Settings"
@@ -76,7 +90,7 @@
 
 					<Button
 						Name="Rename"
-						Grid.Column="8"
+						Grid.Column="10"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"
 						local:AutoIcon.Icon="Text"
