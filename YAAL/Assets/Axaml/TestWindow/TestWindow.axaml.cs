@@ -71,9 +71,12 @@ public partial class TestWindow : ScalableWindow
 
                 SlotSelector.ItemsSource = slotList;
                 SlotSelector.SelectedIndex = 0;
+
+                WindowManager.UpdateComboBox(SlotSelector);
             }
         };
 
+        WindowManager.UpdateComboBox(AsyncSelector);
         AsyncSelector.SelectedIndex = 0;
     }
 

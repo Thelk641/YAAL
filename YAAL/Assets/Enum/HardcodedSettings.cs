@@ -19,7 +19,7 @@ namespace YAAL
         //cache_async
         asyncName,
         room,
-        roomIP,
+        roomAddress,
         roomPort,
         password,
 
