@@ -12,7 +12,7 @@ Finally, remember that, while having these features in another software is *(in 
 
 ## Now that you're ready, how do you use YAAL ?
 
-If you don't know where to start : [here's the quick guide](https://github.com/Thelk641/YAAL/blob/master/Docs/Quick%20start)
+If you don't know where to start : [here's the quick guide](https://github.com/Thelk641/YAAL/blob/master/Docs/Quick%20 start.md)
 
 If you want to go farther, here's the rest of the documentation :
 - [Command line arguments](https://github.com/Thelk641/YAAL/blob/master/Docs/Command%20line%20arguments.md)
