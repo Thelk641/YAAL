@@ -77,20 +77,22 @@ public partial class CustomThemeMaker : ScalableWindow
 
         RemoveTheme.Click += (_, _) =>
         {
-            ConfirmationWindow confirm = new ConfirmationWindow(currentTheme.name);
-
-            confirm.Closing += (source, args) =>
+            if(WindowManager.OpenWindow(WindowType.ConfirmationWindow, this) is ConfirmationWindow confirm)
             {
-                if (confirm.confirmed)
+                confirm.Setup(currentTheme.name);
+                confirm.Closing += (source, args) =>
                 {
-                    DisableEvents();
-                    ThemeManager.DeleteTheme(currentTheme.name);
-                    currentTheme = null;
-                    GenerateThemeList();
-                    LoadTheme();
-                    EnableEvents();
-                }
-            };
+                    if (confirm.confirmed)
+                    {
+                        DisableEvents();
+                        ThemeManager.DeleteTheme(currentTheme.name);
+                        currentTheme = null;
+                        GenerateThemeList();
+                        LoadTheme();
+                        EnableEvents();
+                    }
+                };
+            }
         };
 
         DuplicateTheme.Click += (_, _) =>

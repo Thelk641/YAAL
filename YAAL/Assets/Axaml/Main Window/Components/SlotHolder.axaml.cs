@@ -347,15 +347,19 @@ public partial class SlotHolder : UserControl
 
         DeleteSlot.Click += (_, _) =>
         {
-            ConfirmationWindow confirm = new ConfirmationWindow(thisSlot.settings[slotName]);
-            confirm.Closing += (_, _) =>
+            if (WindowManager.OpenWindow(WindowType.ConfirmationWindow, WindowManager.GetMainWindow()) is ConfirmationWindow confirm)
             {
-                if (confirm.confirmed)
+                confirm.Setup(thisSlot.settings[slotName]);
+
+                confirm.Closing += (_, _) =>
                 {
-                    IOManager.DeleteSlot(asyncName, thisSlot.settings[slotName]);
-                    RequestRemoval?.Invoke();
-                }
-            };
+                    if (confirm.confirmed)
+                    {
+                        IOManager.DeleteSlot(asyncName, thisSlot.settings[slotName]);
+                        RequestRemoval?.Invoke();
+                    }
+                };
+            }
         };
 
         LauncherSelector.SelectionChanged += _ChangedLauncher;

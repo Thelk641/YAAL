@@ -32,7 +32,7 @@ public partial class ConfirmationWindow : ScalableWindow
         };
     }
 
-    public ConfirmationWindow(string toDisplay) : this()
+    public void Setup(string toDisplay)
     {
         TargetName.Text = toDisplay;
         this.IsVisible = true;

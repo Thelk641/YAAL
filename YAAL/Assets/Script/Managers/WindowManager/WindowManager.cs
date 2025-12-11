@@ -11,6 +11,7 @@ using Avalonia.VisualTree;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -99,12 +100,34 @@ namespace YAAL
                 window.Position = windowsData.positions[windowType];
                 window.Width = windowsData.size[windowType].X;
                 window.Height = windowsData.size[windowType].Y;
+            } else
+            {
+                if(source != null)
+                {
+                    Vector2 sourceCenter = new Vector2(
+                        source.Position.X + (int)(source.ClientSize.Width / 2),
+                        source.Position.Y + (int)(source.ClientSize.Height / 2)
+                        );
+
+                    Vector2 windowCenter = new Vector2(
+                        (int)(window.Width / 2),
+                        (int)(window.Height / 2)
+                        );
+
+                    Vector2 trueCenter = new Vector2(
+                        sourceCenter.X - windowCenter.X,
+                        sourceCenter.Y - windowCenter.Y
+                        );
+
+                    window.Position = new PixelPoint((int)trueCenter.X, (int)trueCenter.Y);
+                }
             }
 
-            if(mainWindow != null)
+            if (mainWindow != null)
             {
                 window.Show();
-            } else
+            }
+            else
             {
                 Dispatcher.UIThread.Post(() =>
                 {

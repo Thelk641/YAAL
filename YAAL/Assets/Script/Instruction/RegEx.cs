@@ -128,13 +128,14 @@ namespace YAAL
                 try
                 {
                     Regex expression = new Regex(pattern);
+                    string toReplace = customLauncher.ParseTextWithSettings(replacement);
                     output = "";
                     if (this.InstructionSetting[modeInput] == "File")
                     {
-                        output = expression.Replace(IOManager.LoadFile(target), replacement);
+                        output = expression.Replace(IOManager.LoadFile(target), toReplace);
                     } else
                     {
-                        output = expression.Replace(target, replacement);
+                        output = expression.Replace(target, toReplace);
                     }
 
 

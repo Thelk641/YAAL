@@ -94,7 +94,7 @@
 							/>
 						<TextBox
 							Name="RoomBox"
-							Watermark="archipelago.gg:12345"
+							Watermark="https://archipelago.gg/room/stuff"
 							Grid.Column="2"
 							ToolTip.Tip="This async's room"
 							HorizontalAlignment="Stretch"

@@ -16,5 +16,6 @@ namespace YAAL
         roomPort,
         isHidden,
         cheeseURL,
+        isTemporary
     };
 }

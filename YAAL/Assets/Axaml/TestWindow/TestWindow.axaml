@@ -50,7 +50,7 @@
 
 					<Grid ColumnDefinitions="80,*" Grid.Row="2">
 						<TextBlock 
-							Text="RoomURL : "
+							Text="Room : "
 							HorizontalAlignment="Left"
 							VerticalAlignment="Center"
 							/>
@@ -60,6 +60,7 @@
 							Grid.Column="1"
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Center"
+							ToolTip.Tip="Either archipelago.gg:12345 or a room's URL"
 							/>
 					</Grid>
 

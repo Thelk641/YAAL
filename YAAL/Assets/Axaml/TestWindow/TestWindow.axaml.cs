@@ -42,6 +42,7 @@ public partial class TestWindow : ScalableWindow
             {
                 IOManager.DeleteAsync(temporaryAsync.settings[AsyncSettings.asyncName]);
             }
+            _testWindow = null;
         };
 
         List<string> asyncList = IOManager.GetAsyncList();
@@ -103,11 +104,15 @@ public partial class TestWindow : ScalableWindow
         return _testWindow;
     }
 
-    public void Setup(string name, List<string> newVersions)
+    public void Setup(string name, List<string> newVersions, bool requiresPatch, bool requiresVersion)
     {
         LauncherName.Text = name;
         VersionSelector.ItemsSource = newVersions;
         VersionSelector.SelectedIndex = 0;
+
+        Patch.IsEnabled = requiresPatch;
+        File.IsEnabled = requiresPatch;
+        VersionSelector.IsEnabled = requiresVersion;
     }
 
     private async void LaunchTest()
@@ -127,14 +132,30 @@ public partial class TestWindow : ScalableWindow
 
             if(RoomURL.Text != "")
             {
-                temporaryAsync.settings[AsyncSettings.roomURL] = RoomURL.Text!;
-                temporaryAsync.room = await WebManager.ParseRoomURL(RoomURL.Text!);
-                temporaryAsync.settings[AsyncSettings.roomAddress] = temporaryAsync.room.address;
-                temporaryAsync.settings[AsyncSettings.roomPort] = temporaryAsync.room.port;
-                temporaryAsync.settings[AsyncSettings.room] = temporaryAsync.room.address + ":" + temporaryAsync.room.port;
-                temporaryAsync.settings[AsyncSettings.cheeseURL] = temporaryAsync.room.cheeseTrackerURL;
+                if (WebManager.IsValidURL(RoomURL.Text!))
+                {
+                    temporaryAsync.settings[AsyncSettings.roomURL] = RoomURL.Text!;
+                    temporaryAsync.room = await WebManager.ParseRoomURL(RoomURL.Text!);
+                    temporaryAsync.settings[AsyncSettings.roomAddress] = temporaryAsync.room.address;
+                    temporaryAsync.settings[AsyncSettings.roomPort] = temporaryAsync.room.port;
+                    temporaryAsync.settings[AsyncSettings.room] = temporaryAsync.room.address + ":" + temporaryAsync.room.port;
+                    temporaryAsync.settings[AsyncSettings.cheeseURL] = temporaryAsync.room.cheeseTrackerURL;
+                } else if (RoomURL.Text!.Contains(":"))
+                {
+                    var splitURL = RoomURL.Text!.Split(":");
+                    if(splitURL.Length == 2)
+                    {
+                        temporaryAsync.settings[AsyncSettings.roomAddress] = splitURL[0];
+                        temporaryAsync.settings[AsyncSettings.roomPort] = splitURL[1];
+                        temporaryAsync.settings[AsyncSettings.room] = RoomURL.Text!;
+                    }
+                } else
+                {
+                    temporaryAsync.settings[AsyncSettings.room] = RoomURL.Text!;
+                }
             }
 
+            temporaryAsync.settings[AsyncSettings.isTemporary] = true.ToString();
             IOManager.SaveAsync(temporaryAsync, temporaryAsync);
 
             Cache_Slot temporarySlot;

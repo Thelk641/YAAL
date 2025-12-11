@@ -122,6 +122,12 @@ public partial class MainWindow : ScalableWindow
     private void AddAsync(string asyncName)
     {
         Cache_Async cache = IOManager.GetAsync(asyncName);
+        if(cache.settings.ContainsKey(AsyncSettings.isTemporary) && cache.settings[AsyncSettings.isTemporary] == true.ToString())
+        {
+            IOManager.DeleteAsync(asyncName);
+            return;
+        }
+
         if (cache.settings[AsyncSettings.isHidden] != true.ToString())
         {
             AddAsync(cache);

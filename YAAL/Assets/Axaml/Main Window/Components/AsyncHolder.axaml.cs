@@ -60,6 +60,17 @@ public partial class AsyncHolder : UserControl
         starting = false;
 
         UpdatePort();
+        Dispatcher.UIThread.Post(TurnEventsOn);
+    }
+
+    private void TurnEventsOn()
+    {
+        AsyncNameBox.TextChanged += RenameAsync;
+    }
+
+    private void TurnEventsOff()
+    {
+        AsyncNameBox.TextChanged -= RenameAsync;
     }
 
     public void SetupPlayMode()
@@ -101,27 +112,32 @@ public partial class AsyncHolder : UserControl
 
         DeleteButton.Click += (_, _) =>
         {
-            ConfirmationWindow confirm = new ConfirmationWindow(thisAsync.settings[asyncName]);
-            confirm.Closed += (_, _) =>
+            if(WindowManager.OpenWindow(WindowType.ConfirmationWindow, WindowManager.GetMainWindow()) is ConfirmationWindow confirm)
             {
-                if (confirm.confirmed)
+                confirm.Setup(thisAsync.settings[asyncName]);
+                confirm.Closed += (_, _) =>
                 {
-                    IOManager.DeleteAsync(thisAsync.settings[asyncName]);
-                    RequestRemoval?.Invoke();
-                }
-            };
+                    if (confirm.confirmed)
+                    {
+                        IOManager.DeleteAsync(thisAsync.settings[asyncName]);
+                        RequestRemoval?.Invoke();
+                    }
+                };
+            }
         };
 
-        AsyncNameBox.TextChanged += (_, _) =>
-        {
-            waitingToSave = true;
-            Debouncer.Debounce(Save, 1f);
-        };
+        AsyncNameBox.TextChanged += RenameAsync;
 
         RoomBox.TextChanged += (_, _) =>
         {
             Debouncer.Debounce(UpdateSlotsRoom, 0.5f);
         };
+    }
+
+    private void RenameAsync(object? sender, TextChangedEventArgs e)
+    {
+        waitingToSave = true;
+        Debouncer.Debounce(Save, 1f);
     }
 
     public async void UpdatePort()
@@ -235,10 +251,12 @@ public partial class AsyncHolder : UserControl
 
     public void Save()
     {
-        if (starting)
+        if (starting || AsyncNameBox.Text == "")
         {
             return;
         }
+
+        TurnEventsOff();
 
         // TODO : implement "equal" so we can check if toSave is identical to thisAsync and not waste time saving file
         waitingToSave = false;
@@ -263,6 +281,12 @@ public partial class AsyncHolder : UserControl
             }
         }
 
+        thisAsync = IOManager.SaveAsync(thisAsync, toSave);
+        _AsyncNameBox.Text = thisAsync.settings[asyncName];
+        AsyncNameBox.Text = thisAsync.settings[asyncName];
+        thisAsync.room = toSave.room;
+        thisAsync.settings[roomURL] = toSave.room.URL;
+
         foreach (var item in SlotsContainer.Children)
         {
             if (item is SlotHolder slotHolder)
@@ -272,17 +296,11 @@ public partial class AsyncHolder : UserControl
             }
         }
 
-
-
-        thisAsync = IOManager.SaveAsync(thisAsync, toSave);
-        _AsyncNameBox.Text = thisAsync.settings[asyncName];
-        AsyncNameBox.Text = thisAsync.settings[asyncName];
-        thisAsync.room = toSave.room;
-        thisAsync.settings[roomURL] = toSave.room.URL;
-
         Edit.IsEnabled = true;
         isSaving = false;
         DoneSaving?.Invoke();
+
+        Dispatcher.UIThread.Post(TurnEventsOn);
     }
 
     public async void ClosingSave()

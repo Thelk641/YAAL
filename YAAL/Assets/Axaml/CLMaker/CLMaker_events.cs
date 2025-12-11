@@ -180,14 +180,16 @@ public partial class CLMakerWindow : ScalableWindow
         if(LauncherSelector.SelectedItem is Cache_DisplayLauncher display)
         {
             TestWindow testWindow = TestWindow.GetTestWindow(this);
+            bool requiresPatch = display.cache.settings[LauncherSettings.requiresPatch] == true.ToString();
+            bool requiresVersion = display.cache.settings[LauncherSettings.requiresVersion] == true.ToString();
             if (AvailableVersions.ItemsSource is List<string> list)
             {
-                testWindow.Setup(display.cache.settings[launcherName], list);
+                testWindow.Setup(display.cache.settings[launcherName], list, requiresPatch, requiresVersion);
             }
             else
             {
                 Debug.WriteLine("AvailableVersions isn't a list of string !?");
-                testWindow.Setup(display.cache.settings[launcherName], new List<string>());
+                testWindow.Setup(display.cache.settings[launcherName], new List<string>(), requiresPatch, requiresVersion);
             }
             testWindow.IsVisible = true;
         }
@@ -217,17 +219,19 @@ public partial class CLMakerWindow : ScalableWindow
 
     public void RemoveVersion(object? sender, RoutedEventArgs e)
     {
-        ConfirmationWindow confirm = new ConfirmationWindow(customLauncher.GetSetting(launcherName) + " - " + AvailableVersions.SelectedItem.ToString());
-        confirm.IsVisible = true;
-
-        confirm.Closing += (source, args) =>
+        if(WindowManager.OpenWindow(WindowType.ConfirmationWindow, this) is ConfirmationWindow confirm)
         {
-            if (confirm.confirmed)
+            confirm.Setup(customLauncher.GetSetting(launcherName) + " - " + AvailableVersions.SelectedItem.ToString());
+
+            confirm.Closing += (source, args) =>
             {
-                IOManager.RemoveVersion(customLauncher.GetSetting(launcherName), AvailableVersions.SelectedItem.ToString());
-                UpdateAvailableVersion();
-            }
-        };
+                if (confirm.confirmed)
+                {
+                    IOManager.RemoveVersion(customLauncher.GetSetting(launcherName), AvailableVersions.SelectedItem.ToString());
+                    UpdateAvailableVersion();
+                }
+            };
+        }
     }
 
     public void CreateNewLauncher(object? sender, RoutedEventArgs e)
@@ -301,10 +305,9 @@ public partial class CLMakerWindow : ScalableWindow
 
     public void DeleteLauncher(object? sender, RoutedEventArgs e)
     {
-        if(LauncherSelector.SelectedItem is Cache_DisplayLauncher cache)
+        if(LauncherSelector.SelectedItem is Cache_DisplayLauncher cache && WindowManager.OpenWindow(WindowType.ConfirmationWindow, this) is ConfirmationWindow confirm)
         {
-            ConfirmationWindow confirm = new ConfirmationWindow(cache.name);
-            confirm.IsVisible = true;
+            confirm.Setup(cache.name);
             confirm.Closed += (source, args) =>
             {
                 if (confirm.confirmed)

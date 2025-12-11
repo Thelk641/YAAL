@@ -107,11 +107,16 @@ namespace YAAL.Assets.Scripts
 
         public static void ForceDebounce(Action debouncedFunction)
         {
+            RemoveDebounce(debouncedFunction);
+            debouncedFunction.Invoke();
+        }
+
+        public static void RemoveDebounce(Action debouncedFunction)
+        {
             if (countdown.ContainsKey(debouncedFunction))
             {
                 countdown.Remove(debouncedFunction);
             }
-            debouncedFunction.Invoke();
         }
     }
 }
