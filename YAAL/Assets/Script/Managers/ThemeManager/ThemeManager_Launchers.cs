@@ -267,7 +267,7 @@ namespace YAAL
 
                 foreach (var item in slot.GetForegrounds())
                 {
-                    //Debug.WriteLine(item.Name + " / " + foregroundImage.Size);
+                    //Trace.WriteLine(item.Name + " / " + foregroundImage.Size);
                     AutoTheme.SetTheme(item, ThemeSettings.off);
                     item.Background = foregroundBrush;
                 }
@@ -453,7 +453,7 @@ namespace YAAL
 
         public async static Task<Bitmap> UpdateTheme(Cache_LayeredBrush brush, Cache_CustomTheme theme, ThemeSettings setting, bool save = true)
         {
-            Debug.WriteLine("Updating theme");
+            Trace.WriteLine("Updating theme");
             Canvas holder;
             Canvas container;
             Vector2 temporarySize;
@@ -478,7 +478,7 @@ namespace YAAL
                     container = slotBackground.Back;
                     //temporarySize = WindowManager.GetSlotSize();
                     temporarySize = new Vector2((float)slotBackground.Width, (float)slotBackground.Height);
-                    Debug.WriteLine(temporarySize);
+                    Trace.WriteLine(temporarySize);
                     break;
                 case ThemeSettings.foregroundColor:
                     if (slotForeground == null)
@@ -662,7 +662,7 @@ namespace YAAL
                 Point transformedPoint = ComputePoint(new Point(X, Y), container, (ctrl.Parent as Canvas)!);
                 Canvas.SetLeft(ctrl, transformedPoint.X);
                 Canvas.SetTop(ctrl, transformedPoint.Y);
-                Debug.WriteLine("Bounds : " 
+                Trace.WriteLine("Bounds : " 
                     + Canvas.GetLeft(ctrl) + "/"
                     + Canvas.GetRight(ctrl) + "/"
                     + Canvas.GetTop(ctrl) + "/"

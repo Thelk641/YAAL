@@ -188,7 +188,7 @@ public partial class CLMakerWindow : ScalableWindow
             }
             else
             {
-                Debug.WriteLine("AvailableVersions isn't a list of string !?");
+                Trace.WriteLine("AvailableVersions isn't a list of string !?");
                 testWindow.Setup(display.cache.settings[launcherName], new List<string>(), requiresPatch, requiresVersion);
             }
             testWindow.IsVisible = true;
@@ -263,7 +263,7 @@ public partial class CLMakerWindow : ScalableWindow
                     }
                 }
             }
-            Debug.WriteLine("Error : couldn't find the newly created launcher !?");
+            Trace.WriteLine("Error : couldn't find the newly created launcher !?");
             
         };
     }

@@ -23,7 +23,7 @@ namespace YAAL
         
         public static void SaveLauncher(CustomLauncher toSave)
         {
-            Debug.WriteLine("Saving launcher : " + toSave.selfsettings[LauncherSettings.launcherName]);
+            Trace.WriteLine("Saving launcher : " + toSave.selfsettings[LauncherSettings.launcherName]);
             Cache_CustomLauncher cache = toSave.WriteCache();
             SaveCacheLauncher(cache);
             launcherCache[toSave.selfsettings[LauncherSettings.launcherName]] = toSave;

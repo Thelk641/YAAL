@@ -281,7 +281,7 @@ public partial class Setting : UserControl
 
                     CustomValue.Text = Clean(fullText);
 
-                    Debug.WriteLine("Slider changed, new value : " + CustomValue.Text);
+                    Trace.WriteLine("Slider changed, new value : " + CustomValue.Text);
                 },
                 0.5f);
         };

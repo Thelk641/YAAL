@@ -446,7 +446,7 @@ public partial class BrushMaker : ScalableWindow
                 (brush as Cached_ImageLayer)!.absoluteImageWidth = true;
                 break;
             default:
-                Debug.WriteLine("SwitchRelativeAbsolute called from button " + source.Name);
+                Trace.WriteLine("SwitchRelativeAbsolute called from button " + source.Name);
                 return;
         }
 

@@ -224,7 +224,7 @@ namespace YAAL
         {
             if(oldName == null)
             {
-                Debug.WriteLine(Path.Combine(GetSaveLocation(ManagedApworlds), newName));
+                Trace.WriteLine(Path.Combine(GetSaveLocation(ManagedApworlds), newName));
                 Directory.CreateDirectory(Path.Combine(GetSaveLocation(ManagedApworlds), newName));
                 return true;
             }

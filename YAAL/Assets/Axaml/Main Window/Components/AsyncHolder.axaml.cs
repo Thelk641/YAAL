@@ -112,7 +112,7 @@ public partial class AsyncHolder : UserControl
 
         DeleteButton.Click += (_, _) =>
         {
-            if(WindowManager.OpenWindow(WindowType.ConfirmationWindow, WindowManager.GetMainWindow()) is ConfirmationWindow confirm)
+            if(WindowManager.OpenWindow(WindowType.ConfirmationWindow, this.GetVisualRoot() as Window) is ConfirmationWindow confirm)
             {
                 confirm.Setup(thisAsync.settings[asyncName]);
                 confirm.Closed += (_, _) =>

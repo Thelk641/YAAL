@@ -149,7 +149,7 @@ namespace YAAL
 
         public static bool Restore(string path, string asyncName, string slotName)
         {
-            Debug.WriteLine("FileCore, trying to restore : " + path);
+            Trace.WriteLine("FileCore, trying to restore : " + path);
 
             string slotDir = Path.Combine(GetSaveLocation(Async), asyncName, slotName);
             string tempBackupDir = Path.Combine(slotDir, "Temporary Backup");

@@ -253,7 +253,7 @@ public static partial class WebManager
         }
         else
         {
-            Debug.WriteLine(response);
+            Trace.WriteLine(response);
             string jsonString = await response.Content.ReadAsStringAsync();
             // Direct tag-based result — a single object
             releaseJson = JObject.Parse(jsonString);
@@ -328,7 +328,7 @@ public static partial class WebManager
                         return false;
                     }
                 } else {
-                    Debug.WriteLine("Aborted download, file already downloaded : " + name);
+                    Trace.WriteLine("Aborted download, file already downloaded : " + name);
                 }
 
             }

@@ -50,7 +50,7 @@ public static partial class WebManager
             {
                 byte[] file = await response.Content.ReadAsByteArrayAsync();
                 IOManager.SaveFile(savePath, file);
-                Debug.WriteLine($"Downloaded: {savePath}");
+                Trace.WriteLine($"Downloaded: {savePath}");
                 return true;
             }
             catch (Exception e)

@@ -108,12 +108,12 @@ public partial class SlotHolder : UserControl
         this.Height = newHeight;
         ChangedHeight?.Invoke(previousHeight, newHeight);
         previousHeight = newHeight;
-        //Debug.WriteLine("New height : " + newHeight);
+        //Trace.WriteLine("New height : " + newHeight);
         ThemeHolder.InvalidateArrange();
         ThemeHolder.InvalidateMeasure();
         ThemeHolder.Measure(new Size(0, newHeight));
         ThemeHolder.Arrange(new Rect(0, 0, 0, newHeight));
-        //Debug.WriteLine("ThemeHolder : " + ThemeHolder.Bounds);
+        //Trace.WriteLine("ThemeHolder : " + ThemeHolder.Bounds);
         
     }
 
@@ -347,7 +347,7 @@ public partial class SlotHolder : UserControl
 
         DeleteSlot.Click += (_, _) =>
         {
-            if (WindowManager.OpenWindow(WindowType.ConfirmationWindow, WindowManager.GetMainWindow()) is ConfirmationWindow confirm)
+            if (WindowManager.OpenWindow(WindowType.ConfirmationWindow, this.GetVisualRoot() as Window) is ConfirmationWindow confirm)
             {
                 confirm.Setup(thisSlot.settings[slotName]);
 

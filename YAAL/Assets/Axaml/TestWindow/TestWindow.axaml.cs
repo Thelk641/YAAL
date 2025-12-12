@@ -90,7 +90,7 @@ public partial class TestWindow : ScalableWindow
                 _testWindow = newWindow;
             } else
             {
-                Debug.WriteLine("The new window isn't a test window. What !?");
+                Trace.WriteLine("The new window isn't a test window. What !?");
                 _testWindow = new TestWindow();
             }
         }

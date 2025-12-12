@@ -59,9 +59,9 @@ public partial class App : Application
 #if DEBUG
         if(args.Length == 0)
         {
-            //args = new string[5] { "--restore", "--async", "New async", "--slot", "Masaru_linked" };
+            //args = new string[5] { "--debug", "--async", "Gnya", "--slot", "Masaru_OoS" };
             //args = new string[7] {"--restore", "--async", "Pingu ER", "--slot", "Masaru_FF", "--launcher", "\"Text Client\"" };
-            //args = new string[7] {"--restore", "--async", "_temporary", "--slot", "_temporary", "--launcher", "\"Dice\"" };
+            args = new string[7] {"--debug", "--async", "Gnya", "--slot", "Masaru_OoS", "--launcher", "\"Dice\"" };
             //args = new string[1] { "--debug" };
         }
 #endif
@@ -204,6 +204,10 @@ public partial class App : Application
             } else
             {
                 ErrorManager.ThrowError();
+                if (logDebug)
+                {
+                    logger.Save();
+                }
                 Environment.Exit(0);
             }
         }
@@ -310,7 +314,7 @@ public partial class App : Application
         return true;
     }
 
-    static async Task WaitForRestore(CustomLauncher launcher)
+    async Task WaitForRestore(CustomLauncher launcher)
     {
         var tcs = new TaskCompletionSource();
 
@@ -322,6 +326,10 @@ public partial class App : Application
         await tcs.Task;
 
         ErrorManager.ThrowError();
+        if (logDebug)
+        {
+            logger.Save();
+        }
         Environment.Exit(0);
     }
 }

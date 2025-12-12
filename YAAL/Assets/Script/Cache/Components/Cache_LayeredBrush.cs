@@ -66,7 +66,7 @@ namespace YAAL
             int index = _cache.IndexOf(oldBrush);
             if(index == -1)
             {
-                Debug.WriteLine(_cache.Contains(oldBrush));
+                Trace.WriteLine(_cache.Contains(oldBrush));
             }
             _cache.Remove(oldBrush);
             _cache.Insert(index, newBrush);

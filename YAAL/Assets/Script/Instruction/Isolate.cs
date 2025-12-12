@@ -166,7 +166,7 @@ namespace YAAL
 
         public override void ParseProcess(object? sender, EventArgs e)
         {
-            Debug.WriteLine("Isolate is parsing a process");
+            Trace.WriteLine("Isolate is parsing a process");
             Restore();
         }
 
@@ -178,7 +178,7 @@ namespace YAAL
                 {
                     if (e.Data.Contains(item))
                     {
-                        Debug.WriteLine("Pattern found in output, starting restore. Output : " + e.Data);
+                        Trace.WriteLine("Pattern found in output, starting restore. Output : " + e.Data);
                         Restore();
                     }
                 }

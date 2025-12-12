@@ -53,7 +53,7 @@ namespace YAAL
                 process.StartInfo.UseShellExecute = true;
             }
 
-            Debug.WriteLine($"Running: {truePath} {args}");
+            Trace.WriteLine($"Running: {truePath} {args}");
 
             // We might want to setup the process, but start it at a later time,
             // when we're sure everything is setup (see KeyedProcess)

@@ -150,7 +150,7 @@ namespace YAAL
             }
 
             string json = File.ReadAllText(savePath);
-            Debug.WriteLine("Loading launcher : " + launcherName);
+            Trace.WriteLine("Loading launcher : " + launcherName);
             Cache_CustomLauncher output = null;
             try
             {

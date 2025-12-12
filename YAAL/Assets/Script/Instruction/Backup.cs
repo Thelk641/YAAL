@@ -193,7 +193,7 @@ namespace YAAL
             time -= 0.1f;
             if(time <= 0f)
             {
-                Debug.WriteLine("Timer finished ! Beginning restore");
+                Trace.WriteLine("Timer finished ! Beginning restore");
                 Restore();
             }
         }

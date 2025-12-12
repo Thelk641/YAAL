@@ -95,7 +95,7 @@ namespace YAAL
                 background.SetValue(ctrl, brush);
             } else
             {
-                Debug.WriteLine("No background property for : " + ctrl.Name + " of type " + ctrl.GetType());
+                Trace.WriteLine("No background property for : " + ctrl.Name + " of type " + ctrl.GetType());
             }
         }
 

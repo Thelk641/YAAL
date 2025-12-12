@@ -322,13 +322,13 @@ public static partial class WebManager
             {
                 string jsonString = await response.Content.ReadAsStringAsync();
                 Cache_RoomStatus status = JsonSerializer.Deserialize<Cache_RoomStatus>(jsonString);
-                Debug.WriteLine("port : " + status.last_port.ToString());
+                Trace.WriteLine("port : " + status.last_port.ToString());
                 output.port = status.last_port.ToString();
             }
         }
         catch (Exception e)
         {
-            Debug.WriteLine("Exception while trying to get port : " + e.Message);
+            Trace.WriteLine("Exception while trying to get port : " + e.Message);
         }
 
         return output;

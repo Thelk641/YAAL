@@ -155,7 +155,7 @@ namespace YAAL
             }
             catch (Exception)
             {
-                Debug.WriteLine(name.ToString());
+                Trace.WriteLine(name.ToString());
                 throw;
             }    
         }

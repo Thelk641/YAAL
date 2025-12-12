@@ -76,8 +76,14 @@ namespace YAAL
                 case WindowType.DisplayWindow:
                     window = new DisplayWindow();
                     break;
+                case WindowType.ConfirmationWindow:
+                    window = new ConfirmationWindow();
+                    break;
                 default:
-                    window = new MainWindow();
+                    window = new Window();
+                    ErrorManager.ThrowError(
+                        "WindowManager - Wrong window type", 
+                        "Tried to open a window of type : " + windowType + ". That shouldn't happen, please report.");
                     break;
             }
 

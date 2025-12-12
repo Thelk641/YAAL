@@ -47,7 +47,7 @@ public class CustomLauncher
     public CustomLauncher()
     {
         settings[LauncherSettings.launcherName] = "New Launcher";
-        DoneRestoring += () => { Debug.WriteLine("Done restoring !"); };
+        DoneRestoring += () => { Trace.WriteLine("Done restoring !"); };
     }
 
 
@@ -396,41 +396,33 @@ public class CustomLauncher
         {
             // Text might contain things like ${aplauncher}, we're replacing those by their value
             string[] splitText = text.Split("${");
-            bool needsSpace = false;
-            int index = text.IndexOf('}');
-
-            if (index != -1 &&
-                ((index + 1 < text.Length && text[index + 1] == ' ') ||
-                (index + 2 < text.Length && text[index + 2] == ' '))
-                )
-            {
-                needsSpace = true;
-            }
 
             if (splitText.Length > 1)
             {
                 string output = "";
                 string cleaned;
-                bool needsQuote;
                 foreach (var item in splitText)
                 {
-                    needsQuote = false;
                     if (item == "" || item == "\"" || item == " ")
                     {
                         continue;
                     }
 
+                    if (!item.Contains("}"))
+                    {
+                        output += item;
+                        continue;
+                    }
+
                     cleaned = item;
 
-                    if (item.Trim().StartsWith("\"") || item.Trim().EndsWith("\""))
+                    if (item.Trim().StartsWith("\""))
                     {
-
                         do
                         {
-                            cleaned = cleaned.Trim('\"').Trim();
-                        } while (cleaned.StartsWith("\"") || cleaned.EndsWith("\""));
+                            cleaned = cleaned.TrimStart('\"').Trim();
+                        } while (cleaned.StartsWith("\""));
 
-                        needsQuote = true;
                         output += "\"";
                     }
 
@@ -493,17 +485,7 @@ public class CustomLauncher
                             output = output + split[0];
                         }
 
-                        if (needsQuote && !split[1].StartsWith("\";"))
-                        {
-                            output += "\"";
-                        }
-
                         output = output + split[1];
-
-                        if (needsSpace)
-                        {
-                            output += " ";
-                        }
                     } else
                     {
                         output = output + split[0];
@@ -867,7 +849,7 @@ public class CustomLauncher
             {
                 if(keys == cache.key.Trim())
                 {
-                    Debug.WriteLine("Key is correct, subscribing " + item.Key.GetInstructionType() + " to key " + cache.key);
+                    Trace.WriteLine("Key is correct, subscribing " + item.Key.GetInstructionType() + " to key " + cache.key);
                     cache.GetProcess().Exited += item.Key.ParseProcess;
                 }
             }
@@ -879,7 +861,7 @@ public class CustomLauncher
             {
                 if (keys == cache.key.Trim())
                 {
-                    Debug.WriteLine("Key is correct, subscribing " + item.Key.GetInstructionType() + " to key " + cache.key);
+                    Trace.WriteLine("Key is correct, subscribing " + item.Key.GetInstructionType() + " to key " + cache.key);
                     cache.GetProcess().OutputDataReceived += item.Key.ParseOutputData;
                 }
             }

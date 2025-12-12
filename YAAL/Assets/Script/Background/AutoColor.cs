@@ -38,7 +38,7 @@ namespace YAAL
             {
                 if (ctrl is TextBlock text && text.Text != null && text.Text == "aplauncher")
                 {
-                    //Debug.WriteLine(current);
+                    //Trace.WriteLine(current);
                 }
 
                 brush = GetBrush(current);

@@ -144,7 +144,7 @@ namespace YAAL
             string path = folder;
             string args = customLauncher.ParseTextWithSettings(" -- \"YAAL Patcher\" \"" + this.settings[patch] + "\"");
 
-            Debug.WriteLine("Process : " + path + args);
+            Trace.WriteLine("Process : " + path + args);
 
             Process process = ProcessManager.StartProcess(path, args);
 
