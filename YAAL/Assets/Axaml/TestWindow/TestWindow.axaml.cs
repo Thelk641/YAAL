@@ -198,7 +198,17 @@ public partial class TestWindow : ScalableWindow
 
         string args = "--async " + async.settings[AsyncSettings.asyncName] + " --slot " + slot.settings[SlotSettings.slotName] + " --launcher " + LauncherName.Text;
 
-        ProcessManager.StartProcess(Environment.ProcessPath, args, true, false);
+        try
+        {
+            ProcessManager.StartProcess(Environment.ProcessPath, args, true, false);
+        }
+        catch (Exception e)
+        {
+            ErrorManager.ThrowError(
+                "TestWindow - Starting process threw an exception",
+                "Trying to launch " + Environment.ProcessPath + " with args " + args + " threw the following exception : " + e.Message);
+        }
+        
     }
 
     private void _SwitchMode(object? sender, RoutedEventArgs e)

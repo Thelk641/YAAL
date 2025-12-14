@@ -34,42 +34,53 @@ namespace YAAL
                 
             }
 
-            if (IsExecutable(truePath))
+            try
             {
-                // This is an executable, we need to start it and 
-                // read the output
-                process.StartInfo.FileName = truePath;
-                process.StartInfo.Arguments = args;
-                process.StartInfo.UseShellExecute = !redirectOutput;
-                process.StartInfo.RedirectStandardOutput = redirectOutput;
-                process.StartInfo.RedirectStandardError = redirectOutput;
-                process.EnableRaisingEvents = true;
-            } else
-            {
-                // This is not an executable, let's let the OS
-                // deal with it
-                process.StartInfo.FileName = truePath;
-                process.StartInfo.Arguments = args;
-                process.StartInfo.UseShellExecute = true;
+                if (IsExecutable(truePath))
+                {
+                    // This is an executable, we need to start it and 
+                    // read the output
+                    process.StartInfo.FileName = truePath;
+                    process.StartInfo.Arguments = args;
+                    process.StartInfo.UseShellExecute = !redirectOutput;
+                    process.StartInfo.RedirectStandardOutput = redirectOutput;
+                    process.StartInfo.RedirectStandardError = redirectOutput;
+                    process.EnableRaisingEvents = true;
+                }
+                else
+                {
+                    // This is not an executable, let's let the OS
+                    // deal with it
+                    process.StartInfo.FileName = truePath;
+                    process.StartInfo.Arguments = args;
+                    process.StartInfo.UseShellExecute = true;
+                }
+
+                Trace.WriteLine($"Running: {truePath} {args}");
+
+                // We might want to setup the process, but start it at a later time,
+                // when we're sure everything is setup (see KeyedProcess)
+                if (autoStart)
+                {
+                    process.Start();
+                }
+
+                return process;
             }
-
-            Trace.WriteLine($"Running: {truePath} {args}");
-
-            // We might want to setup the process, but start it at a later time,
-            // when we're sure everything is setup (see KeyedProcess)
-            if (autoStart)
+            catch (Exception e)
             {
-                process.Start();
+                ErrorManager.ThrowError(
+                    "ProcessManager - Failed to create process",
+                    "Trying to create a process raised the following exception : " + e.Message);
+                return null;
             }
-
-            return process;
         }
 
         public static Cache_Process StartKeyedProcess(string path, string args, bool redirectOutput)
         {
             Cache_Process process = new Cache_Process(StartProcess(path, args, false, redirectOutput));
             process.redirectOutput = redirectOutput;
-            if(process == null)
+            if(process == null || process.GetProcess() == null)
             {
                 ErrorManager.AddNewError(
                     "ProcessManager - Failed to start keyed process",

@@ -37,7 +37,7 @@ namespace YAAL
             this.key = newKey;
         }
 
-        public Process GetProcess()
+        public Process? GetProcess()
         {
             return process;
         }
