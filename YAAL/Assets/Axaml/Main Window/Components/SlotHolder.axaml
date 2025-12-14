@@ -131,9 +131,12 @@
 								<ScrollViewer 
 									Grid.Column="0" 
 									Name="Viewer"
-									
 									>
-									<StackPanel Name="TrackerItemHolder"/>
+									<Border
+										Padding="4,4,17,0"
+										>
+										<StackPanel Name="TrackerItemHolder"/>
+									</Border>
 								</ScrollViewer>
 							</Border>
 							<Button

@@ -14,7 +14,7 @@
 		>
 	<LayoutTransformControl x:Name="Controller">
 		<ScrollViewer HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-			<Border Margin="0,0,15,0" Padding="8" Name="TrueBackground">
+			<Border Padding="8,8,23,8" Name="TrueBackground">
 				<Grid RowDefinitions="*, 30">
 					<StackPanel Name="SettingContainer">
 						<Border
