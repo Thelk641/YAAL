@@ -120,73 +120,109 @@ public partial class TestWindow : ScalableWindow
         Cache_Async async;
         Cache_Slot slot;
 
-        if (TemporaryAsync.IsVisible)
+        try
         {
-            bool needToCreateSlot = false;
-
-            if(temporaryAsync == null)
+            if (TemporaryAsync.IsVisible)
             {
-                temporaryAsync = IOManager.CreateNewAsync("_temporary");
-                needToCreateSlot = true;
-            }
+                bool needToCreateSlot = false;
 
-            if(RoomURL.Text != "")
-            {
-                if (WebManager.IsValidURL(RoomURL.Text!))
+                if (temporaryAsync == null)
                 {
-                    temporaryAsync.settings[AsyncSettings.roomURL] = RoomURL.Text!;
-                    temporaryAsync.room = await WebManager.ParseRoomURL(RoomURL.Text!);
-                    temporaryAsync.settings[AsyncSettings.roomAddress] = temporaryAsync.room.address;
-                    temporaryAsync.settings[AsyncSettings.roomPort] = temporaryAsync.room.port;
-                    temporaryAsync.settings[AsyncSettings.room] = temporaryAsync.room.address + ":" + temporaryAsync.room.port;
-                    temporaryAsync.settings[AsyncSettings.cheeseURL] = temporaryAsync.room.cheeseTrackerURL;
-                } else if (RoomURL.Text!.Contains(":"))
+                    temporaryAsync = IOManager.CreateNewAsync("_temporary");
+                    needToCreateSlot = true;
+                }
+
+                if (RoomURL.Text != "")
                 {
-                    var splitURL = RoomURL.Text!.Split(":");
-                    if(splitURL.Length == 2)
+                    if (WebManager.IsValidURL(RoomURL.Text!))
                     {
-                        temporaryAsync.settings[AsyncSettings.roomAddress] = splitURL[0];
-                        temporaryAsync.settings[AsyncSettings.roomPort] = splitURL[1];
+                        temporaryAsync.settings[AsyncSettings.roomURL] = RoomURL.Text!;
+                        temporaryAsync.room = await WebManager.ParseRoomURL(RoomURL.Text!);
+                        temporaryAsync.settings[AsyncSettings.roomAddress] = temporaryAsync.room.address;
+                        temporaryAsync.settings[AsyncSettings.roomPort] = temporaryAsync.room.port;
+                        temporaryAsync.settings[AsyncSettings.room] = temporaryAsync.room.address + ":" + temporaryAsync.room.port;
+                        temporaryAsync.settings[AsyncSettings.cheeseURL] = temporaryAsync.room.cheeseTrackerURL;
+                    }
+                    else if (RoomURL.Text!.Contains(":"))
+                    {
+                        var splitURL = RoomURL.Text!.Split(":");
+                        if (splitURL.Length == 2)
+                        {
+                            temporaryAsync.settings[AsyncSettings.roomAddress] = splitURL[0];
+                            temporaryAsync.settings[AsyncSettings.roomPort] = splitURL[1];
+                            temporaryAsync.settings[AsyncSettings.room] = RoomURL.Text!;
+                        }
+                    }
+                    else
+                    {
                         temporaryAsync.settings[AsyncSettings.room] = RoomURL.Text!;
                     }
-                } else
+                }
+
+                temporaryAsync.settings[AsyncSettings.isTemporary] = true.ToString();
+                IOManager.SaveAsync(temporaryAsync, temporaryAsync);
+
+                Cache_Slot temporarySlot;
+
+                if (needToCreateSlot)
                 {
-                    temporaryAsync.settings[AsyncSettings.room] = RoomURL.Text!;
+                    temporarySlot = IOManager.CreateNewSlot(temporaryAsync, "_temporary");
+                }
+                else
+                {
+                    temporarySlot = temporaryAsync.slots[0];
+                }
+
+                temporarySlot.settings[SlotSettings.patch] = Patch.Text ?? "";
+
+                IOManager.SaveAsync(temporaryAsync, temporaryAsync);
+
+                async = temporaryAsync;
+                slot = temporarySlot;
+            }
+            else
+            {
+                if (AsyncSelector.SelectedItem is string asyncName && asyncName != "None available" && SlotSelector.SelectedItem is string slotName && slotName != "None available")
+                {
+                    async = IOManager.GetAsync(asyncName);
+                    slot = IOManager.GetSlot(asyncName, slotName);
+                }
+                else
+                {
+                    return;
                 }
             }
-
-            temporaryAsync.settings[AsyncSettings.isTemporary] = true.ToString();
-            IOManager.SaveAsync(temporaryAsync, temporaryAsync);
-
-            Cache_Slot temporarySlot;
-
-            if (needToCreateSlot)
-            {
-                temporarySlot = IOManager.CreateNewSlot(temporaryAsync, "_temporary");
-            } else
-            {
-                temporarySlot = temporaryAsync.slots[0];
-            }
-
-            temporarySlot.settings[SlotSettings.patch] = Patch.Text ?? "";
-
-            IOManager.SaveAsync(temporaryAsync, temporaryAsync);
-
-            async = temporaryAsync;
-            slot = temporarySlot;
-        } else
+        }
+        catch (Exception e)
         {
-            if(AsyncSelector.SelectedItem is string asyncName && asyncName != "None available" && SlotSelector.SelectedItem is string slotName && slotName != "None available")
-            {
-                async = IOManager.GetAsync(asyncName);
-                slot = IOManager.GetSlot(asyncName, slotName);
-            } else
-            {
-                return;
-            }
+            ErrorManager.ThrowError(
+                "TestWindow - Exception while trying to get the slot",
+                "Trying to get the async and slot information raised the following exception : " + e.Message);
+            return;
         }
 
-        if(VersionSelector.SelectedItem is string version)
+        string args = "";
+
+        if(async.settings.ContainsKey(AsyncSettings.asyncName) && slot.settings.ContainsKey(SlotSettings.slotName))
+        {
+            args = "--async " + async.settings[AsyncSettings.asyncName] + " --slot " + slot.settings[SlotSettings.slotName] + " --launcher " + LauncherName.Text;
+        } else
+        {
+            if(!async.settings.ContainsKey(AsyncSettings.asyncName))
+            {
+                ErrorManager.ThrowError(
+                "TestWindow - Missing setting : asyncName",
+                "You tried to access an async that doesn't have a name. This shouldn't ever happen, please report this issue.");
+            } else
+            {
+                ErrorManager.ThrowError(
+                "TestWindow - Missing setting : slotName",
+                "You tried to access a slot that doesn't have a name. This shouldn't ever happen, please report this issue.");
+            }
+            return;
+        }
+
+        if (VersionSelector.SelectedItem is string version)
         {
             Cache_Slot oldSlot = new Cache_Slot();
             oldSlot.settings[SlotSettings.slotName] = slot.settings[SlotSettings.slotName];
@@ -196,7 +232,6 @@ public partial class TestWindow : ScalableWindow
             IOManager.SaveSlot(async.settings[AsyncSettings.asyncName], slot, oldSlot);
         }
 
-        string args = "--async " + async.settings[AsyncSettings.asyncName] + " --slot " + slot.settings[SlotSettings.slotName] + " --launcher " + LauncherName.Text;
 
         try
         {
