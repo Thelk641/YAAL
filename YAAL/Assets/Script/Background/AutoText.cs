@@ -131,11 +131,11 @@ namespace YAAL
                 {
                     if (darkMode)
                     {
-                        button.Foreground = Brushes.Black;
+                        AutoButtonText.SetAutoButtonText(button, Brushes.Black);
                     }
                     else
                     {
-                        button.Foreground = Brushes.White;
+                        AutoButtonText.SetAutoButtonText(button, Brushes.White);
                     }
                 }                
 

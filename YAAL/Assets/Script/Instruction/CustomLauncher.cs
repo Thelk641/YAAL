@@ -180,10 +180,13 @@ public class CustomLauncher
             settings[patch] = selfsettings[Debug_Patch];
         }
 
-        // pretty sure these two are just useless, but just in case someone wants them one day...
         Cache_PreviousSlot cache = IOManager.GetLastAsync(this.selfsettings[launcherName]);
         settings[previousAsync] = cache.previousAsync;
         settings[previousSlot] = cache.previousSlot;
+        settings[previousPatch] = cache.previousPatch;
+        settings[previousVersion] = cache.previousVersion;
+        settings[previousRoom] = cache.previousRoom;
+        settings[previousPort] = cache.previousPort;
     }
 
     public void ReadCache(Cache_CustomLauncher cache)
@@ -266,6 +269,11 @@ public class CustomLauncher
         selfsettings[key] = value;
     }
 
+    public void SetTemporarySetting(string key, string value)
+    {
+        settings[key] = value;
+    }
+
     public string GetSetting(string key)
     {
         if (Enum.TryParse(key, out LauncherSettings setting))
@@ -288,6 +296,11 @@ public class CustomLauncher
     public string GetSetting(LauncherSettings key)
     {
         return selfsettings[key];
+    }
+
+    public string? GetTemporarySetting(string key)
+    {
+        return settings[key];
     }
 
     public List<string> ParseTextWithSettings(List<string> input, bool clearQuote = true)

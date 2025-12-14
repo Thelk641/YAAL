@@ -114,7 +114,6 @@ namespace YAAL
         {
             Cache_Async cache_Async = GetAsync(async);
 
-
             foreach (var item in cache_Async.slots)
             {
                 if (item.settings[slotName] == slot)
@@ -124,7 +123,21 @@ namespace YAAL
                     return;
                 }
             }
-            
+        }
+
+        public static void SetSlotSetting(string async, string slot, string key, string value)
+        {
+            Cache_Async cache_Async = GetAsync(async);
+
+            foreach (var item in cache_Async.slots)
+            {
+                if (item.settings[slotName] == slot)
+                {
+                    item.customSettings[key] = value;
+                    SaveCache<Cache_Async>(Path.Combine(GetSaveLocation(Async), async, multiworld.GetFileName()), cache_Async);
+                    return;
+                }
+            }
         }
 
         public static List<string> GetAsyncList()

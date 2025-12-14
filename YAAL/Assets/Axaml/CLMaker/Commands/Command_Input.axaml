@@ -1,6 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Class="YAAL.Command_Wait"
+             x:Class="YAAL.Command_Input"
 			 xmlns:local="clr-namespace:YAAL"
              HorizontalAlignment="Stretch"
              Height="100"
@@ -58,19 +58,27 @@
 
 
 			</Grid>
-			<TextBlock Text="Wait" FontSize="25" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
+			<TextBlock Text="Input" FontSize="25" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
 			
 			<Grid RowDefinitions="*,8,*" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="4">
-				<Grid ColumnDefinitions="*,8,30">
-					<ComboBox 
-						Name="ModeSelector"
-						HorizontalAlignment="Stretch"
+				<Grid ColumnDefinitions="30,*,8,30">
+					<CheckBox
+                        Grid.Column="0"
+                        Name="OnlyOnce"
+                        ToolTip.Tip="Do we need to error out if the selected version doesn't countain this ?"
+                        IsChecked="True"
+                        />
+					
+					<TextBlock 
+						Grid.Column="1"
+						Text="Only ask once per slot"
+						VerticalAlignment="Center"
 						/>
 					
 					<Button 
 						Name="X" 
 						Content="X" 
-						Grid.Column="2" 
+						Grid.Column="3" 
 						Width="30" 
 						HorizontalContentAlignment="Center" 
 						HorizontalAlignment="Right" 
@@ -78,18 +86,10 @@
 				</Grid>
 				
 				<TextBox 
-					Name="TimerInput"
+					Name="VariableName"
+					Watermark="Variable name"
 					Grid.Row="2"
 					HorizontalAlignment="Stretch"
-					Watermark="Time to pause for (in seconds)"
-					/>
-
-				<TextBox
-					Name="ProcessInput"
-					Grid.Row="2"
-					HorizontalAlignment="Stretch"
-					IsVisible="False"
-					Watermark="Key to look for"
 					/>
           </Grid>
         </Grid>

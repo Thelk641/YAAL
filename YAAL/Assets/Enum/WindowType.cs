@@ -12,12 +12,13 @@ namespace YAAL
         ColorSelector,
         ConfirmationWindow,
         CustomThemeMaker,
+        DisplayWindow,
         ErrorWindow,
+        InputWindow,
         MainWindow,
         NewLauncher,
         SettingManager,
         TestWindow,
-        UpdateWindow,
-        DisplayWindow
+        UpdateWindow
     };
 }

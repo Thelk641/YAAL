@@ -11,6 +11,8 @@ namespace YAAL
         previousAsync,
         previousSlot,
         previousVersion,
-        previousPatch
+        previousPatch,
+        previousRoom,
+        previousPort
     };
 }

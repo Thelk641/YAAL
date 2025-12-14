@@ -263,6 +263,15 @@ namespace YAAL
                 }
             }
 
+            foreach (var item in cache_Slot.customSettings)
+            {
+                if (item.Value != "" || !output.settings.ContainsKey(item.Key.ToString()))
+                {
+                    output.settings[item.Key] = item.Value;
+                }
+            }
+
+
             return output;
         }
 

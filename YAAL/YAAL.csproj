@@ -20,11 +20,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Assets\Axaml\CLMaker\Commands\Command_Input.axaml.cs">
+      <DependentUpon>Command_Input.axaml</DependentUpon>
+    </Compile>
     <Compile Update="Assets\Axaml\CLMaker\Commands\Command_Wait.axaml.cs">
       <DependentUpon>Command_Wait.axaml</DependentUpon>
     </Compile>
     <Compile Update="Assets\Axaml\CLMaker\Commands\Command_Display.axaml.cs">
       <DependentUpon>Command_Display.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Assets\Axaml\CLMaker\Commands\Components\Input Window.axaml.cs">
+      <DependentUpon>Input Window.axaml</DependentUpon>
     </Compile>
     <Compile Update="Assets\Axaml\DisplayWindow\Info.axaml.cs">
       <DependentUpon>Info.axaml</DependentUpon>

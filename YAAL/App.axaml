@@ -19,7 +19,35 @@
 			<Setter Property="local:AutoTheme.AutoTheme" Value="buttonColor"/>
 			<Setter Property="local:AutoText.AutoText" Value="True"/>
 			<Setter Property="BorderBrush" Value="Transparent" />
+			<Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource Self}, Path=(local:AutoButtonText.AutoButtonText)}"/>		
 		</Style>
+		
+		<Style Selector="Button:pointerover">
+			<Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource Self}, Path=(local:AutoButtonText.AutoButtonText)}"/>
+		</Style>
+
+		<Style Selector="Button:pressed">
+			<Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource Self}, Path=(local:AutoButtonText.AutoButtonText)}"/>
+		</Style>
+
+		<Style Selector="Button ContentPresenter">
+			<Setter Property="Foreground"
+					Value="{Binding RelativeSource={RelativeSource AncestorType=Button},
+                            Path=(local:AutoButtonText.AutoButtonText)}"/>
+		</Style>
+
+		<Style Selector="Button:pointerover ContentPresenter">
+			<Setter Property="Foreground"
+					Value="{Binding RelativeSource={RelativeSource AncestorType=Button},
+                            Path=(local:AutoButtonText.AutoButtonText)}"/>
+		</Style>
+
+		<Style Selector="Button:pressed ContentPresenter">
+			<Setter Property="Foreground"
+					Value="{Binding RelativeSource={RelativeSource AncestorType=Button},
+                            Path=(local:AutoButtonText.AutoButtonText)}"/>
+		</Style>
+
 
 		<Style Selector="Window">
 			<Setter Property="local:AutoTheme.AutoTheme" Value="backgroundColor" />

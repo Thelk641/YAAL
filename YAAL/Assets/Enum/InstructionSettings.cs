@@ -29,6 +29,12 @@ namespace YAAL
         displayList
     }
 
+    public enum InputSettings
+    {
+        variableName,
+        saveResult
+    }
+
     public enum IsolateSettings
     {
         processName,

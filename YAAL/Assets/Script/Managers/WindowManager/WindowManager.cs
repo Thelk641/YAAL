@@ -79,12 +79,14 @@ namespace YAAL
                 case WindowType.ConfirmationWindow:
                     window = new ConfirmationWindow();
                     break;
+                case WindowType.InputWindow:
+                    window = new InputWindow();
+                    break;
                 default:
-                    window = new Window();
                     ErrorManager.ThrowError(
                         "WindowManager - Wrong window type", 
                         "Tried to open a window of type : " + windowType + ". That shouldn't happen, please report.");
-                    break;
+                    return null;
             }
 
             

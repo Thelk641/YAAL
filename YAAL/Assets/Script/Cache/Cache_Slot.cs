@@ -20,6 +20,8 @@ namespace YAAL
             {slotTrackerURL, "" }
         };
 
+        public Dictionary<string, string> customSettings = new Dictionary<string, string>();
+
         public object Clone()
         {
             return this.MemberwiseClone();

@@ -1,0 +1,51 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:YAAL"
+		mc:Ignorable="d"
+		Width="300"
+        Height="76"
+        x:Class="YAAL.InputWindow"
+        Title="Confirmation window">
+	<LayoutTransformControl x:Name="Controller">
+	<Border Margin="8" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+		<Grid RowDefinitions="*,8,*">
+			<TextBlock
+				Name="VariableDisplay"
+				Text="Variable name holder"
+				Grid.Row="0"
+				HorizontalAlignment="Center"
+				VerticalAlignment="Center"
+				/>
+			<Grid ColumnDefinitions="*,8,30" Grid.Row="2">
+				<TextBox
+				Name="VariableContent"
+				Watermark="Your variable's value"
+				VerticalAlignment="Center"
+				HorizontalAlignment="Stretch"
+				HorizontalContentAlignment="Left"
+				/>
+
+				<Button
+					Name="FileButton"
+					Width="30"
+					Height="30"
+					Grid.Column="2"
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch"
+					local:AutoIcon.Icon="File"
+					ToolTip.Tip="Select a file"
+					>
+					<Svg
+						VerticalAlignment="Center"
+						HorizontalAlignment="Center"
+						Width="30"
+						/>
+				</Button>
+			</Grid>
+
+		</Grid>
+	</Border>
+		</LayoutTransformControl>
+</Window>
