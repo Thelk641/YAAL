@@ -125,27 +125,25 @@ namespace YAAL
                     textblock.Foreground = Brushes.White;
                 }
             }
-            else if (ctrl is Button button && button.Presenter is ContentPresenter buttonPresenter)
+            else if (ctrl is Button button)
             {
                 void Apply()
                 {
-                    if(button.Presenter is ContentPresenter buttonPresenter)
+                    if (darkMode)
                     {
-                        if (darkMode)
-                        {
-                            buttonPresenter.Foreground = Brushes.Black;
-                        }
-                        else
-                        {
-                            buttonPresenter.Foreground = Brushes.White;
-                        }
+                        button.Foreground = Brushes.Black;
+                    }
+                    else
+                    {
+                        button.Foreground = Brushes.White;
                     }
                 }                
 
                 button.PropertyChanged += (_, property) =>
                 {
                     if (property.Property == Button.IsPointerOverProperty ||
-                        property.Property == Button.IsPressedProperty)
+                        property.Property == Button.IsPressedProperty ||
+                        property.Property == Button.IsEnabledProperty)
                     {
                         Apply();
                     }
