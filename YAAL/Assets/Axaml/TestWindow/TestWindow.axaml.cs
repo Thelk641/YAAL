@@ -128,6 +128,7 @@ public partial class TestWindow : ScalableWindow
 
                 if (temporaryAsync == null)
                 {
+                    Trace.WriteLine("Creating a temporary async");
                     temporaryAsync = IOManager.CreateNewAsync("_temporary");
                     needToCreateSlot = true;
                 }
@@ -136,6 +137,7 @@ public partial class TestWindow : ScalableWindow
                 {
                     if (WebManager.IsValidURL(RoomURL.Text!))
                     {
+                        Trace.WriteLine("Parsing RoomURL as full URL");
                         temporaryAsync.settings[AsyncSettings.roomURL] = RoomURL.Text!;
                         temporaryAsync.room = await WebManager.ParseRoomURL(RoomURL.Text!);
                         temporaryAsync.settings[AsyncSettings.roomAddress] = temporaryAsync.room.address;
@@ -145,6 +147,7 @@ public partial class TestWindow : ScalableWindow
                     }
                     else if (RoomURL.Text!.Contains(":"))
                     {
+                        Trace.WriteLine("Parsing RoomURL as IP:port");
                         var splitURL = RoomURL.Text!.Split(":");
                         if (splitURL.Length == 2)
                         {
@@ -155,17 +158,23 @@ public partial class TestWindow : ScalableWindow
                     }
                     else
                     {
+                        Trace.WriteLine("Parsing RoomURL as simple string");
                         temporaryAsync.settings[AsyncSettings.room] = RoomURL.Text!;
                     }
+                } else
+                {
+                    Trace.WriteLine("RoomURL is either null or empty");
                 }
 
                 temporaryAsync.settings[AsyncSettings.isTemporary] = true.ToString();
+                Trace.WriteLine("Saving temporary async (1)");
                 IOManager.SaveAsync(temporaryAsync, temporaryAsync);
 
                 Cache_Slot temporarySlot;
 
                 if (needToCreateSlot)
                 {
+                    Trace.WriteLine("Creating temporary slot");
                     temporarySlot = IOManager.CreateNewSlot(temporaryAsync, "_temporary");
                 }
                 else
@@ -175,6 +184,7 @@ public partial class TestWindow : ScalableWindow
 
                 temporarySlot.settings[SlotSettings.patch] = Patch.Text ?? "";
 
+                Trace.WriteLine("Saving temporary async (2)");
                 IOManager.SaveAsync(temporaryAsync, temporaryAsync);
 
                 async = temporaryAsync;
@@ -184,11 +194,13 @@ public partial class TestWindow : ScalableWindow
             {
                 if (AsyncSelector.SelectedItem is string asyncName && asyncName != "None available" && SlotSelector.SelectedItem is string slotName && slotName != "None available")
                 {
+                    Trace.WriteLine("Reading async information");
                     async = IOManager.GetAsync(asyncName);
                     slot = IOManager.GetSlot(asyncName, slotName);
                 }
                 else
                 {
+                    Trace.WriteLine("Async/slot is either null, None, or invalid");
                     return;
                 }
             }

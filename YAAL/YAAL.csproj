@@ -32,7 +32,7 @@
     <Compile Update="Assets\Axaml\DisplayWindow\Display Window.axaml.cs">
       <DependentUpon>Display Window.axaml</DependentUpon>
     </Compile>
-    <Compile Update="Assets\Axaml\CLMaker\Commands\Display Info.axaml.cs">
+    <Compile Update="Assets\Axaml\CLMaker\Commands\Components\Display Info.axaml.cs">
       <DependentUpon>Display Info.axaml</DependentUpon>
     </Compile>
     <Compile Update="Assets\Axaml\CLMaker\VersionManager\VersionManager.axaml.cs">
