@@ -211,7 +211,27 @@ public partial class CLMakerWindow : ScalableWindow
 
     public async void DownloadVersion(object? sender, RoutedEventArgs e)
     {
-        if(await WebManager.DownloadUpdatedApworld(customLauncher, GitHubVersions.SelectedItem.ToString()))
+        if(customLauncher == null || !customLauncher.selfsettings.ContainsKey(githubURL)){
+            return;
+        }
+
+        string gitURL = customLauncher.selfsettings[githubURL];
+
+        if (gitURL == "")
+        {
+            ErrorManager.ThrowError(
+                "CLMaker - Empty github URL",
+                "To download a version, you must first set this game's github URL in the launcher's settings.");
+            return;
+        } else if (!WebManager.IsValidGitURL(gitURL))
+        {
+            ErrorManager.ThrowError(
+                "CLMaker - Invalid github URL",
+                "For security reasons, YAAL can only download from GitHub. This is not a valid GitHub URL : " + gitURL);
+            return;
+        }
+
+        if (await WebManager.DownloadUpdatedApworld(customLauncher, GitHubVersions.SelectedItem.ToString()))
         {
             UpdateAvailableVersion();
         }
