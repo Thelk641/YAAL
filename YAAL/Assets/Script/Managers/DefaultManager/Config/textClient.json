@@ -3,7 +3,7 @@
     "0-Open": {
       "args": "-- \"Text Client\" --connect ${slotInfo}",
       "processName": "",
-      "path": "\"C:\\ProgramData\\Archipelago\\ArchipelagoLauncher.exe\";",
+      "path": "\"${aplauncher}\"",
       "redirectOutput": "False"
     }
   },

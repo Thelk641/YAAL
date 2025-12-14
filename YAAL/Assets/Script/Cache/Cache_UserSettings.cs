@@ -34,8 +34,12 @@ namespace YAAL
         public void SetDefaultPath()
         {
             // TODO : this is dbeug
+#if DEBUG
             Set(aplauncher, "C:\\ProgramData\\Archipelago\\ArchipelagoLauncher.exe");
             Set("bizhawk", "I:\\Emulators\\Bizhawk\\EmuHawk.exe");
+#else
+            Set(aplauncher, "/path/to/ArchipelagoLauncher.exe");
+#endif
 
             // uppercase, folders
             saveLocation[ManagedApworlds] = ManagedApworlds.GetFolderName();
