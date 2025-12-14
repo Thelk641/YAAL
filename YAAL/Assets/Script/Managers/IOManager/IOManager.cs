@@ -35,6 +35,12 @@ namespace YAAL
         static IOManager()
         {
             settings = LoadCache<Cache_UserSettings>(userSettings.GetFullPath());
+
+            if (settings.generalSettings.ContainsKey(zoom) && double.TryParse(settings.generalSettings[zoom], out double newZoom))
+            {
+                App.Settings.Zoom = newZoom;
+            }
+
             if(settings.saveLocation.Count == 0)
             {
                 settings.SetDefaultPath();
