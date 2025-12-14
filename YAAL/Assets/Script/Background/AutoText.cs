@@ -70,6 +70,7 @@ namespace YAAL
         {
             if(backgroundColor == null)
             {
+                Trace.WriteLine("AutoText found text without a background : " + ctrl.Name);
                 return;
             }
 
@@ -83,7 +84,37 @@ namespace YAAL
             bool darkMode = !NeedsWhite(ctrl);
 
 
-            if (ctrl is TextBlock textblock)
+            if (ctrl is TextBox box)
+            {
+                void Apply()
+                {
+                    var textPresenter = box.GetVisualDescendants().OfType<TextPresenter>().FirstOrDefault();
+
+                    if (textPresenter != null)
+                    {
+                        if (darkMode)
+                        {
+                            textPresenter.Foreground = Brushes.Black;
+                        }
+                        else
+                        {
+                            textPresenter.Foreground = Brushes.White;
+                        }
+                    }
+                }
+
+                if (box.IsAttachedToVisualTree())
+                {
+                    Apply();
+                } else
+                {
+                    box.AttachedToVisualTree += (_, _) =>
+                    {
+                        Apply();
+                    };
+                }
+
+            } else if (ctrl is TextBlock textblock)
             {
                 if (darkMode)
                 {
@@ -93,20 +124,42 @@ namespace YAAL
                 {
                     textblock.Foreground = Brushes.White;
                 }
-
             }
-            else if (ctrl is Button button)
+            else if (ctrl is Button button && button.Presenter is ContentPresenter buttonPresenter)
             {
-                if (darkMode)
+                void Apply()
                 {
-                    button.Foreground = Brushes.Black;
-                }
-                else
+                    if(button.Presenter is ContentPresenter buttonPresenter)
+                    {
+                        if (darkMode)
+                        {
+                            buttonPresenter.Foreground = Brushes.Black;
+                        }
+                        else
+                        {
+                            buttonPresenter.Foreground = Brushes.White;
+                        }
+                    }
+                }                
+
+                button.PropertyChanged += (_, property) =>
                 {
-                    button.Foreground = Brushes.White;
-                    
+                    if (property.Property == Button.IsPointerOverProperty ||
+                        property.Property == Button.IsPressedProperty)
+                    {
+                        Apply();
+                    }
+                };
+
+                if (button.IsAttachedToVisualTree())
+                {
+                    Apply();
+                } else
+                {
+                    button.AttachedToVisualTree += (_, _) => Apply();
                 }
-            } else if (ctrl is ComboBox comboBox)
+            }
+            else if (ctrl is ComboBox comboBox)
             {
                 AutoComboBox(comboBox);
             }
