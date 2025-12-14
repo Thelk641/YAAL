@@ -64,4 +64,11 @@ namespace YAAL
         outputFile,
         outputVar
     }
+
+    public enum WaitSettings
+    {
+        mode,
+        processName,
+        timer
+    }
 }

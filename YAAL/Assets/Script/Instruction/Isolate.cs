@@ -228,6 +228,7 @@ namespace YAAL
                 ErrorManager.AddNewError(
                         "Isolate - Restore threw an exception",
                         "The restore process threw the following exception : " + e.Message);
+                customLauncher.RemoveWait(this);
                 return false;
             }
         }

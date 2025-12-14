@@ -20,6 +20,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Assets\Axaml\CLMaker\Commands\Command_Wait.axaml.cs">
+      <DependentUpon>Command_Wait.axaml</DependentUpon>
+    </Compile>
     <Compile Update="Assets\Axaml\CLMaker\Commands\Command_Display.axaml.cs">
       <DependentUpon>Command_Display.axaml</DependentUpon>
     </Compile>

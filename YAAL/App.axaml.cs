@@ -61,16 +61,10 @@ public partial class App : Application
         {
             //args = new string[5] { "--debug", "--async", "Gnya", "--slot", "Masaru_OoS" };
             //args = new string[7] {"--restore", "--async", "Pingu ER", "--slot", "Masaru_FF", "--launcher", "\"Text Client\"" };
-            //args = new string[7] {"--debug", "--async", "Gnya", "--slot", "Masaru_OoS", "--launcher", "\"Dice\"" };
+            args = new string[7] {"--debug", "--async", "Gnya", "--slot", "Masaru_OoS", "--launcher", "\"Dice\"" };
             //args = new string[1] { "--debug" };
         }
 #endif
-
-        //var args = new string[2] { "--async PatchTest", "--slot Slot 2" };
-        //var args = new string[2]{"--error ", "D:\\Unity\\Avalonia port\\YAAL\\Logs\\31-07-2025-22-27-27.json" };
-        //var args = new string[2]{"--restore", "--exit" };
-        //var args = new string[4] { "--async", "\"Debug_CLMaker_Async\"", "--slot\"Debug_CLMaker_Slot\"", "--launcher\"Universal Tracker\"" };
-        //var args = new string[4] { "--async", "Early test", "--slot", "M-Ash-saru", };
 
         if (args == null || args.Length == 0)
         {

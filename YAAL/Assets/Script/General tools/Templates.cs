@@ -19,6 +19,7 @@ namespace YAAL
             {"Open", typeof(Command_Open) },
             {"Patch", typeof(Command_Patch) },
             {"RegEx", typeof(Command_RegEx) },
+            {"Wait", typeof(Command_Wait) },
         };
 
         public static Dictionary<string, Type> instructionsTemplates = new Dictionary<string, Type>()
@@ -30,6 +31,7 @@ namespace YAAL
             {"Open", typeof(Open) },
             {"Patch", typeof(Patch) },
             {"RegEx", typeof(RegEx) },
+            {"Wait", typeof(Wait) },
         };
 
         public static List<String> commandNames = new List<String>()
@@ -41,6 +43,7 @@ namespace YAAL
             "Open",
             "Patch",
             "RegEx",
+            "Wait"
         };
 
         public static Dictionary<string, string> fixedSettings = new Dictionary<string, string>

@@ -132,7 +132,7 @@ public partial class TestWindow : ScalableWindow
                     needToCreateSlot = true;
                 }
 
-                if (RoomURL.Text != "")
+                if (RoomURL.Text != null && RoomURL.Text != "")
                 {
                     if (WebManager.IsValidURL(RoomURL.Text!))
                     {
