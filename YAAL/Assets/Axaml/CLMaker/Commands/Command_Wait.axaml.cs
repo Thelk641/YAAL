@@ -22,12 +22,14 @@ public partial class Command_Wait : Command
 
         ModeSelector.SelectedIndex = 0;
         WindowManager.UpdateComboBox(ModeSelector);
+        TurnEventsOn();
     }
 
     
 
     public override void LoadInstruction(Interface_Instruction newInstruction)
     {
+        TurnEventsOff();
         linkedInstruction = newInstruction;
 
         TimerInput.Text = linkedInstruction.GetSetting(timer.ToString());

@@ -178,6 +178,8 @@ public partial class SlotHolder : UserControl
         // if the patch changes, the rom will be updated somewhere else
         newSlot.settings[rom] = thisSlot.settings[rom];
 
+        newSlot.customSettings = thisSlot.customSettings;
+
 
         string newName = IOManager.SaveSlot(asyncName, newSlot, thisSlot);
 

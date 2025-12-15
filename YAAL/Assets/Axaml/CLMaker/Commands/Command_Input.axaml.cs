@@ -17,12 +17,14 @@ public partial class Command_Input : Command
         InitializeComponent();
         SetDebouncedEvents();
         linkedInstruction = new Input();
+        TurnEventsOn();
     }
 
     
 
     public override void LoadInstruction(Interface_Instruction newInstruction)
     {
+        TurnEventsOff();
         linkedInstruction = newInstruction;
         OnlyOnce.IsChecked = linkedInstruction.GetSetting(InputSettings.saveResult.ToString()) == true.ToString();
         VariableName.Text = linkedInstruction.GetSetting(InputSettings.variableName.ToString());
