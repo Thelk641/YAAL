@@ -91,6 +91,7 @@ namespace YAAL
             {lua_ladx, "Set automatically" },
             {lua_mmbn3, "Set automatically" },
             {lua_oot, "Set automatically" },
+            {lua_sni, "Set automatically" },
             {lua_tolz, "Set automatically" },
         };
 

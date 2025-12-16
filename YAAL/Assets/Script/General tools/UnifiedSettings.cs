@@ -79,6 +79,7 @@ namespace YAAL
                         Set(LauncherSettings.lua_ladx, ("--lua=\"" + Path.Combine(folder, "data", "lua", "connector_ladx_bizhawk.lua") + "\""));
                         Set(LauncherSettings.lua_mmbn3, ("--lua=\"" + Path.Combine(folder, "data", "lua", "connector_mmbn3.lua") + "\""));
                         Set(LauncherSettings.lua_oot, ("--lua=\"" + Path.Combine(folder, "data", "lua", "connector_oot.lua") + "\""));
+                        Set(LauncherSettings.lua_sni, ("--lua=\"" + Path.Combine(folder, "SNI", "lua", "Connector.lua") + "\""));
                         Set(LauncherSettings.lua_tloz, ("--lua=\"" + Path.Combine(folder, "data", "lua", "connector_tloz.lua") + "\""));
                     }
                     catch { }
