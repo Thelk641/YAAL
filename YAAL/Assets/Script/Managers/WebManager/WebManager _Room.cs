@@ -361,7 +361,7 @@ public static partial class WebManager
                     return "";
                 }
                 string[] split = fullName.Split("filename=");
-                string fullPath = Path.Combine(dir, split.Last<string>());
+                string fullPath = Path.Combine(dir, split.Last<string>().TrimStart('\"').TrimEnd('\"'));
 
                 var downloadStream = await client.GetStreamAsync(URL);
                 FileStream fileStream;
@@ -384,7 +384,7 @@ public static partial class WebManager
             }
         } catch (Exception e)
         {
-            ErrorManager.AddNewError(
+            ErrorManager.ThrowError(
                 "WebManager_Room - Downloading patch raised an exception",
                 "While trying to download patch from " + URL + " the following exception was raised : " + e.Message
                 );
