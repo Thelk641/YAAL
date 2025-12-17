@@ -650,7 +650,7 @@ public class CustomLauncher
             }
         }
 
-        if (_baseLauncher != null)
+        if (_baseLauncher != null && _baseLauncher.selfsettings[LauncherSettings.launcherName] != this.selfsettings[LauncherSettings.launcherName])
         {
             foreach (var item in _baseLauncher.GetApworlds())
             {

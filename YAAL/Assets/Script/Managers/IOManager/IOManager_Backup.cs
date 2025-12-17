@@ -368,6 +368,12 @@ namespace YAAL
             cache.launcherToApworldList[ID] = new List<string>();
             foreach (var item in apworlds)
             {
+                if(item == "smw.apworld" || GetFileName(item) == "smw.apworld")
+                {
+                    continue;
+                }
+
+
                 if (!cache.launcherToApworldList[ID].Contains(item))
                 {
                     cache.launcherToApworldList[ID].Add(item);

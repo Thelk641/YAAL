@@ -75,9 +75,12 @@ namespace YAAL
                             );
                     }
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-
+                    ErrorManager.AddNewError(
+                        "Isolate - Trying to list apworlds triggered an exception",
+                        "While trying to parse the list of apworlds that needs to be isolated, we got this exception : " + e.Message
+                        );
                 }
             }
 
