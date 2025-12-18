@@ -130,14 +130,26 @@ namespace YAAL
                     Regex expression = new Regex(pattern);
                     string toReplace = customLauncher.ParseTextWithSettings(replacement);
                     output = "";
+                    string input = "";
                     if (this.InstructionSetting[modeInput] == "File")
                     {
+                        input = IOManager.LoadFile(target);
                         output = expression.Replace(IOManager.LoadFile(target), toReplace);
                     } else
                     {
+                        input = target;
                         output = expression.Replace(target, toReplace);
                     }
 
+                    output = expression.Replace(input, toReplace);
+                    
+                    if(output == input) 
+                    {
+                        ErrorManager.AddNewError(
+                            "RegEX - Pattern not found",
+                            "Replacing pattern " + pattern + " in the target didn't change it. Usually this means the pattern wasn't found.");
+                        return false;
+                    }
 
 
                     if (!SaveResult(output, i))
@@ -163,7 +175,7 @@ namespace YAAL
             if (this.InstructionSetting[modeOutput] == "File")
             {
                 bool success = false;
-                List<string> splitOutputFile = customLauncher.SplitString(this.InstructionSetting[outputFile]);
+                List<string> splitOutputFile = customLauncher.SplitAndParse(this.InstructionSetting[outputFile]);
 
                 switch (splitOutputFile.Count)
                 {

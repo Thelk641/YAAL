@@ -137,7 +137,7 @@
 			
 			
 			
-            <Grid ColumnDefinitions="*, 8, 108, 30" Grid.Row="3">
+            <Grid ColumnDefinitions="*, 8, *" Grid.Row="3">
                 <TextBox
                 Name="RegEx"
                 Watermark="Regular Expression"

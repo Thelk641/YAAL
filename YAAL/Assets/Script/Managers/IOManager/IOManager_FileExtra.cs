@@ -227,7 +227,7 @@ namespace YAAL
                 workingName
                 );
 
-            if(output == fileToMove)
+            if(output == fileToMove || File.Exists(output))
             {
                 // We've already moved this file to the right directory in the past
                 return fileToMove;
