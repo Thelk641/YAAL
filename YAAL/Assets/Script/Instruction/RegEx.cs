@@ -143,7 +143,7 @@ namespace YAAL
 
                     output = expression.Replace(input, toReplace);
                     
-                    if(output == input) 
+                    if(!expression.IsMatch(input)) 
                     {
                         ErrorManager.AddNewError(
                             "RegEX - Pattern not found",
