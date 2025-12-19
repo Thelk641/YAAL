@@ -303,6 +303,8 @@ public static partial class WebManager
             return output;
         }
 
+
+
         string[] split = output.URL.Split('/');
         string APILink = "https://archipelago.gg/api/room_status/" + split.Last<string>();
 

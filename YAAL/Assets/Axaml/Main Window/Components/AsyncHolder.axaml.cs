@@ -140,14 +140,31 @@ public partial class AsyncHolder : UserControl
         Debouncer.Debounce(Save, 1f);
     }
 
-    public async void UpdatePort()
+    public async Task UpdatePort(bool save = true)
     {
-        thisAsync.room = await WebManager.GetRoomPort(thisAsync.room);
-        thisAsync.settings[roomAddress] = thisAsync.room.address;
-        thisAsync.settings[roomPort] = thisAsync.room.port;
-        thisAsync.settings[room] = thisAsync.room.address + ":" + thisAsync.room.port;
-        thisAsync.settings[cheeseURL] = thisAsync.room.cheeseTrackerURL;
-        Debouncer.ForceDebounce(Save);
+        string URLToParse = thisAsync.settings[roomURL];
+        if (WebManager.IsValidURL(URLToParse))
+        {
+            thisAsync.room = await WebManager.ParseRoomURL(RoomBox.Text);
+            thisAsync.settings[roomAddress] = thisAsync.room.address;
+            thisAsync.settings[roomPort] = thisAsync.room.port;
+            thisAsync.settings[room] = thisAsync.room.address + ":" + thisAsync.room.port;
+            thisAsync.settings[cheeseURL] = thisAsync.room.cheeseTrackerURL;
+        }
+        else if (URLToParse.Contains(":"))
+        {
+            thisAsync.room = new Cache_Room();
+
+            string[] split = URLToParse.Split(':');
+            thisAsync.settings[roomAddress] = split[0];
+            thisAsync.settings[roomPort] = split[1];
+            thisAsync.settings[room] = URLToParse;
+        }
+
+        if (save)
+        {
+            Debouncer.ForceDebounce(Save);
+        }
     }
     
     public async void UpdateSlotsRoom()
@@ -163,16 +180,8 @@ public partial class AsyncHolder : UserControl
         }
 
         ReadingRoom.IsVisible = true;
-        if (RoomBox.Text.Contains("archipelago.gg/room/"))
-        {
-            thisAsync.room = await WebManager.ParseRoomURL(RoomBox.Text);
-            thisAsync.settings[roomAddress] = thisAsync.room.address;
-            thisAsync.settings[roomPort] = thisAsync.room.port;
-            thisAsync.settings[room] = thisAsync.room.address + ":" + thisAsync.room.port;
-            thisAsync.settings[cheeseURL] = thisAsync.room.cheeseTrackerURL;
-        }
-
-        //UpdatePort();
+        thisAsync.settings[roomURL] = RoomBox.Text ?? "";
+        await UpdatePort(false);  
 
         foreach (var item in SlotsContainer.Children)
         {
