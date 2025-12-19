@@ -147,7 +147,7 @@ namespace YAAL
                     {
                         ErrorManager.AddNewError(
                             "RegEX - Pattern not found",
-                            "Replacing pattern " + pattern + " in the target didn't change it. Usually this means the pattern wasn't found.");
+                            "Pattern " + pattern + " couldn't be found in the target.");
                         return false;
                     }
 
