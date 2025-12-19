@@ -73,15 +73,15 @@ namespace YAAL
                 return false;
             }
 
-            if (customLauncher.GetTemporarySetting(SlotSettings.slotName.ToString()) is string slotName)
+            if (customLauncher.GetTemporarySetting(SlotSettings.slotLabel.ToString()) is string slotLabel)
             {
-                slot = slotName;
+                slot = slotLabel;
             }
             else
             {
                 ErrorManager.AddNewError(
                     "Input instruction - Couldn't find slot name",
-                    "Trying to get slotName out of the launcher's temporary settings failed, please report this.");
+                    "Trying to get slotLabel out of the launcher's temporary settings failed, please report this.");
                 return false;
             }
 

@@ -52,7 +52,15 @@ public partial class SlotHolder : UserControl
         thisSlot = slot;
         room = async.room;
         this.holder = holder;
-        previousName = slot.settings[SlotSettings.slotName];
+        
+
+        if (!thisSlot.settings.ContainsKey(slotLabel))
+        {
+            // Backward compatibility
+            thisSlot.settings[slotLabel] = thisSlot.settings[slotName];
+        }
+
+        previousName = thisSlot.settings[SlotSettings.slotLabel];
 
         SetupPlayMode();
         SetupEditMode();
@@ -128,6 +136,9 @@ public partial class SlotHolder : UserControl
         }
         
         Save();
+
+        DownloadPatch.IsEnabled = true;
+        ReDownloadPatch.IsEnabled = true;
     }
 
     public void ClosingSave()
@@ -179,13 +190,13 @@ public partial class SlotHolder : UserControl
         newSlot.settings[rom] = thisSlot.settings[rom];
 
         newSlot.customSettings = thisSlot.customSettings;
+        newSlot.settings[slotLabel] = SlotLabel.Text ?? newSlot.settings[slotName];
 
 
         string newName = IOManager.SaveSlot(asyncName, newSlot, thisSlot);
 
-        newSlot.settings[slotName] = newName;
-        SlotName.Text = newName;
-        _SlotName.Text = newName;
+        newSlot.settings[slotLabel] = newName;
+        SlotLabel.Text = newName;
 
         thisSlot = newSlot;
     }
@@ -230,7 +241,7 @@ public partial class SlotHolder : UserControl
 
     public void SetupPlayMode()
     {
-        _SlotName.Text = thisSlot.settings[slotName];
+        _SlotName.Text = thisSlot.settings[slotLabel];
 
         if(WindowManager.GetMainWindow() is MainWindow window)
         {
@@ -280,14 +291,14 @@ public partial class SlotHolder : UserControl
 
                 ProcessManager.StartProcess(
                     Environment.ProcessPath!,
-                    ("--async " + "\"" + asyncName + "\"" + " --slot " + "\"" + _SlotName.Text + "\""),
+                    ("--async " + "\"" + asyncName + "\"" + " --slot " + "\"" + thisSlot.settings[slotLabel] + "\""),
                     true);
             }
             catch (Exception e)
             {
                 ErrorManager.ThrowError(
                     "SlotHolder - Trying to launch game raised an exception",
-                    "Trying to open slot " + _SlotName.Text + " raised the following exception : " + e.Message);
+                    "Trying to open slot labeled " + _SlotName.Text + " raised the following exception : " + e.Message);
             }
         };
 
@@ -303,7 +314,7 @@ public partial class SlotHolder : UserControl
                 ProcessManager.StartProcess(
                         Environment.ProcessPath!,
                         ("--async " + "\"" + asyncName 
-                        + "\"" + " --slot " + "\"" + _SlotName.Text 
+                        + "\"" + " --slot " + "\"" + thisSlot.settings[slotLabel]
                         + "\"" + " --launcher " + "\"" + cache.name + "\""),
                         true);
             }
@@ -322,6 +333,7 @@ public partial class SlotHolder : UserControl
 
     public void SetupEditMode()
     {
+        SlotLabel.Text = thisSlot.settings[slotLabel];
         SlotName.Text = thisSlot.settings[slotName];
         Patch.Text = thisSlot.settings[patch];
 
@@ -351,13 +363,13 @@ public partial class SlotHolder : UserControl
         {
             if (WindowManager.OpenWindow(WindowType.ConfirmationWindow, this.GetVisualRoot() as Window) is ConfirmationWindow confirm)
             {
-                confirm.Setup(thisSlot.settings[slotName]);
+                confirm.Setup(thisSlot.settings[slotLabel]);
 
                 confirm.Closing += (_, _) =>
                 {
                     if (confirm.confirmed)
                     {
-                        IOManager.DeleteSlot(asyncName, thisSlot.settings[slotName]);
+                        IOManager.DeleteSlot(asyncName, thisSlot.settings[slotLabel]);
                         RequestRemoval?.Invoke();
                     }
                 };
@@ -369,18 +381,27 @@ public partial class SlotHolder : UserControl
 
         SlotName.TextChanged += (_, _) =>
         {
-            _SlotName.Text = SlotName.Text;
+            isEditing = true;
+            Debouncer.Debounce(finished, 1);
+        };
+
+        SlotLabel.TextChanged += (_, _) =>
+        {
+            _SlotName.Text = SlotLabel.Text;
             isEditing = true;
             Debouncer.Debounce(finished, 1);
         };
 
         DownloadPatch.Click += async (_, _) =>
         {
+            DownloadPatch.IsEnabled = false;
+            ReDownloadPatch.IsEnabled = false;
             AutoDownload(false);
         };
 
         ReDownloadPatch.Click += async (_, _) =>
         {
+            ReDownloadPatch.IsEnabled = false;
             AutoDownload(true);
         };
 
@@ -403,6 +424,21 @@ public partial class SlotHolder : UserControl
         if (room == null || room.slots.Count == 0)
         {
             SwitchPatchMode();
+        }
+
+        AutomaticLabelButton.Click += (_, _) =>
+        {
+            SwitchLabelMode();
+        };
+
+        ManualLabelButton.Click += (_, _) =>
+        {
+            SwitchLabelMode();
+        };
+
+        if (thisSlot.settings[slotLabel] == thisSlot.settings[slotName] && room != null)
+        {
+            SwitchLabelMode();
         }
 
         _ChangedSlot(null, null);
@@ -475,8 +511,6 @@ public partial class SlotHolder : UserControl
         if (manual)
         {
             AutomaticPatch.IsVisible = false;
-            SlotSelector.IsVisible = false;
-            SlotName.IsVisible = true;
             ManualPatch.IsVisible = true;
             AutomaticPatchButton.IsVisible = true;
             ManualPatchButton.IsVisible = false;
@@ -484,11 +518,29 @@ public partial class SlotHolder : UserControl
         else
         {
             AutomaticPatch.IsVisible = true;
-            SlotSelector.IsVisible = true;
-            SlotName.IsVisible = false;
             ManualPatch.IsVisible = false;
             AutomaticPatchButton.IsVisible = false;
             ManualPatchButton.IsVisible = true;
+        }
+    }
+
+    public void SwitchLabelMode()
+    {
+        if (SlotSelector.IsVisible)
+        {
+            SlotSelector.IsVisible = false;
+            SlotLabel.IsVisible = true;
+            SlotName.IsVisible = true;
+            AutomaticLabelButton.IsVisible = true;
+            ManualLabelButton.IsVisible = false;
+        }
+        else
+        {
+            SlotSelector.IsVisible = true;
+            SlotLabel.IsVisible = false;
+            SlotName.IsVisible = false;
+            AutomaticLabelButton.IsVisible = false;
+            ManualLabelButton.IsVisible = true;
         }
     }
 
@@ -497,9 +549,10 @@ public partial class SlotHolder : UserControl
         selectedSlot = (Cache_DisplaySlot)SlotSelector.SelectedItem;
 
 
-        if (selectedSlot.slotName != "None")
+        if (selectedSlot.slotName != "None" && ManualLabelButton.IsVisible)
         {
             SlotName.Text = selectedSlot.slotName;
+            SlotLabel.Text = selectedSlot.slotName;
         }
 
         DownloadPatch.IsEnabled = selectedSlot.cache.patchURL != "";
@@ -537,9 +590,17 @@ public partial class SlotHolder : UserControl
         List<string> games = IOManager.GetGameList();
         List<string> slots = IOManager.GetSlotList(asyncName);
 
+        string temp = IOManager.GetSetting(GeneralSettings.allowMultislot);
+        bool allowMulti = false;
+
+        if(temp == "" || temp == true.ToString())
+        {
+            allowMulti = true;
+        }
+
         foreach (var item in room.slots)
         {
-            if (slots.Contains(item.Key) && item.Key != thisSlot.settings[slotName])
+            if (slots.Contains(item.Key) && item.Key != thisSlot.settings[slotName] && !allowMulti)
             {
                 // This item already has another SlotHolder dedicated to it, let's ignore it
                 continue;
@@ -610,7 +671,6 @@ public partial class SlotHolder : UserControl
 
         if(SlotSelector.ItemsSource is List<Cache_DisplaySlot> oldList)
         {
-            
             if(oldList.SequenceEqual(possibleSlots))
             {
                 // if slot A changes, it triggers slot B to update its slot list to hide slot A's slot from the list

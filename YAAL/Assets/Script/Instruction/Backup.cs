@@ -128,7 +128,7 @@ namespace YAAL
                 item.Key,
                 item.Value,
                 settings["asyncName"],
-                settings["slotName"],
+                settings["slotLabel"],
                 (this.InstructionSetting[modeSelect] != "off")))
                 {
                     backedUpFile.Add(item.Key);
@@ -260,7 +260,7 @@ namespace YAAL
                     if(!IOManager.Restore(
                     item,
                     settings[AsyncSettings.asyncName],
-                    settings[SlotSettings.slotName]))
+                    settings[SlotSettings.slotLabel]))
                     {
                         success = false;
                     }

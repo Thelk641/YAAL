@@ -191,23 +191,38 @@
 												Width="30"
 										/>
 										</Button>
-										<TextBox
-											Name="SlotName"
-											VerticalAlignment="Center"
-											HorizontalAlignment="Stretch"
-											HorizontalContentAlignment="Center"
-											Grid.Column="2"
-											ToolTip.Tip="The slot name"
-											Watermark="Slot name"
-											IsVisible="False"
-										/>
+
+										<Grid Name="ManualLabel" IsVisible="True" Grid.Column="2" ColumnDefinitions="*,8,*">
+											<TextBox
+												Name="SlotLabel"
+												VerticalAlignment="Center"
+												HorizontalAlignment="Stretch"
+												HorizontalContentAlignment="Center"
+												Grid.Column="0"
+												ToolTip.Tip="The name you see in YAAL"
+												Watermark="Label name"
+												/>
+											
+											<TextBox
+												Name="SlotName"
+												VerticalAlignment="Center"
+												HorizontalAlignment="Stretch"
+												HorizontalContentAlignment="Center"
+												Grid.Column="2"
+												ToolTip.Tip="The slot's name in the room"
+												Watermark="Slot name"
+												/>
+										</Grid>
+
+
 										<ComboBox
 											Name="SlotSelector"
 											VerticalAlignment="Center"
 											HorizontalAlignment="Stretch"
 											HorizontalContentAlignment="Center"
 											Grid.Column="2"
-											IsVisible="True"
+											Grid.ColumnSpan="3"
+											IsVisible="False"
 											ItemsSource="{Binding Cache_DisplaySlot}"
 											SelectedItem="{Binding selectedSlot}"
 										>
@@ -228,69 +243,36 @@
 											</ComboBox.ItemTemplate>
 										</ComboBox>
 									</Grid>
-									<Grid Grid.Column="2" ColumnDefinitions="*,8,70,8,30" HorizontalAlignment="Stretch">
+									<Grid Grid.Column="2" ColumnDefinitions="*,8,*,8,30" HorizontalAlignment="Stretch">
 
-										<Grid Name="ManualPatch" IsVisible="False" ColumnDefinitions="*,8,30" Grid.Column="0">
-											<TextBox
-											Name="Patch"
-											Grid.Column="0"
-											VerticalContentAlignment="Center"
-											VerticalAlignment="Center"
-											HorizontalAlignment="Stretch"
-											ToolTip.Tip="The patch file"
-											Watermark="/path/to/patch"
-										/>
+										<Grid Name="ManualAutoLabelButton" Grid.Column="0">
 											<Button
-												Name="PatchSelect"
-												Width="30"
-												Height="30"
-												Grid.Column="2"
-												HorizontalAlignment="Stretch"
-												VerticalAlignment="Stretch"
-												local:AutoIcon.Icon="File"
-												local:VisibilityHolder.VisibilityHolder="ManualPatch"
-												ToolTip.Tip="Select a file"
-											>
-												<Svg
-													VerticalAlignment="Center"
-													HorizontalAlignment="Center"
-													Width="30"
-												/>
-											</Button>
-										</Grid>
-
-										<Grid Name="AutomaticPatch">
-											<Button
-												Name="DownloadPatch"
-												Content="Download patch"
-												VerticalAlignment="Stretch"
+												Name="ManualLabelButton"
+												Content="Manual label"
 												HorizontalAlignment="Stretch"
 												HorizontalContentAlignment="Center"
-												Grid.Column="0"
-												Height="30"
+												IsVisible="False"
 											/>
 											<Button
-												Name="ReDownloadPatch"
-												Content="Download patch again"
-												VerticalAlignment="Stretch"
+												Name="AutomaticLabelButton"
+												Content="Auto label"
 												HorizontalAlignment="Stretch"
-												Grid.Column="0"
-												IsVisible="false"
-												Height="30"
+												HorizontalContentAlignment="Center"
+												IsVisible="True"
 											/>
 										</Grid>
 
-										<Grid Name="ManualAutoButton" Grid.Column="2">
+										<Grid Name="ManualAutoPatchButton" Grid.Column="2">
 											<Button
 												Name="ManualPatchButton"
-												Content="Manual"
+												Content="Manual patch"
 												HorizontalAlignment="Stretch"
 												HorizontalContentAlignment="Center"
 												IsVisible="True"
 											/>
 											<Button
 												Name="AutomaticPatchButton"
-												Content="Auto"
+												Content="Auto patch"
 												HorizontalAlignment="Stretch"
 												HorizontalContentAlignment="Center"
 												IsVisible="False"
@@ -328,7 +310,7 @@
 							IsVisible="True"
 							Grid.Row="2"
 						>
-								<Grid Grid.Row="1" ColumnDefinitions="*,8,*" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+								<Grid Grid.Row="1" ColumnDefinitions="*,8,*,8,*" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 									<ComboBox
 										Name="LauncherSelector"
 										Grid.Column="0"
@@ -359,6 +341,56 @@
 										VerticalAlignment="Center"
 										HorizontalContentAlignment="Center"
 										/>
+
+									<Grid Name="AutomaticPatch" Grid.Column="4" IsVisible="True">
+										<Button
+											Name="DownloadPatch"
+											Content="Download"
+											VerticalAlignment="Stretch"
+											HorizontalAlignment="Stretch"
+											HorizontalContentAlignment="Center"
+											Grid.Column="0"
+											Height="30"
+											/>
+										<Button
+											Name="ReDownloadPatch"
+											Content="Download"
+											VerticalAlignment="Stretch"
+											HorizontalAlignment="Stretch"
+											Grid.Column="0"
+											IsVisible="false"
+											Height="30"
+											/>
+									</Grid>
+
+									<Grid Name="ManualPatch" IsVisible="False" ColumnDefinitions="*,8,30" Grid.Column="4">
+										<TextBox
+										Name="Patch"
+										Grid.Column="0"
+										VerticalContentAlignment="Center"
+										VerticalAlignment="Center"
+										HorizontalAlignment="Stretch"
+										ToolTip.Tip="The patch file"
+										Watermark="/path/to/patch"
+										/>
+										<Button
+											Name="PatchSelect"
+											Width="30"
+											Height="30"
+											Grid.Column="2"
+											HorizontalAlignment="Stretch"
+											VerticalAlignment="Stretch"
+											local:AutoIcon.Icon="File"
+											local:VisibilityHolder.VisibilityHolder="ManualPatch"
+											ToolTip.Tip="Select a file"
+											>
+											<Svg
+												VerticalAlignment="Center"
+												HorizontalAlignment="Center"
+												Width="30"
+												/>
+										</Button>
+									</Grid>
 								</Grid>
 						</Border>
 					</Grid>

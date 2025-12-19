@@ -3,6 +3,7 @@
   },
   "generalSettings": {
     "aplauncher": "",
+    "allowMultislot":  "false",
     "scaleModifier": "1",
     "zoom": "1",
     "backgroundColor": "#FF000000",

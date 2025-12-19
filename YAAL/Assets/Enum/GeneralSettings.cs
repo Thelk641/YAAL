@@ -8,6 +8,7 @@ namespace YAAL
 {
     public enum GeneralSettings
     {
+        allowMultislot,
         aplauncher,
         slotNameFilter,
         backgroundColor,

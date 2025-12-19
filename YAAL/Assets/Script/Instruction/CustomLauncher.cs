@@ -109,7 +109,7 @@ public class CustomLauncher
         Cache_PreviousSlot newSlot = new Cache_PreviousSlot()
         {
             previousAsync = this.settings[asyncName] ?? "",
-            previousSlot = this.settings[slotName] ?? "",
+            previousSlot = this.settings[slotLabel] ?? "",
             previousPatch = this.settings[patch] ?? "",
             previousVersion = this.settings[version] ?? "",
             previousRoom = this.settings[roomAddress] ?? "" + ":" + this.settings[roomPort] ?? "",
@@ -595,7 +595,7 @@ public class CustomLauncher
 
     public void SetSlotSetting(SlotSettings key, string value)
     {
-        IOManager.SetSlotSetting(this.settings[asyncName], this.settings[slotName], key, value);
+        IOManager.SetSlotSetting(this.settings[asyncName], this.settings[slotLabel], key, value);
         settings[key] = value;
     }
 
@@ -618,7 +618,7 @@ public class CustomLauncher
                 return null;
             }
             CustomLauncher output = IOManager.LoadLauncher(settings[SlotSettings.baseLauncher]);
-            output.ReadSettings(settings[asyncName], settings[slotName]);
+            output.ReadSettings(settings[asyncName], settings[slotLabel]);
             _baseLauncher = output;
             return output;
         } else

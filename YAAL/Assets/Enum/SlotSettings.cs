@@ -9,6 +9,7 @@ namespace YAAL
     public enum SlotSettings
     {
         patch,
+        slotLabel,
         slotName,
         slotInfo,
         rom,

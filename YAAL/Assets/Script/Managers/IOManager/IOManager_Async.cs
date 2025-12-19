@@ -41,6 +41,7 @@ namespace YAAL
             name = FindAvailableDirectoryName(asyncPath, name);
             Directory.CreateDirectory(Path.Combine(asyncPath, name));
             async.slots.Add(newSlot);
+            newSlot.settings[slotLabel] = name;
             newSlot.settings[slotName] = name;
             SaveCache<Cache_Async>(Path.Combine(asyncPath, multiworld.GetFileName()), async);
             return newSlot;
@@ -57,25 +58,25 @@ namespace YAAL
             return LoadCache<Cache_Async>(file);
         }
 
-        public static Cache_Slot GetSlot(string asyncName, string slotName)
+        public static Cache_Slot GetSlot(string asyncName, string slotLabel)
         {
             string asyncFolder = Path.Combine(GetSaveLocation(Async), asyncName);
-            string slotFolder = Path.Combine(asyncFolder, slotName);
+            string slotFolder = Path.Combine(asyncFolder, slotLabel);
             if (!Directory.Exists(slotFolder))
             {
-                return CreateNewSlot(GetAsync(asyncName), slotName);
+                return CreateNewSlot(GetAsync(asyncName), slotLabel);
             }
             Cache_Async cache = LoadCache<Cache_Async>(Path.Combine(asyncFolder, multiworld.GetFileName()));
 
             foreach (var item in cache.slots)
             {
-                if (item.settings[SlotSettings.slotName] == slotName)
+                if (item.settings[SlotSettings.slotLabel] == slotLabel)
                 {
                     return item;
                 }
             }
 
-            return CreateNewSlot(GetAsync(asyncName), slotName);
+            return CreateNewSlot(GetAsync(asyncName), slotLabel);
         }
 
         public static void SetAsyncSetting(string async, string key, string value)
@@ -116,7 +117,7 @@ namespace YAAL
 
             foreach (var item in cache_Async.slots)
             {
-                if (item.settings[slotName] == slot)
+                if (item.settings[slotLabel] == slot)
                 {
                     item.settings[key] = value;
                     SaveCache<Cache_Async>(Path.Combine(GetSaveLocation(Async), async, multiworld.GetFileName()), cache_Async);
@@ -131,7 +132,7 @@ namespace YAAL
 
             foreach (var item in cache_Async.slots)
             {
-                if (item.settings[slotName] == slot)
+                if (item.settings[slotLabel] == slot)
                 {
                     item.customSettings[key] = value;
                     SaveCache<Cache_Async>(Path.Combine(GetSaveLocation(Async), async, multiworld.GetFileName()), cache_Async);
@@ -163,7 +164,7 @@ namespace YAAL
             List<string> output = new List<string>();
             foreach (var item in cache.slots)
             {
-                output.Add(item.settings[slotName]);
+                output.Add(item.settings[slotLabel]);
             }
             return output;
         }
@@ -206,17 +207,17 @@ namespace YAAL
 
             if (!needSaving)
             {
-                return newSlot.settings[slotName];
+                return newSlot.settings[slotLabel];
             }
             Cache_Async cache = GetAsync(async);
             Cache_Async newCache = (Cache_Async)cache.Clone();
 
             Cache_Slot toRemove = null;
-            string output = newSlot.settings[slotName];
+            string output = newSlot.settings[slotLabel];
 
             foreach (var item in newCache.slots)
             {
-                if (item.settings[slotName] == oldSlot.settings[slotName])
+                if (item.settings[slotLabel] == oldSlot.settings[slotLabel])
                 {
                     toRemove = item;
                     break;
@@ -228,14 +229,14 @@ namespace YAAL
                 newCache.slots.Remove(toRemove);
             }
 
-            if (oldSlot.settings[slotName] != newSlot.settings[slotName])
+            if (oldSlot.settings[slotLabel] != newSlot.settings[slotLabel])
             {
                 string asyncDir = Path.Combine(GetSaveLocation(Async), async);
-                string oldDir = Path.Combine(asyncDir, oldSlot.settings[slotName]);
+                string oldDir = Path.Combine(asyncDir, oldSlot.settings[slotLabel]);
 
-                string newName = FindAvailableDirectoryName(asyncDir, newSlot.settings[slotName]);
+                string newName = FindAvailableDirectoryName(asyncDir, newSlot.settings[slotLabel]);
                 MoveFile(oldDir, Path.Combine(asyncDir, newName));
-                newSlot.settings[slotName] = newName;
+                newSlot.settings[slotLabel] = newName;
                 output = newName;
             }
 
@@ -256,7 +257,7 @@ namespace YAAL
             SoftDeleteFile(Path.Combine(GetSaveLocation(Async), asyncName));
         }
 
-        public static void DeleteSlot(string asyncName, string slotName)
+        public static void DeleteSlot(string asyncName, string slotLabel)
         {
             try
             {
@@ -265,7 +266,7 @@ namespace YAAL
                 Cache_Slot slot = null;
                 foreach (var item in cache.slots)
                 {
-                    if (item.settings[SlotSettings.slotName] == slotName)
+                    if (item.settings[SlotSettings.slotLabel] == slotLabel)
                     {
                         slot = item;
                         break;
@@ -276,21 +277,21 @@ namespace YAAL
                 {
                     cache.slots.Remove(slot);
                     SaveCache<Cache_Async>(Path.Combine(GetSaveLocation(Async), cache.settings[AsyncSettings.asyncName], multiworld.GetFileName()), cache);
-                    SoftDeleteFile(Path.Combine(GetSaveLocation(Async), cache.settings[AsyncSettings.asyncName], slotName));
+                    SoftDeleteFile(Path.Combine(GetSaveLocation(Async), cache.settings[AsyncSettings.asyncName], slotLabel));
                 }
             }
             catch (Exception e)
             {
                 ErrorManager.ThrowError(
                     "IOManager_Async - Deleting a slot threw an error", 
-                    "Please report this. Trying to delete slot " + slotName + " from async " + asyncName + " threw the following error : " + e.Message);
+                    "Please report this. Trying to delete slot " + slotLabel + " from async " + asyncName + " threw the following error : " + e.Message);
             }
 
         }
 
-        public static bool CheckExistance (string asyncName, string slotName)
+        public static bool CheckExistance (string asyncName, string slotLabel)
         {
-            string path = Path.Combine(GetSaveLocation(Async), asyncName, slotName);
+            string path = Path.Combine(GetSaveLocation(Async), asyncName, slotLabel);
             return Directory.Exists(path);
         }
     }

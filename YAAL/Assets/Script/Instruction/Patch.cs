@@ -50,7 +50,7 @@ namespace YAAL
             string patch = IOManager.MoveToSlotDirectory(
                 settings[SlotSettings.patch],
                 settings[AsyncSettings.asyncName],
-                settings[slotName],
+                settings[slotLabel],
                 newFileName
                 );
 
@@ -189,7 +189,7 @@ namespace YAAL
             Cache_PreviousSlot cache = new Cache_PreviousSlot();
             cache.previousPatch = this.settings[patch] ?? "";
             cache.previousAsync = this.settings[AsyncSettings.asyncName] ?? "";
-            cache.previousSlot = this.settings[slotName] ?? "";
+            cache.previousSlot = this.settings[slotLabel] ?? "";
             cache.previousVersion = this.settings[version] ?? "";
             cache.previousRoom = this.settings[AsyncSettings.roomAddress] ?? "" + ":" + this.settings[AsyncSettings.roomPort] ?? "";
             cache.previousPort = this.settings[AsyncSettings.roomPort] ?? "";
