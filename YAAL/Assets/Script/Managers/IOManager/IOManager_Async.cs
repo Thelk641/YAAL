@@ -55,7 +55,19 @@ namespace YAAL
             {
                 return CreateNewAsync(name);
             }
-            return LoadCache<Cache_Async>(file);
+
+            Cache_Async output = LoadCache<Cache_Async>(file);
+
+            foreach (var item in output.slots)
+            {
+                if (!item.settings.ContainsKey(SlotSettings.slotLabel))
+                {
+                    // Backward compatibility
+                    item.settings[SlotSettings.slotLabel] = item.settings[SlotSettings.slotName];
+                }
+            }
+
+            return output;
         }
 
         public static Cache_Slot GetSlot(string asyncName, string slotLabel)
@@ -164,7 +176,14 @@ namespace YAAL
             List<string> output = new List<string>();
             foreach (var item in cache.slots)
             {
-                output.Add(item.settings[slotLabel]);
+                if (item.settings.ContainsKey(slotLabel))
+                {
+                    output.Add(item.settings[slotLabel]);
+                } else
+                {
+                    // Backward compatibility
+                    output.Add(item.settings[slotName]);
+                } 
             }
             return output;
         }

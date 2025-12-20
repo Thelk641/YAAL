@@ -45,7 +45,7 @@ public partial class AsyncHolder : UserControl
 
         foreach (var item in thisAsync.slots)
         {
-            slotName = item.settings[SlotSettings.slotName];
+            slotName = item.settings[SlotSettings.slotLabel];
             if (IOManager.CheckExistance(asyncName, slotName))
             {
                 AddNewSlot(item);
