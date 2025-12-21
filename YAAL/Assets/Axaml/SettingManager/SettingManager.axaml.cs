@@ -318,9 +318,9 @@ public partial class SettingManager : ScalableWindow
             if(item is Setting setting)
             {
                 name = setting.GetValue(out value);
-                if(value != "" || origin == "General")
+                if (value != "" || origin == "General")
                 {
-                    output[name] = value;
+                    output[name] = ParseBinarySetting(value);
                 }
             }
         }
@@ -332,7 +332,7 @@ public partial class SettingManager : ScalableWindow
                 name = setting.GetValue(out value);
                 if (value != "" || origin == "CLMaker")
                 {
-                    output[name] = value;
+                    output[name] = ParseBinarySetting(value);
                 }
             }
         }
@@ -342,7 +342,7 @@ public partial class SettingManager : ScalableWindow
             if (item is Setting setting)
             {
                 name = setting.GetValue(out value);
-                output[name] = value;
+                output[name] = ParseBinarySetting(value);
             }
         }
 
@@ -351,13 +351,13 @@ public partial class SettingManager : ScalableWindow
             if (item is Setting setting)
             {
                 name = setting.GetValue(out value);
-                output[name] = value;
+                output[name] = ParseBinarySetting(value);
             }
         }
 
         foreach (var item in hidden)
         {
-            output[item.Key.ToString()] = item.Value;
+            output[item.Key.ToString()] = ParseBinarySetting(item.Value);
         }
 
         return output;
@@ -400,5 +400,19 @@ public partial class SettingManager : ScalableWindow
         }
 
         return output;
+    }
+
+    public string ParseBinarySetting(string input)
+    {
+        if (input == "true")
+        {
+            return true.ToString();
+        }
+        else if (input == "false")
+        {
+            return false.ToString();
+        }
+
+        return input;
     }
 }
