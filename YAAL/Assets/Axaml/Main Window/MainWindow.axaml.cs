@@ -39,6 +39,12 @@ public partial class MainWindow : ScalableWindow
         {
             Dictionary<string, string> customSetting;
             Dictionary<GeneralSettings, string> generalSettings = IOManager.GetUserSettings(out customSetting);
+            string allowMulti = "";
+            if (generalSettings.ContainsKey(GeneralSettings.allowMultislot))
+            {
+                allowMulti = generalSettings[GeneralSettings.allowMultislot];
+            }
+
             SettingManager manager = SettingManager.GetSettingsWindow(this, generalSettings, customSetting);
             manager.Closing += (_, _) =>
             {
@@ -50,6 +56,17 @@ public partial class MainWindow : ScalableWindow
                 if(newGeneralSettings.ContainsKey(GeneralSettings.zoom) && float.TryParse(newGeneralSettings[GeneralSettings.zoom], out float newZoom))
                 {
                     App.Settings.Zoom = newZoom;
+                }
+
+                if(newGeneralSettings.ContainsKey(GeneralSettings.allowMultislot) && newGeneralSettings[GeneralSettings.allowMultislot] != allowMulti)
+                {
+                    foreach (var item in AsyncContainer.Children)
+                    {
+                        if(item is AsyncHolder holder)
+                        {
+                            holder.UpdateSlotSelection();
+                        }
+                    }
                 }
             };
             manager.IsVisible = true;

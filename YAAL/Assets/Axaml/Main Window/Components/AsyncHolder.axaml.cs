@@ -350,4 +350,12 @@ public partial class AsyncHolder : UserControl
         }
         Debouncer.Debounce(Save, 1f);
     }
+
+    public void UpdateSlotSelection()
+    {
+        if(SlotsContainer.Children.Count > 0 && SlotsContainer.Children[0] is SlotHolder holder)
+        {
+            UpdateSlotSelection(holder);
+        }
+    }
 }
