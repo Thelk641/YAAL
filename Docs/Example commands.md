@@ -12,7 +12,7 @@ Remember that Open treats both its "file to open" and "arguments" field as a sin
 
 */path/to/EmuHawk.exe ${lua_bizhawk} ${rom}*
 
-If you need another lua file, exchange "lua_bizhawk" with "lua_sni" for example. Also it is "lua", not "Lua", I don't know why github refuses to let me write it normally...
+If you need another lua file, exchange "lua_bizhawk" with "lua_sni" for example. The "lua_" shortcuts are automatically generated based on your aplauncher setting, there's one per lua file in /data/lua/ plus "lua_sni" for /SNI/lua/Connector.lua.
 
 ## Poptracker
 
