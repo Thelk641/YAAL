@@ -12,5 +12,6 @@ namespace YAAL
     {
         public Dictionary<WindowType, PixelPoint> positions = new Dictionary<WindowType, PixelPoint>();
         public Dictionary<WindowType, Vector2> size = new Dictionary<WindowType, Vector2>();
+        public Dictionary<WindowType, bool> maximized = new Dictionary<WindowType, bool>();
     }
 }

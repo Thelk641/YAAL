@@ -84,6 +84,9 @@ namespace YAAL
                 case WindowType.InputWindow:
                     window = new InputWindow();
                     break;
+                case WindowType.MainWindow:
+                    window = new MainWindow();
+                    break;
                 default:
                     ErrorManager.ThrowError(
                         "WindowManager - Wrong window type", 
@@ -99,9 +102,11 @@ namespace YAAL
                     source.Topmost = true;
                     source.Topmost = false;
                 }
+
                 windowsData.positions[windowType] = window.Position;
                 Vector2 size = new Vector2((float)window.Width, (float)window.Height);
                 windowsData.size[windowType] = size;
+                windowsData.maximized[windowType] = window.WindowState == WindowState.Maximized;
                 IOManager.SetWindowSettings(windowsData);
             };
 
@@ -115,6 +120,10 @@ namespace YAAL
                 window.Position = windowsData.positions[windowType];
                 window.Width = windowsData.size[windowType].X;
                 window.Height = windowsData.size[windowType].Y;
+                if (windowsData.maximized[windowType])
+                {
+                    window.WindowState = WindowState.Maximized;
+                }
             } else
             {
                 if(source != null)
@@ -212,26 +221,13 @@ namespace YAAL
             if (mainWindow == null)
             {
                 doneStarting = false;
-                mainWindow = new MainWindow();
-                mainWindow.Show();
-                mainWindow.IsVisible = true;
-                doneStarting = true;
-                if (windowsData.positions.ContainsKey(WindowType.MainWindow))
+
+                if(OpenWindow(WindowType.MainWindow, null) is MainWindow window)
                 {
-                    mainWindow.Position = windowsData.positions[WindowType.MainWindow];
-                    mainWindow.Width = windowsData.size[WindowType.MainWindow].X;
-                    mainWindow.Height = windowsData.size[WindowType.MainWindow].Y;
+                    mainWindow = window;
+                    doneStarting = true;
+                    DoneStarting?.Invoke();
                 }
-
-                mainWindow.Closing += (_, _) =>
-                {
-                    windowsData.positions[WindowType.MainWindow] = mainWindow.Position;
-                    Vector2 size = new Vector2((float)mainWindow.Width, (float)mainWindow.Height);
-                    windowsData.size[WindowType.MainWindow] = size;
-                    IOManager.SetWindowSettings(windowsData);
-                };
-
-                DoneStarting?.Invoke();
             }
 
             return mainWindow;
