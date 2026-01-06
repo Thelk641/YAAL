@@ -53,9 +53,10 @@ namespace YAAL
             return new Vector2(mathedX, mathedY);
         }
 
-        public static Window OpenWindow(WindowType windowType, Window? source)
+        public static Window OpenWindow(WindowType windowType, Window? source, bool autoClose = true)
         {
             Window window;
+            bool useSavedSize = true;
             switch (windowType)
             {
                 case WindowType.CLMaker:
@@ -75,6 +76,7 @@ namespace YAAL
                     break;
                 case WindowType.DisplayWindow:
                     window = new DisplayWindow();
+                    useSavedSize = false;
                     break;
                 case WindowType.ConfirmationWindow:
                     window = new ConfirmationWindow();
@@ -103,7 +105,12 @@ namespace YAAL
                 IOManager.SetWindowSettings(windowsData);
             };
 
-            if (windowsData.positions.ContainsKey(windowType))
+            if(source != null && autoClose)
+            {
+                source.Closing += (_, _) => window.Close();
+            }
+
+            if (useSavedSize && windowsData.positions.ContainsKey(windowType))
             {
                 window.Position = windowsData.positions[windowType];
                 window.Width = windowsData.size[windowType].X;
