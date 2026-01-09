@@ -137,7 +137,7 @@
                     <CheckBox
                         Grid.Column="0"
                         Name="Optimize"
-                        ToolTip.Tip="Do we need to error out if the selected version doesn't countain this ?"
+                        ToolTip.Tip="Temporarily remove all unnecessary apworld for faster loads"
                         IsChecked="True"
                         />
                     <TextBlock
