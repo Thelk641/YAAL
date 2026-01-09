@@ -12,6 +12,16 @@ Remember that Open treats both its "file to open" and "arguments" field as a sin
 
 */path/to/EmuHawk.exe ${lua_bizhawk} ${rom}*
 
+If you need another lua file, exchange "lua_bizhawk" with "lua_sni" for example. The "lua_" shortcuts are automatically generated based on your aplauncher setting, there's one per lua file in /data/lua/ plus "lua_sni" for /SNI/lua/Connector.lua.
+
+## Poptracker
+
+Command line args : https://github.com/black-sliver/PopTracker/blob/master/doc/commandline.txt
+
+"Just use --list-installed to list all of your current packs, and launch the program with --load-pack <uid> to launch Poptracker with the one you want!
+
+Before that, you can also edit PopTracker.json with RegEx to change the slot and address, so it's automatically filled when you open the AP prompt!" (thanks Grayson for this knowledge !)
+
 ## Yacht Dice
 
 *https://yacht-dice-ap.netlify.app/?hostport=${room}&name=${slotName}&go=y&p=AP*
