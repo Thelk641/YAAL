@@ -55,13 +55,17 @@ namespace YAAL
 
         public static void SaveCacheLogs(string toSave)
         {
-            string savePath = Path.Combine(GetSaveLocation(Logs), ("Debug log " + GetTime() + ".txt"));
+            string logDirectory = GetSaveLocation(Logs);
+            Directory.CreateDirectory(logDirectory);
+            string savePath = Path.Combine(logDirectory, ("Debug log " + GetTime() + ".txt"));
             File.WriteAllText(savePath, toSave);
         }
 
         public static string SaveCacheError(Cache_ErrorList error)
         {
-            string savePath = Path.Combine(GetSaveLocation(Logs), ("Error log " + GetTime() + ".txt"));
+            string logDirectory = GetSaveLocation(Logs);
+            Directory.CreateDirectory(logDirectory);
+            string savePath = Path.Combine(logDirectory, ("Error log " + GetTime() + ".txt"));
 
             string readableLog = "";
 
@@ -131,7 +135,9 @@ namespace YAAL
                     );
                 return;
             }
-            string savePath = Path.Combine(GetSaveLocation(ManagedApworlds), toSave.settings[launcherName], "launcher.json");
+            string launcherDirectory = GetSaveLocation(ManagedApworlds);
+            Directory.CreateDirectory(launcherDirectory);
+            string savePath = Path.Combine(launcherDirectory, toSave.settings[launcherName], "launcher.json");
             string json = JsonConvert.SerializeObject(toSave, Formatting.Indented);
             SaveFile(savePath, json);
             libraryCustomLauncher[toSave.settings[launcherName]] = toSave;
