@@ -267,46 +267,58 @@ public partial class AsyncHolder : UserControl
 
         TurnEventsOff();
 
-        // TODO : implement "equal" so we can check if toSave is identical to thisAsync and not waste time saving file
-        waitingToSave = false;
-        isSaving = true;
-        Edit.IsEnabled = false;
-        Cache_Async toSave = new Cache_Async();
-        toSave.settings[asyncName] = AsyncNameBox.Text;
-        toSave.settings[roomURL] = RoomBox.Text;
-        toSave.settings[password] = PasswordBox.Text;
-        toSave.settings[roomAddress] = thisAsync.settings[roomAddress];
-        toSave.settings[roomPort] = thisAsync.settings[roomPort];
-        toSave.settings[cheeseURL] = thisAsync.settings[cheeseURL];
-        toSave.settings[room] = thisAsync.settings[room];
-        toSave.room = thisAsync.room;
-
-
-        foreach (var item in SlotsContainer.Children)
+        try
         {
-            if(item is SlotHolder slotHolder)
+            // TODO : implement "equal" so we can check if toSave is identical to thisAsync and not waste time saving file
+            waitingToSave = false;
+            isSaving = true;
+            Edit.IsEnabled = false;
+            Cache_Async toSave = new Cache_Async();
+            toSave.settings[asyncName] = AsyncNameBox.Text!;
+            toSave.settings[roomURL] = RoomBox.Text!;
+            toSave.settings[password] = PasswordBox.Text!;
+            toSave.settings[roomAddress] = thisAsync.settings[roomAddress];
+            toSave.settings[roomPort] = thisAsync.settings[roomPort];
+            toSave.settings[cheeseURL] = thisAsync.settings[cheeseURL];
+            toSave.settings[room] = thisAsync.settings[room];
+            toSave.room = thisAsync.room;
+
+
+            foreach (var item in SlotsContainer.Children)
             {
-                toSave.slots.Add(slotHolder.Slot);
+                if (item is SlotHolder slotHolder)
+                {
+                    toSave.slots.Add(slotHolder.Slot);
+                }
             }
+
+            thisAsync = IOManager.SaveAsync(thisAsync, toSave);
+
+            _AsyncNameBox.Text = thisAsync.settings[asyncName];
+            AsyncNameBox.Text = thisAsync.settings[asyncName];
+            thisAsync.room = toSave.room;
+            thisAsync.settings[roomURL] = toSave.room.URL;
+
+            foreach (var item in SlotsContainer.Children)
+            {
+                if (item is SlotHolder slotHolder)
+                {
+                    slotHolder.SetAsyncName(toSave.settings[asyncName]);
+                    slotHolder.SetRoom(toSave.room);
+                }
+            }
+
+            Edit.IsEnabled = true;
+            isSaving = false;
         }
-
-        thisAsync = IOManager.SaveAsync(thisAsync, toSave);
-        _AsyncNameBox.Text = thisAsync.settings[asyncName];
-        AsyncNameBox.Text = thisAsync.settings[asyncName];
-        thisAsync.room = toSave.room;
-        thisAsync.settings[roomURL] = toSave.room.URL;
-
-        foreach (var item in SlotsContainer.Children)
+        catch (Exception e)
         {
-            if (item is SlotHolder slotHolder)
-            {
-                slotHolder.SetAsyncName(toSave.settings[asyncName]);
-                slotHolder.SetRoom(toSave.room);
-            }
+            ErrorManager.ThrowError(
+                "AsyncHolder - Failed to save async",
+                "Trying to save this async raised the following exception : " + e.Message
+                );
         }
-
-        Edit.IsEnabled = true;
-        isSaving = false;
+        
         DoneSaving?.Invoke();
 
         Dispatcher.UIThread.Post(TurnEventsOn);

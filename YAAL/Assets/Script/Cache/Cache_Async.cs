@@ -17,7 +17,9 @@ namespace YAAL
             {password, "None" },
             {roomAddress, "" },
             {roomPort, "" },
-            {isHidden, false.ToString() }
+            {isHidden, false.ToString() },
+            {cheeseURL, "" },
+            {AsyncSettings.room, "" }
         };
 
         public Dictionary<string, string> toolVersions = new Dictionary<string, string>();
