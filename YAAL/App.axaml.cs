@@ -23,6 +23,7 @@ public partial class App : Application
     bool hasReadLauncher = false;
     bool logDebug = false;
     bool hasErroredOut = false;
+    bool ignoreBase = false;
     DebugManager logger = new DebugManager();
 
     public static UISettings Settings { get; } = new UISettings();
@@ -59,7 +60,7 @@ public partial class App : Application
 #if DEBUG
         if(args.Length == 0)
         {
-            //args = new string[7] { "--debug", "--async", "Pingu birthday", "--slot", "Masaru of Cards", "--launcher", "\"RegEx Test\"" };
+            args = new string[8] { "--debug", "--async", "Pingu birthday", "--slot", "RoR2", "--launcher", "\"RegEx Test\"", "--ignoreBase" };
 
             //args = new string[5] { "--debug", "--async", "Pingu birthday", "--slot", "Masaru of Cards" };
             //args = new string[7] {"--restore", "--async", "Pingu ER", "--slot", "Masaru_FF", "--launcher", "\"Text Client\"" };
@@ -191,6 +192,10 @@ public partial class App : Application
             // for some reason, the instruction are not set to this launcher !?
             CustomLauncher customLauncher = IOManager.LoadLauncher(launcher);
             customLauncher.ReadSettings(async, slot);
+            if (ignoreBase)
+            {
+                customLauncher.SetTemporarySetting("baseLauncher", "");
+            }
             customLauncher.Execute();
             if (customLauncher.waitingForRestore)
             {
@@ -298,6 +303,9 @@ public partial class App : Application
                 break;
             case "debug":
                 logDebug = true;
+                break;
+            case "ignoreBase":
+                ignoreBase = true;
                 break;
             default:
                 ErrorManager.AddNewError(

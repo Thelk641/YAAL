@@ -180,7 +180,7 @@ public partial class CLMakerWindow : ScalableWindow
 
         if(LauncherSelector.SelectedItem is Cache_DisplayLauncher display)
         {
-            TestWindow testWindow = TestWindow.GetTestWindow(this);
+            TestWindow testWindow = TestWindow.GetTestWindow(this, customLauncher.isGame);
             bool requiresPatch = display.cache.settings[LauncherSettings.requiresPatch] == true.ToString();
             bool requiresVersion = display.cache.settings[LauncherSettings.requiresVersion] == true.ToString();
             if (AvailableVersions.ItemsSource is List<string> list)

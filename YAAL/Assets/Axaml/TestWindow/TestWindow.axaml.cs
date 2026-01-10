@@ -17,6 +17,7 @@ using static YAAL.LauncherSettings;
 using static YAAL.SlotSettings;
 using System.Collections;
 using Avalonia.Platform;
+using System.Reactive.Concurrency;
 
 namespace YAAL;
 
@@ -24,6 +25,7 @@ public partial class TestWindow : ScalableWindow
 {
     private Cache_Async? temporaryAsync;
     private static TestWindow? _testWindow;
+    private bool isGame = false;
     public TestWindow()
     {
         InitializeComponent();
@@ -81,7 +83,7 @@ public partial class TestWindow : ScalableWindow
         AsyncSelector.SelectedIndex = 0;
     }
 
-    public static TestWindow GetTestWindow(Window source)
+    public static TestWindow GetTestWindow(Window source, bool isGame)
     {
         if (_testWindow == null)
         {
@@ -101,6 +103,7 @@ public partial class TestWindow : ScalableWindow
             _testWindow.Topmost = false;
         }
 
+        _testWindow.isGame = isGame;
         return _testWindow;
     }
 
@@ -247,6 +250,11 @@ public partial class TestWindow : ScalableWindow
 
         try
         {
+            if (isGame)
+            {
+                args += " --ignoreBase";
+            }
+
             ProcessManager.StartProcess(Environment.ProcessPath, args, true, false);
         }
         catch (Exception e)
