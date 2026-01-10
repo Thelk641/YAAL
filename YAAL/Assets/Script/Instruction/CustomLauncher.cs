@@ -35,6 +35,7 @@ public class CustomLauncher
     public event Action DoneRestoring;
     public bool requiresPatch = false;
     public bool requiresVersion = false;
+    private bool hasErroredOut = false;
 
     // Permanent settings, saved in launcher.json
     // Defaults set in DefaultManager
@@ -53,6 +54,7 @@ public class CustomLauncher
 
     public bool Execute()
     {
+        hasErroredOut = false;
         listOfProcess = new List<Cache_Process>();
         instructionAttachedToOutput = new Dictionary<Interface_Instruction, List<string>>();
         instructionAttachedToClosing = new Dictionary<Interface_Instruction, List<string>>();
@@ -65,7 +67,7 @@ public class CustomLauncher
         {
             instruction.SetExecuteSettings(settings);
             
-            if (!instruction.Execute())
+            if (!instruction.Execute() || hasErroredOut)
             {
                 ErrorManager.AddNewError(
                     "CustomLauncher - Failed to Execute()",
@@ -321,6 +323,7 @@ public class CustomLauncher
                 "CustomLauncher - Tried to parse null",
                 "Something asked the Custom Launcher to parse a null text. This shouldn't ever happen. Please report this issue."
                 );
+            hasErroredOut = true;
             return "";
         }
 
@@ -362,10 +365,11 @@ public class CustomLauncher
         {
             if (isGame)
             {
-                ErrorManager.ThrowError(
+                ErrorManager.AddNewError(
                     "CustomLauncher - Tried to use tool-specific settings in non-tool launcher",
                     "YAAL was asked to parse a baseSetting in a game. This is not allowed. BaseSettings are only there for tools."
                     );
+                hasErroredOut = true;
                 return "";
             }
             foreach (Match m in Regex.Matches(text, @"\$\{baseSetting:(?<key>[^}]+)\}"))
@@ -384,10 +388,11 @@ public class CustomLauncher
         {
             if (isGame)
             {
-                ErrorManager.ThrowError(
+                ErrorManager.AddNewError(
                     "CustomLauncher - Tried to use tool-specific settings in non-tool launcher",
                     "YAAL was asked to parse base:apworld in a game. This is not allowed. 'Base' options are only there for tools."
                     );
+                hasErroredOut = true;
                 return "";
             }
             text = text.Replace("${base:apworld}", baseLauncher.settings[LauncherSettings.apworld]);
@@ -483,10 +488,11 @@ public class CustomLauncher
                             catch (Exception e)
                             {
                                 ErrorManager.AddNewError(
-                                    "CustomLauncher - Missing settings",
+                                    "CustomLauncher - Exception while reading settings",
                                     "Trying to parse " + split[0] + " lead to the following exception : " + e.Message
                                     );
-                                return text;
+                                hasErroredOut = true;
+                                return "";
                             }
                             
                                 
@@ -495,7 +501,12 @@ public class CustomLauncher
                             output = output + IOManager.ToDebug(settings[GeneralSettings.aplauncher]);
                         } else
                         {
-                            output = output + split[0];
+                            ErrorManager.AddNewError(
+                                "CustomLauncher - Variable name doesn't exist.",
+                                "Trying to parse text with settings failed, variable " + split[0] + " doesn't appear to exist."
+                                );
+                            hasErroredOut = true;
+                            return "";
                         }
 
                         output = output + split[1];
@@ -615,6 +626,7 @@ public class CustomLauncher
                     "CustomLauncher - Tried to access empty launcher",
                     "A customLauncher tried to access its baseLauncher (the game the tool is for), but this launcher doesn't have a baselauncher. Please report this issue."
                     );
+                hasErroredOut = true;
                 return null;
             }
             CustomLauncher output = IOManager.LoadLauncher(settings[SlotSettings.baseLauncher]);
@@ -693,6 +705,7 @@ public class CustomLauncher
                 "CustomLauncher - Tried attaching instruction twice",
                 "Trying to attach an instruction triggered the following exception : " + e.Message
                 );
+            hasErroredOut = true;
             return false;
         }
 
@@ -724,6 +737,7 @@ public class CustomLauncher
                 "CustomLauncher - Tried attaching key twice",
                 "Trying to attach an instruction triggered the following exception : " + e.Message
                 );
+                hasErroredOut = true;
                 return false;
             }
 
@@ -779,6 +793,7 @@ public class CustomLauncher
                 "CustomLauncher - Tried attaching instruction twice",
                 "Trying to attach an instruction triggered the following exception : " + e.Message
                 );
+            hasErroredOut = true;
             return false;
         }
 
@@ -810,6 +825,7 @@ public class CustomLauncher
                 "CustomLauncher - Tried attaching key twice",
                 "Trying to attach an instruction triggered the following exception : " + e.Message
                 );
+                hasErroredOut = true;
                 return false;
             }
 
