@@ -56,6 +56,7 @@ public partial class CLMakerWindow : ScalableWindow
             if(NamingBox.IsVisible)
             {
                 TurnEventsOff();
+                Save();
                 if(LauncherSelector.SelectedItem is Cache_DisplayLauncher cache 
                 && NamingBox.Text is string newName 
                 && newName != "" 
