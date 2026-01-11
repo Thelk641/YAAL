@@ -8,12 +8,12 @@
         x:Class="YAAL.Info">
 	<Grid RowDefinitions="*,8">
 		<Grid ColumnDefinitions="*,8,3*">
-			<TextBlock
+			<Label
 				Name="Tag"
 				Grid.Column="0"
 				HorizontalAlignment="Center"
 				VerticalAlignment="Center"
-			
+				Target="{Binding ElementName=Copy}"
 			/>
 			<Button
 				Name="Copy"

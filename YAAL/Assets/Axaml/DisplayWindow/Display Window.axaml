@@ -8,8 +8,11 @@
 	<LayoutTransformControl x:Name="Controller">
 		<Border Name="BackgroundColor" Padding="8" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 			<ScrollViewer Name="Viewer" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-				<StackPanel x:Name="InfoContainer" />
+				<StackPanel x:Name="InfoContainer">
+					<TextBox IsVisible="False" Focusable="True" Name="FocusSink" />
+				</StackPanel>	
 			</ScrollViewer>
 		</Border>
+		
 	</LayoutTransformControl>
 </Window>

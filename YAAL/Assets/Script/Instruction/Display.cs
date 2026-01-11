@@ -1,4 +1,5 @@
 ﻿using Avalonia.Platform.Storage;
+using Avalonia.Threading;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -36,7 +37,9 @@ namespace YAAL
                     window.AddInfo(item.Key, item.Value);
                 }
                 customLauncher.AddWait(this);
+
                 window.Closing += (_, _) => { customLauncher.RemoveWait(this); };
+                window.IsVisible = true;
 
                 return true;
             }

@@ -218,9 +218,9 @@ public partial class TestWindow : ScalableWindow
 
         string args = "";
 
-        if(async.settings.ContainsKey(AsyncSettings.asyncName) && slot.settings.ContainsKey(SlotSettings.slotName))
+        if(async.settings.ContainsKey(AsyncSettings.asyncName) && slot.settings.ContainsKey(SlotSettings.slotLabel))
         {
-            args = "--async " + async.settings[AsyncSettings.asyncName] + " --slot " + slot.settings[SlotSettings.slotName] + " --launcher " + LauncherName.Text;
+            args = "--async " + async.settings[AsyncSettings.asyncName] + " --slot " + slot.settings[SlotSettings.slotLabel] + " --launcher " + LauncherName.Text;
         } else
         {
             if(!async.settings.ContainsKey(AsyncSettings.asyncName))
@@ -237,10 +237,10 @@ public partial class TestWindow : ScalableWindow
             return;
         }
 
-        if (VersionSelector.SelectedItem is string version)
+        if (VersionSelector.SelectedItem is string version && version != "")
         {
             Cache_Slot oldSlot = new Cache_Slot();
-            oldSlot.settings[SlotSettings.slotName] = slot.settings[SlotSettings.slotName];
+            oldSlot.settings[SlotSettings.slotLabel] = slot.settings[SlotSettings.slotLabel];
 
             slot.settings[SlotSettings.version] = version;
             slot.settings[SlotSettings.baseLauncher] = LauncherName.Text ?? "";

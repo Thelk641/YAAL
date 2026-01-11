@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input.Platform;
 using Avalonia.Interactivity;
@@ -26,14 +26,29 @@ public partial class Info : UserControl
     public Info(string newTag, string newValue)
     {
         InitializeComponent();
-        Tag.Text = newTag;
-        Copy.Content = newValue;
-        Copy.Click += async (_, _) =>
+        Tag.Content = newTag;
+        
+
+        if (newValue.Contains("_"))
         {
-            if (TopLevel.GetTopLevel(this)?.Clipboard is IClipboard clipboard)
+            Copy.Content = newValue.Replace("_", "__");
+        } else
+        {
+            Copy.Content = newValue;
+        }
+            
+        Copy.Click += async (_, _) =>
             {
-                await clipboard.SetTextAsync(newValue);
-            }
-        };
+                await CopyToClipboard(newValue);
+            };
+
+    }
+
+    private async Task CopyToClipboard(string text)
+    {
+        if (TopLevel.GetTopLevel(this)?.Clipboard is IClipboard clipboard)
+        {
+            await clipboard.SetTextAsync(text);
+        }
     }
 }

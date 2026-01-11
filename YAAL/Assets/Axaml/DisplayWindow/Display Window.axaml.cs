@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Avalonia.Input.Platform;
+using Avalonia.Threading;
 
 namespace YAAL;
 
@@ -27,5 +28,12 @@ public partial class DisplayWindow : ScalableWindow
     {
         Info toAdd = new Info(tag, info);
         InfoContainer.Children.Add(toAdd);
+        this.Activated += (_, _) =>
+        {
+            Dispatcher.UIThread.Post(() =>
+            {
+                toAdd.Copy.Focus();
+            });
+        };
     }
 }
