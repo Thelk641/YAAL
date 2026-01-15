@@ -13,7 +13,7 @@ jobs:
           repository: Thelk641/Table-Maker
           path: Docs/Table-Maker
       - uses: actions/setup-dotnet@v4
-      - run: dotnet-build
+      - run: dotnet build
         working-directory: Docs/Table-Maker
       - run: dotnet run "$GITHUB_WORKSPACE/Docs/Raw game list.txt" "$GITHUB_WORKSPACE/Docs/GameList.html"
         working-directory: Docs/Table-Maker
