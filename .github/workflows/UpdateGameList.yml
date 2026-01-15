@@ -1,0 +1,30 @@
+name: Update game list
+run-name: Updating the game list automatically
+on:
+  push:
+    paths:
+    - "Docs/Raw game list.txt" 
+  workflow_dispatch: 
+jobs:
+  Update-List:
+    runs-on: ubuntu-latest
+    steps:
+    
+      - name: Check YAAL's content
+        uses: actions/checkout@v4
+        
+      - name: Check Table Maker's content
+        uses: actions/checkout@v4
+        with: 
+          repository: Thelk641/Table-Maker
+          path: Docs/Table-Maker
+          
+      - uses: actions/setup-dotnet@v4
+      
+      - run: dotnet build
+        working-directory: Docs/Table-Maker
+        
+      - run: dotnet run '../Raw game list.txt' '../GameList.md'
+        working-directory: Docs/Table-Maker
+      
+    
