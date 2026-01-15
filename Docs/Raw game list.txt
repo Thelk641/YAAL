@@ -1,0 +1,5 @@
+Adventure / No / / Not implemented
+Shadow The Hedgehog / Meh / google.com / 0 argument bug, can't auto-connect
+Wind Waker / Meh / google.com / 0 argument bug, can't auto-connect
+Yacht Dice / Yes / google.com /
+Yu-Gi-Oh World Championship 2006 / Yes / Bizhawk / Still prone to save corruption
