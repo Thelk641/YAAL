@@ -1,7 +1,9 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.OpenGL;
+using Avalonia.Svg.Skia;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -19,6 +21,8 @@ public partial class CLMakerWindow : ScalableWindow
     public SettingManager? settingManager;
     public List<Command> commandList = new List<Command>();
     public int previousIndex = 0;
+    public Dictionary<Button, KeyValuePair<Avalonia.Svg.Skia.Svg, TextBlock>> buttonsList = new Dictionary<Button, KeyValuePair<Avalonia.Svg.Skia.Svg, TextBlock>>();
+    public List<string> keyHandled = new List<string>();
 
     public Command AddCommand(string type, bool addToCustomLauncher = true)
     {
@@ -269,5 +273,22 @@ public partial class CLMakerWindow : ScalableWindow
         GitHubVersions.ItemsSource = newList;
         GitHubVersions.SelectedIndex = 0;
         GitHubVersions.IsEnabled = true;
+    }
+
+    public void ListButtons()
+    {
+        List<Button> list = new List<Button>();
+        list.Add(EmptyLauncher);
+
+        foreach (Button button in list)
+        {
+            var icon = button.FindDescendantOfType<Avalonia.Svg.Skia.Svg>();
+            var text = button.FindDescendantOfType<TextBlock>();
+
+            if(icon is Avalonia.Svg.Skia.Svg svg && text is TextBlock label)
+            {
+                buttonsList.Add(button, new KeyValuePair<Avalonia.Svg.Skia.Svg, TextBlock>(svg, label));
+            }
+        }
     }
 }

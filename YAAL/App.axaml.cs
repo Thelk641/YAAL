@@ -60,7 +60,7 @@ public partial class App : Application
 #if DEBUG
         if(args.Length == 0)
         {
-            args = new string[8] { "--debug", "--async", "Pingu birthday", "--slot", "RoR2", "--launcher", "\"Dice\"", "--ignoreBase" };
+            //args = new string[8] { "--debug", "--async", "Pingu birthday", "--slot", "RoR2", "--launcher", "\"Dice\"", "--ignoreBase" };
 
             //args = new string[5] { "--debug", "--async", "Pingu birthday", "--slot", "Masaru of Cards" };
             //args = new string[7] {"--restore", "--async", "Pingu ER", "--slot", "Masaru_FF", "--launcher", "\"Text Client\"" };

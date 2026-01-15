@@ -24,12 +24,24 @@
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"
 						local:AutoIcon.Icon="NewFile"
+						
 						>
-						<Svg
-							VerticalAlignment="Center"
-							HorizontalAlignment="Center"
-							Width="30"
-							/>
+						<Grid>
+							<AccessText IsVisible="False">N</AccessText>
+							<Svg
+								VerticalAlignment="Center"
+								HorizontalAlignment="Center"
+								Width="30"
+								IsVisible="True"
+								/>
+							<TextBlock
+								Text="N"
+								IsVisible="False"
+								HorizontalAlignment="Stretch"
+								VerticalAlignment="Stretch"
+								/>
+						</Grid>
+
 					</Button>
 
 					<Button

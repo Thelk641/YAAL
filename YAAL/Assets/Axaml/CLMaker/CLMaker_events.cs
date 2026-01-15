@@ -1,20 +1,22 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
-using YAAL.Assets.Scripts;
-using Avalonia;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
+using YAAL.Assets.Scripts;
 using static System.Diagnostics.Debug;
 using static YAAL.LauncherSettings;
-using System.Collections.ObjectModel;
 
 namespace YAAL;
 
 public partial class CLMakerWindow : ScalableWindow
 {
+    bool _altHeld = false;
     private void SetEvents(bool autoLoad)
     {
         ModeSelector.ItemsSource = new List<string> { "Game", "Tool" };
@@ -390,6 +392,59 @@ public partial class CLMakerWindow : ScalableWindow
             Save();
             LoadLauncher(cache.cache);
             previousIndex = LauncherSelector.SelectedIndex;
+        }
+    }
+
+    private void OnKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (keyHandled.Contains(e.Key.ToString()))
+        {
+            return;
+        }
+
+        if ((e.Key is Key.LeftAlt or Key.RightAlt) && !_altHeld)
+        {
+            _altHeld = true;
+            foreach (var item in buttonsList)
+            {
+                item.Value.Key.IsVisible = false;
+                item.Value.Value.IsVisible = true;
+            }
+        } else if (_altHeld)
+        {
+            foreach (var item in buttonsList)
+            {
+                if(e.Key.ToString() == item.Value.Value.Text)
+                {
+                    item.Key.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                    OnKeyUp(Key.LeftAlt);
+                    return;
+                }
+            }
+        }
+
+        keyHandled.Add(e.Key.ToString());
+    }
+
+    private void OnKeyUp(object? sender, KeyEventArgs e)
+    {
+        if ((e.Key is Key.LeftAlt or Key.RightAlt) && _altHeld)
+        {
+            OnKeyUp(e.Key);
+        }
+    }
+
+    private void OnKeyUp(Key key)
+    {
+        _altHeld = false;
+        foreach (var item in buttonsList)
+        {
+            item.Value.Key.IsVisible = true;
+            item.Value.Value.IsVisible = false;
+        }
+        if (keyHandled.Contains(key.ToString()))
+        {
+            keyHandled.Remove(key.ToString());
         }
     }
 }

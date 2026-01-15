@@ -1,12 +1,14 @@
+using Avalonia.Controls;
+using Avalonia.Input;
+using Avalonia.Interactivity;
+using Avalonia.Threading;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Avalonia.Controls;
-using Avalonia.Interactivity;
-using YAAL.Assets.Scripts;
-using static System.Diagnostics.Debug;
 using System.Threading;
 using System.Threading.Tasks;
+using YAAL.Assets.Scripts;
+using static System.Diagnostics.Debug;
 
 namespace YAAL;
 
@@ -43,6 +45,21 @@ public partial class CLMakerWindow : ScalableWindow
         {
             AutoTheme.SetScrollbarTheme(Scroll);
         };
+
+        AddHandler(
+            InputElement.KeyDownEvent,
+            OnKeyDown,
+            RoutingStrategies.Tunnel);
+
+        AddHandler(
+            InputElement.KeyUpEvent,
+            OnKeyUp,
+            RoutingStrategies.Tunnel);
+
+        Dispatcher.UIThread.Post(() =>
+        {
+            ListButtons();
+        });
     }
 
     public CLMakerWindow(string launcherName) : this()
@@ -71,7 +88,7 @@ public partial class CLMakerWindow : ScalableWindow
     {
         //Debouncer.DebounceCompleted -= ActualClose;
         _clMakerWindow = null;
-        Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+        Dispatcher.UIThread.Post(() =>
         {
             this.Close();
         });
