@@ -24,7 +24,7 @@ jobs:
       - run: dotnet build
         working-directory: Docs/Table-Maker
         
-      - run: dotnet run '../Raw game list.txt' '../GameList.html'
+      - run: dotnet run '../Raw game list.txt' '../GameList.md'
         working-directory: Docs/Table-Maker
       
     
