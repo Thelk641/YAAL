@@ -1,4 +1,5 @@
 Adventure / No / / Not implemented
+(TLoZ) Oracle of Seasons / Yes / Bizhawk / 
 Shadow The Hedgehog / Meh / google.com / 0 argument bug, can't auto-connect
 Wind Waker / Meh / google.com / 0 argument bug, can't auto-connect
 Yacht Dice / Yes / google.com /
