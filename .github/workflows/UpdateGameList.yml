@@ -1,0 +1,21 @@
+name: Update game list
+run-name: Updating the game list automatically
+on:
+  push:
+    paths:
+    - "YAAL/Docs/Raw game list.txt" 
+jobs:
+  Update-List:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: 
+          repository: Thelk641/Table-Maker
+          path: YAAL/Docs/Table-Maker
+      - uses: actions/setup-dotnet@v4
+      - run: dotnet-build
+        working-directory: YAAL/Docs/Table-Maker
+      - run: dotnet run "YAAL/Docs/Raw game list.txt" "YAAL/Docs/GameList.html"
+        working-directory: YAAL/Docs/Table-Maker
+      
+    
