@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="YAAL.CLM_BottomBar"
+			 xmlns:local="clr-namespace:YAAL"
+             HorizontalAlignment="Stretch"
+			 Name="TrueBackground"
+             >
+	<Grid
+		ColumnDefinitions="100, 8, 200, *, 246, 8, 100"
+		VerticalAlignment="Bottom"
+		Grid.Row="6"
+		>
+		<ComboBox
+			Name="ModeSelector"
+			Grid.Column="0"
+			VerticalAlignment="Stretch"
+			HorizontalAlignment="Stretch"
+			ToolTip.Tip="A slot has a single Game while Tools can be used on any slot"
+			/>
+		<Button
+			Name="OpenTestWindow"
+			Content="Test"
+			HorizontalContentAlignment="Center"
+			Grid.Column="6"
+			Width="100"
+			HorizontalAlignment="Left"
+			/>
+	</Grid>
+</UserControl>

@@ -10,6 +10,14 @@ namespace YAAL
 {
     public static class Templates
     {
+        static Templates()
+        {
+            foreach (var item in commandTemplates)
+            {
+                commandNames.Add(item.Key);
+            }
+        }
+
         public static Dictionary<string, Type> commandTemplates = new Dictionary<string, Type>()
         {
             {"Apworld", typeof(Command_Apworld)},
@@ -36,18 +44,7 @@ namespace YAAL
             {"Wait", typeof(Wait) },
         };
 
-        public static List<String> commandNames = new List<String>()
-        {
-            "Apworld",
-            "Backup",
-            "Display",
-            "Isolate",
-            "Input",
-            "Open",
-            "Patch",
-            "RegEx",
-            "Wait"
-        };
+        public static List<String> commandNames = new List<String>();
 
         public static Dictionary<string, string> fixedSettings = new Dictionary<string, string>
         {

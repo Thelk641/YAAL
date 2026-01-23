@@ -1,0 +1,76 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="YAAL.CLM_Commands"
+			 xmlns:local="clr-namespace:YAAL"
+             HorizontalAlignment="Stretch"
+			 VerticalAlignment="Stretch"
+			 Name="TrueBackground"
+			 
+             >
+	<Border BorderBrush="Gray"
+			BorderThickness="1"
+			CornerRadius="4"
+			Padding="8"
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Stretch"
+			Grid.Row="2"
+			Name="CommandBackground"
+				>
+		<Grid RowDefinitions="*, 48">
+			<ScrollViewer
+				Name="Scroll"
+				Grid.Row="0"
+				Grid.RowSpan="2"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				AllowAutoHide="False"
+					>
+				<Border Padding="0,0,8,0" Name="PaddingBorder">
+					<StackPanel x:Name="CommandContainer" />
+				</Border>
+			</ScrollViewer>
+			<Grid ColumnDefinitions="*,200, 30" Grid.Row="1">
+				<Border
+					Grid.Column="1"
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch"
+					CornerRadius="4"
+					Padding="8"
+					BorderThickness="1"
+					BorderBrush="Gray"
+						>
+					<Grid
+						ColumnDefinitions="*,8,30"
+						Grid.Column="3"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+							>
+
+						<ComboBox
+							Name="CommandSelector"
+							Grid.Column="0"
+							HorizontalAlignment="Stretch"
+							VerticalAlignment="Stretch"
+							HorizontalContentAlignment="Center"
+								/>
+
+						<Button
+							Name="CommandAdder"
+							Grid.Column="2"
+							HorizontalAlignment="Stretch"
+							VerticalAlignment="Stretch"
+							local:AutoIcon.Icon="Plus"
+								>
+							<Svg
+								VerticalAlignment="Center"
+								HorizontalAlignment="Center"
+								Width="30"
+									/>
+						</Button>
+					</Grid>
+				</Border>
+			</Grid>
+		</Grid>
+
+	</Border>
+</UserControl>

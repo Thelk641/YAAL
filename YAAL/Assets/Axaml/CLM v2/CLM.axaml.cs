@@ -1,0 +1,102 @@
+using Avalonia.Input;
+using Avalonia.Interactivity;
+
+namespace YAAL;
+
+public partial class CLM : ScalableWindow
+{
+    private CLM? window;
+    // TODO : CustomLauncher shouldn't be a thing, at all
+    //private CustomLauncher customLauncher;
+    //public CustomLauncher CustomLauncher { get => customLauncher; }
+    private bool altMode = false;
+
+    private CLM_Selector selector;
+    private CLM_Commands commands;
+    private CLM_Buttons buttons;
+    private CLM_BottomBar bottomBar;
+
+    public CLM()
+    {
+        InitializeComponent();
+
+        selector = new CLM_Selector(this);
+        Holder_Selector.Children.Add(selector);
+
+        buttons = new CLM_Buttons(this, selector);
+        Holder_Buttons.Children.Add(buttons);
+
+        commands = new CLM_Commands(this);
+        Holder_Commands.Children.Add(commands);
+
+        bottomBar = new CLM_BottomBar();
+        Holder_BottomBar.Children.Add(bottomBar);
+
+        AutoTheme.SetTheme(BackgroundColor, ThemeSettings.backgroundColor);
+
+        AddHandler(InputElement.KeyDownEvent, (_, e) =>
+        {
+            if (altMode)
+            {
+                buttons.ProcessKey(e.Key);
+                return;
+            } else if (e.Key == Key.LeftAlt || e.Key == Key.RightAlt)
+            {
+                altMode = true;
+                buttons.SwitchMode(true);
+            }
+        }, RoutingStrategies.Tunnel);
+
+        AddHandler(InputElement.KeyUpEvent, (_, e) =>
+        {
+            if (e.Key == Key.LeftAlt || e.Key == Key.RightAlt)
+            {
+                altMode = false;
+                buttons.SwitchMode(false);
+            }
+        }, RoutingStrategies.Tunnel);
+
+        this.Closing += (_, _) =>
+        {
+            SaveLauncher();
+        };
+    }
+
+    
+
+    public CLM GetWindow()
+    {
+        if(window == null)
+        {
+            window = new CLM();
+            window.Closing += (_,_) =>
+            {
+                window = null;
+            };
+        }
+        return window;
+    } 
+
+    public void LoadLauncher(Cache_CustomLauncher launcher)
+    {
+        // TODO : this shouldn't use CustomLauncher, it should only go through Cache_CustomLauncher instead
+        CustomLauncher customLauncher = IOManager.LoadLauncher(launcher);
+        commands.LoadCommands(launcher.instructionList);
+    }
+
+    public void SaveLauncher()
+    {
+        Cache_CustomLauncher toSave = selector.GetCache().cache;
+        toSave.instructionList = commands.GetCommands();
+        IOManager.SaveCacheLauncher(toSave);
+        selector.UpdateCache(toSave);
+    }
+
+    public void SaveLauncher(string newName)
+    {
+        Cache_DisplayLauncher toSave = selector.GetCache();
+        toSave.cache.instructionList = commands.GetCommands();
+        string trueName = IOManager.RenameLauncher(toSave, newName);
+        selector.ReloadList(trueName);
+    }
+}

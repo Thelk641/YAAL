@@ -1,0 +1,34 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="YAAL.CLM_Selector"
+			 xmlns:local="clr-namespace:YAAL"
+             HorizontalAlignment="Stretch"
+			 Name="TrueBackground"
+             >
+	<Grid>
+		<TextBox
+			IsVisible="False"
+			Name="NamingBox"
+			MinWidth="100"
+			Grid.Column="1"
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Stretch"
+			/>
+
+		<ComboBox
+			Name="LauncherSelector"
+			MinWidth="150"
+			Grid.Column="1"
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Stretch"
+			>
+			<ComboBox.ItemTemplate>
+				<DataTemplate>
+					<TextBlock
+						Text="{Binding name}"
+					/>
+				</DataTemplate>
+			</ComboBox.ItemTemplate>
+		</ComboBox>
+	</Grid>
+</UserControl>

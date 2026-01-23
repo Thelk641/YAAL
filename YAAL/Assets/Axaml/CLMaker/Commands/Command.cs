@@ -19,6 +19,9 @@ namespace YAAL
     {
         public Interface_Instruction linkedInstruction;
         public CLMakerWindow clMaker;
+        public CLM_Commands? holder;
+        public Interface_CommandSetting settings;
+        public string type;
 
         protected Dictionary<string, Action> debouncedEvents = new();
         protected Dictionary<TextBox, string> debouncedSettings = new();
@@ -105,7 +108,7 @@ namespace YAAL
 
         public void MoveUp(object? sender, RoutedEventArgs e)
         {
-            var parent = this.Parent as Panel;
+            /*var parent = this.Parent as Panel;
             if (parent != null)
             {
                 int index = parent.Children.IndexOf(this);
@@ -115,12 +118,17 @@ namespace YAAL
                     parent.Children.Insert(index - 1, this);
                     clMaker.MoveUp(this);
                 }
+            }*/
+            if(holder != null)
+            {
+                holder.MoveCommandUp(this);
             }
+            
         }
 
         public void MoveDown(object? sender, RoutedEventArgs e)
         {
-            var parent = this.Parent as Panel;
+            /*var parent = this.Parent as Panel;
             if (parent != null)
             {
                 int index = parent.Children.IndexOf(this);
@@ -130,13 +138,20 @@ namespace YAAL
                     parent.Children.Insert(index + 1, this);
                     clMaker.MoveDown(this);
                 }
+            }*/
+            if (holder != null)
+            {
+                holder.MoveCommandDown(this);
             }
-
         }
 
         public void DeleteComponent(object? sender = null, RoutedEventArgs e = null)
         {
-            DeleteComponent(true);
+            //DeleteComponent(true);
+            if (holder != null)
+            {
+                holder.RemoveCommand(this);
+            }
         }
 
         public void DeleteComponent(bool passInfo)
@@ -162,6 +177,11 @@ namespace YAAL
         public virtual void LoadInstruction(Interface_Instruction newInstruction)
         {
             linkedInstruction = newInstruction;
+        }
+
+        public virtual void LoadInstruction(Interface_CommandSetting newSettings)
+        {
+            // to be override'd by each instruction type
         }
 
         public void LoadInstruction(Interface_Instruction newInstruction, CustomLauncher launcher)

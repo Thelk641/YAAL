@@ -12,9 +12,21 @@ namespace YAAL;
 
 public partial class Command_Apworld : Command
 {
+    public CommandSetting<ApworldSettings> CommandSettings => (CommandSetting<ApworldSettings>)settings;
+
+    private Dictionary<ApworldSettings, string> defaultValues = new Dictionary<ApworldSettings, string>() { 
+        {apworldTarget,"" },
+        {processName, "" },
+        {optimize,"True" },
+        {necessaryFile,"True" }
+    };
+
     public Command_Apworld()
     {
         InitializeComponent();
+        settings = new CommandSetting<ApworldSettings>();
+        CommandSettings.SetDefaultSetting(defaultValues);
+        CommandSettings.SetCommandType("Apworld");
 
         SetDebouncedEvents();
         linkedInstruction = new Apworld();
@@ -63,15 +75,26 @@ public partial class Command_Apworld : Command
         TurnEventsBackOn();
     }
 
+    public void LoadInstruction(CommandSetting<ApworldSettings> newSettings)
+    {
+        TurnEventsOff();
+        settings = newSettings;
+        BackupTarget.Text = newSettings.GetSetting(apworldTarget);
+        IsNecessary.IsChecked = newSettings.GetSetting(necessaryFile) == true.ToString();
+        Optimize.IsChecked = newSettings.GetSetting(optimize) == true.ToString();
+        VarName.Text = newSettings.GetSetting(processName);
+        TurnEventsBackOn();
+    }
+
 
 
     private void _IsNecessaryChanged(object? sender, RoutedEventArgs e)
     {
-        this.linkedInstruction.SetSetting(necessaryFile.ToString(), IsNecessary.IsChecked.ToString());
+        CommandSettings.SetSetting(necessaryFile, IsNecessary.IsChecked.ToString() ?? "False");
     }
 
     private void _OptimizeChanged(object? sender, RoutedEventArgs e)
     {
-        linkedInstruction.SetSetting(optimize.ToString(), Optimize.IsChecked.ToString());
+        CommandSettings.SetSetting(optimize, Optimize.IsChecked.ToString() ?? "False");
     }
 }

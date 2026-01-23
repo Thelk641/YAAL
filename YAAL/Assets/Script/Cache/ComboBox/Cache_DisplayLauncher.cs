@@ -10,7 +10,7 @@ namespace YAAL
 {
     public class Cache_DisplayLauncher : ICloneable
     {
-        public string name { get; set; }
+        public string name { get; set; } = "";
         public Cache_CustomLauncher cache { get; set; }
 
         public bool isHeader { get; set; } = false;

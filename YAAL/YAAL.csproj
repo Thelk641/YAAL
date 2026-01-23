@@ -20,6 +20,21 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Assets\Axaml\CLM v2\CLM.axaml.cs">
+      <DependentUpon>CLM.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Assets\Axaml\CLM v2\CLM_BottomBar.axaml.cs">
+      <DependentUpon>CLM_BottomBar.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Assets\Axaml\CLM v2\CLM_Selector.axaml.cs">
+      <DependentUpon>CLM_Selector.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Assets\Axaml\CLM v2\CLM_Commands.axaml.cs">
+      <DependentUpon>CLM_Commands.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Assets\Axaml\CLM v2\CLM_Buttons.axaml.cs">
+      <DependentUpon>CLM_Buttons.axaml</DependentUpon>
+    </Compile>
     <Compile Update="Assets\Axaml\CLMaker\Commands\Command_Input.axaml.cs">
       <DependentUpon>Command_Input.axaml</DependentUpon>
     </Compile>

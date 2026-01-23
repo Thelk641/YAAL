@@ -16,23 +16,16 @@ namespace YAAL;
 
 public partial class NewLauncher : ScalableWindow
 {
-    private CLMakerWindow clmaker;
     public Cache_CustomLauncher launcher;
     public bool create = false;
     public NewLauncher()
     {
         InitializeComponent();
         AutoTheme.SetTheme(TrueBackground, ThemeSettings.backgroundColor);
-    }
-
-    public NewLauncher(CLMakerWindow parent)
-    {
-        InitializeComponent();
-        AutoTheme.SetTheme(TrueBackground, ThemeSettings.backgroundColor);
         FilePick.Click += _PickFile;
         Create.Click += _CreateLauncher;
         ApworldPath.TextChanged += _ApworldPathTextChanged;
-        clmaker = parent;
+        this.Show();
     }
 
     private void _ApworldPathTextChanged(object? sender, TextChangedEventArgs e)

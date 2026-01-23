@@ -1,0 +1,59 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+		xmlns:local="clr-namespace:YAAL"
+        x:Class="YAAL.CLM"
+        Title="YAAL - Custom Launcher maker"
+        Width="800"
+        Height="500"
+        MinHeight="400"
+        MinWidth="700"
+        Name="mainWindow"
+        >
+	<LayoutTransformControl x:Name="Controller">
+		<Border Name="BackgroundColor" Padding="8">
+			<Grid RowDefinitions="30, 8, *, 8, 30">
+    
+				<!-- Top of the Window, most of the controls -->
+				<Grid ColumnDefinitions="*,*" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+					<StackPanel
+						Name="Holder_Buttons"
+						Grid.Column="0"
+						VerticalAlignment="Stretch"
+						HorizontalAlignment="Stretch"
+						/>
+					<StackPanel 
+						Name="Holder_Selector" 
+						Grid.Column="1"
+						VerticalAlignment="Stretch"
+						HorizontalAlignment="Stretch"
+						/>
+				</Grid>
+    
+				<!-- Second part, components -->
+				<Grid
+					Name="Holder_Commands"
+					Grid.Row="2"
+					VerticalAlignment="Stretch"
+					HorizontalAlignment="Stretch"
+					ColumnDefinitions="*"
+					/>
+    
+				<!-- Bottom of the Window, mode selector, test -->
+				<StackPanel
+					Name="Holder_BottomBar"
+					Grid.Row="4"
+					VerticalAlignment="Stretch"
+					HorizontalAlignment="Stretch"
+					/>
+			  </Grid>
+		</Border>
+	</LayoutTransformControl>
+</Window>
+
+
+
+<!-- SizeToContent="WidthAndHeight" 
+
+Width="800"
+Height="200" -->

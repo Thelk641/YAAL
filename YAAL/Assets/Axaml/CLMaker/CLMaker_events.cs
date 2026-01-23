@@ -260,7 +260,7 @@ public partial class CLMakerWindow : ScalableWindow
     public void CreateNewLauncher(object? sender, RoutedEventArgs e)
     {
         Save();
-        NewLauncher launcher = new NewLauncher(this);
+        NewLauncher launcher = new NewLauncher();
         launcher.Show();
 
         launcher.Closing += (_, _) =>
