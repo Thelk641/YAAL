@@ -29,7 +29,6 @@ public partial class Command_Apworld : Command
         CommandSettings.SetCommandType("Apworld");
 
         SetDebouncedEvents();
-        linkedInstruction = new Apworld();
         TurnEventsOn();
         IsNecessary.IsChecked = true;
         Optimize.IsChecked = true;
@@ -64,25 +63,14 @@ public partial class Command_Apworld : Command
         VarName.TextChanged -= _TextChanged;
     }
 
-    public override void LoadInstruction(Interface_Instruction newInstruction)
+    public override void LoadInstruction(Interface_CommandSetting newSettings)
     {
         TurnEventsOff();
-        linkedInstruction = newInstruction;
-        BackupTarget.Text = this.linkedInstruction.GetSetting(apworldTarget.ToString());
-        IsNecessary.IsChecked = this.linkedInstruction.GetSetting(necessaryFile.ToString()) == true.ToString();
-        Optimize.IsChecked = this.linkedInstruction.GetSetting(optimize.ToString()) == true.ToString();
-        VarName.Text = this.linkedInstruction.GetSetting(processName.ToString());
-        TurnEventsBackOn();
-    }
-
-    public void LoadInstruction(CommandSetting<ApworldSettings> newSettings)
-    {
-        TurnEventsOff();
-        settings = newSettings;
-        BackupTarget.Text = newSettings.GetSetting(apworldTarget);
-        IsNecessary.IsChecked = newSettings.GetSetting(necessaryFile) == true.ToString();
-        Optimize.IsChecked = newSettings.GetSetting(optimize) == true.ToString();
-        VarName.Text = newSettings.GetSetting(processName);
+        base.LoadInstruction(newSettings);
+        BackupTarget.Text = CommandSettings.GetSetting(apworldTarget);
+        IsNecessary.IsChecked = CommandSettings.GetSetting(necessaryFile) == true.ToString();
+        Optimize.IsChecked = CommandSettings.GetSetting(optimize) == true.ToString();
+        VarName.Text = CommandSettings.GetSetting(processName);
         TurnEventsBackOn();
     }
 

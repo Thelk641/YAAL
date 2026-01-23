@@ -9,6 +9,14 @@ namespace YAAL;
 
 public partial class Command_Patch : Command
 {
+    public CommandSetting<PatchSettings> CommandSettings => (CommandSetting<PatchSettings>)settings;
+
+    private Dictionary<PatchSettings, string> defaultValues = new Dictionary<PatchSettings, string>() {
+        {mode, "Apply" },
+        {target, "" },
+        {optimize, "True" },
+        {rename, "" }
+    };
     public List<string> modes = new List<string>()
     {
         "Apply the patch",
@@ -17,9 +25,12 @@ public partial class Command_Patch : Command
     public Command_Patch()
     {
         InitializeComponent();
+        settings = new CommandSetting<PatchSettings>();
+        CommandSettings.SetDefaultSetting(defaultValues);
+        CommandSettings.SetCommandType("Patch");
+
         SetDebouncedEvents();
         Optimize.IsChecked = true;
-        linkedInstruction = new Patch();
         Target.Text = "";
         TurnEventsOn();
 
@@ -39,19 +50,19 @@ public partial class Command_Patch : Command
         explorers[TargetFolder] = Target;
     }
 
-    public override void LoadInstruction(Interface_Instruction newInstruction)
+    public override void LoadInstruction(Interface_CommandSetting newInstruction)
     {
         TurnEventsOff();
-        linkedInstruction = newInstruction;
-        Target.Text = linkedInstruction.GetSetting(target.ToString());
-        NewName.Text = linkedInstruction.GetSetting(rename.ToString());
+        base.LoadInstruction(newInstruction);
+        Target.Text = CommandSettings.GetSetting(target);
+        NewName.Text = CommandSettings.GetSetting(rename);
 
-        if(linkedInstruction.GetSetting(mode.ToString()) == "Copy")
+        if(CommandSettings.GetSetting(mode) == "Copy")
         {
             Mode.SelectedIndex = 1;
             _ModeChanged(null, null);
         }
-        Optimize.IsChecked = linkedInstruction.GetSetting(optimize.ToString()) == true.ToString();
+        Optimize.IsChecked = CommandSettings.GetSetting(optimize) == true.ToString();
         TurnEventsBackOn();
     }
 
@@ -73,7 +84,7 @@ public partial class Command_Patch : Command
 
     private void _OptimizeChanged(object? sender, RoutedEventArgs e)
     {
-        linkedInstruction.SetSetting(optimize.ToString(), Optimize.IsChecked.ToString());
+        CommandSettings.SetSetting(optimize, Optimize.IsChecked.ToString());
     }
 
     private void _ModeChanged(object? sender, SelectionChangedEventArgs e)
@@ -81,12 +92,12 @@ public partial class Command_Patch : Command
         switch (Mode.SelectedItem.ToString())
         {
             case "Apply the patch":
-                linkedInstruction.SetSetting(mode.ToString(), "Apply");
+                CommandSettings.SetSetting(mode, "Apply");
                 ApplyGrid.IsVisible = true;
                 CopyGrid.IsVisible = false;
                 break;
             case "Copy to the patch to this folder :":
-                linkedInstruction.SetSetting(mode.ToString(), "Copy");
+                CommandSettings.SetSetting(mode, "Copy");
                 ApplyGrid.IsVisible = false;
                 CopyGrid.IsVisible = true;
                 break;

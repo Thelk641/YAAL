@@ -9,12 +9,27 @@ namespace YAAL;
 
 public partial class Command_RegEx : Command
 {
+    public CommandSetting<RegExSettings> CommandSettings => (CommandSetting<RegExSettings>)settings;
+
+    private Dictionary<RegExSettings, string> defaultValues = new Dictionary<RegExSettings, string>() {
+        {targetFile,"" },
+        {targetString, "" },
+        {modeInput, "File" },
+        {modeOutput, "File" },
+        {regex, "localhost|archipelago\\.gg:\\d+" },
+        {replacement, "" },
+        {outputFile, "" },
+        {outputVar, "" }
+    };
     public Command_RegEx()
     {
         InitializeComponent();
+        settings = new CommandSetting<RegExSettings>();
+        CommandSettings.SetDefaultSetting(defaultValues);
+        CommandSettings.SetCommandType("RegEx");
+
         SetDebouncedEvents();
         RegEx.Text = "localhost|archipelago\\.gg:\\d+";
-        linkedInstruction = new RegEx();
         InputType.ItemsSource = new List<string>()
         {
             "From file :",
@@ -73,17 +88,17 @@ public partial class Command_RegEx : Command
         InputType.SelectionChanged -= _InputTypeChanged;
     }
 
-    public override void LoadInstruction(Interface_Instruction newInstruction)
+    public override void LoadInstruction(Interface_CommandSetting newInstruction)
     {
         TurnEventsOff();
-        linkedInstruction = newInstruction;
-        InputFile.Text = this.linkedInstruction.GetSetting(targetFile.ToString());
-        InputString.Text = this.linkedInstruction.GetSetting(targetString.ToString());
-        OutputFile.Text = this.linkedInstruction.GetSetting(outputFile.ToString());
-        OutputString.Text = this.linkedInstruction.GetSetting(outputVar.ToString());
-        RegEx.Text = this.linkedInstruction.GetSetting(regex.ToString());
-        Replacement.Text = this.linkedInstruction.GetSetting(replacement.ToString());
-        if (this.linkedInstruction.GetSetting(modeInput.ToString()) == "String")
+        base.LoadInstruction(newInstruction);
+        InputFile.Text = CommandSettings.GetSetting(targetFile);
+        InputString.Text = CommandSettings.GetSetting(targetString);
+        OutputFile.Text = CommandSettings.GetSetting(outputFile);
+        OutputString.Text = CommandSettings.GetSetting(outputVar);
+        RegEx.Text = CommandSettings.GetSetting(regex);
+        Replacement.Text = CommandSettings.GetSetting(replacement);
+        if (CommandSettings.GetSetting(modeInput) == "String")
         {
             GridInputFile.IsVisible = false;
             GridInputString.IsVisible = true;
@@ -94,7 +109,7 @@ public partial class Command_RegEx : Command
             GridInputString.IsVisible = false;
             InputType.SelectedIndex = 0;
         }
-        if (this.linkedInstruction.GetSetting(modeOutput.ToString()) == "String")
+        if (CommandSettings.GetSetting(modeOutput) == "String")
         {
             GridOutputFile.IsVisible = false;
             GridOutputString.IsVisible = true;
@@ -118,13 +133,13 @@ public partial class Command_RegEx : Command
         {
             GridInputFile.IsVisible = false;
             GridInputString.IsVisible = true;
-            this.linkedInstruction.SetSetting(modeInput.ToString(), "String");
+            CommandSettings.SetSetting(modeInput, "String");
         }
         else
         {
             GridInputFile.IsVisible = true;
             GridInputString.IsVisible = false;
-            this.linkedInstruction.SetSetting(modeInput.ToString(), "File");
+            CommandSettings.SetSetting(modeInput, "File");
         }
     }
 
@@ -134,13 +149,13 @@ public partial class Command_RegEx : Command
         {
             GridOutputFile.IsVisible = false;
             GridOutputString.IsVisible = true;
-            this.linkedInstruction.SetSetting(modeOutput.ToString(), "String");
+            CommandSettings.SetSetting(modeOutput, "String");
         }
         else
         {
             GridOutputFile.IsVisible = true;
             GridOutputString.IsVisible = false;
-            this.linkedInstruction.SetSetting(modeOutput.ToString(), "File");
+            CommandSettings.SetSetting(modeOutput, "File");
         }
     }
 }

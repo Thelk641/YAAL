@@ -30,6 +30,25 @@ namespace YAAL
             }
         }
 
+        public void SetSetting(string key, string value)
+        {
+            if (Enum.TryParse<TEnum>(key, out TEnum result))
+            {
+                SetSetting(result, value);
+            } else
+            {
+                ErrorManager.ThrowError(
+                    "CommandSetting - Invalid setting key", 
+                    "Try to set setting " + key + " but it is not a valid key for a command of type " + commandType
+                    );
+            }
+        }
+
+        public void SetSetting(Dictionary<string, string> newSettings)
+        {
+
+        }
+
         public string GetSetting(TEnum key)
         {
             if (InstructionSetting.ContainsKey(key))
@@ -56,5 +75,6 @@ namespace YAAL
     public interface Interface_CommandSetting
     {
         public string GetCommandType();
+        public void SetSetting(string key, string value); // must only be used by CommandSetting itself, as it's generic
     }
 }

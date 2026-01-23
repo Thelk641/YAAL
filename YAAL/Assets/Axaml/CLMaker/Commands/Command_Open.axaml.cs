@@ -14,10 +14,21 @@ namespace YAAL;
 
 public partial class Command_Open : Command
 {
+    public CommandSetting<OpenSettings> CommandSettings => (CommandSetting<OpenSettings>)settings;
+
+    private Dictionary<OpenSettings, string> defaultValues = new Dictionary<OpenSettings, string>() {
+        {args, "" },
+        {processName, "" },
+        {path, "" },
+        {redirectOutput, "False" }
+    };
     public Command_Open()
     {
         InitializeComponent();
-        linkedInstruction = new Open();
+        settings = new CommandSetting<OpenSettings>();
+        CommandSettings.SetDefaultSetting(defaultValues);
+        CommandSettings.SetCommandType("Open");
+
         SetDebouncedEvents();
         TurnEventsOn();
 
@@ -25,14 +36,14 @@ public partial class Command_Open : Command
         Folder.Click += _FolderExplorer;
     }
 
-    public override void LoadInstruction(Interface_Instruction newInstruction)
+    public override void LoadInstruction(Interface_CommandSetting newInstruction)
     {
         base.LoadInstruction(newInstruction);
         TurnEventsOff();
-        FilePath.Text = this.linkedInstruction.GetSetting(path.ToString());
-        FileArgs.Text = this.linkedInstruction.GetSetting(args.ToString());
-        VarName.Text = this.linkedInstruction.GetSetting(processName.ToString());
-        RedirectOutput.IsChecked = this.linkedInstruction.GetSetting(redirectOutput.ToString()) == true.ToString();
+        FilePath.Text = CommandSettings.GetSetting(path);
+        FileArgs.Text = CommandSettings.GetSetting(args);
+        VarName.Text = CommandSettings.GetSetting(processName);
+        RedirectOutput.IsChecked = CommandSettings.GetSetting(redirectOutput) == true.ToString();
         TurnEventsBackOn();
     }
 
@@ -67,10 +78,10 @@ public partial class Command_Open : Command
     {
         if(RedirectOutput.IsChecked is bool clicked)
         {
-            this.linkedInstruction.SetSetting(redirectOutput.ToString(), clicked.ToString());
+            CommandSettings.SetSetting(redirectOutput, clicked.ToString());
         } else
         {
-            this.linkedInstruction.SetSetting(redirectOutput.ToString(), false.ToString());
+            CommandSettings.SetSetting(redirectOutput, false.ToString());
         }
     }
 }

@@ -17,7 +17,6 @@ namespace YAAL
 {
     public abstract class Command : UserControl
     {
-        public Interface_Instruction linkedInstruction;
         public CLMakerWindow clMaker;
         public CLM_Commands? holder;
         public Interface_CommandSetting settings;
@@ -40,7 +39,7 @@ namespace YAAL
                 this.debouncedEvents[box.Name]();
             } else
             {
-                this.linkedInstruction.SetSetting(debouncedSettings[box], box.Text);
+                settings.SetSetting(debouncedSettings[box], box.Text);
             }
         }
 
@@ -108,17 +107,6 @@ namespace YAAL
 
         public void MoveUp(object? sender, RoutedEventArgs e)
         {
-            /*var parent = this.Parent as Panel;
-            if (parent != null)
-            {
-                int index = parent.Children.IndexOf(this);
-                if (index > 0)
-                {
-                    parent.Children.RemoveAt(index);
-                    parent.Children.Insert(index - 1, this);
-                    clMaker.MoveUp(this);
-                }
-            }*/
             if(holder != null)
             {
                 holder.MoveCommandUp(this);
@@ -128,17 +116,6 @@ namespace YAAL
 
         public void MoveDown(object? sender, RoutedEventArgs e)
         {
-            /*var parent = this.Parent as Panel;
-            if (parent != null)
-            {
-                int index = parent.Children.IndexOf(this);
-                if (index < parent.Children.Count - 1)
-                {
-                    parent.Children.RemoveAt(index);
-                    parent.Children.Insert(index + 1, this);
-                    clMaker.MoveDown(this);
-                }
-            }*/
             if (holder != null)
             {
                 holder.MoveCommandDown(this);
@@ -147,7 +124,6 @@ namespace YAAL
 
         public void DeleteComponent(object? sender = null, RoutedEventArgs e = null)
         {
-            //DeleteComponent(true);
             if (holder != null)
             {
                 holder.RemoveCommand(this);
@@ -164,30 +140,14 @@ namespace YAAL
             }
         }
 
-        public virtual Interface_Instruction GetInstruction()
+        public virtual Interface_CommandSetting GetInstruction()
         {
-            return linkedInstruction;
-        }
-
-        public void SetCustomLauncher(CustomLauncher launcher)
-        {
-            linkedInstruction.SetCustomLauncher(launcher);
-        }
-
-        public virtual void LoadInstruction(Interface_Instruction newInstruction)
-        {
-            linkedInstruction = newInstruction;
+            return settings;
         }
 
         public virtual void LoadInstruction(Interface_CommandSetting newSettings)
         {
-            // to be override'd by each instruction type
-        }
-
-        public void LoadInstruction(Interface_Instruction newInstruction, CustomLauncher launcher)
-        {
-            LoadInstruction(newInstruction);
-            linkedInstruction.SetCustomLauncher(launcher);
+            settings = newSettings;
         }
     }
 }

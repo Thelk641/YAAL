@@ -11,12 +11,22 @@ namespace YAAL;
 
 public partial class Command_Wait : Command
 {
-    
+    public CommandSetting<WaitSettings> CommandSettings => (CommandSetting<WaitSettings>)settings;
+
+    private Dictionary<WaitSettings, string> defaultValues = new Dictionary<WaitSettings, string>() {
+        {mode,"Timer" },
+        {processName, "" },
+        {timer, "" }
+    };
+
     public Command_Wait()
     {
         InitializeComponent();
+        settings = new CommandSetting<WaitSettings>();
+        CommandSettings.SetDefaultSetting(defaultValues);
+        CommandSettings.SetCommandType("Wait");
+
         SetDebouncedEvents();
-        linkedInstruction = new Wait();
 
         ModeSelector.ItemsSource = new List<string>() { "Pause launcher until timer is finished", "Keep launcher open until process closes" };
 
@@ -27,15 +37,15 @@ public partial class Command_Wait : Command
 
     
 
-    public override void LoadInstruction(Interface_Instruction newInstruction)
+    public override void LoadInstruction(Interface_CommandSetting newInstruction)
     {
         TurnEventsOff();
-        linkedInstruction = newInstruction;
+        base.LoadInstruction(newInstruction);
 
-        TimerInput.Text = linkedInstruction.GetSetting(timer.ToString());
-        ProcessInput.Text = linkedInstruction.GetSetting(processName.ToString());
+        TimerInput.Text = CommandSettings.GetSetting(timer);
+        ProcessInput.Text = CommandSettings.GetSetting(processName);
 
-        if (linkedInstruction.GetSetting(mode.ToString()) == "Process")
+        if (CommandSettings.GetSetting(mode) == "Process")
         {
             ModeSelector.SelectedItem = "Keep launcher open until process closes";
         }
@@ -68,11 +78,11 @@ public partial class Command_Wait : Command
     {
         if (ModeSelector.SelectedItem is string selection && selection == "Pause launcher until timer is finished")
         {
-            linkedInstruction.SetSetting(mode.ToString(), "Timer");
+            CommandSettings.SetSetting(mode, "Timer");
         }
         else
         {
-            linkedInstruction.SetSetting(mode.ToString(), "Process");
+            CommandSettings.SetSetting(mode, "Process");
         }
 
         TimerInput.IsVisible = !TimerInput.IsVisible;

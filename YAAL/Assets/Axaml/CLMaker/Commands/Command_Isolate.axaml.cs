@@ -3,12 +3,21 @@ using System.Collections.Generic;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using YAAL.Assets.Scripts;
-using static YAAL.BackupSettings;
+using static YAAL.IsolateSettings;
 
 namespace YAAL;
 
 public partial class Command_Isolate : Command
 {
+    public CommandSetting<IsolateSettings> CommandSettings => (CommandSetting<IsolateSettings>)settings;
+
+    private Dictionary<IsolateSettings, string> defaultValues = new Dictionary<IsolateSettings, string>() {
+        {processName, "" },
+        {outputToLookFor, "" },
+        {timer, "" },
+        {modeSelect,"Process exit" }
+    };
+
     private List<string> modeList = new List<string>() 
     {
         "Process exit",
@@ -21,7 +30,10 @@ public partial class Command_Isolate : Command
     public Command_Isolate()
     {
         InitializeComponent();
-        linkedInstruction = new Isolate();
+        settings = new CommandSetting<IsolateSettings>();
+        CommandSettings.SetDefaultSetting(defaultValues);
+        CommandSettings.SetCommandType("Isolate");
+
         SetDebouncedEvents();
         TurnEventsOn();
         ModeSelector.ItemsSource = modeList;
@@ -41,16 +53,16 @@ public partial class Command_Isolate : Command
         debouncedEvents["CombinedOutput"] = _OutputChanged;
     }
 
-    public override void LoadInstruction(Interface_Instruction newInstruction)
+    public override void LoadInstruction(Interface_CommandSetting newInstruction)
     {
         base.LoadInstruction(newInstruction);
         TurnEventsOff();
-        Delay.Text = this.linkedInstruction.GetSetting(timer.ToString());
-        ProcessName.Text = this.linkedInstruction.GetSetting(processName.ToString());
-        CombinedProcess.Text = this.linkedInstruction.GetSetting(processName.ToString());
-        OutputContains.Text = this.linkedInstruction.GetSetting(outputToLookFor.ToString());
-        CombinedOutput.Text = this.linkedInstruction.GetSetting(outputToLookFor.ToString());
-        switch (this.linkedInstruction.GetSetting(modeSelect.ToString()))
+        Delay.Text = CommandSettings.GetSetting(timer);
+        ProcessName.Text = CommandSettings.GetSetting(processName);
+        CombinedProcess.Text = CommandSettings.GetSetting(processName);
+        OutputContains.Text = CommandSettings.GetSetting(outputToLookFor);
+        CombinedOutput.Text = CommandSettings.GetSetting(outputToLookFor);
+        switch (CommandSettings.GetSetting(modeSelect))
         {
             case "process":
                 ModeSelector.SelectedIndex = 0;
@@ -99,20 +111,20 @@ public partial class Command_Isolate : Command
     public void _OutputChanged()
     {
         TurnEventsOff();
-        if(CombinedOutput.Text == linkedInstruction.GetSetting(outputToLookFor.ToString()))
+        if(CombinedOutput.Text == CommandSettings.GetSetting(outputToLookFor))
         {
             CombinedOutput.Text = OutputContains.Text;
         } else
         {
             OutputContains.Text = CombinedOutput.Text;
         }
-        linkedInstruction.SetSetting(outputToLookFor.ToString(), OutputContains.Text ?? "");
+        CommandSettings.SetSetting(outputToLookFor, OutputContains.Text ?? "");
         TurnEventsBackOn();
     }
     public void _KeyChanged()
     {
         TurnEventsOff();
-        string oldKey = linkedInstruction.GetSetting(processName.ToString());
+        string oldKey = CommandSettings.GetSetting(processName);
         if (CombinedProcess.Text != null && CombinedProcess.Text != oldKey)
         {
             ProcessName.Text = CombinedProcess.Text;
@@ -127,7 +139,7 @@ public partial class Command_Isolate : Command
             CombinedProcess.Text = ProcessName.Text;
             OutputKey.Text = ProcessName.Text;
         }
-        linkedInstruction.SetSetting(processName.ToString(), ProcessName.Text ?? "");
+        CommandSettings.SetSetting(processName, ProcessName.Text ?? "");
         TurnEventsBackOn();
     }
     
@@ -144,23 +156,23 @@ public partial class Command_Isolate : Command
         switch (ModeSelector.SelectedItem.ToString())
         {
             case "Process exit":
-                linkedInstruction.SetSetting(modeSelect.ToString(), "process");
+                CommandSettings.SetSetting(modeSelect, "process");
                 Mode_Process.IsVisible = true;
                 break;
             case "Output contains":
-                linkedInstruction.SetSetting(modeSelect.ToString(), "output");
+                CommandSettings.SetSetting(modeSelect, "output");
                 Mode_Output.IsVisible = true;
                 break;
             case "Process / Output":
-                linkedInstruction.SetSetting(modeSelect.ToString(), "combined");
+                CommandSettings.SetSetting(modeSelect, "combined");
                 Mode_Combined.IsVisible = true;
                 break;
             case "Timer":
-                linkedInstruction.SetSetting(modeSelect.ToString(), "timer");
+                CommandSettings.SetSetting(modeSelect, "timer");
                 Mode_Timer.IsVisible = true;
                 break;
             case "Off":
-                linkedInstruction.SetSetting(modeSelect.ToString(), "off");
+                CommandSettings.SetSetting(modeSelect, "off");
                 Mode_Off.IsVisible = true;
                 break;
         }

@@ -118,6 +118,15 @@ public partial class TestWindow : ScalableWindow
         VersionSelector.IsEnabled = requiresVersion;
     }
 
+    public void Setup(string name, bool requiresPatch, bool requiresVersion)
+    {
+        LauncherName.Text = name;
+
+        Patch.IsEnabled = requiresPatch;
+        File.IsEnabled = requiresPatch;
+        VersionSelector.IsEnabled = requiresVersion;
+    }
+
     private async void LaunchTest()
     {
         Cache_Async async;

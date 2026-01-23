@@ -10,6 +10,18 @@ namespace YAAL;
 
 public partial class Command_Backup : Command
 {
+    public CommandSetting<BackupSettings> CommandSettings => (CommandSetting<BackupSettings>)settings;
+
+    private Dictionary<BackupSettings, string> defaultValues = new Dictionary<BackupSettings, string>() {
+        {processName, "" },
+        {target, "" },
+        {outputToLookFor, "" },
+        {timer, "" },
+        {modeSelect,"Process exit" },
+        {defaultFile, "" }
+    };
+
+
     private List<string> modeList = new List<string>() 
     {
         "Process exit",
@@ -22,7 +34,10 @@ public partial class Command_Backup : Command
     public Command_Backup()
     {
         InitializeComponent();
-        linkedInstruction = new Backup();
+        settings = new CommandSetting<BackupSettings>();
+        CommandSettings.SetDefaultSetting(defaultValues);
+        CommandSettings.SetCommandType("Backup");
+
         SetDebouncedEvents();
         TurnEventsOn();
         ModeSelector.ItemsSource = modeList;
@@ -54,18 +69,18 @@ public partial class Command_Backup : Command
         explorers[DefaultFolderButton] = DefaultFile;
     }
 
-    public override void LoadInstruction(Interface_Instruction newInstruction)
+    public override void LoadInstruction(Interface_CommandSetting newInstruction)
     {
-        base.LoadInstruction(newInstruction);
         TurnEventsOff();
-        BackupTarget.Text = this.linkedInstruction.GetSetting(target.ToString());
-        DefaultFile.Text = this.linkedInstruction.GetSetting(defaultFile.ToString());
-        Delay.Text = this.linkedInstruction.GetSetting(timer.ToString());
-        ProcessName.Text = this.linkedInstruction.GetSetting(processName.ToString());
-        CombinedProcess.Text = this.linkedInstruction.GetSetting(processName.ToString());
-        OutputContains.Text = this.linkedInstruction.GetSetting(outputToLookFor.ToString());
-        CombinedOutput.Text = this.linkedInstruction.GetSetting(outputToLookFor.ToString());
-        switch (this.linkedInstruction.GetSetting(modeSelect.ToString()))
+        base.LoadInstruction(newInstruction);
+        BackupTarget.Text = CommandSettings.GetSetting(target);
+        DefaultFile.Text = CommandSettings.GetSetting(defaultFile);
+        Delay.Text = CommandSettings.GetSetting(timer);
+        ProcessName.Text = CommandSettings.GetSetting(processName);
+        CombinedProcess.Text = CommandSettings.GetSetting(processName);
+        OutputContains.Text = CommandSettings.GetSetting(outputToLookFor);
+        CombinedOutput.Text = CommandSettings.GetSetting(outputToLookFor);
+        switch (CommandSettings.GetSetting(modeSelect))
         {
             case "process":
                 ModeSelector.SelectedIndex = 0;
@@ -118,20 +133,20 @@ public partial class Command_Backup : Command
     public void _OutputChanged()
     {
         TurnEventsOff();
-        if(CombinedOutput.Text == linkedInstruction.GetSetting(outputToLookFor.ToString()))
+        if(CombinedOutput.Text == CommandSettings.GetSetting(outputToLookFor))
         {
             CombinedOutput.Text = OutputContains.Text;
         } else
         {
             OutputContains.Text = CombinedOutput.Text;
         }
-        linkedInstruction.SetSetting(outputToLookFor.ToString(), OutputContains.Text ?? "");
+        CommandSettings.SetSetting(outputToLookFor, OutputContains.Text ?? "");
         TurnEventsBackOn();
     }
     public void _KeyChanged()
     {
         TurnEventsOff();
-        string oldKey = linkedInstruction.GetSetting(processName.ToString());
+        string oldKey = CommandSettings.GetSetting(processName);
         if (CombinedProcess.Text != null && CombinedProcess.Text != oldKey)
         {
             ProcessName.Text = CombinedProcess.Text;
@@ -146,7 +161,7 @@ public partial class Command_Backup : Command
             CombinedProcess.Text = ProcessName.Text;
             OutputKey.Text = ProcessName.Text;
         }
-        linkedInstruction.SetSetting(processName.ToString(), ProcessName.Text ?? "");
+        CommandSettings.SetSetting(processName, ProcessName.Text ?? "");
         TurnEventsBackOn();
     }
 
@@ -162,23 +177,23 @@ public partial class Command_Backup : Command
         switch (ModeSelector.SelectedItem.ToString())
         {
             case "Process exit":
-                linkedInstruction.SetSetting(modeSelect.ToString(), "process");
+                CommandSettings.SetSetting(modeSelect, "process");
                 Mode_Process.IsVisible = true;
                 break;
             case "Output contains":
-                linkedInstruction.SetSetting(modeSelect.ToString(), "output");
+                CommandSettings.SetSetting(modeSelect, "output");
                 Mode_Output.IsVisible = true;
                 break;
             case "Process / Output":
-                linkedInstruction.SetSetting(modeSelect.ToString(), "combined");
+                CommandSettings.SetSetting(modeSelect, "combined");
                 Mode_Combined.IsVisible = true;
                 break;
             case "Timer":
-                linkedInstruction.SetSetting(modeSelect.ToString(), "timer");
+                CommandSettings.SetSetting(modeSelect, "timer");
                 Mode_Timer.IsVisible = true;
                 break;
             case "Off":
-                linkedInstruction.SetSetting(modeSelect.ToString(), "off");
+                CommandSettings.SetSetting(modeSelect, "off");
                 Mode_Off.IsVisible = true;
                 break;
         }

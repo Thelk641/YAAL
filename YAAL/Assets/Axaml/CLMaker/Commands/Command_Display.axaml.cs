@@ -11,23 +11,31 @@ namespace YAAL;
 
 public partial class Command_Display : Command
 {
+    public CommandSetting<DisplaySettings> CommandSettings => (CommandSetting<DisplaySettings>)settings;
+
+    private Dictionary<DisplaySettings, string> defaultValues = new Dictionary<DisplaySettings, string>() {
+        {displayList,"" }
+    };
+
     List<DisplayInfo> displays = new List<DisplayInfo>();
 
     public Command_Display()
     {
         InitializeComponent();
-        AutoTheme.SetTheme(ContainerBorder, ThemeSettings.off);
+        settings = new CommandSetting<DisplaySettings>();
+        CommandSettings.SetDefaultSetting(defaultValues);
+        CommandSettings.SetCommandType("Display");
+        
         SetDebouncedEvents();
-        linkedInstruction = new Display();
-
         Add.Click += (_, _) => { AddDisplay("", ""); };
+        AutoTheme.SetTheme(ContainerBorder, ThemeSettings.off);
     }
 
-    public override void LoadInstruction(Interface_Instruction newInstruction)
+    public override void LoadInstruction(Interface_CommandSetting newInstruction)
     {
-        linkedInstruction = newInstruction;
+        base.LoadInstruction(newInstruction);
 
-        string displayList = this.linkedInstruction.GetSetting(DisplaySettings.displayList.ToString());
+        string displayList = CommandSettings.GetSetting(DisplaySettings.displayList);
         var list = JsonConvert.DeserializeObject<Dictionary<string, string>>(displayList);
 
         if(list is Dictionary<string, string> parsedList)
@@ -52,7 +60,7 @@ public partial class Command_Display : Command
         displays.Add(info);
     }
 
-    public override Interface_Instruction GetInstruction()
+    public override Interface_CommandSetting GetInstruction()
     {
         Dictionary<string, string> newInfos = new Dictionary<string, string>();
         foreach (var item in displays) 
@@ -66,9 +74,9 @@ public partial class Command_Display : Command
         }
 
         string newSetting = JsonConvert.SerializeObject(newInfos);
-        linkedInstruction.SetSetting(DisplaySettings.displayList.ToString(), newSetting);
+        CommandSettings.SetSetting(DisplaySettings.displayList, newSetting);
 
-        return linkedInstruction;
+        return CommandSettings;
     }
 
     protected override void TurnEventsOn()

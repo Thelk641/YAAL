@@ -6,9 +6,6 @@ namespace YAAL;
 public partial class CLM : ScalableWindow
 {
     private CLM? window;
-    // TODO : CustomLauncher shouldn't be a thing, at all
-    //private CustomLauncher customLauncher;
-    //public CustomLauncher CustomLauncher { get => customLauncher; }
     private bool altMode = false;
 
     private CLM_Selector selector;
@@ -29,7 +26,7 @@ public partial class CLM : ScalableWindow
         commands = new CLM_Commands(this);
         Holder_Commands.Children.Add(commands);
 
-        bottomBar = new CLM_BottomBar();
+        bottomBar = new CLM_BottomBar(this, selector);
         Holder_BottomBar.Children.Add(bottomBar);
 
         AutoTheme.SetTheme(BackgroundColor, ThemeSettings.backgroundColor);
@@ -79,8 +76,6 @@ public partial class CLM : ScalableWindow
 
     public void LoadLauncher(Cache_CustomLauncher launcher)
     {
-        // TODO : this shouldn't use CustomLauncher, it should only go through Cache_CustomLauncher instead
-        CustomLauncher customLauncher = IOManager.LoadLauncher(launcher);
         commands.LoadCommands(launcher.instructionList);
     }
 
