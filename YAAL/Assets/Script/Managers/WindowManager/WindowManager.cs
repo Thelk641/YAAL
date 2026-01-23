@@ -60,7 +60,7 @@ namespace YAAL
             switch (windowType)
             {
                 case WindowType.CLMaker:
-                    window = CLMakerWindow.GetCLMakerWindow();
+                    window = CLM.GetWindow();
                     break;
                 case WindowType.CustomThemeMaker:
                     window = new CustomThemeMaker();

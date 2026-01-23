@@ -28,6 +28,11 @@ public partial class CLM_Selector : UserControl
         this.clm = newClm;
         ReloadList();
         LauncherSelector.SelectedIndex = 0;
+        if(LauncherSelector.SelectedItem is Cache_DisplayLauncher display)
+        {
+            NamingBox.Text = display.name;
+            previousName = display.name;
+        }
 
         LauncherSelector.SelectionChanged += (_, _) =>
         {
@@ -104,12 +109,27 @@ public partial class CLM_Selector : UserControl
         }
     }
 
+    public bool Save()
+    {
+        bool output = NamingBox.IsVisible;
+        if (output)
+        {
+            SwitchMode();
+        }
+        return output;
+    }
+
     public void SelectFirst()
     {
         if(LauncherSelector.SelectedIndex != 0)
         {
             LauncherSelector.SelectedIndex = 0;
         }
+    }
+
+    public void SetFocus()
+    {
+        NamingBox.Focus();
     }
 
     public void SwitchMode()
@@ -119,7 +139,7 @@ public partial class CLM_Selector : UserControl
 
         if (LauncherSelector.IsVisible && LauncherSelector.SelectedItem is Cache_DisplayLauncher display)
         {
-            display.name = NamingBox.Text ?? previousName;
+            display.name = NamingBox.Text!;
             if(display.name != previousName)
             {
                 clm.SaveLauncher(display.name);

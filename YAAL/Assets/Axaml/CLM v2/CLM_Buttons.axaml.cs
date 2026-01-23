@@ -7,6 +7,7 @@ using Avalonia.Threading;
 using Avalonia.VisualTree;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using YAAL.Assets.Scripts;
 using static YAAL.ApworldSettings;
 
@@ -124,12 +125,14 @@ public partial class CLM_Buttons : UserControl
 
         Rename.Click += (_, _) =>
         {
+            selector.SwitchMode();
+
             if (altMode)
             {
                 SwitchMode(false);
+                Trace.WriteLine("Tried to set focus");
+                selector.SetFocus();
             }
-
-            selector.SwitchMode();
         };
     }
 

@@ -201,11 +201,12 @@ public static partial class WebManager
         return output;
     }
 
-    public static async Task GetVersions(string url, CLMakerWindow clMaker){
+    public static async Task GetVersions(string url, CLM clMaker){
         List<string> options = await GetVersions(url);
         await Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() =>
         {
-            clMaker.SetGitVersions(options);
+            // TODO : this will need to be on games, not on CLM
+            //clMaker.SetGitVersions(options);
         });
     }
 
