@@ -18,13 +18,33 @@ jobs:
         with: 
           repository: Thelk641/Table-Maker
           path: Docs/Table-Maker
+
+      - name: Check the wiki's content
+        uses: actions/checkout@v4
+        with:
+          repository: Thelk641/YAAL.wiki
+          path: Docs/Wiki
           
       - uses: actions/setup-dotnet@v4
       
       - run: dotnet build
         working-directory: Docs/Table-Maker
         
-      - run: dotnet run '../Raw game list.txt' '../GameList.md'
+      - run: dotnet run '../Raw game list.txt' '../Wiki/GameList.md'
         working-directory: Docs/Table-Maker
+
+      - name: Commit files
+        working-directory: Docs/Wiki
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add GameList.md
+          git commit -m "Updated game list automatically"
+
+      - name: Push wiki changes
+        working-directory: Docs/Wiki
+        run: |
+          git push
+      
       
     
