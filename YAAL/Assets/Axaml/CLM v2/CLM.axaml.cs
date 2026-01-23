@@ -5,7 +5,7 @@ namespace YAAL;
 
 public partial class CLM : ScalableWindow
 {
-    private CLM? window;
+    private static CLM? window;
     private bool altMode = false;
 
     private CLM_Selector selector;
@@ -61,7 +61,7 @@ public partial class CLM : ScalableWindow
 
     
 
-    public CLM GetWindow()
+    public static CLM GetWindow()
     {
         if(window == null)
         {

@@ -17,7 +17,7 @@ namespace YAAL
 {
     public abstract class Command : UserControl
     {
-        public CLMakerWindow clMaker;
+        public CLM clMaker;
         public CLM_Commands? holder;
         public Interface_CommandSetting settings;
         public string type;
@@ -127,16 +127,6 @@ namespace YAAL
             if (holder != null)
             {
                 holder.RemoveCommand(this);
-            }
-        }
-
-        public void DeleteComponent(bool passInfo)
-        {
-            var parent = this.Parent as StackPanel;
-            parent?.Children.Remove(this);
-            if (passInfo)
-            {
-                clMaker.RemoveCommand(this);
             }
         }
 
