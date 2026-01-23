@@ -38,7 +38,7 @@ public partial class App : Application
         Newtonsoft.Json.JsonConvert.DefaultSettings = () => new Newtonsoft.Json.JsonSerializerSettings
         {
             Formatting = Newtonsoft.Json.Formatting.Indented,
-            Converters = { new CachedBrushConverter() }
+            Converters = { new CachedBrushConverter(), new CommandSettingConverter() }
         };
 
         Trace.Listeners.Add(logger);

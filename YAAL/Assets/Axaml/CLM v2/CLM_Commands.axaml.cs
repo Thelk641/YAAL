@@ -61,7 +61,7 @@ public partial class CLM_Commands : UserControl
             // TODO : what does this do and why is it there ?
             //command.SetCustomLauncher(clm.CustomLauncher);
             command.holder = this;
-            command.type = commandName;
+            command.settings.SetCommandType(commandName);
             return command;
         }
         ErrorManager.ThrowError(

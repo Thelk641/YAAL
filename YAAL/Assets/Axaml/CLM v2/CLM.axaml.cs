@@ -57,6 +57,8 @@ public partial class CLM : ScalableWindow
         {
             SaveLauncher();
         };
+
+        LoadLauncher(selector.GetCache().cache);
     }
 
     
@@ -81,7 +83,19 @@ public partial class CLM : ScalableWindow
 
     public void SaveLauncher()
     {
+        if (selector.Save())
+        {
+            return;
+        }
+
         Cache_CustomLauncher toSave = selector.GetCache().cache;
+        toSave.instructionList = commands.GetCommands();
+        IOManager.SaveCacheLauncher(toSave);
+        selector.UpdateCache(toSave);
+    }
+
+    public void SaveLauncher(Cache_CustomLauncher toSave)
+    {
         toSave.instructionList = commands.GetCommands();
         IOManager.SaveCacheLauncher(toSave);
         selector.UpdateCache(toSave);

@@ -10,7 +10,7 @@ namespace YAAL
 {
     public class CommandSetting<TEnum> : Interface_CommandSetting where TEnum : struct, Enum
     {
-        private string commandType = "";
+        public string commandType { set; get; } = "";
         public Dictionary<TEnum, string> InstructionSetting = new Dictionary<TEnum, string>();
 
         public void SetDefaultSetting(Dictionary<TEnum, string> defaultValue)
@@ -44,11 +44,6 @@ namespace YAAL
             }
         }
 
-        public void SetSetting(Dictionary<string, string> newSettings)
-        {
-
-        }
-
         public string GetSetting(TEnum key)
         {
             if (InstructionSetting.ContainsKey(key))
@@ -74,6 +69,7 @@ namespace YAAL
 
     public interface Interface_CommandSetting
     {
+        public void SetCommandType(string newValue);
         public string GetCommandType();
         public void SetSetting(string key, string value); // must only be used by CommandSetting itself, as it's generic
     }

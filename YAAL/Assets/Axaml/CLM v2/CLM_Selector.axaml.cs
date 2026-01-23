@@ -34,10 +34,13 @@ public partial class CLM_Selector : UserControl
             previousName = display.name;
         }
 
-        LauncherSelector.SelectionChanged += (_, _) =>
+        LauncherSelector.SelectionChanged += (_, e) =>
         {
-            if (loadOnChangedSelection && LauncherSelector.SelectedItem is Cache_DisplayLauncher display)
+            if (loadOnChangedSelection 
+            && LauncherSelector.SelectedItem is Cache_DisplayLauncher display
+            && e.RemovedItems[0] is Cache_DisplayLauncher previousDisplay)
             {
+                clm.SaveLauncher(previousDisplay.cache);
                 clm.LoadLauncher(display.cache);
                 previousName = display.name;
                 NamingBox.Text = display.name;
@@ -53,6 +56,8 @@ public partial class CLM_Selector : UserControl
             }
                 
         }, RoutingStrategies.Tunnel);
+
+        loadOnChangedSelection = true;
     }
 
     public Cache_DisplayLauncher GetCache()
@@ -67,6 +72,11 @@ public partial class CLM_Selector : UserControl
             "LauncherSelector.SelectedItem isn't a Cache_DisplayLauncher, please report this.");
 
         return new Cache_DisplayLauncher();
+    }
+
+    public string GetName()
+    {
+        return previousName;
     }
 
     public void ReloadList(string toSelect = "")
@@ -149,9 +159,13 @@ public partial class CLM_Selector : UserControl
 
     public void UpdateCache(Cache_CustomLauncher newCache)
     {
-        if(LauncherSelector.SelectedItem is Cache_DisplayLauncher display)
+        foreach (var item in LauncherSelector.ItemsSource)
         {
-            display.cache = newCache;
+            if(item is Cache_DisplayLauncher display && display.cache.settings[LauncherSettings.launcherName] == newCache.settings[LauncherSettings.launcherName])
+            {
+                display.cache = newCache;
+                return;
+            }
         }
     }
 }
