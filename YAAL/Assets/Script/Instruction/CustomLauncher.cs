@@ -203,31 +203,35 @@ public class CustomLauncher
             int dashIndex = item.Key.IndexOf('-');
             string cleaned = item.Key.Substring(dashIndex + 1);
 
-            Templates.instructionsTemplates.TryGetValue(cleaned, out var instructionType);
-            var instruction = Activator.CreateInstance(instructionType) as Interface_Instruction;
-            listOfInstructions.Add(instruction);
-            instruction.SetCustomLauncher(this);
-            instruction.SetSettings(item.Value);
-            if (instruction is Apworld apworldInstruction)
+            if (Templates.GetInstruction(cleaned) is Type instructionType)
             {
-                string target = apworldInstruction.GetTarget();
-                if (target.Contains(";"))
+                var instruction = Activator.CreateInstance(instructionType) as Interface_Instruction;
+                listOfInstructions.Add(instruction);
+                instruction.SetCustomLauncher(this);
+                instruction.SetSettings(item.Value);
+                if (instruction is Apworld apworldInstruction)
                 {
-                    foreach (var value in IOManager.SplitPathList(target))
+                    string target = apworldInstruction.GetTarget();
+                    if (target.Contains(";"))
                     {
-                        this.settings[LauncherSettings.apworld] += "\"" + value + "\";"; 
+                        foreach (var value in IOManager.SplitPathList(target))
+                        {
+                            this.settings[LauncherSettings.apworld] += "\"" + value + "\";";
+                        }
                     }
+                    else
+                    {
+                        this.settings[LauncherSettings.apworld] += "\"" + target + "\";";
+                    }
+                    requiresVersion = true;
                 }
-                else
+                else if (instruction is Patch patchInstruction)
                 {
-                    this.settings[LauncherSettings.apworld] += "\"" + target + "\";";
+                    requiresVersion = true;
+                    requiresPatch = true;
                 }
-                requiresVersion = true;
-            } else if (instruction is Patch patchInstruction)
-            {
-                requiresVersion = true;
-                requiresPatch = true;
             }
+            
         }
         this.isGame = cache.isGame;
     }

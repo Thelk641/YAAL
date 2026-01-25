@@ -54,7 +54,7 @@ public partial class CLM_Commands : UserControl
 
     public Command? AddCommand(string commandName)
     {
-        if (Templates.commandTemplates.TryGetValue(commandName, out var commandType))
+        if(Templates.GetCommand(commandName) is Type commandType)
         {
             Command command = (Command)Activator.CreateInstance(commandType)!;
             CommandContainer.Children.Add(command);

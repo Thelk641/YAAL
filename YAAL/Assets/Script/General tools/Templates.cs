@@ -31,32 +31,6 @@ namespace YAAL
             { typeof(Wait), typeof(Command_Wait) },
         };
 
-        public static Dictionary<string, Type> commandTemplates = new Dictionary<string, Type>()
-        {
-            {"Apworld", typeof(Command_Apworld)},
-            {"Backup", typeof(Command_Backup) },
-            {"Display", typeof(Command_Display) },
-            {"Isolate", typeof(Command_Isolate) },
-            {"Input", typeof(Command_Input) },
-            {"Open", typeof(Command_Open) },
-            {"Patch", typeof(Command_Patch) },
-            {"RegEx", typeof(Command_RegEx) },
-            {"Wait", typeof(Command_Wait) },
-        };
-
-        public static Dictionary<string, Type> instructionsTemplates = new Dictionary<string, Type>()
-        {
-            {"Apworld", typeof(Apworld)},
-            {"Backup", typeof(Backup) },
-            {"Display", typeof(Display) },
-            {"Isolate", typeof(Isolate) },
-            {"Input", typeof(Input) },
-            {"Open", typeof(Open) },
-            {"Patch", typeof(Patch) },
-            {"RegEx", typeof(RegEx) },
-            {"Wait", typeof(Wait) },
-        };
-
         public static List<String> commandNames = new List<String>();
 
         public static Dictionary<string, string> fixedSettings = new Dictionary<string, string>
