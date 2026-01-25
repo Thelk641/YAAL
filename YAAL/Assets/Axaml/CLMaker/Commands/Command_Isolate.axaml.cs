@@ -7,7 +7,7 @@ using static YAAL.IsolateSettings;
 
 namespace YAAL;
 
-public partial class Command_Isolate : Command
+public partial class Command_Isolate : Command<IsolateSettings>
 {
     public CommandSetting<IsolateSettings> CommandSettings => (CommandSetting<IsolateSettings>)settings;
 
@@ -30,7 +30,6 @@ public partial class Command_Isolate : Command
     public Command_Isolate()
     {
         InitializeComponent();
-        settings = new CommandSetting<IsolateSettings>();
         CommandSettings.SetDefaultSetting(defaultValues);
         CommandSettings.SetCommandType("Isolate");
 

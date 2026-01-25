@@ -7,7 +7,7 @@ using static YAAL.PatchSettings;
 
 namespace YAAL;
 
-public partial class Command_Patch : Command
+public partial class Command_Patch : Command<PatchSettings>
 {
     public CommandSetting<PatchSettings> CommandSettings => (CommandSetting<PatchSettings>)settings;
 
@@ -25,7 +25,6 @@ public partial class Command_Patch : Command
     public Command_Patch()
     {
         InitializeComponent();
-        settings = new CommandSetting<PatchSettings>();
         CommandSettings.SetDefaultSetting(defaultValues);
         CommandSettings.SetCommandType("Patch");
 

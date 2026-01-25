@@ -7,7 +7,7 @@ using static YAAL.RegExSettings;
 
 namespace YAAL;
 
-public partial class Command_RegEx : Command
+public partial class Command_RegEx : Command<RegExSettings>
 {
     public CommandSetting<RegExSettings> CommandSettings => (CommandSetting<RegExSettings>)settings;
 
@@ -24,7 +24,6 @@ public partial class Command_RegEx : Command
     public Command_RegEx()
     {
         InitializeComponent();
-        settings = new CommandSetting<RegExSettings>();
         CommandSettings.SetDefaultSetting(defaultValues);
         CommandSettings.SetCommandType("RegEx");
 

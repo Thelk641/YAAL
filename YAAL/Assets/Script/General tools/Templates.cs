@@ -12,11 +12,24 @@ namespace YAAL
     {
         static Templates()
         {
-            foreach (var item in commandTemplates)
+            foreach (var item in commandInstruction)
             {
-                commandNames.Add(item.Key);
+                commandNames.Add(item.Key.Name);
             }
         }
+
+        public static Dictionary<Type, Type> commandInstruction = new Dictionary<Type, Type>()
+        {
+            { typeof(Apworld), typeof(Command_Apworld) },
+            { typeof(Backup), typeof(Command_Backup) },
+            { typeof(Display), typeof(Command_Display) },
+            { typeof(Isolate), typeof(Command_Isolate) },
+            { typeof(Input), typeof(Command_Input) },
+            { typeof(Open), typeof(Command_Open) },
+            { typeof(Patch), typeof(Command_Patch) },
+            { typeof(RegEx), typeof(Command_RegEx) },
+            { typeof(Wait), typeof(Command_Wait) },
+        };
 
         public static Dictionary<string, Type> commandTemplates = new Dictionary<string, Type>()
         {
@@ -108,11 +121,28 @@ namespace YAAL
             "Debug_baseLauncher",
         };
 
-        public static Type GetInstructionTypeFromKey(string key)
+        public static Type? GetCommand(string key)
         {
-            foreach (var item in instructionsTemplates)
+            foreach (var item in commandInstruction)
             {
-                if (item.Key == key)
+                if (item.Key.Name == key)
+                {
+                    return item.Key;
+                }
+            }
+
+            ErrorManager.ThrowError(
+                "Templates - Command doesn't exists",
+                "Function 'GetCommandTypeFromKey' got called with argument " + key + " which doesn't exist in commandInstruction. Please report this issue."
+            );
+            return null;
+        }
+
+        public static Type? GetInstruction(string key)
+        {
+            foreach (var item in commandInstruction)
+            {
+                if (item.Key.Name == key)
                 {
                     return item.Value;
                 }
@@ -120,42 +150,7 @@ namespace YAAL
 
             ErrorManager.ThrowError(
                 "Templates - Instruction doesn't exists",
-                "Function 'GetInstructionTypeFromKey' got called with argument " + key + " which doesn't exist in instructionsTemplates. Please report this issue."
-            );
-            return null;
-        }
-
-        public static string GetCommandKey(Interface_Instruction instruction)
-        {
-            foreach (var item in commandTemplates)
-            {
-                if (item.Value == instruction.GetType())
-                {
-                    return item.Key;
-                }
-            }
-            
-            ErrorManager.ThrowError(
-                "Templates - Command doesn't exists",
-                "Function 'GetCommandKey' got called with argument " + instruction.GetType().ToString() + " which doesn't exist in commandTemplates. Please report this issue."
-                );
-
-            return "";
-        }
-
-        public static Type GetCommandTypeFromKey(string key)
-        {
-            foreach (var item in commandTemplates)
-            {
-                if (item.Key == key)
-                {
-                    return item.Value;
-                }
-            }
-            
-            ErrorManager.ThrowError(
-                "Templates - Command doesn't exists",
-                "Function 'GetCommandTypeFromKey' got called with argument " + key + " which doesn't exist in commandTemplates. Please report this issue."
+                "Function 'GetInstruction' got called with argument " + key + " which doesn't exist in commandInstruction. Please report this issue."
             );
             return null;
         }

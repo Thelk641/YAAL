@@ -12,7 +12,7 @@ using static YAAL.OpenSettings;
 
 namespace YAAL;
 
-public partial class Command_Open : Command
+public partial class Command_Open : Command<OpenSettings>
 {
     public CommandSetting<OpenSettings> CommandSettings => (CommandSetting<OpenSettings>)settings;
 
@@ -25,7 +25,6 @@ public partial class Command_Open : Command
     public Command_Open()
     {
         InitializeComponent();
-        settings = new CommandSetting<OpenSettings>();
         CommandSettings.SetDefaultSetting(defaultValues);
         CommandSettings.SetCommandType("Open");
 

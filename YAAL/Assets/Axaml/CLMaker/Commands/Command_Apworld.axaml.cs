@@ -10,7 +10,7 @@ using static YAAL.ApworldSettings;
 
 namespace YAAL;
 
-public partial class Command_Apworld : Command
+public partial class Command_Apworld : Command<ApworldSettings>
 {
     public CommandSetting<ApworldSettings> CommandSettings => (CommandSetting<ApworldSettings>)settings;
 
@@ -24,7 +24,6 @@ public partial class Command_Apworld : Command
     public Command_Apworld()
     {
         InitializeComponent();
-        settings = new CommandSetting<ApworldSettings>();
         CommandSettings.SetDefaultSetting(defaultValues);
         CommandSettings.SetCommandType("Apworld");
 

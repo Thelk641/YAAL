@@ -9,7 +9,7 @@ using static YAAL.DisplaySettings;
 
 namespace YAAL;
 
-public partial class Command_Display : Command
+public partial class Command_Display : Command<DisplaySettings>
 {
     public CommandSetting<DisplaySettings> CommandSettings => (CommandSetting<DisplaySettings>)settings;
 
@@ -22,7 +22,6 @@ public partial class Command_Display : Command
     public Command_Display()
     {
         InitializeComponent();
-        settings = new CommandSetting<DisplaySettings>();
         CommandSettings.SetDefaultSetting(defaultValues);
         CommandSettings.SetCommandType("Display");
         

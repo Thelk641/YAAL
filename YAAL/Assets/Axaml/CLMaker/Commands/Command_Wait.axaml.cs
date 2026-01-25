@@ -9,7 +9,7 @@ using static YAAL.WaitSettings;
 
 namespace YAAL;
 
-public partial class Command_Wait : Command
+public partial class Command_Wait : Command<WaitSettings>
 {
     public CommandSetting<WaitSettings> CommandSettings => (CommandSetting<WaitSettings>)settings;
 
@@ -22,7 +22,6 @@ public partial class Command_Wait : Command
     public Command_Wait()
     {
         InitializeComponent();
-        settings = new CommandSetting<WaitSettings>();
         CommandSettings.SetDefaultSetting(defaultValues);
         CommandSettings.SetCommandType("Wait");
 

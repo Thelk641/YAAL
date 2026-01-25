@@ -9,7 +9,7 @@ using static YAAL.InputSettings;
 
 namespace YAAL;
 
-public partial class Command_Input : Command
+public partial class Command_Input : Command<InputSettings>
 {
     public CommandSetting<InputSettings> CommandSettings => (CommandSetting<InputSettings>)settings;
 
@@ -21,7 +21,6 @@ public partial class Command_Input : Command
     public Command_Input()
     {
         InitializeComponent();
-        settings = new CommandSetting<InputSettings>();
         CommandSettings.SetDefaultSetting(defaultValues);
         CommandSettings.SetCommandType("Input");
         SetDebouncedEvents();

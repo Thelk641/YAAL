@@ -14,6 +14,7 @@ using Avalonia.Media.Imaging;
 using Avalonia.Controls;
 using ReactiveUI;
 using Newtonsoft.Json.Linq;
+using System.Security.Principal;
 
 namespace YAAL
 {
@@ -27,16 +28,26 @@ namespace YAAL
 
             foreach (var item in JsonObject)
             {
-                switch (item["commandType"].ToString())
+                if (Templates.GetCommand(item["commandType"].ToString()) is Type type)
                 {
-                    case "Apworld":
-                        commands.Add(item.ToObject<CommandSetting<ApworldSettings>>());
-                        break;
-                    case "Backup":
-                        commands.Add(item.ToObject<CommandSetting<BackupSettings>>());
-                        break;
+                    Type enumType = type.BaseType!.GetGenericArguments()[0];
+                    Type toAdd = typeof(CommandSetting<>).MakeGenericType(enumType);
+                    try
+                    {
+                        commands.Add((Interface_CommandSetting)item.ToObject(toAdd, serializer));
+                    }
+                    catch (Exception e)
+                    {
+                        ErrorManager.ThrowError(
+                            "JsonConverter_Command - Failed to parse command",
+                            "Trying to read a json raised the following exception : " + e.Message
+                            );
+                    }
+                    
                 }
             }
+
+
 
             return commands;
         }

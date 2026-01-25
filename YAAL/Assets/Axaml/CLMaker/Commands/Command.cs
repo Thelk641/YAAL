@@ -19,28 +19,20 @@ namespace YAAL
     {
         public CLM clMaker;
         public CLM_Commands? holder;
-        public Interface_CommandSetting settings;
         public string type;
 
         protected Dictionary<string, Action> debouncedEvents = new();
         protected Dictionary<TextBox, string> debouncedSettings = new();
         protected Dictionary<Button, TextBox> explorers = new();
+
+        public abstract void Trigger(TextBox box);
+        public abstract void LoadInstruction(Interface_CommandSetting settings);
+        public abstract Interface_CommandSetting GetSettings();
         public virtual void SetDebouncedEvents()
         {
             this.FindControl<Button>("MoveUp").Click += MoveUp;
             this.FindControl<Button>("MoveDown").Click += MoveDown;
             this.FindControl<Button>("X").Click += DeleteComponent;
-        }
-
-        public void Trigger(TextBox box)
-        {
-            if (this.debouncedEvents.ContainsKey(box.Name))
-            {
-                this.debouncedEvents[box.Name]();
-            } else
-            {
-                settings.SetSetting(debouncedSettings[box], box.Text);
-            }
         }
 
         protected void _TextChanged(object? sender, TextChangedEventArgs e)
@@ -128,16 +120,6 @@ namespace YAAL
             {
                 holder.RemoveCommand(this);
             }
-        }
-
-        public virtual Interface_CommandSetting GetInstruction()
-        {
-            return settings;
-        }
-
-        public virtual void LoadInstruction(Interface_CommandSetting newSettings)
-        {
-            settings = newSettings;
         }
     }
 }

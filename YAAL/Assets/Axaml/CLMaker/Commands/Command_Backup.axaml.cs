@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace YAAL;
 
-public partial class Command_Backup : Command
+public partial class Command_Backup : Command<BackupSettings>
 {
     public CommandSetting<BackupSettings> CommandSettings => (CommandSetting<BackupSettings>)settings;
 
@@ -34,7 +34,6 @@ public partial class Command_Backup : Command
     public Command_Backup()
     {
         InitializeComponent();
-        settings = new CommandSetting<BackupSettings>();
         CommandSettings.SetDefaultSetting(defaultValues);
         CommandSettings.SetCommandType("Backup");
 
