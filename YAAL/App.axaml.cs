@@ -66,10 +66,6 @@ public partial class App : Application
             //args = new string[7] {"--restore", "--async", "Pingu ER", "--slot", "Masaru_FF", "--launcher", "\"Text Client\"" };
             //args = new string[1] { "--debug" };
         }
-
-        Cache_CustomLauncher cache = IOManager.LoadCacheLauncher("New Launcher");
-        CustomLauncher debugLauncher = new CustomLauncher();
-        debugLauncher.ReadCache(cache);
 #endif
 
         if (args == null || args.Length == 0)

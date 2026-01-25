@@ -129,7 +129,7 @@ namespace YAAL
             return null;
         }
 
-        public static Type? GetCommandWithEnum(string key)
+        public static Type? GetCommandSetting(string key)
         {
             Type commandType = GetCommand(key);
             if(commandType != null)

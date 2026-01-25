@@ -203,7 +203,7 @@ public class CustomLauncher
             {
                 string commandName = command.GetCommandType();
 
-                if (Templates.GetCommandWithEnum(commandName) is Type commandType
+                if (Templates.GetCommandSetting(commandName) is Type commandType
                     && Templates.GetInstruction(commandName) is Type instructionType
                     && Activator.CreateInstance(instructionType) is Interface_Instruction tempInstruction)
                 {
@@ -251,11 +251,27 @@ public class CustomLauncher
     public Cache_CustomLauncher WriteCache()
     {
         Cache_CustomLauncher output = new Cache_CustomLauncher();
-        int i = 0;
         foreach (Interface_Instruction instruction in listOfInstructions)
         {
-            output.instructions[i + "-" + instruction.GetInstructionType()] = instruction.GetSettings();
-            ++i;
+            try
+            {
+                Type instructionType = instruction.GetType();
+                dynamic realInstruction = Convert.ChangeType(instruction, instructionType);
+                Type commandType = Templates.GetCommandSetting(realInstruction.instructionType);
+                Interface_CommandSetting command = (Interface_CommandSetting)Activator.CreateInstance(commandType);
+                dynamic realCommand = Convert.ChangeType(command, commandType);
+                realCommand.InstructionSetting = realInstruction.InstructionSetting;
+                realCommand.commandType = realInstruction.instructionType;
+                output.instructionList.Add(realCommand);
+            }
+            catch (Exception e)
+            {
+                ErrorManager.ThrowError(
+                    "CustomLauncher - Failed to write a cache",
+                    "Trying to parse instructions into commands raised the following exception : " + e.Message
+                    );
+            }
+            
         }
         output.settings = this.selfsettings;
         output.customSettings = this.customSettings;
