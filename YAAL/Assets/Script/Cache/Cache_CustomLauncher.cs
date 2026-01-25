@@ -9,7 +9,6 @@ namespace YAAL
 {
     public class Cache_CustomLauncher
     {
-        //[JsonConverter(typeof(CommandSettingConverter))]
         public List<Interface_CommandSetting> instructionList = new List<Interface_CommandSetting>();
         public Dictionary<string, Dictionary<string, string>> instructions = new();
         public Dictionary<LauncherSettings, string> settings = new();

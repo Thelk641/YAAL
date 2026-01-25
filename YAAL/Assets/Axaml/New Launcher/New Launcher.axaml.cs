@@ -88,11 +88,10 @@ public partial class NewLauncher : ScalableWindow
                 return;
             }
 
-            Dictionary<string, string> instructionSettings = new Dictionary<string, string>
-            {
-                {"apworldTarget", ApworldPath.Text }
-            };
-            cache.instructions.Add("0-Apworld", instructionSettings);
+            CommandSetting<ApworldSettings> commandSetting = new CommandSetting<ApworldSettings>();
+            commandSetting.SetSetting(ApworldSettings.apworldTarget, ApworldPath.Text);
+            cache.instructionList.Add(commandSetting);
+
             IOManager.CreateNewVersionCache(LauncherName.Text, VersionName.Text);
         }
 
