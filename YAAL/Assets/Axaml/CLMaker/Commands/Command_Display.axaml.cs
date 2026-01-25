@@ -59,7 +59,7 @@ public partial class Command_Display : Command<DisplaySettings>
         displays.Add(info);
     }
 
-    public override Interface_CommandSetting GetInstruction()
+    public override Interface_CommandSetting GetSettings()
     {
         Dictionary<string, string> newInfos = new Dictionary<string, string>();
         foreach (var item in displays) 

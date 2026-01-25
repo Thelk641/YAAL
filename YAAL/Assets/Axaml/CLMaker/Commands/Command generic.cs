@@ -31,7 +31,7 @@ namespace YAAL
             }
         }
 
-        public virtual Interface_CommandSetting GetInstruction()
+        public override Interface_CommandSetting GetSettings()
         {
             return settings;
         }
@@ -48,11 +48,6 @@ namespace YAAL
                     "Settings passed were of type " + newSettings.GetType() + " instead of " + typeof(CommandSetting<T>) + ". Please report this.");
             }
             
-        }
-
-        public override Interface_CommandSetting GetSettings()
-        {
-            return settings;
         }
     }
 }

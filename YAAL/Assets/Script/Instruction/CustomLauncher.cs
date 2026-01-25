@@ -191,49 +191,61 @@ public class CustomLauncher
         settings[previousPort] = cache.previousPort;
     }
 
-    public void ReadCache(Cache_CustomLauncher cache)
+    public bool ReadCache(Cache_CustomLauncher cache)
     {
         this.settings[LauncherSettings.apworld] = "";
         this.selfsettings = cache.settings;
         this.customSettings = cache.customSettings;
         listOfInstructions = new List<Interface_Instruction>();
-        foreach (var item in cache.instructions)
+        foreach (var item in cache.instructionList)
         {
-            // item.Key is "Nbr-InstructionName"
-            int dashIndex = item.Key.IndexOf('-');
-            string cleaned = item.Key.Substring(dashIndex + 1);
-
-            if (Templates.GetInstruction(cleaned) is Type instructionType)
+            if(item is Interface_CommandSetting command)
             {
-                var instruction = Activator.CreateInstance(instructionType) as Interface_Instruction;
-                listOfInstructions.Add(instruction);
-                instruction.SetCustomLauncher(this);
-                instruction.SetSettings(item.Value);
-                if (instruction is Apworld apworldInstruction)
+                string commandName = command.GetCommandType();
+
+                if (Templates.GetCommandWithEnum(commandName) is Type commandType
+                    && Templates.GetInstruction(commandName) is Type instructionType
+                    && Activator.CreateInstance(instructionType) is Interface_Instruction tempInstruction)
                 {
-                    string target = apworldInstruction.GetTarget();
-                    if (target.Contains(";"))
+                    dynamic commandSetting = Convert.ChangeType(item, commandType);
+                    dynamic instruction = Convert.ChangeType(tempInstruction, instructionType);
+                    instruction.SetSettings(commandSetting.InstructionSetting);
+                    instruction.SetCustomLauncher(this);
+                    listOfInstructions.Add(instruction);
+                    if (instruction is Apworld apworldInstruction)
                     {
-                        foreach (var value in IOManager.SplitPathList(target))
+                        string target = apworldInstruction.GetTarget();
+                        if (target.Contains(";"))
                         {
-                            this.settings[LauncherSettings.apworld] += "\"" + value + "\";";
+                            foreach (var value in IOManager.SplitPathList(target))
+                            {
+                                this.settings[LauncherSettings.apworld] += "\"" + value + "\";";
+                            }
                         }
+                        else
+                        {
+                            this.settings[LauncherSettings.apworld] += "\"" + target + "\";";
+                        }
+                        requiresVersion = true;
                     }
-                    else
+                    else if (instruction is Patch patchInstruction)
                     {
-                        this.settings[LauncherSettings.apworld] += "\"" + target + "\";";
+                        requiresVersion = true;
+                        requiresPatch = true;
                     }
-                    requiresVersion = true;
-                }
-                else if (instruction is Patch patchInstruction)
+                } else
                 {
-                    requiresVersion = true;
-                    requiresPatch = true;
+                    ErrorManager.ThrowError(
+                        "CustomLauncher - Failed to read cache",
+                        "Something went wrong while reading an instruction of type " + commandName
+                        );
+                    return false;
                 }
             }
             
         }
         this.isGame = cache.isGame;
+        return true;
     }
 
     public Cache_CustomLauncher WriteCache()

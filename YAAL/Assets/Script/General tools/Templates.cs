@@ -118,7 +118,7 @@ namespace YAAL
             {
                 if (item.Key.Name == key)
                 {
-                    return item.Value;
+                    return item.Key;
                 }
             }
 
@@ -126,6 +126,30 @@ namespace YAAL
                 "Templates - Instruction doesn't exists",
                 "Function 'GetInstruction' got called with argument " + key + " which doesn't exist in commandInstruction. Please report this issue."
             );
+            return null;
+        }
+
+        public static Type? GetCommandWithEnum(string key)
+        {
+            Type commandType = GetCommand(key);
+            if(commandType != null)
+            {
+                Type enumType = commandType.BaseType!.GetGenericArguments()[0];
+                Type toAdd = typeof(CommandSetting<>).MakeGenericType(enumType);
+                return toAdd;
+            }
+            return null;
+        }
+
+        public static Type? GetInstructionWithEnum(string key)
+        {
+            Type commandType = GetInstruction(key);
+            if (commandType != null)
+            {
+                Type enumType = commandType.BaseType!.GetGenericArguments()[0];
+                Type toAdd = typeof(Instruction<>).MakeGenericType(enumType);
+                return toAdd;
+            }
             return null;
         }
     }
