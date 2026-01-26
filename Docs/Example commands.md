@@ -32,6 +32,12 @@ Before that, you can also edit PopTracker.json with RegEx to change the slot and
 
 In the "regular expression" field : *localhost|archipelago.gg:\d+*
 
+## Replace text between known "before" and "after" text
+
+In the "regular expression" field : *(?<=before)(.*)(?=after)*
+
+Thanks AnnoyingCoder for this one.
+
 ## Find a patched rom's save file
 
 Bizhawk sadly isn't friendly with us when trying to backup patched game save, thanksfully it's only necessary if you're scared of hard lock or corruption, but still. Here's how to do it :
