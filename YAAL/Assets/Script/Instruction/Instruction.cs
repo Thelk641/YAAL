@@ -27,11 +27,11 @@ public abstract class Instruction<TEnum> : Interface_Instruction where TEnum : s
         InstructionSetting[item] = value;
     }
 
-    public void SetSettings(Dictionary<TEnum,string> newSettings)
+    public void SetSettings(Dictionary<Enum,string> newSettings)
     {
         foreach (var item in newSettings)
         {
-            SetSetting(item.Key, item.Value);
+            SetSetting((TEnum)item.Key, item.Value);
         }
     }
 
@@ -65,12 +65,12 @@ public abstract class Instruction<TEnum> : Interface_Instruction where TEnum : s
         return "";
     }
 
-    public Dictionary<string, string> GetSettings()
+    public Dictionary<Enum, string> GetSettings()
     {
-        Dictionary<string, string> output = new Dictionary<string, string>();
+        Dictionary<Enum, string> output = new Dictionary<Enum, string>();
         foreach (var item in InstructionSetting)
         {
-            output[item.Key.ToString()] = item.Value;
+            output[item.Key] = item.Value;
         }
         return output;
     }

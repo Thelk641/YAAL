@@ -1,24 +1,25 @@
-using YAAL;
-using YAAL.Assets.Script.Cache;
-using YAAL.Assets.Scripts;
 using Avalonia.Controls;
 using Avalonia.Data.Converters;
+using Avalonia.Input;
+using Avalonia.Utilities;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using YAAL;
+using YAAL.Assets.Script.Cache;
+using YAAL.Assets.Scripts;
 using static YAAL.AsyncSettings;
 using static YAAL.LauncherSettings;
 using static YAAL.PreviousAsyncSettings;
 using static YAAL.SlotSettings;
-using System.Text;
-using Avalonia.Input;
-using Avalonia.Utilities;
 
 public class CustomLauncher
 {
@@ -203,13 +204,10 @@ public class CustomLauncher
             {
                 string commandName = command.GetCommandType();
 
-                if (Templates.GetCommandSetting(commandName) is Type commandType
-                    && Templates.GetInstruction(commandName) is Type instructionType
-                    && Activator.CreateInstance(instructionType) is Interface_Instruction tempInstruction)
+                if (Templates.GetInstruction(commandName) is Type instructionType
+                    && Activator.CreateInstance(instructionType) is Interface_Instruction instruction)
                 {
-                    dynamic commandSetting = Convert.ChangeType(item, commandType);
-                    dynamic instruction = Convert.ChangeType(tempInstruction, instructionType);
-                    instruction.SetSettings(commandSetting.InstructionSetting);
+                    instruction.SetSettings(item.GetSettings());
                     instruction.SetCustomLauncher(this);
                     listOfInstructions.Add(instruction);
                     if (instruction is Apworld apworldInstruction)
@@ -255,14 +253,20 @@ public class CustomLauncher
         {
             try
             {
-                Type instructionType = instruction.GetType();
-                dynamic realInstruction = Convert.ChangeType(instruction, instructionType);
-                Type commandType = Templates.GetCommandSetting(realInstruction.instructionType);
-                Interface_CommandSetting command = (Interface_CommandSetting)Activator.CreateInstance(commandType);
-                dynamic realCommand = Convert.ChangeType(command, commandType);
-                realCommand.InstructionSetting = realInstruction.InstructionSetting;
-                realCommand.commandType = realInstruction.instructionType;
-                output.instructionList.Add(realCommand);
+                string commandType = instruction.GetInstructionType();
+                if (Templates.GetCommandSetting(commandType) is Type toInstantiate 
+                    && Activator.CreateInstance(toInstantiate) is Interface_CommandSetting command)
+                {
+                    command.SetSettings(instruction.GetSettings());
+                    command.SetCommandType(commandType);
+                    output.instructionList.Add(command);
+                } else
+                {
+                    ErrorManager.ThrowError(
+                        "CustomLauncher - Failed to write cache",
+                        "Couldn't create a command of type " + commandType
+                        );
+                }
             }
             catch (Exception e)
             {

@@ -11,10 +11,11 @@ public interface Interface_Instruction
 {
     public bool Execute();
     public void SetSetting(string key, string value);
+    public void SetSettings(Dictionary<Enum, string> settings);
     public void SetSettings(Dictionary<string, string> settings);
     public void SetExecuteSettings(UnifiedSettings settings);
     public string GetSetting(string key);
-    public Dictionary<string, string> GetSettings();
+    public Dictionary<Enum, string> GetSettings();
     public string GetInstructionType();
     public CustomLauncher GetCustomLauncher();
     public void SetCustomLauncher(CustomLauncher customLauncher);

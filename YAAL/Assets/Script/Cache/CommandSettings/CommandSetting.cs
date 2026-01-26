@@ -18,6 +18,15 @@ namespace YAAL
             InstructionSetting = defaultValue;
         }
 
+        public void SetSettings(Dictionary<Enum, string> newSettings)
+        {
+            InstructionSetting = new Dictionary<TEnum, string>();
+            foreach (var item in newSettings)
+            {
+                InstructionSetting[(TEnum)item.Key] = item.Value;
+            }
+        }
+
         public void SetSetting(TEnum key, string value) {
             if (InstructionSetting.ContainsKey(key))
             {
@@ -42,6 +51,16 @@ namespace YAAL
                     "Try to set setting " + key + " but it is not a valid key for a command of type " + commandType
                     );
             }
+        }
+
+        public Dictionary<Enum, string> GetSettings()
+        {
+            Dictionary<Enum, string> output = new Dictionary<Enum, string>();
+            foreach (var item in InstructionSetting)
+            {
+                output[item.Key] = item.Value;
+            }
+            return output;
         }
 
         public string GetSetting(TEnum key)
@@ -72,5 +91,8 @@ namespace YAAL
         public void SetCommandType(string newValue);
         public string GetCommandType();
         public void SetSetting(string key, string value); // must only be used by CommandSetting itself, as it's generic
+
+        public void SetSettings(Dictionary<Enum, string> newSettings);
+        public Dictionary<Enum, string> GetSettings();
     }
 }
