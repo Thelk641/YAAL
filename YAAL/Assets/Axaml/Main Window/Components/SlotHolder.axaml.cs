@@ -703,9 +703,19 @@ public partial class SlotHolder : UserControl
     {
         List<string> launcherList = IOManager.GetLauncherList();
 
-        if (launcherList.Count > 0 && SlotSelector.SelectedItem is Cache_DisplaySlot displaySlot)
+
+
+        if (launcherList.Count > 0)
         {
-            List<Cache_DisplayLauncher> list = IOManager.GetLaunchersForGame(displaySlot.cache.gameName);
+            List<Cache_DisplayLauncher> list = new List<Cache_DisplayLauncher>();
+            if(SlotSelector.SelectedItem is Cache_DisplaySlot displaySlot)
+            {
+                list = IOManager.GetLaunchersForGame(displaySlot.cache.gameName);
+            } else
+            {
+                list = IOManager.GetLaunchersForGame("");
+            }
+                
             LauncherSelector.ItemsSource = list;
 
             foreach (var item in list)

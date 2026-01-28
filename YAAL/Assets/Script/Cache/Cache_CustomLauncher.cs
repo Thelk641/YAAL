@@ -12,6 +12,5 @@ namespace YAAL
         public List<Interface_CommandSetting> instructionList = new List<Interface_CommandSetting>();
         public Dictionary<LauncherSettings, string> settings = new();
         public Dictionary<string, string> customSettings = new();
-        public bool isGame = true;
     }
 }

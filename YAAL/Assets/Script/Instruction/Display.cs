@@ -24,8 +24,8 @@ namespace YAAL
             Dictionary<string, string> toDisplay = new Dictionary<string, string>();
             foreach (var item in list)
             {
-                string key = this.customLauncher.ParseTextWithSettings(item.Key);
-                string value = this.customLauncher.ParseTextWithSettings(item.Value);
+                string key = executer.Parser.ParseTextWithSettings(item.Key);
+                string value = executer.Parser.ParseTextWithSettings(item.Value);
                 toDisplay[key] = value;
             }
 
@@ -36,9 +36,9 @@ namespace YAAL
                 {
                     window.AddInfo(item.Key, item.Value);
                 }
-                customLauncher.AddWait(this);
+                executer.AddWait(this);
 
-                window.Closing += (_, _) => { customLauncher.RemoveWait(this); };
+                window.Closing += (_, _) => { executer.RemoveWait(this); };
                 window.IsVisible = true;
 
                 return true;

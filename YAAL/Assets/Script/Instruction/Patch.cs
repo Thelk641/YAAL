@@ -36,7 +36,7 @@ namespace YAAL
 
             if (newFileName != "")
             {
-                newFileName = customLauncher.ParseTextWithSettings(newFileName);
+                newFileName = executer.Parser.ParseTextWithSettings(newFileName);
                 if(newFileName == "")
                 {
                     ErrorManager.AddNewError(
@@ -59,12 +59,12 @@ namespace YAAL
                 return false;
             } else
             {
-                if (customLauncher.GetSetting(Debug_Patch) == settings[SlotSettings.patch])
+                if (executer.SettingsHandler.GetSetting(Debug_Patch) == settings[SlotSettings.patch])
                 {
-                    customLauncher.SetSetting(Debug_Patch, patch);
+                    executer.SettingsHandler.SetSetting(Debug_Patch, patch);
                 }
                 this.settings[SlotSettings.patch] = patch;
-                customLauncher.SetSlotSetting(SlotSettings.patch, patch);
+                executer.InstructionHandler.SetSlotSetting(SlotSettings.patch, patch);
             }
 
             if (this.InstructionSetting[mode] == "Apply")
@@ -97,8 +97,8 @@ namespace YAAL
 
         private bool ApplyPatch()
         {
-            string apLauncher = customLauncher.ParseTextWithSettings("${aplauncher}");
-            string folder = IOManager.ToDebug(customLauncher.ParseTextWithSettings("${aplauncher}"));
+            string apLauncher = executer.Parser.ParseTextWithSettings("${aplauncher}");
+            string folder = IOManager.ToDebug(executer.Parser.ParseTextWithSettings("${aplauncher}"));
 
             
             
@@ -116,7 +116,7 @@ namespace YAAL
 
             if (this.InstructionSetting[optimize] == true.ToString())
             {
-                apworlds = customLauncher.GetApworlds();
+                apworlds = executer.SettingsHandler.GetApworlds();
                 bool addedYAAL = false;
                 foreach (var item in apworlds)
                 {
@@ -142,7 +142,7 @@ namespace YAAL
             }
 
             string path = folder;
-            string args = customLauncher.ParseTextWithSettings(" -- \"YAAL Patcher\" \"" + this.settings[patch] + "\"");
+            string args = executer.Parser.ParseTextWithSettings(" -- \"YAAL Patcher\" \"" + this.settings[patch] + "\"");
 
             Trace.WriteLine("Process : " + path + args);
 
@@ -171,7 +171,7 @@ namespace YAAL
             {
                 // Success : Patch created at path\to\patch with metadata: {'server': '', 'player': '', 'player_name': ''}"
                 string patchedRom = output.Split("Patch created at ")[1].Split(" with metadata:")[0];
-                customLauncher.SetSlotSetting(rom, patchedRom);
+                executer.InstructionHandler.SetSlotSetting(rom, patchedRom);
                 return true;
             }
             else
@@ -194,7 +194,7 @@ namespace YAAL
             cache.previousRoom = this.settings[AsyncSettings.roomAddress] ?? "" + ":" + this.settings[AsyncSettings.roomPort] ?? "";
             cache.previousPort = this.settings[AsyncSettings.roomPort] ?? "";
 
-            List<string> splitTarget = customLauncher.SplitString(this.InstructionSetting[target]);
+            List<string> splitTarget = executer.Parser.SplitString(this.InstructionSetting[target]);
 
             foreach (var item in splitTarget)
             {

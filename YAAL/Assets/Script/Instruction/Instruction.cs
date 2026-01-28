@@ -10,7 +10,7 @@ public abstract class Instruction<TEnum> : Interface_Instruction where TEnum : s
 {
     public Dictionary<TEnum, string> InstructionSetting = new Dictionary<TEnum, string>();
     public UnifiedSettings settings;
-    public CustomLauncher customLauncher;
+    public Executer executer;
     public string instructionType;
     public abstract bool Execute();
 
@@ -80,14 +80,9 @@ public abstract class Instruction<TEnum> : Interface_Instruction where TEnum : s
         return instructionType;
     }
 
-    public void SetCustomLauncher(CustomLauncher newCustomLauncher)
+    public void SetExecuter(Executer newExecuter)
     {
-        customLauncher = newCustomLauncher;
-    }
-
-    public CustomLauncher GetCustomLauncher()
-    {
-        return customLauncher;
+        executer = newExecuter;
     }
 
     public virtual void ParseProcess(object? sender, EventArgs e)

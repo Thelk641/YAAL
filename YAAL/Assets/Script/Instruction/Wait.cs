@@ -41,7 +41,7 @@ namespace YAAL
                     processKey = this.InstructionSetting[WaitSettings.processName];
                     if(processKey != "")
                     {
-                        customLauncher.AttachToClosing(this, processKey);
+                        executer.ProcessHandler.AttachToClosing(this, processKey);
                         return true;
                     }
                     ErrorManager.AddNewError(
@@ -56,8 +56,8 @@ namespace YAAL
 
         public override void ParseProcess(object? sender, EventArgs e)
         {
-            customLauncher.DetachToClosing(this, processKey);
-            customLauncher.RemoveWait(this);
+            executer.ProcessHandler.DetachToClosing(this, processKey);
+            executer.RemoveWait(this);
             return;
         }
 

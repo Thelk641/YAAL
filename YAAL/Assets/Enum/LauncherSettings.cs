@@ -27,6 +27,7 @@ namespace YAAL
         lua_tloz,
         customTheme,
         requiresPatch,
-        requiresVersion
+        requiresVersion,
+        IsGame
     };
 }

@@ -120,14 +120,13 @@ public partial class UpdateChecker : UserControl
 
     private async void DownloadUpdate(object? sender, RoutedEventArgs e)
     {
-        if (!HasUpdatetoDownload)
+        /*if (!HasUpdatetoDownload)
         {
             return;
         }
 
         StandardDisplay.IsVisible = false;
         WaitingForDownload.IsVisible = true;
-        CustomLauncher customLauncher = IOManager.LoadLauncher(launcherName.Text);
         if (await WebManager.DownloadUpdatedApworld(customLauncher, Available.Text))
         {
             Downloaded.Text = IOManager.GetDownloadedVersions(launcherName.Text)[0];
@@ -136,6 +135,6 @@ public partial class UpdateChecker : UserControl
             DoneDownloading?.Invoke(this, EventArgs.Empty);
         }
         WaitingForDownload.IsVisible = false;
-        StandardDisplay.IsVisible = true;
+        StandardDisplay.IsVisible = true;*/
     }
 }

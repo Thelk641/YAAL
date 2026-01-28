@@ -42,8 +42,8 @@ namespace YAAL
                 return false;
             }
 
-            List<string> splitPattern = customLauncher.SplitString(this.InstructionSetting[regex]);
-            List<string> splitReplacement = customLauncher.SplitString(this.InstructionSetting[replacement]);
+            List<string> splitPattern = executer.Parser.SplitString(this.InstructionSetting[regex]);
+            List<string> splitReplacement = executer.Parser.SplitString(this.InstructionSetting[replacement]);
 
             if (this.InstructionSetting[modeInput] == "File")
             {
@@ -80,7 +80,7 @@ namespace YAAL
 
         private bool ApplyRegex(string rawTarget, List<string> cleanedPattern, List<string> cleanedReplacement)
         {
-            List<string> splitInput = customLauncher.SplitAndParse(rawTarget);
+            List<string> splitInput = executer.Parser.SplitAndParse(rawTarget);
 
             if (
             !(cleanedPattern.Count == 1 || cleanedPattern.Count == splitInput.Count)
@@ -128,7 +128,7 @@ namespace YAAL
                 try
                 {
                     Regex expression = new Regex(pattern);
-                    string toReplace = customLauncher.ParseTextWithSettings(replacement);
+                    string toReplace = executer.Parser.ParseTextWithSettings(replacement);
                     output = "";
                     string input = "";
                     if (this.InstructionSetting[modeInput] == "File")
@@ -175,7 +175,7 @@ namespace YAAL
             if (this.InstructionSetting[modeOutput] == "File")
             {
                 bool success = false;
-                List<string> splitOutputFile = customLauncher.SplitAndParse(this.InstructionSetting[outputFile]);
+                List<string> splitOutputFile = executer.Parser.SplitAndParse(this.InstructionSetting[outputFile]);
 
                 switch (splitOutputFile.Count)
                 {
@@ -213,7 +213,7 @@ namespace YAAL
             }
             else
             {
-                List<string> splitOutputVar = customLauncher.SplitString(this.InstructionSetting[outputVar]);
+                List<string> splitOutputVar = executer.Parser.SplitString(this.InstructionSetting[outputVar]);
 
                 switch (splitOutputVar.Count)
                 {
@@ -239,18 +239,18 @@ namespace YAAL
 
                 if (alreadyOutputedVar.Contains(splitOutputVar[i]))
                 {
-                    if (customLauncher.settings.Has(splitOutputVar[i]))
+                    if (executer.SettingsHandler.settings.Has(splitOutputVar[i]))
                     {
-                        customLauncher.settings[splitOutputVar[i]] = customLauncher.settings[splitOutputVar[i]] + "; " + result;
+                        executer.SettingsHandler.settings[splitOutputVar[i]] = executer.SettingsHandler.settings[splitOutputVar[i]] + "; " + result;
                     }
                     else
                     {
-                        customLauncher.settings[splitOutputVar[i]] = result;
+                        executer.SettingsHandler.settings[splitOutputVar[i]] = result;
                     }
                 }
                 else
                 {
-                    customLauncher.settings[splitOutputVar[i]] = result;
+                    executer.SettingsHandler.settings[splitOutputVar[i]] = result;
                     alreadyOutputedVar.Add(splitOutputVar[i]);
                 }
                 return true;

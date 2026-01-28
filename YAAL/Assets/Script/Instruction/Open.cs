@@ -28,9 +28,9 @@ public class Open : Instruction<OpenSettings>
         }
 
 
-        List<string> splitPath = customLauncher.SplitAndParse(this.InstructionSetting[OpenSettings.path]);
-        List<string> splitArgs = customLauncher.SplitAndParse(this.InstructionSetting[OpenSettings.args], false);
-        List<string> splitKeys = customLauncher.SplitAndParse(this.InstructionSetting[OpenSettings.processName]);
+        List<string> splitPath = executer.Parser.SplitAndParse(this.InstructionSetting[OpenSettings.path]);
+        List<string> splitArgs = executer.Parser.SplitAndParse(this.InstructionSetting[OpenSettings.args], false);
+        List<string> splitKeys = executer.Parser.SplitAndParse(this.InstructionSetting[OpenSettings.processName]);
 
         if(splitKeys.Count == 1 && splitKeys[0] == "")
         {
@@ -81,11 +81,8 @@ public class Open : Instruction<OpenSettings>
             {
                 continue;
             }
-            string parsed = customLauncher.ParseTextWithSettings(item.Key);
+            string parsed = executer.Parser.ParseTextWithSettings(item.Key);
             SeparateArgsFromPath(parsed, item.Value, out path, out args);
-            Trace.WriteLine("File exists : " + File.Exists(path));
-            Trace.WriteLine("Dir exists : " + Directory.Exists(path));
-            Trace.WriteLine("URL is valid : " + WebManager.IsValidURL(path));
             if (!(File.Exists(path) || Directory.Exists(path) || WebManager.IsValidURL(path)))
             {
                 ErrorManager.AddNewError(
@@ -138,8 +135,8 @@ public class Open : Instruction<OpenSettings>
                             "so you can't use it for auto-restore. Pass it as an argument to a browser to be able to use it as a keyed process."
                             );
                     }
-                    keyedProcess.Setup(key, customLauncher);
-                    customLauncher.NoteProcess(keyedProcess);
+                    keyedProcess.Setup(key);
+                    executer.ProcessHandler.NoteProcess(keyedProcess);
                 }
             }
             catch (Exception e)
@@ -233,7 +230,7 @@ public class Open : Instruction<OpenSettings>
         {
             args += settingArgs;
         }
-        customLauncher.ParseTextWithSettings(args);
+        executer.Parser.ParseTextWithSettings(args);
         path = path.Trim('"').Trim();
     }
 }

@@ -34,14 +34,20 @@ namespace YAAL
 
         public override bool Execute()
         {
-            List<string> launcherTargets = customLauncher.GetApworlds();
+            List<string> launcherTargets = executer.SettingsHandler.GetApworlds();
             targets = new List<string>();
 
-            if (!customLauncher.isGame)
+            if (executer.SettingsHandler.GetSetting(LauncherSettings.IsGame) == false.ToString())
             {
-                foreach (var item in customLauncher.GetBaseLauncher().GetApworlds())
+                if(executer.SettingsHandler.GetBaseLauncher() is Executer baseLauncher)
                 {
-                    launcherTargets.Add(item);
+                    foreach (var item in baseLauncher.SettingsHandler.GetApworlds())
+                    {
+                        launcherTargets.Add(item);
+                    }
+                } else
+                {
+                    return false;
                 }
             }
 
@@ -59,7 +65,7 @@ namespace YAAL
             {
                 try
                 {
-                    string clean = customLauncher.ParseTextWithSettings(item.Trim('\"'));
+                    string clean = executer.Parser.ParseTextWithSettings(item.Trim('\"'));
                     DirectoryInfo dir = new DirectoryInfo(clean);
                     string custom_world = Path.Combine(dir.Parent.Parent.FullName, "ArchipelagoLauncher.exe");
                     string worlds = Path.Combine(dir.Parent.Parent.Parent.FullName, "ArchipelagoLauncher.exe");
@@ -117,35 +123,35 @@ namespace YAAL
                 case "off":
                     return true;
                 case "process":
-                    if (!customLauncher.AttachToClosing(this, this.InstructionSetting[processName] ?? ""))
+                    if (!executer.ProcessHandler.AttachToClosing(this, this.InstructionSetting[processName] ?? ""))
                     {
                         Restore();
                         return false;
                     }
                     return true;
                 case "output":
-                    if (!customLauncher.AttachToOutput(this, this.InstructionSetting[processName] ?? ""))
+                    if (!executer.ProcessHandler.AttachToOutput(this, this.InstructionSetting[processName] ?? ""))
                     {
                         Restore();
                         return false;
                     }
-                    outputToLookFor = customLauncher.SplitString(this.InstructionSetting[IsolateSettings.outputToLookFor]);
+                    outputToLookFor = executer.Parser.SplitString(this.InstructionSetting[IsolateSettings.outputToLookFor]);
                     return true;
                 case "combined":
-                    if (!customLauncher.AttachToClosing(this, this.InstructionSetting[processName] ?? ""))
+                    if (!executer.ProcessHandler.AttachToClosing(this, this.InstructionSetting[processName] ?? ""))
                     {
                         Restore();
                         return false;
                     }
-                    if (!customLauncher.AttachToOutput(this, this.InstructionSetting[processName] ?? ""))
+                    if (!executer.ProcessHandler.AttachToOutput(this, this.InstructionSetting[processName] ?? ""))
                     {
                         Restore();
                         return false;
                     }
-                    outputToLookFor = customLauncher.SplitString(this.InstructionSetting[IsolateSettings.outputToLookFor]);
+                    outputToLookFor = executer.Parser.SplitString(this.InstructionSetting[IsolateSettings.outputToLookFor]);
                     return true;
                 case "timer":
-                    customLauncher.AddWait(this);
+                    executer.AddWait(this);
                     time = float.Parse(this.InstructionSetting[timer], CultureInfo.InvariantCulture.NumberFormat) * 0.1f;
                     Debouncer.timer.Tick += Timer;
                     return true;
@@ -201,14 +207,14 @@ namespace YAAL
             switch (this.InstructionSetting[modeSelect])
             {
                 case "process":
-                    customLauncher.DetachToClosing(this, this.InstructionSetting[processName] ?? "");
+                    executer.ProcessHandler.DetachToClosing(this, this.InstructionSetting[processName] ?? "");
                     break;
                 case "output":
-                    customLauncher.DetachToOutput(this, this.InstructionSetting[processName] ?? "");
+                    executer.ProcessHandler.DetachToOutput(this, this.InstructionSetting[processName] ?? "");
                     break;
                 case "combined":
-                    customLauncher.DetachToClosing(this, this.InstructionSetting[processName] ?? "");
-                    customLauncher.DetachToOutput(this, this.InstructionSetting[processName] ?? "");
+                    executer.ProcessHandler.DetachToClosing(this, this.InstructionSetting[processName] ?? "");
+                    executer.ProcessHandler.DetachToOutput(this, this.InstructionSetting[processName] ?? "");
                     break;
                 case "timer":
                     Debouncer.timer.Tick -= Timer;
@@ -221,7 +227,7 @@ namespace YAAL
             {
                 if(IOManager.RestoreApworlds(settings[aplauncher], targets))
                 {
-                    customLauncher.RemoveWait(this);
+                    executer.RemoveWait(this);
                     return true;
                 }
                 return false;
@@ -231,7 +237,7 @@ namespace YAAL
                 ErrorManager.AddNewError(
                         "Isolate - Restore threw an exception",
                         "The restore process threw the following exception : " + e.Message);
-                customLauncher.RemoveWait(this);
+                executer.RemoveWait(this);
                 return false;
             }
         }

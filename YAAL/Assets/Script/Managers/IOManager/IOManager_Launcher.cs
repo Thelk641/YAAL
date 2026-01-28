@@ -20,59 +20,6 @@ namespace YAAL
         public static event Action<string> UpdatedLauncher;
         public static Dictionary<string, Cache_CustomLauncher> libraryCustomLauncher = new Dictionary<string, Cache_CustomLauncher>();
         public static List<Cache_DisplayLauncher> libraryTools = new List<Cache_DisplayLauncher>();
-        
-        public static void SaveLauncher(CustomLauncher toSave)
-        {
-            Trace.WriteLine("Saving launcher : " + toSave.selfsettings[LauncherSettings.launcherName]);
-            Cache_CustomLauncher cache = toSave.WriteCache();
-            SaveCacheLauncher(cache);
-            launcherCache[toSave.selfsettings[LauncherSettings.launcherName]] = toSave;
-            if (toSave.selfsettings.ContainsKey(LauncherSettings.gameName))
-            {
-                launcherList.list[toSave.selfsettings[LauncherSettings.launcherName]] = toSave.selfsettings[LauncherSettings.gameName];
-            } else
-            {
-                launcherList.list[toSave.selfsettings[LauncherSettings.launcherName]] = "None";
-            }
-
-            SaveCache<Cache_LauncherList>(GetSaveLocation(FileSettings.launcherList), launcherList);
-            libraryCustomLauncher[toSave.selfsettings[LauncherSettings.launcherName]] = cache;
-            UpdateLauncherList();
-            UpdatedLauncher?.Invoke(toSave.selfsettings[LauncherSettings.launcherName]);
-
-            if (!cache.isGame)
-            {
-                UpdateToolList();
-            }
-        }
-
-        public static CustomLauncher LoadLauncher(string launcherName)
-        {
-            if (!GetLauncherList(true).Contains(launcherName)) 
-            {
-                ErrorManager.ThrowError(
-                    "IOManager_Launcher - Invalid launcher name",
-                    "IOManager was asked to load " + launcherName + " but there doesn't appear to be a folder in /ManagedApworlds with this name containing a launcher.json"
-                    );
-                return null;
-            }
-
-            if (launcherCache.ContainsKey(launcherName))
-            {
-                return launcherCache[launcherName];
-            } else
-            {
-                return LoadLauncher(LoadCacheLauncher(launcherName));
-            }
-        }
-
-        public static CustomLauncher LoadLauncher(Cache_CustomLauncher cache)
-        {
-            CustomLauncher output = new CustomLauncher();
-            output.ReadCache(cache);
-            launcherCache[cache.settings[LauncherSettings.launcherName]] = output;
-            return output;
-        }
 
         public static string RenameLauncher(Cache_DisplayLauncher cache, string newName)
         {
@@ -232,13 +179,9 @@ namespace YAAL
             return GetSlot(async, slot).settings[SlotSettings.baseLauncher];
         }
 
-        public static Cache_Settings GetSettings(string async, string slot)
+        public static Cache_Settings GetGeneralSettings()
         {
-
             Cache_Settings output = new Cache_Settings();
-
-            Cache_Async cache_async = GetAsync(async);
-            Cache_Slot cache_Slot = GetSlot(async, slot);
 
             foreach (var item in settings.GetSettings())
             {
@@ -246,6 +189,17 @@ namespace YAAL
                 string value = item.Value;
                 output.settings[item.Key] = item.Value;
             }
+
+            return output;
+        }
+
+        public static Cache_Settings GetSettings(string async, string slot)
+        {
+
+            Cache_Settings output = new Cache_Settings();
+
+            Cache_Async cache_async = GetAsync(async);
+            Cache_Slot cache_Slot = GetSlot(async, slot);
 
             foreach (var item in cache_async.settings)
             {
@@ -294,56 +248,6 @@ namespace YAAL
             }
 
             return "None";
-        }
-
-        public static void AddTool(CustomLauncher toAdd)
-        {
-            string path = GetSaveLocation(tools);
-            string name = toAdd.GetSetting(LauncherSettings.launcherName.ToString());
-            Cache_Tools cache = LoadCache<Cache_Tools>(path);
-
-            Cache_DisplayLauncher display = new Cache_DisplayLauncher();
-            display.isHeader = false;
-            display.name = name;
-            display.cache = toAdd.WriteCache();
-
-            foreach (var item in cache.customTools)
-            {
-                if(item.name == name)
-                {
-                    item.cache = display.cache;
-                    SaveCache<Cache_Tools>(path, cache);
-                    return;
-                }
-            }
-
-            cache.customTools.Add(display);
-            SaveCache<Cache_Tools>(path, cache);
-            UpdateToolList();
-        }
-
-        public static void RemoveTool(CustomLauncher toRemove)
-        {
-            string path = GetSaveLocation(tools);
-            string name = toRemove.GetSetting(LauncherSettings.launcherName.ToString());
-            Cache_Tools cache = LoadCache<Cache_Tools>(path);
-            Cache_DisplayLauncher? displayToRemove = null;
-
-            foreach (var item in cache.customTools)
-            {
-                if(item.name == name)
-                {
-                    displayToRemove = item;
-                    break;
-                }
-            }
-
-            if(displayToRemove != null)
-            {
-                cache.customTools.Remove(displayToRemove);
-                SaveCache<Cache_Tools>(path, cache);
-                UpdateToolList();
-            }
         }
 
         public async static Task UpdateToolList()

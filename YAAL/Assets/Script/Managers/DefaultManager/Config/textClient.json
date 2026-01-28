@@ -17,23 +17,11 @@
     "Debug_AsyncName": "Debug_CLMaker_Async",
     "Debug_SlotName": "Debug_CLMaker_Slot",
     "Debug_Patch": "",
-    "Debug_baseLauncher": ""
+    "Debug_baseLauncher": "",
+    "IsGame": "False"
   },
   "customSettings": {
-    "asyncName": "",
-    "password": "",
-    "patch": "",
-    "previous_async": "",
-    "previous_slot": "",
-    "rom": "",
-    "room": "",
-    "roomIP": "",
-    "roomPort": "",
-    "slotInfo": "",
-    "slotName": "",
-    "version": ""
   },
-  "isGame": false,
   "requiresPatch": false,
   "requiresVersion": false
 }

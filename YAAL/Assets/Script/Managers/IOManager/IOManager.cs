@@ -29,7 +29,7 @@ namespace YAAL
         //private static string baseDirectory = AppContext.BaseDirectory;
         public static Cache_UserSettings settings;
         public static List<string> games;
-        static Dictionary<string, CustomLauncher> launcherCache = new Dictionary<string, CustomLauncher>();
+        static Dictionary<string, Cache_CustomLauncher> launcherCache = new Dictionary<string, Cache_CustomLauncher>();
         static Cache_LauncherList launcherList = new Cache_LauncherList();
 
         static IOManager()

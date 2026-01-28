@@ -62,7 +62,7 @@ public partial class App : Application
         {
             //args = new string[8] { "--debug", "--async", "Pingu birthday", "--slot", "RoR2", "--launcher", "\"Dice\"", "--ignoreBase" };
 
-            //args = new string[5] { "--debug", "--async", "Pingu birthday", "--slot", "Masaru of Cards" };
+            //args = new string[5] { "--debug", "--async", "New async", "--slot", "New" };
             //args = new string[7] {"--restore", "--async", "Pingu ER", "--slot", "Masaru_FF", "--launcher", "\"Text Client\"" };
             //args = new string[1] { "--debug" };
         }
@@ -190,13 +190,16 @@ public partial class App : Application
             }
 
             // for some reason, the instruction are not set to this launcher !?
-            CustomLauncher customLauncher = IOManager.LoadLauncher(launcher);
-            customLauncher.ReadSettings(async, slot);
-            if (ignoreBase && customLauncher.isGame)
+            Executer customLauncher = new Executer();
+            customLauncher.Load(async, slot, launcher);
+
+            if (ignoreBase)
             {
-                customLauncher.SetTemporarySetting("baseLauncher", launcher);
+                customLauncher.SettingsHandler.IgnoreBaseLauncher();
             }
-            customLauncher.Execute();
+
+            customLauncher.ProcessHandler.Execute();
+
             if (customLauncher.waitingForRestore)
             {
                 _ = WaitForRestore(customLauncher);
@@ -317,7 +320,7 @@ public partial class App : Application
         return true;
     }
 
-    async Task WaitForRestore(CustomLauncher launcher)
+    async Task WaitForRestore(Executer launcher)
     {
         var tcs = new TaskCompletionSource();
 

@@ -33,8 +33,8 @@ namespace YAAL
 
         public override bool Execute()
         {
-            List<string> splitTarget = customLauncher.SplitAndParse(this.InstructionSetting[target]);
-            List<string> splitDefault = customLauncher.SplitAndParse(this.InstructionSetting[defaultFile]);
+            List<string> splitTarget = executer.Parser.SplitAndParse(this.InstructionSetting[target]);
+            List<string> splitDefault = executer.Parser.SplitAndParse(this.InstructionSetting[defaultFile]);
             Dictionary<string, string> BackupAndDefault = new Dictionary<string, string>();
             backedUpFile = new List<string>();
 
@@ -65,7 +65,7 @@ namespace YAAL
                         break;
                     }
 
-                    if (!IOManager.CopyToDefault(customLauncher.GetSetting(launcherName), splitDefault[0], out string singleDefault))
+                    if (!IOManager.CopyToDefault(executer.SettingsHandler.GetSetting(launcherName), splitDefault[0], out string singleDefault))
                     {
                         ErrorManager.AddNewError(
                             "Backup - Failed to copy defaults",
@@ -73,7 +73,7 @@ namespace YAAL
                         return false;
                     }
                     this.InstructionSetting[defaultFile] = singleDefault.Trim().Trim(';');
-                    customLauncher.Save();
+                    executer.InstructionHandler.UpdateCache(this);
                     for (int i = 0; i < splitTarget.Count; i++)
                     {
                         BackupAndDefault[splitTarget[i]] = singleDefault;
@@ -100,7 +100,7 @@ namespace YAAL
                             newSetting += "\" \"";
                             continue;
                         }
-                        if (!IOManager.CopyToDefault(customLauncher.GetSetting(launcherName), item, out newDefault))
+                        if (!IOManager.CopyToDefault(executer.SettingsHandler.GetSetting(launcherName), item, out newDefault))
                         {
                             ErrorManager.AddNewError(
                                 "Backup - Failed to copy defaults",
@@ -112,7 +112,7 @@ namespace YAAL
                     }
 
                     this.InstructionSetting[defaultFile] = newSetting.Trim().Trim(';');
-                    customLauncher.Save();
+                    executer.InstructionHandler.UpdateCache(this);
 
                     for (int i = 0; i < splitTarget.Count; i++)
                     {
@@ -125,11 +125,11 @@ namespace YAAL
             foreach (var item in BackupAndDefault)
             {
                 if(IOManager.Backup(
-                item.Key,
-                item.Value,
-                settings["asyncName"],
-                settings["slotLabel"],
-                (this.InstructionSetting[modeSelect] != "off")))
+                    item.Key,
+                    item.Value,
+                    settings["asyncName"],
+                    settings["slotLabel"],
+                    (this.InstructionSetting[modeSelect] != "off")))
                 {
                     backedUpFile.Add(item.Key);
                 } else
@@ -147,37 +147,37 @@ namespace YAAL
                 case "off":
                     return true;
                 case "process":
-                    if (!customLauncher.AttachToClosing(this, this.InstructionSetting[processName] ?? ""))
+                    if (!executer.ProcessHandler.AttachToClosing(this, this.InstructionSetting[processName] ?? ""))
                     {
                         Restore();
                         return false;
                     }
                     return true;
                 case "output":
-                    if (!customLauncher.AttachToOutput(this, this.InstructionSetting[processName] ?? ""))
+                    if (!executer.ProcessHandler.AttachToOutput(this, this.InstructionSetting[processName] ?? ""))
                     {
                         Restore();
                         return false;
                     }
-                    outputToLookFor = customLauncher.SplitString(this.InstructionSetting[BackupSettings.outputToLookFor]);
+                    outputToLookFor = executer.Parser.SplitString(this.InstructionSetting[BackupSettings.outputToLookFor]);
                     return true;
                 case "combined":
-                    if (!customLauncher.AttachToClosing(this, this.InstructionSetting[processName] ?? ""))
+                    if (!executer.ProcessHandler.AttachToClosing(this, this.InstructionSetting[processName] ?? ""))
                     {
                         Restore();
                         return false;
                     }
-                    if (!customLauncher.AttachToOutput(this, this.InstructionSetting[processName] ?? ""))
+                    if (!executer.ProcessHandler.AttachToOutput(this, this.InstructionSetting[processName] ?? ""))
                     {
                         Restore();
                         return false;
                     }
-                    outputToLookFor = customLauncher.SplitString(this.InstructionSetting[BackupSettings.outputToLookFor]);
+                    outputToLookFor = executer.Parser.SplitString(this.InstructionSetting[BackupSettings.outputToLookFor]);
                     return true;
                 case "timer":
                     time = float.Parse(this.InstructionSetting[timer], CultureInfo.InvariantCulture.NumberFormat) * 0.1f;
                     Debouncer.timer.Tick += Timer;
-                    customLauncher.AddWait(this);
+                    executer.AddWait(this);
                     return true;
                 default:
                     ErrorManager.AddNewError(
@@ -234,15 +234,15 @@ namespace YAAL
             switch (this.InstructionSetting[modeSelect])
             {
                 case "process":
-                    customLauncher.DetachToClosing(this, this.InstructionSetting[processName] ?? "");
+                    executer.ProcessHandler.DetachToClosing(this, this.InstructionSetting[processName] ?? "");
                     break;
                 case "output":
-                    customLauncher.DetachToOutput(this, this.InstructionSetting[processName] ?? "");
+                    executer.ProcessHandler.DetachToOutput(this, this.InstructionSetting[processName] ?? "");
                     
                     break;
                 case "combined":
-                    customLauncher.DetachToClosing(this, this.InstructionSetting[processName] ?? "");
-                    customLauncher.DetachToOutput(this, this.InstructionSetting[processName] ?? "");
+                    executer.ProcessHandler.DetachToClosing(this, this.InstructionSetting[processName] ?? "");
+                    executer.ProcessHandler.DetachToOutput(this, this.InstructionSetting[processName] ?? "");
                     break;
                 case "timer":
                     Debouncer.timer.Tick -= Timer;
@@ -258,9 +258,9 @@ namespace YAAL
                 try
                 {
                     if(!IOManager.Restore(
-                    item,
-                    settings[AsyncSettings.asyncName],
-                    settings[SlotSettings.slotLabel]))
+                        item,
+                        settings[AsyncSettings.asyncName],
+                        settings[SlotSettings.slotLabel]))
                     {
                         success = false;
                     }
@@ -274,7 +274,7 @@ namespace YAAL
                 }
             }
 
-            customLauncher.RemoveWait(this);
+            executer.RemoveWait(this);
             return success;
         }
     }

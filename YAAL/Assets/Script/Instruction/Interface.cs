@@ -17,8 +17,7 @@ public interface Interface_Instruction
     public string GetSetting(string key);
     public Dictionary<Enum, string> GetSettings();
     public string GetInstructionType();
-    public CustomLauncher GetCustomLauncher();
-    public void SetCustomLauncher(CustomLauncher customLauncher);
+    public void SetExecuter(Executer executer);
     public void ParseProcess(object? sender, EventArgs e);
     public void ParseOutputData(object sender, DataReceivedEventArgs e);
 }

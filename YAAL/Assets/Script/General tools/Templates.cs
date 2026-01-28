@@ -101,7 +101,7 @@ namespace YAAL
             {
                 if (item.Key.Name == key)
                 {
-                    return item.Key;
+                    return item.Value;
                 }
             }
 

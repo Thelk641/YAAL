@@ -16,8 +16,8 @@
     "Debug_baseLauncher": "",
     "customTheme": "None",
     "requiresPatch": "True",
-    "requiresVersion": "True"
+    "requiresVersion": "True",
+    "IsGame": "True"
   },
-  "customSettings": {},
-  "isGame": true
+  "customSettings": {}
 }

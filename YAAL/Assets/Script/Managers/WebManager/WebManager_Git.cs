@@ -215,7 +215,7 @@ public static partial class WebManager
         return (url != null && IsValidURL(url) && url.Contains("github.com"));
     }
 
-    public static async Task<bool> DownloadUpdatedApworld(CustomLauncher customLauncher, string targetVersion){
+    public static async Task<bool> DownloadUpdatedApworld(Cache_Game customLauncher, string targetVersion){
 
         HttpResponseMessage response = null;
 

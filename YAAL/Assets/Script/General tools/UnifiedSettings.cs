@@ -28,6 +28,11 @@ namespace YAAL
             dict[key] = value;
         }
 
+        public void Set<TEnum>(TEnum key, bool value) where TEnum : Enum
+        {
+            Set(key, value.ToString());
+        }
+
         // Get for Enum keys
         public string? Get<TEnum>(TEnum key) where TEnum : Enum
         {
@@ -110,6 +115,26 @@ namespace YAAL
             return null;
         }
 
+        public Dictionary<LauncherSettings, string>? GetLauncherSettings()
+        {
+            if (enumSettings.ContainsKey(typeof(LauncherSettings)))
+            {
+                Dictionary<LauncherSettings, string> output = new Dictionary<LauncherSettings, string>();
+                foreach (var item in enumSettings[typeof(LauncherSettings)])
+                {
+                    output[(LauncherSettings)item.Key] = item.Value;
+                }
+                return output;
+            }
+
+            return null;
+        }
+
+        public Dictionary<string, string> GetCustomSettings()
+        {
+            return customSettings;
+        }
+
         // Indexer for string and enum keys (convenient syntax)
         public string? this[string key]
         {
@@ -128,7 +153,9 @@ namespace YAAL
         {
             var type = key.GetType();
             if (!enumSettings.TryGetValue(type, out var dict))
+            {
                 enumSettings[type] = dict = new Dictionary<Enum, string>();
+            }
 
             dict[key] = value;
         }
@@ -137,7 +164,10 @@ namespace YAAL
         {
             var type = key.GetType();
             if (enumSettings.TryGetValue(type, out var dict) && dict.TryGetValue(key, out var val))
+            {
                 return val;
+            }
+                
 
             return null;
         }

@@ -27,9 +27,14 @@ namespace YAAL
             string version = this.settings[SlotSettings.version];
             if (target.Contains("${base:apworld}"))
             {
-                UnifiedSettings baseSettings = customLauncher.GetBaseLauncher().settings;
+                Executer baseLauncher = executer.SettingsHandler.GetBaseLauncher();
+                if(baseLauncher == null)
+                {
+                    return false;
+                }
+                UnifiedSettings baseSettings = baseLauncher.SettingsHandler.settings;
                 Apworld baseApworld = new Apworld();
-                baseApworld.customLauncher = customLauncher.GetBaseLauncher();
+                baseApworld.executer = baseLauncher;
                 foreach (var item in this.InstructionSetting)
                 {
                     baseApworld.InstructionSetting[item.Key] = item.Value;
@@ -45,7 +50,7 @@ namespace YAAL
                 }
             }
 
-            apworlds = customLauncher.SplitAndParse(target);
+            apworlds = executer.Parser.SplitAndParse(target);
 
             if (this.InstructionSetting[optimize] == true.ToString())
             {
@@ -58,7 +63,7 @@ namespace YAAL
                     return false;
                 }
 
-                string apLauncher = customLauncher.ParseTextWithSettings("${aplauncher}");
+                string apLauncher = executer.Parser.ParseTextWithSettings("${aplauncher}");
                 if (!IOManager.IsolateApworlds(apLauncher, apworlds))
                 {
                     ErrorManager.AddNewError(
@@ -69,7 +74,7 @@ namespace YAAL
                     return false;
                 }
 
-                if(!customLauncher.AttachToClosing(this, this.InstructionSetting[processName]))
+                if(!executer.ProcessHandler.AttachToClosing(this, this.InstructionSetting[processName]))
                 {
                     ErrorManager.AddNewError(
                         "Apworld - Failed to attach to a process",
@@ -135,7 +140,7 @@ namespace YAAL
 
         public override void ParseProcess(object? sender, EventArgs e)
         {
-            string apLauncher = customLauncher.ParseTextWithSettings("${aplauncher}");
+            string apLauncher = executer.Parser.ParseTextWithSettings("${aplauncher}");
             IOManager.RestoreApworlds(apLauncher, apworlds);
         }
     }

@@ -28,7 +28,7 @@ namespace YAAL
         } 
         
 
-        public void Setup(string newKey, CustomLauncher newLauncher)
+        public void Setup(string newKey)
         {
             if(newKey == null || newKey == "")
             {

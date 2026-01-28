@@ -26,7 +26,7 @@ namespace YAAL
             string name = this.InstructionSetting[InputSettings.variableName];
             string value = "";
 
-            if (customLauncher.GetTemporarySetting(name) is string previousValue)
+            if (executer.SettingsHandler.GetSetting(name) != "")
             {
                 // We've already ran through this for this slot before, and saved the result
                 return true;
@@ -44,7 +44,7 @@ namespace YAAL
             {
                 window.Setup(name);
                 value = ShowAndWait(window);
-                customLauncher.SetTemporarySetting(name, value);
+                executer.SettingsHandler.SetSetting(name, value);
             } else
             {
                 ErrorManager.AddNewError(
@@ -58,14 +58,10 @@ namespace YAAL
                 return true;
             }
 
-            string async = "";
-            string slot = "";
+            string async = executer.SettingsHandler.GetSetting(AsyncSettings.asyncName);
+            string slot = executer.SettingsHandler.GetSetting(SlotSettings.slotLabel);
 
-            if (customLauncher.GetTemporarySetting(AsyncSettings.asyncName.ToString()) is string asyncName)
-            {
-                async = asyncName;
-            }
-            else
+            if (async == "")
             {
                 ErrorManager.AddNewError(
                     "Input instruction - Couldn't find async name",
@@ -73,12 +69,8 @@ namespace YAAL
                 return false;
             }
 
-            if (customLauncher.GetTemporarySetting(SlotSettings.slotLabel.ToString()) is string slotLabel)
-            {
-                slot = slotLabel;
-            }
-            else
-            {
+            if (slot == "") 
+            { 
                 ErrorManager.AddNewError(
                     "Input instruction - Couldn't find slot name",
                     "Trying to get slotLabel out of the launcher's temporary settings failed, please report this.");

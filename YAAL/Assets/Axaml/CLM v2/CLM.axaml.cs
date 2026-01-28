@@ -79,6 +79,7 @@ public partial class CLM : ScalableWindow
     public void LoadLauncher(Cache_CustomLauncher launcher)
     {
         commands.LoadCommands(launcher.instructionList);
+        bottomBar.SwitchGameMode(launcher.settings[LauncherSettings.IsGame] == true.ToString());
     }
 
     public void SaveLauncher()
