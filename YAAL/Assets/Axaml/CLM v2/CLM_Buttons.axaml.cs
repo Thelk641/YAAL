@@ -101,7 +101,7 @@ public partial class CLM_Buttons : UserControl
                 SwitchMode(false);
             }
             Cache_DisplayLauncher selectedLauncher = selector.GetCache();
-            SettingManager settingManager = SettingManager.GetSettingsWindow(clm, selectedLauncher.cache.settings, selectedLauncher.cache.customSettings);
+            SettingWindow settingManager = SettingWindow.GetSettingsWindow(clm, selectedLauncher.cache.settings, selectedLauncher.cache.customSettings);
             settingManager.Show();
 
             settingManager.Closing += (_, _) =>

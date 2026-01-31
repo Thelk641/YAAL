@@ -8,8 +8,8 @@
         Height="500"
         MinHeight="300"
         MinWidth="300"
-        x:Class="YAAL.SettingManager"
-        Title="YAAL settings manager"
+        x:Class="YAAL.SettingWindow"
+        Title="YAAL settings"
 		Name="Window"
 		>
 	<LayoutTransformControl x:Name="Controller">

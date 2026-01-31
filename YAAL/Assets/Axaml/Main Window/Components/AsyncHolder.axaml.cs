@@ -84,7 +84,7 @@ public partial class AsyncHolder : UserControl
 
         ToolVersions.Click += (_, _) =>
         {
-            SettingManager settingManager = SettingManager.GetSettingsWindow(this.FindAncestorOfType<Window>(), thisAsync.toolVersions);
+            SettingWindow settingManager = SettingWindow.GetSettingsWindow(this.FindAncestorOfType<Window>(), thisAsync.toolVersions);
             settingManager.OnClosing += async () =>
             {
                 thisAsync.toolVersions = settingManager.OutputSettings("Tools");

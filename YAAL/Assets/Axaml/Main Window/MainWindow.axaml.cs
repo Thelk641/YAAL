@@ -45,7 +45,7 @@ public partial class MainWindow : ScalableWindow
                 allowMulti = generalSettings[GeneralSettings.allowMultislot];
             }
 
-            SettingManager manager = SettingManager.GetSettingsWindow(this, generalSettings, customSetting);
+            SettingWindow manager = SettingWindow.GetSettingsWindow(this, generalSettings, customSetting);
             manager.Closing += (_, _) =>
             {
                 Dictionary<string, string> newCustomSetting;

@@ -16,18 +16,18 @@ using static YAAL.LauncherSettings;
 
 namespace YAAL;
 
-public partial class SettingManager : ScalableWindow
+public partial class SettingWindow : ScalableWindow
 {
-    private static SettingManager _general;
-    private static SettingManager _clmaker;
-    private static SettingManager _tools;
+    private static SettingWindow _general;
+    private static SettingWindow _clmaker;
+    private static SettingWindow _tools;
 
     private Dictionary<HiddenSettings, string> hidden = new Dictionary<HiddenSettings, string>();
     private List<HardcodedSettings> alreadyThere = new List<HardcodedSettings>();
 
     public Action? OnClosing;
 
-    public SettingManager()
+    public SettingWindow()
     {
         InitializeComponent();
         DataContext = App.Settings;
@@ -45,11 +45,11 @@ public partial class SettingManager : ScalableWindow
         };
     }
 
-    public static SettingManager GetSettingsWindow(Window window, Dictionary<GeneralSettings, string> generalSettings, Dictionary<string, string> customSettings)
+    public static SettingWindow GetSettingsWindow(Window window, Dictionary<GeneralSettings, string> generalSettings, Dictionary<string, string> customSettings)
     {
         if(_general == null)
         {
-            _general = new SettingManager();
+            _general = new SettingWindow();
             _general.Closing += (_,_) =>
             {
                 _general = null;
@@ -70,11 +70,11 @@ public partial class SettingManager : ScalableWindow
         return _general; 
     }
 
-    public static SettingManager GetSettingsWindow(Window window, Dictionary<LauncherSettings, string> launcherSettings, Dictionary<string, string> customSettings)
+    public static SettingWindow GetSettingsWindow(Window window, Dictionary<LauncherSettings, string> launcherSettings, Dictionary<string, string> customSettings)
     {
         if (_clmaker == null)
         {
-            _clmaker = new SettingManager();
+            _clmaker = new SettingWindow();
             _clmaker.Closing += (_, _) =>
             {
                 _clmaker = null;
@@ -97,11 +97,11 @@ public partial class SettingManager : ScalableWindow
         return _clmaker;
     }
 
-    public static SettingManager GetSettingsWindow(Window window, Dictionary<string, string> customSettings)
+    public static SettingWindow GetSettingsWindow(Window window, Dictionary<string, string> customSettings)
     {
         if (_tools == null)
         {
-            _tools = new SettingManager();
+            _tools = new SettingWindow();
             _tools.CustomSettingsTag.Text = "Tool version settings";
             _tools.Closing += (_, _) =>
             {

@@ -98,8 +98,8 @@
     <Compile Update="Assets\Axaml\SettingManager\Setting.axaml.cs">
       <DependentUpon>Setting.axaml</DependentUpon>
     </Compile>
-    <Compile Update="Assets\Axaml\SettingManager\SettingManager.axaml.cs">
-      <DependentUpon>SettingManager.axaml</DependentUpon>
+    <Compile Update="Assets\Axaml\SettingManager\SettingWindow.axaml.cs">
+      <DependentUpon>SettingWindow.axaml</DependentUpon>
     </Compile>
     <Compile Update="Assets\Axaml\SettingManager\Settings\Setting_Tool.axaml.cs">
       <DependentUpon>Setting_Tool.axaml</DependentUpon>

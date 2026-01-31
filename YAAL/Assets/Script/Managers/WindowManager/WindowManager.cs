@@ -29,7 +29,7 @@ namespace YAAL
 
         static WindowManager()
         {
-            windowsData = IOManager.GetWindowSettings();
+            windowsData = GetWindowSettings();
         }
 
         public static Vector2 GetWindowSize()
@@ -107,7 +107,7 @@ namespace YAAL
                 Vector2 size = new Vector2((float)window.Width, (float)window.Height);
                 windowsData.size[windowType] = size;
                 windowsData.maximized[windowType] = window.WindowState == WindowState.Maximized;
-                IOManager.SetWindowSettings(windowsData);
+                SetWindowSettings(windowsData);
             };
 
             if(source != null && autoClose)
@@ -231,6 +231,16 @@ namespace YAAL
             }
 
             return mainWindow;
+        }
+
+        public static Cache_Windows GetWindowSettings()
+        {
+            return CacheManager.LoadCache<Cache_Windows>(SettingsManager.GetSaveLocation(FileSettings.windows));
+        }
+
+        public static void SetWindowSettings(Cache_Windows newSettings)
+        {
+            CacheManager.SaveCache<Cache_Windows>(SettingsManager.GetSaveLocation(FileSettings.windows), newSettings);
         }
     }
 }
