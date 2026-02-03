@@ -26,7 +26,11 @@ namespace YAAL
         public static Dictionary<string, Cache_CustomLauncher> libraryCustomLauncher = new Dictionary<string, Cache_CustomLauncher>();
         public static List<Cache_DisplayLauncher> libraryTools = new List<Cache_DisplayLauncher>();
         public static event Action<string>? UpdatedLauncher;
-        public static Cache_LauncherList launcherList = new Cache_LauncherList(); // obsolete, to be redone when Game are a thing, still use in GameManager
+
+        // obsolete, to be redone when Game are a thing
+        // still used in GameManager
+        // still used in SlotHolder
+        public static Cache_LauncherList launcherList = new Cache_LauncherList(); 
 
         public static void DeleteLauncher(string gameName)
         {

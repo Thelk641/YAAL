@@ -44,7 +44,7 @@ namespace YAAL
 
         public static Cache_CustomTheme CreateNewTheme()
         {
-            List<string> themeList = IOManager.GetThemeList();
+            List<string> themeList = ThemeIOManager.GetThemeList();
 
             string temporaryName = "New Theme";
             int i = 1;
@@ -62,7 +62,7 @@ namespace YAAL
 
         public static void DeleteTheme(string name)
         {
-            IOManager.DeleteTheme(name);
+            ThemeIOManager.DeleteTheme(name);
             themes.Remove(name);
         }
 
@@ -73,7 +73,7 @@ namespace YAAL
                 return newName;
             }
             themes.Remove(cache.name);
-            string trueName = IOManager.RenameTheme(cache.name, newName);
+            string trueName = ThemeIOManager.RenameTheme(cache.name, newName);
             foreach (var item in themedSlots)
             {
                 if(item.Key.themeName == cache.name)
@@ -90,7 +90,7 @@ namespace YAAL
 
         public static string DuplicateTheme(Cache_CustomTheme cache)
         {
-            string trueName = IOManager.GetAvailableThemeName(cache.name);
+            string trueName = ThemeIOManager.GetAvailableThemeName(cache.name);
             Cache_CustomTheme newCache = cache.Clone() as Cache_CustomTheme;
             newCache.name = trueName;
             SaveTheme(newCache);
@@ -103,7 +103,7 @@ namespace YAAL
             {
                 return;
             }
-            IOManager.SaveCustomTheme(cache);
+            ThemeIOManager.SaveCustomTheme(cache);
             themes[cache.name] = cache;
 
             UpdateSlots(cache);
@@ -141,7 +141,7 @@ namespace YAAL
             }
 
             Cache_RenderedTheme output = new Cache_RenderedTheme();
-            Cache_CustomTheme? loadedTheme = IOManager.LoadCustomTheme(name);
+            Cache_CustomTheme? loadedTheme = ThemeIOManager.LoadCustomTheme(name);
             
             if(loadedTheme == null)
             {
@@ -154,12 +154,12 @@ namespace YAAL
             output.topOffset = loadedTheme.topOffset;
             output.bottomOffset = loadedTheme.bottomOffset;
 
-            Bitmap? background = IOManager.GetRender(loadedTheme, ThemeSettings.backgroundColor);
+            Bitmap? background = ThemeIOManager.GetRender(loadedTheme, ThemeSettings.backgroundColor);
             var slotsize = WindowManager.GetSlotSize();
             var backgroundSize = new Vector2(slotsize.X, slotsize.Y + output.topOffset + output.bottomOffset);
 
 
-            Bitmap? foreground = IOManager.GetRender(loadedTheme, ThemeSettings.foregroundColor);
+            Bitmap? foreground = ThemeIOManager.GetRender(loadedTheme, ThemeSettings.foregroundColor);
             var foregroundSize = WindowManager.GetSlotForegroundSize();
 
             if (background == null 
@@ -194,7 +194,7 @@ namespace YAAL
                 return result;
             }
 
-            Cache_CustomTheme? output = IOManager.LoadCustomTheme(name);
+            Cache_CustomTheme? output = ThemeIOManager.LoadCustomTheme(name);
             if (output != null)
             {
                 themes[name] = output;
@@ -322,7 +322,7 @@ namespace YAAL
                 images.Remove(name);
             }
 
-            Bitmap? readBitmap = IOManager.ReadImage(name);
+            Bitmap? readBitmap = ThemeIOManager.ReadImage(name);
             if (readBitmap != null)
             {
                 images[name] = new WeakReference<Bitmap>(readBitmap);
@@ -337,7 +337,7 @@ namespace YAAL
 
         public static string AddNewImage(string path, string themeName)
         {
-            string output = IOManager.CopyImageToDefaultFolder(path, themeName);
+            string output = ThemeIOManager.CopyImageToDefaultFolder(path, themeName);
             if(output != "")
             {
                 return output;
@@ -352,7 +352,7 @@ namespace YAAL
             float sharpnessMultiplier = 2f;
             try
             {
-                string setting = IOManager.GetSetting(GeneralSettings.scaleModifier).TrimEnd('f');
+                string setting = SettingsManager.GetSetting(GeneralSettings.scaleModifier).TrimEnd('f');
                 float parsed = float.Parse(setting, CultureInfo.InvariantCulture.NumberFormat);
                 if (parsed != 0)
                 {
@@ -373,7 +373,7 @@ namespace YAAL
             {
                 case ThemeSettings.rendered:
                 case ThemeSettings.backgroundColor:
-                    Cache_CustomTheme? cacheTheme = IOManager.LoadCustomTheme(themeName);
+                    Cache_CustomTheme? cacheTheme = ThemeIOManager.LoadCustomTheme(themeName);
                     float offset = 0f;
                     if(cacheTheme != null)
                     {
@@ -406,7 +406,7 @@ namespace YAAL
 
             if (save)
             {
-                IOManager.SaveImage(renderer, themeName, category);
+                ThemeIOManager.SaveImage(renderer, themeName, category);
             }
 
             return renderer;

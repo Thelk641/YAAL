@@ -81,7 +81,7 @@ public partial class CLM_Selector : UserControl
 
     public void ReloadList(string toSelect = "")
     {
-        List<string> launcherList = IOManager.GetLauncherList();
+        List<string> launcherList = LauncherManager.GetLauncherList();
         ObservableCollection<Cache_DisplayLauncher> list = new ObservableCollection<Cache_DisplayLauncher>();
 
         if (launcherList.Count == 0)
@@ -89,7 +89,7 @@ public partial class CLM_Selector : UserControl
             Cache_DisplayLauncher defaultLauncher = new Cache_DisplayLauncher();
             defaultLauncher.cache = DefaultManager.GetDefault<Cache_CustomLauncher>();
             defaultLauncher.name = defaultLauncher.cache.settings[LauncherSettings.launcherName];
-            IOManager.SaveCacheLauncher(defaultLauncher.cache);
+            LauncherManager.SaveLauncher(defaultLauncher.cache);
             list.Add(defaultLauncher);
             LauncherSelector.ItemsSource = list;
             LauncherSelector.SelectedItem = defaultLauncher;
@@ -104,7 +104,7 @@ public partial class CLM_Selector : UserControl
         {
             Cache_DisplayLauncher cache = new Cache_DisplayLauncher();
             cache.name = item;
-            cache.cache = IOManager.LoadCacheLauncher(item);
+            cache.cache = LauncherManager.LoadLauncher(item);
             list.Add(cache);
             if(cache.name == toSelect)
             {

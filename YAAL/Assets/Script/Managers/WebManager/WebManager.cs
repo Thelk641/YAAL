@@ -49,7 +49,7 @@ public static partial class WebManager
             try
             {
                 byte[] file = await response.Content.ReadAsByteArrayAsync();
-                IOManager.SaveFile(savePath, file);
+                FileManager.SaveFile(savePath, file);
                 Trace.WriteLine($"Downloaded: {savePath}");
                 return true;
             }

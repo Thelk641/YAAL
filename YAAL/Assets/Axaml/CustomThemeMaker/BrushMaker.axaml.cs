@@ -259,7 +259,7 @@ public partial class BrushMaker : ScalableWindow
                         if(newPath != image.imageSource)
                         {
                             ImageSource.Text = newPath;
-                            image.imageSource = IOManager.ProcessLocalPath(newPath);
+                            image.imageSource = IO_Tools.ProcessLocalPath(newPath);
                             RaiseEvent(BrushEvents.ImageSource);
                         }
                     },
@@ -268,7 +268,7 @@ public partial class BrushMaker : ScalableWindow
 
         ImageSelect.Click += async (_, _) =>
         {
-            ImageSource.Text = await IOManager.PickFile(this);
+            ImageSource.Text = await IO_Tools.PickFile(this);
         };
 
         ImageHeight.TextChanged += (_, _) =>

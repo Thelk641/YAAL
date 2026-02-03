@@ -45,9 +45,9 @@ namespace YAAL
         public static void UpdateGeneralTheme()
         {
             generalTheme = new Cache_GeneralTheme();
-            string background = IOManager.GetSetting(GeneralSettings.backgroundColor);
-            string foreground = IOManager.GetSetting(GeneralSettings.foregroundColor);
-            string button = IOManager.GetSetting(GeneralSettings.buttonColor);
+            string background = SettingsManager.GetSetting(GeneralSettings.backgroundColor);
+            string foreground = SettingsManager.GetSetting(GeneralSettings.foregroundColor);
+            string button = SettingsManager.GetSetting(GeneralSettings.buttonColor);
 
             if(background == "" || foreground == "" || button == "")
             {

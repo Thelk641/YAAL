@@ -36,10 +36,10 @@ public partial class UpdateChecker : UserControl
     public UpdateChecker(string launcher, UpdateWindow window) : this()
     {
         launcherName.Text = launcher;
-        List<string> donwloadedVersions = IOManager.GetDownloadedVersions(launcher);
+        List<string> donwloadedVersions = VersionManager.GetDownloadedVersions(launcher);
         if( donwloadedVersions.Count > 0)
         {
-            Downloaded.Text = IOManager.GetDownloadedVersions(launcher)[0];
+            Downloaded.Text = VersionManager.GetDownloadedVersions(launcher)[0];
         } else
         {
             Downloaded.Text = "None";
@@ -78,7 +78,7 @@ public partial class UpdateChecker : UserControl
 
     public async Task GetGitVersions(string launcher)
     {
-        Cache_CustomLauncher cache = IOManager.LoadCacheLauncher(launcher);
+        Cache_CustomLauncher cache = LauncherManager.LoadLauncher(launcher);
         string gitlink = cache.settings[githubURL];
         if(gitlink == "")
         {
@@ -129,7 +129,7 @@ public partial class UpdateChecker : UserControl
         WaitingForDownload.IsVisible = true;
         if (await WebManager.DownloadUpdatedApworld(customLauncher, Available.Text))
         {
-            Downloaded.Text = IOManager.GetDownloadedVersions(launcherName.Text)[0];
+            Downloaded.Text = VersionManager.GetDownloadedVersions(launcherName.Text)[0];
             Download.IsEnabled = false;
             HasUpdatetoDownload = false;
             DoneDownloading?.Invoke(this, EventArgs.Empty);

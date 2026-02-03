@@ -40,7 +40,7 @@ namespace YAAL
                 return;
             }
 
-            string path = IOManager.SaveCacheError(cache);
+            string path = LogsIOManager.SaveCacheError(cache);
             string args = (" --error " + "\"" + path + "\"");
             ProcessManager.StartProcess(Environment.ProcessPath,
                 ("--error " + "\"" + path + "\""), true);
@@ -56,7 +56,7 @@ namespace YAAL
 
         public static void ReadError(string path, IClassicDesktopStyleApplicationLifetime desktop)
         {
-            IOManager.ReadCacheError(path);
+            LogsIOManager.ReadCacheError(path);
             ShowError(desktop);
         }
 

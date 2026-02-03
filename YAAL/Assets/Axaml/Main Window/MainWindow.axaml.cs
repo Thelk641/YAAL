@@ -38,7 +38,7 @@ public partial class MainWindow : ScalableWindow
         SettingsButton.Click += (_, _) =>
         {
             Dictionary<string, string> customSetting;
-            Dictionary<GeneralSettings, string> generalSettings = IOManager.GetUserSettings(out customSetting);
+            Dictionary<GeneralSettings, string> generalSettings = SettingsManager.GetUserSettings(out customSetting);
             string allowMulti = "";
             if (generalSettings.ContainsKey(GeneralSettings.allowMultislot))
             {
@@ -50,7 +50,7 @@ public partial class MainWindow : ScalableWindow
             {
                 Dictionary<string, string> newCustomSetting;
                 Dictionary<GeneralSettings, string> newGeneralSettings = manager.OutputGeneralSettings(out newCustomSetting);
-                IOManager.SetUserSettings(newGeneralSettings, newCustomSetting);
+                SettingsManager.SetUserSettings(newGeneralSettings, newCustomSetting);
                 this.Topmost = true;
                 this.Topmost = false;
                 if(newGeneralSettings.ContainsKey(GeneralSettings.zoom) && float.TryParse(newGeneralSettings[GeneralSettings.zoom], out float newZoom))
@@ -83,7 +83,7 @@ public partial class MainWindow : ScalableWindow
         };
 
 
-        foreach (var item in IOManager.GetAsyncList())
+        foreach (var item in AsyncManager.GetAsyncList())
         {
             AddAsync(item);
         }
@@ -131,17 +131,17 @@ public partial class MainWindow : ScalableWindow
 
     private void AddAsync()
     {
-        Cache_Async cache = IOManager.CreateNewAsync("New async");
+        Cache_Async cache = AsyncManager.CreateNewAsync("New async");
         AsyncHolder holder = AddAsync(cache);
         holder.SwitchMode();
     }
 
     private void AddAsync(string asyncName)
     {
-        Cache_Async cache = IOManager.GetAsync(asyncName);
+        Cache_Async cache = AsyncManager.GetAsync(asyncName);
         if(cache.settings.ContainsKey(AsyncSettings.isTemporary) && cache.settings[AsyncSettings.isTemporary] == true.ToString())
         {
-            IOManager.DeleteAsync(asyncName);
+            AsyncManager.DeleteAsync(asyncName);
             return;
         }
 

@@ -91,14 +91,14 @@ public partial class CLM : ScalableWindow
 
         Cache_CustomLauncher toSave = selector.GetCache().cache;
         toSave.instructionList = commands.GetCommands();
-        IOManager.SaveCacheLauncher(toSave);
+        LauncherManager.SaveLauncher(toSave);
         selector.UpdateCache(toSave);
     }
 
     public void SaveLauncher(Cache_CustomLauncher toSave)
     {
         toSave.instructionList = commands.GetCommands();
-        IOManager.SaveCacheLauncher(toSave);
+        LauncherManager.SaveLauncher(toSave);
         selector.UpdateCache(toSave);
     }
 
@@ -106,7 +106,7 @@ public partial class CLM : ScalableWindow
     {
         Cache_DisplayLauncher toSave = selector.GetCache();
         toSave.cache.instructionList = commands.GetCommands();
-        string trueName = IOManager.RenameLauncher(toSave, newName);
+        string trueName = LauncherManager.RenameLauncher(toSave, newName);
         selector.ReloadList(trueName);
     }
 }

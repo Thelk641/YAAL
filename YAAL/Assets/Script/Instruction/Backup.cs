@@ -65,7 +65,7 @@ namespace YAAL
                         break;
                     }
 
-                    if (!IOManager.CopyToDefault(executer.SettingsHandler.GetSetting(launcherName), splitDefault[0], out string singleDefault))
+                    if (!BackupManager.CopyToDefault(executer.SettingsHandler.GetSetting(launcherName), splitDefault[0], out string singleDefault))
                     {
                         ErrorManager.AddNewError(
                             "Backup - Failed to copy defaults",
@@ -100,7 +100,7 @@ namespace YAAL
                             newSetting += "\" \"";
                             continue;
                         }
-                        if (!IOManager.CopyToDefault(executer.SettingsHandler.GetSetting(launcherName), item, out newDefault))
+                        if (!BackupManager.CopyToDefault(executer.SettingsHandler.GetSetting(launcherName), item, out newDefault))
                         {
                             ErrorManager.AddNewError(
                                 "Backup - Failed to copy defaults",
@@ -124,7 +124,7 @@ namespace YAAL
 
             foreach (var item in BackupAndDefault)
             {
-                if(IOManager.Backup(
+                if(BackupManager.Backup(
                     item.Key,
                     item.Value,
                     settings["asyncName"],
@@ -257,7 +257,7 @@ namespace YAAL
             {
                 try
                 {
-                    if(!IOManager.Restore(
+                    if(!BackupManager.Restore(
                         item,
                         settings[AsyncSettings.asyncName],
                         settings[SlotSettings.slotLabel]))

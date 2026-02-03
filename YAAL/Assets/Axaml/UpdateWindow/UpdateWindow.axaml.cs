@@ -33,7 +33,7 @@ public partial class UpdateWindow : ScalableWindow
         DownloadAll.Click += DownloadAllUpdates;
 
 
-        foreach (var item in IOManager.GetLauncherList())
+        foreach (var item in LauncherManager.GetLauncherList())
         {
             UpdateChecker checker = new UpdateChecker(item, this);
             checker.DoneDownloading += NoteDoneDownloading;

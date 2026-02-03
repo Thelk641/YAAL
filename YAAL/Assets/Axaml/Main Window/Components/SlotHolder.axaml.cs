@@ -65,7 +65,7 @@ public partial class SlotHolder : UserControl
         SetupPlayMode();
         SetupEditMode();
 
-        IOManager.UpdatedLauncher += (string updatedLauncher) =>
+        LauncherManager.UpdatedLauncher += (string updatedLauncher) =>
         {
             UpdateAvailableSlot();
             UpdateAvailableVersions();
@@ -193,7 +193,7 @@ public partial class SlotHolder : UserControl
         newSlot.settings[slotLabel] = SlotLabel.Text ?? newSlot.settings[slotName];
 
 
-        string newName = IOManager.SaveSlot(asyncName, newSlot, thisSlot);
+        string newName = AsyncManager.SaveSlot(asyncName, newSlot, thisSlot);
 
         newSlot.settings[slotLabel] = newName;
         SlotLabel.Text = newName;
@@ -349,7 +349,7 @@ public partial class SlotHolder : UserControl
         PatchSelect.Click += async (_, _) =>
         {
             isEditing = true;
-            Patch.Text = await IOManager.PickFile(this.VisualRoot as Window);
+            Patch.Text = await IO_Tools.PickFile(this.VisualRoot as Window);
             finished();
         };
 
@@ -369,7 +369,7 @@ public partial class SlotHolder : UserControl
                 {
                     if (confirm.confirmed)
                     {
-                        IOManager.DeleteSlot(asyncName, thisSlot.settings[slotLabel]);
+                        AsyncManager.DeleteSlot(asyncName, thisSlot.settings[slotLabel]);
                         RequestRemoval?.Invoke();
                     }
                 };
@@ -587,10 +587,10 @@ public partial class SlotHolder : UserControl
     {
         List<Cache_RoomSlot> filteredSlots = new List<Cache_RoomSlot>();
         List<Cache_RoomSlot> unfilteredSlots = new List<Cache_RoomSlot>();
-        List<string> games = IOManager.GetGameList();
-        List<string> slots = IOManager.GetSlotList(asyncName);
+        List<string> games = GameManager.GetGameList();
+        List<string> slots = AsyncManager.GetSlotList(asyncName);
 
-        string temp = IOManager.GetSetting(GeneralSettings.allowMultislot);
+        string temp = SettingsManager.GetSetting(GeneralSettings.allowMultislot);
         bool allowMulti = false;
 
         if(temp == "" || temp == true.ToString())
@@ -701,7 +701,7 @@ public partial class SlotHolder : UserControl
     
     private void UpdateAvailableLaunchers()
     {
-        List<string> launcherList = IOManager.GetLauncherList();
+        List<string> launcherList = LauncherManager.GetLauncherList();
 
 
 
@@ -710,10 +710,10 @@ public partial class SlotHolder : UserControl
             List<Cache_DisplayLauncher> list = new List<Cache_DisplayLauncher>();
             if(SlotSelector.SelectedItem is Cache_DisplaySlot displaySlot)
             {
-                list = IOManager.GetLaunchersForGame(displaySlot.cache.gameName);
+                list = GameManager.GetLaunchersForGame(displaySlot.cache.gameName);
             } else
             {
-                list = IOManager.GetLaunchersForGame("");
+                list = GameManager.GetLaunchersForGame("");
             }
                 
             LauncherSelector.ItemsSource = list;
@@ -751,7 +751,7 @@ public partial class SlotHolder : UserControl
         if(LauncherSelector.SelectedItem is Cache_DisplayLauncher cache)
         {
             var prevSelection = SelectedVersion.SelectedItem;
-            List<string> versions = IOManager.GetVersions(cache.name);
+            List<string> versions = VersionManager.GetVersions(cache.name);
 
             if(versions.Count == 0)
             {
@@ -772,7 +772,7 @@ public partial class SlotHolder : UserControl
             {
                 Save();
             }
-            currentLauncher = IOManager.LoadCacheLauncher(cache.name);
+            currentLauncher = LauncherManager.LoadLauncher(cache.name);
         }
     }
 
@@ -825,7 +825,7 @@ public partial class SlotHolder : UserControl
 
     public void UpdateToolList()
     {
-        ToolSelect.ItemsSource = IOManager.GetToolList().Result;
+        ToolSelect.ItemsSource = LauncherManager.GetToolList().Result;
         ToolSelect.SelectedIndex = 0;
     }
 

@@ -117,7 +117,7 @@ public partial class App : Application
             Environment.Exit(1);
         } else
         {
-            IOManager.UpdateLauncherList();
+            LauncherManager.UpdateLauncherList();
             hasReadLauncher = true;
         }
 
@@ -127,7 +127,7 @@ public partial class App : Application
 
 
 
-        if (launcher != "" && !IOManager.GetLauncherList(true).Contains(launcher))
+        if (launcher != "" && !LauncherManager.GetLauncherList(true).Contains(launcher))
         {
             ErrorManager.ThrowError(
                 "App - Invalid launcher name",
@@ -138,7 +138,7 @@ public partial class App : Application
 
         if(async != "")
         {
-            if(!IOManager.GetAsyncList().Contains(async))
+            if(!AsyncManager.GetAsyncList().Contains(async))
             {
                 ErrorManager.ThrowError(
                     "App - Invalid async name",
@@ -156,7 +156,7 @@ public partial class App : Application
                 Environment.Exit(1);
             } else
             {
-                if(!IOManager.GetSlotList(async).Contains(slot))
+                if(!AsyncManager.GetSlotList(async).Contains(slot))
                 {
                     ErrorManager.ThrowError(
                         "App - Invalid slot name",
@@ -168,7 +168,7 @@ public partial class App : Application
 
             if(launcher == "")
             {
-                launcher = IOManager.GetLauncherNameFromSlot(async, slot);
+                launcher = AsyncManager.GetLauncherNameFromSlot(async, slot);
                 if(launcher == null || launcher == "")
                 {
                     ErrorManager.ThrowError(
@@ -258,7 +258,7 @@ public partial class App : Application
     {
         if (!hasReadLauncher)
         {
-            IOManager.UpdateLauncherList();
+            LauncherManager.UpdateLauncherList();
         }
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
@@ -299,7 +299,7 @@ public partial class App : Application
                 slot = value;
                 break;
             case "restore":
-                IOManager.RestoreAll();
+                BackupManager.RestoreAll();
                 break;
             case "exit":
                 Environment.Exit(0);

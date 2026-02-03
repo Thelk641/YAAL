@@ -37,10 +37,10 @@ public partial class NewLauncher : ScalableWindow
     {
         if (File.Exists(ApworldPath.Text))
         {
-            string gameName = IOManager.GetGameNameFromApworld(ApworldPath.Text);
+            string gameName = IO_Tools.GetGameNameFromApworld(ApworldPath.Text);
             if(gameName != "")
             {
-                LauncherName.Text = IOManager.FindAvailableLauncherName(gameName);
+                LauncherName.Text = LauncherManager.FindAvailableLauncherName(gameName);
                 GameName.Text = gameName;
             }
 
@@ -49,14 +49,14 @@ public partial class NewLauncher : ScalableWindow
             string folder = dir.Parent.Name;
             if (parent == "lib" && folder == "worlds")
             {
-                VersionName.Text = "AP " + IOManager.GetArchipelagoVersion();
+                VersionName.Text = "AP " + IO_Tools.GetArchipelagoVersion();
             }
         }
     }
 
     private async void _PickFile(object? sender, RoutedEventArgs e)
     {
-        ApworldPath.Text = await IOManager.PickFile(this);
+        ApworldPath.Text = await IO_Tools.PickFile(this);
     }
 
     private void _CreateLauncher(object? sender, RoutedEventArgs e)
@@ -79,7 +79,7 @@ public partial class NewLauncher : ScalableWindow
             {
                 VersionName.Text = "Unknown";
             }
-            if(!IOManager.AddDefaultVersion(LauncherName.Text, VersionName.Text, ApworldPath.Text))
+            if(!VersionManager.AddDefaultVersion(LauncherName.Text, VersionName.Text, ApworldPath.Text))
             {
                 ErrorManager.AddNewError(
                     "New Launcher - Couldn't add default version",
@@ -92,7 +92,7 @@ public partial class NewLauncher : ScalableWindow
             commandSetting.SetSetting(ApworldSettings.apworldTarget, ApworldPath.Text);
             cache.instructionList.Add(commandSetting);
 
-            IOManager.CreateNewVersionCache(LauncherName.Text, VersionName.Text);
+            VersionManager.CreateNewVersionCache(LauncherName.Text, VersionName.Text);
         }
 
         this.launcher = cache;

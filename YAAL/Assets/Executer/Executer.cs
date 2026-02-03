@@ -49,7 +49,7 @@ public class Executer
 
     public void Load(string async, string slot, string launcherName)
     {
-        LoadCache(IOManager.LoadCacheLauncher(launcherName));
+        LoadCache(LauncherManager.LoadLauncher(launcherName));
         SettingsHandler.ReadSlot(async, slot);
     }
 
@@ -63,7 +63,7 @@ public class Executer
     {
         Cache_CustomLauncher toSave = SettingsHandler.WriteCache();
         toSave.instructionList = InstructionHandler.WriteCache();
-        IOManager.SaveCacheLauncher(toSave);
+        LauncherManager.SaveLauncher(toSave);
     }
 
     public void AddWait(Interface_Instruction instruction)

@@ -160,7 +160,7 @@ public partial class CustomThemeMaker : ScalableWindow
     {
         ObservableCollection<Cache_CustomTheme> list = new ObservableCollection<Cache_CustomTheme>();
 
-        List<string> themeList = IOManager.GetThemeList();
+        List<string> themeList = ThemeIOManager.GetThemeList();
 
         if (themeList.Count == 0)
         {

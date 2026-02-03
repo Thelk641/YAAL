@@ -99,7 +99,7 @@ public class ProcessHandler
             previousPort = settingsHandler.GetSetting(roomPort)
         };
 
-        IOManager.UpdateLastAsync(settingsHandler.GetSetting(gameName), newSlot);
+        LauncherManager.UpdateLastAsync(settingsHandler.GetSetting(gameName), newSlot);
         return true;
     }
 

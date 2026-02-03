@@ -45,7 +45,7 @@ public class SettingsHandler
 
     public void ReadSlot(string async, string slot)
     {
-        foreach (var item in IOManager.GetSettings(async, slot).settings)
+        foreach (var item in AsyncManager.GetSettings(async, slot).settings)
         {
             settings[item.Key] = item.Value;
         }
@@ -53,7 +53,7 @@ public class SettingsHandler
 
     public void ReadCache(Cache_CustomLauncher cache)
     {
-        foreach (var item in IOManager.GetGeneralSettings().settings)
+        foreach (var item in SettingsManager.GetGeneralSettings().settings)
         {
             settings[item.Key] = item.Value;
         }
@@ -82,7 +82,7 @@ public class SettingsHandler
     {
         if (target.Contains(";"))
         {
-            foreach (var value in IOManager.SplitPathList(target))
+            foreach (var value in IO_Tools.SplitPathList(target))
             {
                 this.settings[LauncherSettings.apworld] += "\"" + value + "\";";
             }

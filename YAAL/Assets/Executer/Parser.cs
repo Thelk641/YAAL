@@ -73,7 +73,7 @@ public class Parser
 
             if (text.Contains(".apworld") && !text.Contains("\\"))
             {
-                return IOManager.FindApworld(settingsHandler.settings[LauncherSettings.apfolder]!, text);
+                return IO_Tools.FindApworld(settingsHandler.settings[LauncherSettings.apfolder]!, text);
             }
 
             return text;
@@ -235,7 +235,7 @@ public class Parser
                         }
                         else if (split[0] == "apDebug" && settingsHandler.settings.Has(GeneralSettings.aplauncher))
                         {
-                            output = output + IOManager.ToDebug(settingsHandler.settings[GeneralSettings.aplauncher]);
+                            output = output + IO_Tools.ToDebug(settingsHandler.settings[GeneralSettings.aplauncher]);
                         }
                         else
                         {

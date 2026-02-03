@@ -28,12 +28,12 @@ public partial class VersionFile : UserControl
     {
         FileTarget.Click += async (_, _) =>
         {
-            Target.Text = await IOManager.PickFile(window);
+            Target.Text = await IO_Tools.PickFile(window);
         };
 
         FolderTarget.Click += async (_, _) =>
         {
-            Target.Text = await IOManager.PickFolder(window);
+            Target.Text = await IO_Tools.PickFolder(window);
         };
 
         RemoveVersion.Click += (_, _) => {

@@ -46,7 +46,7 @@ namespace YAAL
                     output += item + "\n";
                 }
             }
-            IOManager.SaveCacheLogs(output);
+            LogsIOManager.SaveCacheLogs(output);
         }
     }
 }

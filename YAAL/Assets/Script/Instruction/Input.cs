@@ -77,7 +77,7 @@ namespace YAAL
                 return false;
             }
 
-            IOManager.SetSlotSetting(async, slot, name, value);
+            AsyncManager.SetSlotSetting(async, slot, name, value);
 
             return true;
         }

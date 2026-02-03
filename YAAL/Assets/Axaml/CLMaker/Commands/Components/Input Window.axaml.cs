@@ -32,7 +32,7 @@ public partial class InputWindow : ScalableWindow
 
         FileButton.Click += async (_, _) =>
         {
-            string input = await IOManager.PickFile(this);
+            string input = await IO_Tools.PickFile(this);
             input = "\"" + input + "\";";
             VariableContent.Text += input;
         };

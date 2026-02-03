@@ -133,8 +133,8 @@ namespace YAAL
                     string input = "";
                     if (this.InstructionSetting[modeInput] == "File")
                     {
-                        input = IOManager.LoadFile(target);
-                        output = expression.Replace(IOManager.LoadFile(target), toReplace);
+                        input = FileManager.LoadFile(target);
+                        output = expression.Replace(FileManager.LoadFile(target), toReplace);
                     } else
                     {
                         input = target;
@@ -201,12 +201,12 @@ namespace YAAL
 
                 if (alreadyOutputedFile.Contains(splitOutputFile[i]))
                 {
-                    string toSave = IOManager.LoadFile(splitOutputFile[i]) + "; " + result;
-                    success = IOManager.SaveFile(splitOutputFile[i], toSave);
+                    string toSave = FileManager.LoadFile(splitOutputFile[i]) + "; " + result;
+                    success = FileManager.SaveFile(splitOutputFile[i], toSave);
                 }
                 else
                 {
-                    success = IOManager.SaveFile(splitOutputFile[i], result);
+                    success = FileManager.SaveFile(splitOutputFile[i], result);
                     alreadyOutputedFile.Add(splitOutputFile[i]);
                 }
                 return success;

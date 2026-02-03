@@ -47,7 +47,7 @@ namespace YAAL
                 }
             }
 
-            string patch = IOManager.MoveToSlotDirectory(
+            string patch = AsyncManager.MoveToSlotDirectory(
                 settings[SlotSettings.patch],
                 settings[AsyncSettings.asyncName],
                 settings[slotLabel],
@@ -98,7 +98,7 @@ namespace YAAL
         private bool ApplyPatch()
         {
             string apLauncher = executer.Parser.ParseTextWithSettings("${aplauncher}");
-            string folder = IOManager.ToDebug(executer.Parser.ParseTextWithSettings("${aplauncher}"));
+            string folder = IO_Tools.ToDebug(executer.Parser.ParseTextWithSettings("${aplauncher}"));
 
             
             
@@ -130,13 +130,13 @@ namespace YAAL
                 {
                     apworlds.Add("YAAL.apworld");
                 }
-                if(!IOManager.IsolateApworlds(apLauncher, apworlds))
+                if(!BackupManager.IsolateApworlds(apLauncher, apworlds))
                 {
                     ErrorManager.AddNewError(
                         "Patch - Failed to isolate apworlds",
                         "Patch's optimization threw an error. Please see other errors for more information."
                         );
-                    IOManager.RestoreApworlds(apLauncher, apworlds);
+                    BackupManager.RestoreApworlds(apLauncher, apworlds);
                     return false;
                 }
             }
@@ -164,7 +164,7 @@ namespace YAAL
 
             if (this.InstructionSetting[optimize] == true.ToString())
             {
-                IOManager.RestoreApworlds(apLauncher, apworlds);
+                BackupManager.RestoreApworlds(apLauncher, apworlds);
             }
 
             if (output.Contains("Patch created at"))
@@ -203,7 +203,7 @@ namespace YAAL
                     continue;
                 }
 
-                if (!IOManager.UpdatePatch(this.settings[launcherName], item.Trim().Trim('\"'), cache))
+                if (!LauncherManager.UpdatePatch(this.settings[launcherName], item.Trim().Trim('\"'), cache))
                 {
                     ErrorManager.AddNewError(
                         "Patch - Updating patch failed",
@@ -213,7 +213,7 @@ namespace YAAL
                 }
             }
 
-            IOManager.UpdateLastAsync(this.settings[gameName], cache);
+            LauncherManager.UpdateLastAsync(this.settings[gameName], cache);
 
             return true;
         }

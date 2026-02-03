@@ -33,7 +33,7 @@ public partial class TestWindow : ScalableWindow
 
         Launch.Click += (_, _) => { LaunchTest(); };
         
-        Restore.Click += (_, _) => { IOManager.RestoreAll(); };
+        Restore.Click += (_, _) => { BackupManager.RestoreAll(); };
 
         Temporary.Click += _SwitchMode;
         Existing.Click += _SwitchMode;
@@ -42,12 +42,12 @@ public partial class TestWindow : ScalableWindow
         {
             if(temporaryAsync != null)
             {
-                IOManager.DeleteAsync(temporaryAsync.settings[AsyncSettings.asyncName]);
+                AsyncManager.DeleteAsync(temporaryAsync.settings[AsyncSettings.asyncName]);
             }
             _testWindow = null;
         };
 
-        List<string> asyncList = IOManager.GetAsyncList();
+        List<string> asyncList = AsyncManager.GetAsyncList();
 
         if(asyncList.Count == 0)
         {
@@ -64,7 +64,7 @@ public partial class TestWindow : ScalableWindow
 
                 if (asyncName != "None available")
                 {
-                    slotList = IOManager.GetSlotList(asyncName);
+                    slotList = AsyncManager.GetSlotList(asyncName);
                 }
 
                 if(slotList.Count == 0)
@@ -141,7 +141,7 @@ public partial class TestWindow : ScalableWindow
                 if (temporaryAsync == null)
                 {
                     Trace.WriteLine("Creating a temporary async");
-                    temporaryAsync = IOManager.CreateNewAsync("_temporary");
+                    temporaryAsync = AsyncManager.CreateNewAsync("_temporary");
                     needToCreateSlot = true;
                 }
 
@@ -180,14 +180,14 @@ public partial class TestWindow : ScalableWindow
 
                 temporaryAsync.settings[AsyncSettings.isTemporary] = true.ToString();
                 Trace.WriteLine("Saving temporary async (1)");
-                IOManager.SaveAsync(temporaryAsync, temporaryAsync);
+                AsyncManager.SaveAsync(temporaryAsync, temporaryAsync);
 
                 Cache_Slot temporarySlot;
 
                 if (needToCreateSlot)
                 {
                     Trace.WriteLine("Creating temporary slot");
-                    temporarySlot = IOManager.CreateNewSlot(temporaryAsync, "_temporary");
+                    temporarySlot = AsyncManager.CreateNewSlot(temporaryAsync, "_temporary");
                 }
                 else
                 {
@@ -197,7 +197,7 @@ public partial class TestWindow : ScalableWindow
                 temporarySlot.settings[SlotSettings.patch] = Patch.Text ?? "";
 
                 Trace.WriteLine("Saving temporary async (2)");
-                IOManager.SaveAsync(temporaryAsync, temporaryAsync);
+                AsyncManager.SaveAsync(temporaryAsync, temporaryAsync);
 
                 async = temporaryAsync;
                 slot = temporarySlot;
@@ -207,8 +207,8 @@ public partial class TestWindow : ScalableWindow
                 if (AsyncSelector.SelectedItem is string asyncName && asyncName != "None available" && SlotSelector.SelectedItem is string slotName && slotName != "None available")
                 {
                     Trace.WriteLine("Reading async information");
-                    async = IOManager.GetAsync(asyncName);
-                    slot = IOManager.GetSlot(asyncName, slotName);
+                    async = AsyncManager.GetAsync(asyncName);
+                    slot = AsyncManager.GetSlot(asyncName, slotName);
                 }
                 else
                 {
@@ -253,7 +253,7 @@ public partial class TestWindow : ScalableWindow
 
             slot.settings[SlotSettings.version] = version;
             slot.settings[SlotSettings.baseLauncher] = LauncherName.Text ?? "";
-            IOManager.SaveSlot(async.settings[AsyncSettings.asyncName], slot, oldSlot);
+            AsyncManager.SaveSlot(async.settings[AsyncSettings.asyncName], slot, oldSlot);
         }
 
 
@@ -283,6 +283,6 @@ public partial class TestWindow : ScalableWindow
 
     private async void _FileSelect(object? sender, RoutedEventArgs e)
     {
-        Patch.Text = await IOManager.PickFile(this);
+        Patch.Text = await IO_Tools.PickFile(this);
     }
 }

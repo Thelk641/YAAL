@@ -46,7 +46,7 @@ public partial class AsyncHolder : UserControl
         foreach (var item in thisAsync.slots)
         {
             slotName = item.settings[SlotSettings.slotLabel];
-            if (IOManager.CheckExistance(asyncName, slotName))
+            if (AsyncManager.CheckExistance(asyncName, slotName))
             {
                 AddNewSlot(item);
             } else
@@ -54,7 +54,7 @@ public partial class AsyncHolder : UserControl
                 // Sometime for some reason we get slots only half-deleted,
                 // can't seem to find what triggers this, so let's just 
                 // make sure we actually nuke them as they're not meant to exists
-                IOManager.DeleteSlot(asyncName, slotName);
+                AsyncManager.DeleteSlot(asyncName, slotName);
             }
         }
         starting = false;
@@ -78,7 +78,7 @@ public partial class AsyncHolder : UserControl
         _AsyncNameBox.Text = thisAsync.settings[asyncName];
         NewSlot.Click += (_, _) =>
         {
-            SlotHolder newSlot = AddNewSlot(IOManager.CreateNewSlot(thisAsync, "New"));
+            SlotHolder newSlot = AddNewSlot(AsyncManager.CreateNewSlot(thisAsync, "New"));
             newSlot.SwitchMode();
         };
 
@@ -119,7 +119,7 @@ public partial class AsyncHolder : UserControl
                 {
                     if (confirm.confirmed)
                     {
-                        IOManager.DeleteAsync(thisAsync.settings[asyncName]);
+                        AsyncManager.DeleteAsync(thisAsync.settings[asyncName]);
                         RequestRemoval?.Invoke();
                     }
                 };
@@ -292,7 +292,7 @@ public partial class AsyncHolder : UserControl
                 }
             }
 
-            thisAsync = IOManager.SaveAsync(thisAsync, toSave);
+            thisAsync = AsyncManager.SaveAsync(thisAsync, toSave);
 
             _AsyncNameBox.Text = thisAsync.settings[asyncName];
             AsyncNameBox.Text = thisAsync.settings[asyncName];

@@ -51,7 +51,7 @@ public partial class Setting : UserControl
 
         File.Click += async (_, _) =>
         {
-            CustomValue.Text = await IOManager.PickFile(this.FindAncestorOfType<Window>());
+            CustomValue.Text = await IO_Tools.PickFile(this.FindAncestorOfType<Window>());
         };
     }
 
@@ -72,7 +72,7 @@ public partial class Setting : UserControl
 
         File.Click += async (_, _) =>
         {
-            CustomValue.Text = await IOManager.PickFile(this.FindAncestorOfType<Window>());
+            CustomValue.Text = await IO_Tools.PickFile(this.FindAncestorOfType<Window>());
         };
 
         SpecialMode.Click += (_, _) =>
@@ -219,7 +219,7 @@ public partial class Setting : UserControl
                     {
                         // The only color in GeneralSettings are the general theme
                         // this lets us update it in real time
-                        IOManager.SetSetting(setting, output);
+                        SettingsManager.SetSetting(setting, output);
                     }
                 }
 

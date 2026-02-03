@@ -47,7 +47,7 @@ namespace YAAL
         public static string GetFullPath(this FileSettings setting)
         {
             string relativePath = "./" + setting.GetFileName();
-            return IOManager.ProcessLocalPath(relativePath);
+            return IO_Tools.ProcessLocalPath(relativePath);
         }
     }
 }

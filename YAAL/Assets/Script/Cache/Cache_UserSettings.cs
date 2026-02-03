@@ -60,13 +60,13 @@ namespace YAAL
             saveLocation[userSettings] = "./" + userSettings.GetFileName();
             saveLocation[windows] = "./" + windows.GetFileName();
 
-            Directory.CreateDirectory(IOManager.ProcessLocalPath(saveLocation[ManagedApworlds]));
-            Directory.CreateDirectory(IOManager.ProcessLocalPath(saveLocation[Async]));
-            Directory.CreateDirectory(IOManager.ProcessLocalPath(saveLocation[Trash]));
-            Directory.CreateDirectory(IOManager.ProcessLocalPath(saveLocation[Logs]));
-            Directory.CreateDirectory(IOManager.ProcessLocalPath(saveLocation[Themes]));
-            Directory.CreateDirectory(IOManager.ProcessLocalPath(saveLocation[Images]));
-            Directory.CreateDirectory(IOManager.ProcessLocalPath(saveLocation[Rendered]));
+            Directory.CreateDirectory(IO_Tools.ProcessLocalPath(saveLocation[ManagedApworlds]));
+            Directory.CreateDirectory(IO_Tools.ProcessLocalPath(saveLocation[Async]));
+            Directory.CreateDirectory(IO_Tools.ProcessLocalPath(saveLocation[Trash]));
+            Directory.CreateDirectory(IO_Tools.ProcessLocalPath(saveLocation[Logs]));
+            Directory.CreateDirectory(IO_Tools.ProcessLocalPath(saveLocation[Themes]));
+            Directory.CreateDirectory(IO_Tools.ProcessLocalPath(saveLocation[Images]));
+            Directory.CreateDirectory(IO_Tools.ProcessLocalPath(saveLocation[Rendered]));
 
             Cache_Tools cacheTools = new Cache_Tools();
             List<Cache_CustomLauncher> list = new List<Cache_CustomLauncher>();
@@ -75,11 +75,11 @@ namespace YAAL
             list.Add(DefaultManager.GetDefaultLauncher(DefaultTools.textClient));
             list.Add(DefaultManager.GetDefaultLauncher(DefaultTools.webTracker));
 
-            string fulldir = IOManager.ProcessLocalPath(saveLocation[ManagedApworlds]);
+            string fulldir = IO_Tools.ProcessLocalPath(saveLocation[ManagedApworlds]);
 
             foreach (var item in list)
             {
-                IOManager.SaveCacheLauncher(item);
+                LauncherManager.SaveLauncher(item);
 
                 DirectoryInfo trueDir = new DirectoryInfo(Path.Combine(fulldir, item.settings[LauncherSettings.launcherName]));
                 trueDir.Attributes |= FileAttributes.Hidden;
@@ -91,7 +91,7 @@ namespace YAAL
                 cacheTools.defaultTools.Add(display);
             }
 
-            IOManager.SaveCache<Cache_Tools>(IOManager.ProcessLocalPath(saveLocation[tools]), cacheTools);
+            CacheManager.SaveCache<Cache_Tools>(IO_Tools.ProcessLocalPath(saveLocation[tools]), cacheTools);
         }
 
         public string? this[string key]

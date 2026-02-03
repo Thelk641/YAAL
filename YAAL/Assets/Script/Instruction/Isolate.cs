@@ -101,7 +101,7 @@ namespace YAAL
 
             waitingForRestore = true;
 
-            if (!IOManager.IsolateApworlds(settings[aplauncher], targets))
+            if (!BackupManager.IsolateApworlds(settings[aplauncher], targets))
             {
                 string targetList = "";
                 foreach (var item in targets)
@@ -225,7 +225,7 @@ namespace YAAL
 
             try
             {
-                if(IOManager.RestoreApworlds(settings[aplauncher], targets))
+                if(BackupManager.RestoreApworlds(settings[aplauncher], targets))
                 {
                     executer.RemoveWait(this);
                     return true;

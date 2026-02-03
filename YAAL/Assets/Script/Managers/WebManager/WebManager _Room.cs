@@ -338,7 +338,7 @@ public static partial class WebManager
 
     public static async Task<string> DownloadPatch(string asyncName, string slotName, string URL, bool replace = false)
     {
-        string dir = IOManager.GetSlotDirectory(asyncName, slotName);
+        string dir = AsyncManager.GetSlotDirectory(asyncName, slotName);
 
         HttpRequestMessage request = new HttpRequestMessage()
         {

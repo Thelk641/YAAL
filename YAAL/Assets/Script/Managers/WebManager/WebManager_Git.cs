@@ -293,7 +293,7 @@ public static partial class WebManager
             .ToArray();
 
         string gameName = customLauncher.GetSetting(launcherName);
-        string folder = Path.Combine(IOManager.GetSaveLocation(ManagedApworlds), gameName, version);
+        string folder = Path.Combine(SettingsManager.GetSaveLocation(ManagedApworlds), gameName, version);
         // ManagedApworlds > launcher name > version
 
         List<string> downloadedFilesURL = new List<string>();
@@ -317,7 +317,7 @@ public static partial class WebManager
             if (ignoreExtensions || extensions.Any(ext => name.ToLower().EndsWith(ext) || filenames.Any(file => name.ToLower().Contains(file))))
             {
                 string savePath = Path.Combine(folder, name);
-                if (!IOManager.HasThisBeenAlreadyDownloaded(gameName, version, downloadUrl))
+                if (!VersionManager.HasThisBeenAlreadyDownloaded(gameName, version, downloadUrl))
                 {
                     if(await DownloadFile(downloadUrl, savePath))
                     {
@@ -337,7 +337,7 @@ public static partial class WebManager
 
         if (hasDownloadedAnything)
         {
-            IOManager.AddDownloadedFilesToVersion(gameName, version, downloadedFilesURL, downloadedFilesPath);
+            VersionManager.AddDownloadedFilesToVersion(gameName, version, downloadedFilesURL, downloadedFilesPath);
         }
 
         return true;

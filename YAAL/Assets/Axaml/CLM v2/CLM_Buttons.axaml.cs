@@ -52,7 +52,7 @@ public partial class CLM_Buttons : UserControl
                 }
 
                 Cache_CustomLauncher cache = launcherCreator.launcher;
-                IOManager.SaveCacheLauncher(cache);
+                LauncherManager.SaveLauncher(cache);
                 selector!.ReloadList(cache.settings[LauncherSettings.launcherName]);
             };
         };
@@ -66,9 +66,9 @@ public partial class CLM_Buttons : UserControl
         {
             clm.SaveLauncher();
             Cache_DisplayLauncher cache = selector.GetCache();
-            string duplicateName = IOManager.FindAvailableLauncherName(cache.name);
+            string duplicateName = LauncherManager.FindAvailableLauncherName(cache.name);
             cache.cache.settings[LauncherSettings.launcherName] = duplicateName;
-            IOManager.SaveCacheLauncher(cache.cache);
+            LauncherManager.SaveLauncher(cache.cache);
             selector.ReloadList(duplicateName);
         };
 
@@ -86,7 +86,7 @@ public partial class CLM_Buttons : UserControl
                 {
                     if (confirm.confirmed)
                     {
-                        IOManager.DeleteLauncher(cache.name);
+                        LauncherManager.DeleteLauncher(cache.name);
                         selector.ReloadList();
                         selector.SelectFirst();
                     }
@@ -118,7 +118,7 @@ public partial class CLM_Buttons : UserControl
                 } else
                 {
                     // we openned the screen, then selected another launcher, we just need to update this
-                    IOManager.SaveCacheLauncher(selectedLauncher.cache);
+                    LauncherManager.SaveLauncher(selectedLauncher.cache);
                 }
             };
         };

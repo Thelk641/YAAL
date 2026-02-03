@@ -64,13 +64,13 @@ namespace YAAL
                 }
 
                 string apLauncher = executer.Parser.ParseTextWithSettings("${aplauncher}");
-                if (!IOManager.IsolateApworlds(apLauncher, apworlds))
+                if (!BackupManager.IsolateApworlds(apLauncher, apworlds))
                 {
                     ErrorManager.AddNewError(
                         "Apworld - Failed to isolate apworlds",
                         "Apworld's optimization threw an error. Please see other errors for more information."
                         );
-                    IOManager.RestoreApworlds(apLauncher, apworlds);
+                    BackupManager.RestoreApworlds(apLauncher, apworlds);
                     return false;
                 }
 
@@ -80,7 +80,7 @@ namespace YAAL
                         "Apworld - Failed to attach to a process",
                         "Customlauncher failed to parse the variable name. Please see other errors for more information."
                         );
-                    IOManager.RestoreApworlds(apLauncher, apworlds);
+                    BackupManager.RestoreApworlds(apLauncher, apworlds);
                     return false;
                 }
             }
@@ -98,7 +98,7 @@ namespace YAAL
                     }
                     return true;
                 case 1:
-                    bool success = IOManager.UpdateFileToVersion(
+                    bool success = BackupManager.UpdateFileToVersion(
                     apworlds[0],
                     this.settings[launcherName],
                     this.settings[SlotSettings.version],
@@ -119,7 +119,7 @@ namespace YAAL
                         {
                             continue;
                         }
-                        if (!IOManager.UpdateFileToVersion(item, launchername, version, this.InstructionSetting[necessaryFile]))
+                        if (!BackupManager.UpdateFileToVersion(item, launchername, version, this.InstructionSetting[necessaryFile]))
                         {
                             ErrorManager.AddNewError(
                             "Apworld - Failed to update a file from a list",
@@ -141,7 +141,7 @@ namespace YAAL
         public override void ParseProcess(object? sender, EventArgs e)
         {
             string apLauncher = executer.Parser.ParseTextWithSettings("${aplauncher}");
-            IOManager.RestoreApworlds(apLauncher, apworlds);
+            BackupManager.RestoreApworlds(apLauncher, apworlds);
         }
     }
 }

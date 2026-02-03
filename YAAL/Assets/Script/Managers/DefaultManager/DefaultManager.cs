@@ -33,7 +33,7 @@ namespace YAAL
                 typeof(Cache_UserSettings), () =>
                 {
                     string path = FileSettings.userSettings.GetFullPath();
-                    IOManager.SaveCache<Cache_UserSettings>(path, userSettings);
+                    CacheManager.SaveCache<Cache_UserSettings>(path, userSettings);
                     return userSettings;
                 }
             },

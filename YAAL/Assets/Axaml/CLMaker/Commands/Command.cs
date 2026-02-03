@@ -53,10 +53,10 @@ namespace YAAL
             Button button = sender as Button;
             if (explorers[button].Text == "")
             {
-                explorers[button].Text = "\"" + await IOManager.PickFile(clMaker) + "\";";
+                explorers[button].Text = "\"" + await IO_Tools.PickFile(clMaker) + "\";";
             } else
             {
-                explorers[button].Text += "\"" + await IOManager.PickFile(clMaker) + "\";";
+                explorers[button].Text += "\"" + await IO_Tools.PickFile(clMaker) + "\";";
             }
             
         }
@@ -66,11 +66,11 @@ namespace YAAL
             Button button = sender as Button;
             if (explorers[button].Text == "")
             {
-                explorers[button].Text = "\"" + await IOManager.PickFolder(clMaker) + "\";";
+                explorers[button].Text = "\"" + await IO_Tools.PickFolder(clMaker) + "\";";
             }
             else
             {
-                explorers[button].Text += "\"" + await IOManager.PickFolder(clMaker) + "\";";
+                explorers[button].Text += "\"" + await IO_Tools.PickFolder(clMaker) + "\";";
             }
         }
 

@@ -21,6 +21,12 @@ namespace YAAL
 
     public static class AsyncManager
     {
+        public static bool CheckExistance(string asyncName, string slotLabel)
+        {
+            string path = Path.Combine(SettingsManager.GetSaveLocation(Async), asyncName, slotLabel);
+            return Directory.Exists(path);
+        }
+
         public static Cache_Async CreateNewAsync(string name)
         {
             name = IO_Tools.FindAvailableDirectoryName(SettingsManager.GetSaveLocation(Async), name);

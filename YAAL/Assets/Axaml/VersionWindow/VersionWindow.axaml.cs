@@ -57,7 +57,7 @@ public partial class VersionWindow : ScalableWindow
         gameName = game;
         VersionName.Text = versionName;
         originalName = versionName;
-        List<string> files = IOManager.GetFilesFromVersion(game, versionName);
+        List<string> files = VersionManager.GetFilesFromVersion(game, versionName);
         foreach (var item in files)
         {
             VersionFile file = new VersionFile(this);
@@ -84,15 +84,15 @@ public partial class VersionWindow : ScalableWindow
             {
                 if(originalName == newName)
                 {
-                    IOManager.UpdateVersion(gameName, newName, files);
+                    VersionManager.UpdateVersion(gameName, newName, files);
                 } else
                 {
-                    IOManager.UpdateVersion(gameName, originalName, newName, files);
+                    VersionManager.UpdateVersion(gameName, originalName, newName, files);
                     originalName = newName;
                 }
             } else
             {
-                IOManager.AddFilesToVersion(gameName, newName, files);
+                VersionManager.AddFilesToVersion(gameName, newName, files);
             }
         }
     }

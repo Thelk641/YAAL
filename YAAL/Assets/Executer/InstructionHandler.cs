@@ -87,7 +87,7 @@ public class InstructionHandler
 
     public void SetSlotSetting(SlotSettings key, string value)
     {
-        IOManager.SetSlotSetting(settings.GetSetting(AsyncSettings.asyncName), settings.GetSetting(SlotSettings.slotLabel), key, value);
+        AsyncManager.SetSlotSetting(settings.GetSetting(AsyncSettings.asyncName), settings.GetSetting(SlotSettings.slotLabel), key, value);
         settings.SetSetting(key, value);
     }
 }
