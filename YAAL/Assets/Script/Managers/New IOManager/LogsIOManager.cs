@@ -23,12 +23,32 @@ namespace YAAL
 
     public static class LogsIOManager
     {
-        public static void SaveCacheLogs(string toSave)
+        public static void ReadCacheError(string path)
         {
-            string logDirectory = SettingsManager.GetSaveLocation(Logs);
-            Directory.CreateDirectory(logDirectory);
-            string savePath = Path.Combine(logDirectory, ("Debug log " + IO_Tools.GetTime() + ".txt"));
-            File.WriteAllText(savePath, toSave);
+            string json = "";
+            try
+            {
+                json = FileManager.LoadFile(path.Replace("\\\\", "\\").Trim('\"'));
+            }
+            catch (Exception e)
+            {
+                ErrorManager.AddNewError(
+                    "LogsIOManager - Failed to find error file",
+                    "Trying to display error threw the following exception : " + e.Message);
+                return;
+            }
+
+            Cache_ErrorList output = new Cache_ErrorList();
+            var pattern = @"=== ERROR: (?<name>.+?) ===\r?\n\r?\n(?<content>.*?)\r?\n\r?\nStack Trace:\r?\n(?<stack>.*?)\r?\n\r?\n=+";
+            var matches = Regex.Matches(json, pattern, RegexOptions.Singleline);
+
+            foreach (Match match in matches)
+            {
+                ErrorManager.AddNewError(
+                    match.Groups["name"].Value.Trim(),
+                    match.Groups["content"].Value.Trim(),
+                    match.Groups["stack"].Value.Trim());
+            }
         }
 
         public static string SaveCacheError(Cache_ErrorList error)
@@ -66,32 +86,13 @@ namespace YAAL
             return Path.GetFullPath(savePath);
         }
 
-        public static void ReadCacheError(string path)
+        public static void SaveCacheLogs(string toSave)
         {
-            string json = "";
-            try
-            {
-                json = FileManager.LoadFile(path.Replace("\\\\", "\\").Trim('\"'));
-            }
-            catch (Exception e)
-            {
-                ErrorManager.AddNewError(
-                    "Failed to find error file",
-                    "Trying to display error threw the following exception : " + e.Message);
-                return;
-            }
-
-            Cache_ErrorList output = new Cache_ErrorList();
-            var pattern = @"=== ERROR: (?<name>.+?) ===\r?\n\r?\n(?<content>.*?)\r?\n\r?\nStack Trace:\r?\n(?<stack>.*?)\r?\n\r?\n=+";
-            var matches = Regex.Matches(json, pattern, RegexOptions.Singleline);
-
-            foreach (Match match in matches)
-            {
-                ErrorManager.AddNewError(
-                    match.Groups["name"].Value.Trim(),
-                    match.Groups["content"].Value.Trim(),
-                    match.Groups["stack"].Value.Trim());
-            }
+            string logDirectory = SettingsManager.GetSaveLocation(Logs);
+            Directory.CreateDirectory(logDirectory);
+            string savePath = Path.Combine(logDirectory, ("Debug log " + IO_Tools.GetTime() + ".txt"));
+            File.WriteAllText(savePath, toSave);
         }
+        
     }
 }

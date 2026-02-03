@@ -20,21 +20,113 @@ namespace YAAL
 
     public static partial class FileManager
     {
-        #if DEBUG
+#if DEBUG
                 private static string baseDirectory = "I:\\Emulators\\vba\\rom\\OOS rando\\YAAL - dev";
-        #else
+#else
                 private static string baseDirectory = AppContext.BaseDirectory;
-        #endif
+#endif
 
-
-        static FileManager()
+        public static bool CopyFile(string originalFile, string destinationPath)
         {
-            
+            //destinationPath must include file name !
+            if (File.Exists(destinationPath))
+            {
+                // we are never, ever, overriding a file in this function
+                ErrorManager.AddNewError(
+                    "FileManager - Copy can't overwrite",
+                    "CopyFile was asked to copy a file to " + destinationPath + " but that file already exists. CopyFile is banned from overwriting for security reasons.");
+                return false;
+            }
+
+            try
+            {
+                File.Copy(originalFile, destinationPath);
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                ErrorManager.AddNewError(
+                    "FileManager - Copy threw an exception",
+                    "Tried to copy a file to " + destinationPath + " but it raised the following exception : " + e.Message
+                    );
+                return false;
+            }
+
+        }
+
+        public static bool CopyFolder(string sourceDir, string destinationDir, bool recursive = true)
+        {
+            // Get information about the source directory
+            var dir = new DirectoryInfo(sourceDir);
+
+            if (!dir.Exists)
+            {
+                ErrorManager.AddNewError(
+                    "FileManager - Folder doesn't exist",
+                    "Tried to copy the following folder : " + dir + " but it doesn't seem to exist."
+                    );
+                return false;
+            }
+
+            // Create the destination directory if it doesn't exist
+            Directory.CreateDirectory(destinationDir);
+
+            // Copy all the files
+            foreach (FileInfo file in dir.GetFiles())
+            {
+                string targetFilePath = Path.Combine(destinationDir, file.Name);
+                file.CopyTo(targetFilePath, overwrite: true);
+            }
+
+            // Copy all subdirectories
+            if (recursive)
+            {
+                foreach (DirectoryInfo subDir in dir.GetDirectories())
+                {
+                    string newDestinationDir = Path.Combine(destinationDir, subDir.Name);
+                    if (!CopyFolder(subDir.FullName, newDestinationDir, true))
+                    {
+                        ErrorManager.AddNewError(
+                            "FileManager - SubFolder copy failed",
+                            "Tried to copy subfolder " + subDir.FullName + " to target " + newDestinationDir + " but it failed for some reasons."
+                            );
+                        return false;
+                    }
+                }
+            }
+            return true;
         }
 
         public static string GetBaseDirectory()
         {
             return baseDirectory;
+        }
+
+        public static bool HardDeleteFile(string path)
+        {
+            try
+            {
+                if (File.Exists(path))
+                {
+                    File.Delete(path);
+                }
+
+                if (Directory.Exists(path))
+                {
+                    Directory.Delete(path, true);
+                }
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                ErrorManager.AddNewError(
+                    "FileManager - Hard delete threw an exception",
+                    "Tried to delete file or folder at " + path + "but it raised the following exception : " + e.Message
+                    );
+                return false;
+            }
         }
 
         public static string LoadFile(string path)
@@ -46,42 +138,6 @@ namespace YAAL
             else return File.ReadAllText(path);
         }
 
-        public static bool SaveFile(string path, string file)
-        {
-            try
-            {
-                Directory.CreateDirectory(Path.GetDirectoryName(path));
-                File.WriteAllText(path, file);
-                return true;
-            }
-            catch (Exception e)
-            {
-                ErrorManager.AddNewError(
-                    "IOManager_FileCore - Saving threw an exception",
-                    "Trying to save file " + path + " threw the following exception : " + e.Message
-                    );
-                return false;
-            }
-        }
-
-        public static bool SaveFile(string path, byte[] file)
-        {
-            try
-            {
-                Directory.CreateDirectory(Path.GetDirectoryName(path));
-                File.WriteAllBytes(path, file);
-                return true;
-            }
-            catch (Exception e)
-            {
-                ErrorManager.AddNewError(
-                    "IOManager_FileCore - Saving threw an exception",
-                    "Trying to save file " + path + " threw the following exception : " + e.Message
-                    );
-                return false;
-            }
-        }
-
         public static bool MoveFile(string origin, string target)
         {
             //tries to move origin to target, returns how successfull it was
@@ -90,7 +146,7 @@ namespace YAAL
                 if (origin == "" || target == "")
                 {
                     ErrorManager.AddNewError(
-                        "IOManager_FileCore - Origin or Target is empty",
+                        "FileManager - Origin or Target is empty",
                         "Something just tried to move nothing somewhere, something nowhere, or nothing nowhere. If your settings appear fine, please report this issue.");
                     return false;
                 }
@@ -118,14 +174,14 @@ namespace YAAL
                     }
                 }
                 ErrorManager.AddNewError(
-                    "IOManager_FileCore - File doesn't exists",
+                    "FileManager - File doesn't exists",
                     "MoveFile tried to move this : " + origin + " sadly, this file or folder doesn't appear to exist.");
                 return false;
             }
             catch (Exception e)
             {
                 ErrorManager.AddNewError(
-                    "IOManager_FileCore - MoveFile threw an exception",
+                    "FileManager - MoveFile threw an exception",
                     "MoveFile tried to move this : " + origin + " but this raised the following exception : " + e.Message);
                 return false;
             }
@@ -165,82 +221,46 @@ namespace YAAL
             catch (Exception e)
             {
                 ErrorManager.AddNewError(
-                    "IOManager_FileCore - MoveFile threw an exception",
+                    "FileManager - MoveFile threw an exception",
                     "MoveFile tried to move this : " + origin + " but this raised the following exception : " + e.Message);
                 return false;
             }
         }
 
-        public static bool CopyFile(string originalFile, string destinationPath)
+        public static bool SaveFile(string path, string file)
         {
-            //destinationPath must include file name !
-            if (File.Exists(destinationPath))
-            {
-                // we are never, ever, overriding a file in this function
-                ErrorManager.AddNewError(
-                    "IOManager_FileCore - Copy can't overwrite",
-                    "CopyFile was asked to copy a file to " + destinationPath + " but that file already exists. CopyFile is banned from overwriting for security reasons.");
-                return false;
-            }
-
             try
             {
-                File.Copy(originalFile, destinationPath);
-
+                Directory.CreateDirectory(Path.GetDirectoryName(path));
+                File.WriteAllText(path, file);
                 return true;
             }
             catch (Exception e)
             {
                 ErrorManager.AddNewError(
-                    "IOManager_FileCore - Copy threw an exception",
-                    "Tried to copy a file to " + destinationPath + " but it raised the following exception : " + e.Message
+                    "FileManager - Saving threw an exception",
+                    "Trying to save file " + path + " threw the following exception : " + e.Message
                     );
                 return false;
             }
-
         }
 
-        public static bool CopyFolder(string sourceDir, string destinationDir, bool recursive = true)
+        public static bool SaveFile(string path, byte[] file)
         {
-            // Get information about the source directory
-            var dir = new DirectoryInfo(sourceDir);
-
-            if (!dir.Exists)
+            try
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(path));
+                File.WriteAllBytes(path, file);
+                return true;
+            }
+            catch (Exception e)
             {
                 ErrorManager.AddNewError(
-                    "IOManager_FileCore - Folder doesn't exist",
-                    "Tried to copy the following folder : " + dir + " but it doesn't seem to exist."
+                    "FileManager - Saving threw an exception",
+                    "Trying to save file " + path + " threw the following exception : " + e.Message
                     );
                 return false;
             }
-
-            // Create the destination directory if it doesn't exist
-            Directory.CreateDirectory(destinationDir);
-
-            // Copy all the files
-            foreach (FileInfo file in dir.GetFiles())
-            {
-                string targetFilePath = Path.Combine(destinationDir, file.Name);
-                file.CopyTo(targetFilePath, overwrite: true);
-            }
-
-            // Copy all subdirectories
-            if (recursive)
-            {
-                foreach (DirectoryInfo subDir in dir.GetDirectories())
-                {
-                    string newDestinationDir = Path.Combine(destinationDir, subDir.Name);
-                    if (!CopyFolder(subDir.FullName, newDestinationDir, true))
-                    {
-                        ErrorManager.AddNewError(
-                            "IOManager_FileCore - SubFolder copy failed",
-                            "Tried to copy subfolder " + subDir.FullName + " to target " + newDestinationDir + " but it failed for some reasons."
-                            );
-                        return false;
-                    }
-                }
-            }
-            return true;
         }
 
         public static bool SoftDeleteFile(string path)
@@ -274,32 +294,6 @@ namespace YAAL
             }
             else
             {
-                return false;
-            }
-        }
-
-        public static bool HardDeleteFile(string path)
-        {
-            try
-            {
-                if (File.Exists(path))
-                {
-                    File.Delete(path);
-                }
-
-                if (Directory.Exists(path))
-                {
-                    Directory.Delete(path, true);
-                }
-
-                return true;
-            }
-            catch (Exception e)
-            {
-                ErrorManager.AddNewError(
-                    "IOManager_FileCore - Hard delete threw an exception",
-                    "Tried to delete file or folder at " + path + "but it raised the following exception : " + e.Message
-                    );
                 return false;
             }
         }

@@ -21,14 +21,6 @@ namespace YAAL
 
     public static class AsyncManager
     {
-        public static string GetSlotDirectory(string async, string slot)
-        {
-            string output = Path.Combine(SettingsManager.GetSaveLocation(Async), async, slot);
-            output = IO_Tools.ProcessLocalPath(output);
-            Directory.CreateDirectory(output);
-            return output;
-        }
-
         public static Cache_Async CreateNewAsync(string name)
         {
             name = IO_Tools.FindAvailableDirectoryName(SettingsManager.GetSaveLocation(Async), name);
@@ -84,7 +76,7 @@ namespace YAAL
             catch (Exception e)
             {
                 ErrorManager.ThrowError(
-                    "IOManager_Async - Deleting a slot threw an error",
+                    "AsyncManager - Deleting a slot threw an error",
                     "Please report this. Trying to delete slot " + slotLabel + " from async " + asyncName + " threw the following error : " + e.Message);
             }
 
@@ -130,6 +122,47 @@ namespace YAAL
             return output;
         }
 
+        public static string GetLauncherNameFromSlot(string async, string slot)
+        {
+            return GetSlot(async, slot).settings[baseLauncher];
+        }
+
+        public static Cache_Settings GetSettings(string async, string slot)
+        {
+
+            Cache_Settings output = new Cache_Settings();
+
+            Cache_Async cache_async = GetAsync(async);
+            Cache_Slot cache_Slot = GetSlot(async, slot);
+
+            foreach (var item in cache_async.settings)
+            {
+                if (item.Value != "" || !output.settings.ContainsKey(item.Key.ToString()))
+                {
+                    output.settings[item.Key.ToString()] = item.Value;
+                }
+            }
+
+            foreach (var item in cache_Slot.settings)
+            {
+                if (item.Value != "" || !output.settings.ContainsKey(item.Key.ToString()))
+                {
+                    output.settings[item.Key.ToString()] = item.Value;
+                }
+            }
+
+            foreach (var item in cache_Slot.customSettings)
+            {
+                if (item.Value != "" || !output.settings.ContainsKey(item.Key.ToString()))
+                {
+                    output.settings[item.Key] = item.Value;
+                }
+            }
+
+
+            return output;
+        }
+
         public static Cache_Slot GetSlot(string asyncName, string slotLabel)
         {
             string asyncFolder = Path.Combine(SettingsManager.GetSaveLocation(Async), asyncName);
@@ -169,6 +202,37 @@ namespace YAAL
             }
             return output;
         }
+        
+        public static string GetSlotDirectory(string async, string slot)
+        {
+            string output = Path.Combine(SettingsManager.GetSaveLocation(Async), async, slot);
+            output = IO_Tools.ProcessLocalPath(output);
+            Directory.CreateDirectory(output);
+            return output;
+        }
+
+        public static string GetToolVersion(string asyncName, string toolName)
+        {
+            Cache_Async cache = GetAsync(asyncName);
+
+
+            if (cache.toolVersions.ContainsKey(toolName))
+            {
+                return cache.toolVersions[toolName];
+            }
+            else
+            {
+                List<string> versions = VersionManager.GetVersions(toolName);
+                if (versions.Count > 0)
+                {
+                    string selectedVersion = versions[0];
+                    SetAsyncToolVersion(asyncName, toolName, selectedVersion);
+                    return selectedVersion;
+                }
+            }
+
+            return "None";
+        }
 
         public static string MoveToSlotDirectory(string fileToMove, string asyncName, string slotName, string newName)
         {
@@ -205,7 +269,7 @@ namespace YAAL
             else
             {
                 ErrorManager.AddNewError(
-                "IOManager_FileExtra - Failed to move file to working directory",
+                "AsyncManager - Failed to move file to working directory",
                 "Couldn't move file " + fileToMove + " to " + output
                 );
                 return "";
@@ -213,71 +277,6 @@ namespace YAAL
 
 
         }
-
-        public static void SetAsyncSetting(string async, string key, string value)
-        {
-
-            if (Enum.TryParse(key, out AsyncSettings setting))
-            {
-                Cache_Async cache_Async = GetAsync(async);
-                cache_Async.settings[setting] = value;
-                if (key == "room")
-                {
-                    cache_Async.ParseRoomInfo();
-                }
-                CacheManager.SaveCache<Cache_Async>(Path.Combine(SettingsManager.GetSaveLocation(Async), async, multiworld.GetFileName()), cache_Async);
-            }
-            else
-            {
-                ErrorManager.ThrowError(
-                    "IOManager_Async - Invalid setting name",
-                    "Tried to assign a value to setting " + key + " for async " + async + " but this async doesn't have such setting. Please report this issue."
-                    );
-            }
-        }
-
-        public static void SetAsyncToolVersion(string async, string name, string value)
-        {
-            Cache_Async cache_Async = GetAsync(async);
-            cache_Async.toolVersions[name] = value;
-            if (name == "room")
-            {
-                cache_Async.ParseRoomInfo();
-            }
-            CacheManager.SaveCache<Cache_Async>(Path.Combine(SettingsManager.GetSaveLocation(Async), async, multiworld.GetFileName()), cache_Async);
-        }
-
-        public static void SetSlotSetting(string async, string slot, SlotSettings key, string value)
-        {
-            Cache_Async cache_Async = GetAsync(async);
-
-            foreach (var item in cache_Async.slots)
-            {
-                if (item.settings[slotLabel] == slot)
-                {
-                    item.settings[key] = value;
-                    CacheManager.SaveCache<Cache_Async>(Path.Combine(SettingsManager.GetSaveLocation(Async), async, multiworld.GetFileName()), cache_Async);
-                    return;
-                }
-            }
-        }
-
-        public static void SetSlotSetting(string async, string slot, string key, string value)
-        {
-            Cache_Async cache_Async = GetAsync(async);
-
-            foreach (var item in cache_Async.slots)
-            {
-                if (item.settings[slotLabel] == slot)
-                {
-                    item.customSettings[key] = value;
-                    CacheManager.SaveCache<Cache_Async>(Path.Combine(SettingsManager.GetSaveLocation(Async), async, multiworld.GetFileName()), cache_Async);
-                    return;
-                }
-            }
-        }
-
-        
 
         public static Cache_Async SaveAsync(Cache_Async oldAsync, Cache_Async newAsync)
         {
@@ -361,6 +360,69 @@ namespace YAAL
             SaveAsync(cache, newCache);
 
             return output;
+        }
+
+        public static void SetAsyncSetting(string async, string key, string value)
+        {
+
+            if (Enum.TryParse(key, out AsyncSettings setting))
+            {
+                Cache_Async cache_Async = GetAsync(async);
+                cache_Async.settings[setting] = value;
+                if (key == "room")
+                {
+                    cache_Async.ParseRoomInfo();
+                }
+                CacheManager.SaveCache<Cache_Async>(Path.Combine(SettingsManager.GetSaveLocation(Async), async, multiworld.GetFileName()), cache_Async);
+            }
+            else
+            {
+                ErrorManager.ThrowError(
+                    "AsyncManager - Invalid setting name",
+                    "Tried to assign a value to setting " + key + " for async " + async + " but this async doesn't have such setting. Please report this issue."
+                    );
+            }
+        }
+
+        public static void SetAsyncToolVersion(string async, string name, string value)
+        {
+            Cache_Async cache_Async = GetAsync(async);
+            cache_Async.toolVersions[name] = value;
+            if (name == "room")
+            {
+                cache_Async.ParseRoomInfo();
+            }
+            CacheManager.SaveCache<Cache_Async>(Path.Combine(SettingsManager.GetSaveLocation(Async), async, multiworld.GetFileName()), cache_Async);
+        }
+
+        public static void SetSlotSetting(string async, string slot, SlotSettings key, string value)
+        {
+            Cache_Async cache_Async = GetAsync(async);
+
+            foreach (var item in cache_Async.slots)
+            {
+                if (item.settings[slotLabel] == slot)
+                {
+                    item.settings[key] = value;
+                    CacheManager.SaveCache<Cache_Async>(Path.Combine(SettingsManager.GetSaveLocation(Async), async, multiworld.GetFileName()), cache_Async);
+                    return;
+                }
+            }
+        }
+
+        public static void SetSlotSetting(string async, string slot, string key, string value)
+        {
+            Cache_Async cache_Async = GetAsync(async);
+
+            foreach (var item in cache_Async.slots)
+            {
+                if (item.settings[slotLabel] == slot)
+                {
+                    item.customSettings[key] = value;
+                    CacheManager.SaveCache<Cache_Async>(Path.Combine(SettingsManager.GetSaveLocation(Async), async, multiworld.GetFileName()), cache_Async);
+                    return;
+                }
+            }
         }
     }
 }

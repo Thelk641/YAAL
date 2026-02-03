@@ -36,12 +36,29 @@ namespace YAAL
             catch (Exception e)
             {
                 ErrorManager.AddNewError(
-                "IOManager - Couldn't clean path",
+                "IO_Tools - Couldn't clean path",
                 "Tried to clean path : " + originalPath + ", ended with the following exception :" + e.Message
                 );
 
                 return originalPath;
             }
+        }
+
+        public static string FindApworld(string apfolder, string fileName)
+        {
+            string custom_world = Path.Combine(apfolder, "custom_worlds", fileName);
+            string lib_world = Path.Combine(apfolder, "lib", "worlds", fileName);
+
+            if (File.Exists(custom_world))
+            {
+                return custom_world;
+            }
+            else if (File.Exists(lib_world))
+            {
+                return lib_world;
+            }
+
+            return fileName;
         }
 
         public static string FindAvailableDirectoryName(string origin, string baseName)
@@ -111,7 +128,7 @@ namespace YAAL
             catch (Exception)
             {
                 ErrorManager.AddNewError(
-                    "IOManager_FileCore - Tried to find name of path null",
+                    "IO_Tools - Tried to find name of path null",
                     "Something sent a null value to GetFileName(path), this shouldn't ever happen. Please report the issue."
                     );
                 return "";
@@ -153,7 +170,7 @@ namespace YAAL
             if (window == null)
             {
                 ErrorManager.ThrowError(
-                    "IOManager_UI - Unable to find the parent window",
+                    "IO_Tools - Unable to find the parent window",
                     "The function PickFile is unable to find the main window. Please report this issue.");
                 return "";
             }
@@ -170,7 +187,7 @@ namespace YAAL
             if (window == null)
             {
                 ErrorManager.ThrowError(
-                    "IOManager_UI - Unable to find the parent window",
+                    "IO_Tools - Unable to find the parent window",
                     "The function PickFolder is unable to find its parent window. Please report this issue.");
                 return "";
             }
@@ -200,22 +217,10 @@ namespace YAAL
             catch (Exception e)
             {
                 ErrorManager.ThrowError(
-                        "IOManager - Failed to parse local path",
-                        "Trying to parse local path raised the following exception : " + e.Message);
+                    "IO_Tools - Failed to parse local path",
+                    "Trying to parse local path raised the following exception : " + e.Message);
                 return originalPath;
             }
-        }
-
-        public static string ToLocalPath(string originalPath)
-        {
-            string relativePath = Path.GetRelativePath(FileManager.GetBaseDirectory(), Path.GetFullPath(originalPath));
-
-            if (Path.IsPathRooted(relativePath) && !relativePath.StartsWith("."))
-            {
-                return originalPath;
-            }
-
-            return "./" + relativePath.Replace("\\", "/");
         }
 
         public static List<string> SplitPathList(string originalPath)
@@ -232,6 +237,18 @@ namespace YAAL
                 }
             }
             return output;
+        }
+
+        public static string ToLocalPath(string originalPath)
+        {
+            string relativePath = Path.GetRelativePath(FileManager.GetBaseDirectory(), Path.GetFullPath(originalPath));
+
+            if (Path.IsPathRooted(relativePath) && !relativePath.StartsWith("."))
+            {
+                return originalPath;
+            }
+
+            return "./" + relativePath.Replace("\\", "/");
         }
 
         public static string ToDebug(string archipelago)

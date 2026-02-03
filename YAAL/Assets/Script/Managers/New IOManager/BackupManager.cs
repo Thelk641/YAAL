@@ -25,7 +25,7 @@ namespace YAAL
             if (IsAlreadyBackedUp(path))
             {
                 ErrorManager.AddNewError(
-                    "IOManager_FileCore - File already backed up",
+                    "BackupManager - File already backed up",
                     "File " + path + " has already been backed up by a launcher that is waiting to auto-restore it. This is not allowed. This can also be caused by a failed auto-restore, please check 'YAAL/ManagedApworlds/backupList.json' for a list of files waiting to be successfully auto-restored."
                     );
 
@@ -63,7 +63,7 @@ namespace YAAL
                 if (!FileManager.MoveFile(path, tempBackedupFile))
                 {
                     ErrorManager.AddNewError(
-                        "IOManager_FileCore - Moving file to temporary backup failed",
+                        "BackupManager - Moving file to temporary backup failed",
                         "Trying to move " + path + " to " + tempBackedupFile + " failed."
                         );
                     return false;
@@ -109,7 +109,7 @@ namespace YAAL
                         return true;
                     }
                     ErrorManager.AddNewError(
-                        "IOManager_FileCore - Copying default file failed",
+                        "BackupManager - Copying default file failed",
                         "Trying to copy " + defaultFile + " to " + path + " failed."
                         );
                     return false;
@@ -122,7 +122,7 @@ namespace YAAL
                         return true;
                     }
                     ErrorManager.AddNewError(
-                        "IOManager_FileCore - Copying default folder failed",
+                        "BackupManager - Copying default folder failed",
                         "Trying to copy " + defaultFile + " to " + path + " failed."
                         );
                     return false;
@@ -136,7 +136,7 @@ namespace YAAL
 
             // Either MoveFile or CopyFile failed
             ErrorManager.AddNewError(
-                "IOManager_FileCore - Unknown error",
+                "BackupManager - Unknown error",
                 "Backup returned false for unknown reasons. Please check other errors for more information."
                 );
             return false;
@@ -169,7 +169,7 @@ namespace YAAL
             }
 
             ErrorManager.AddNewError(
-                "IOManager_FileExtra - Target default doesn't exist",
+                "BackupManager - Target default doesn't exist",
                 "Tried to copy " + path + "to the default directory, but this file or folder doesn't seem to exist."
                 );
             return false;
@@ -221,7 +221,7 @@ namespace YAAL
             catch (System.Exception e)
             {
                 ErrorManager.AddNewError(
-                    "IOManager_FileExtra - IsolateApworlds threw an exception",
+                    "BackupManager - IsolateApworlds threw an exception",
                     "Trying to get the Archipelago folder raised the following exception : " + e.Message
                     );
                 return false;
@@ -293,7 +293,7 @@ namespace YAAL
                 }
 
                 ErrorManager.AddNewError(
-                    "IOManager_FileExtra - Apworld not found",
+                    "BackupManager - Apworld not found",
                     "You've asked this launcher to isolate " + fileName + " but this file doesn't appear to exist in either customWorlds or lib/world"
                     );
                 CacheManager.SaveCache<Cache_BackupList>(SettingsManager.GetSaveLocation(backupList), cache);
@@ -326,6 +326,12 @@ namespace YAAL
             CacheManager.SaveCache<Cache_BackupList>(SettingsManager.GetSaveLocation(backupList), list);
         }
 
+        public static void ResetBackupList()
+        {
+            Cache_BackupList cache = new Cache_BackupList();
+            CacheManager.SaveCache<Cache_BackupList>(SettingsManager.GetSaveLocation(backupList), cache);
+        }
+        
         public static bool Restore(string path, string asyncName, string slotName)
         {
             Trace.WriteLine("FileCore, trying to restore : " + path);
@@ -343,7 +349,7 @@ namespace YAAL
             if (IsAlreadyBackedUp(path) && (!File.Exists(tempBackedupFile) && !Directory.Exists(tempBackedupFile)))
             {
                 ErrorManager.AddNewError(
-                    "IOManager_FileCore - Backedup file doesn't appear to exists",
+                    "BackupManager - Backedup file doesn't appear to exists",
                     "File " + path + " has been backed up to " + tempBackedupFile + " but it doesn't appear to exist anymore. If you've not done that yourself, please report this issue."
                     );
             }
@@ -368,7 +374,7 @@ namespace YAAL
                     if (!FileManager.MoveFile(backedupFile, Path.Combine(oldBackupDir, pathName)))
                     {
                         ErrorManager.AddNewError(
-                            "IOManager_FileCore - Updating backup failed",
+                            "BackupManager - Updating backup failed",
                             "While restoring, trying to update backup " + backedupFile + " by moving the old one to " + Path.Combine(oldBackupDir, pathName) + " failed."
                             );
                         return false;
@@ -378,7 +384,7 @@ namespace YAAL
                 if (!FileManager.MoveFile(path, backedupFile))
                 {
                     ErrorManager.AddNewError(
-                        "IOManager_FileCore - Updating backup failed",
+                        "BackupManager - Updating backup failed",
                         "While restoring, trying to backup " + path + " to " + backedupFile + " failed."
                         );
                     return false;
@@ -404,7 +410,7 @@ namespace YAAL
             if (!FileManager.MoveFile(tempBackedupFile, path))
             {
                 ErrorManager.AddNewError(
-                    "IOManager_FileCore - Restore failed",
+                    "BackupManager - Restore failed",
                     "Trying to restore " + tempBackedupFile + " to " + path + " failed."
                     );
                 return false;
@@ -418,18 +424,18 @@ namespace YAAL
             if (!RestoreApworlds())
             {
                 ErrorManager.ThrowError(
-                        "App - Failed to restore apworlds",
-                        "Something went wrong while trying to restore apworlds directly."
-                        );
+                    "BackupManager - Failed to restore apworlds",
+                    "Something went wrong while trying to restore apworlds directly."
+                    );
                 return;
             }
 
             if (!RestoreBackups())
             {
                 ErrorManager.ThrowError(
-                        "App - Failed to restore backups",
-                        "Something went wrong while trying to restore backups directly."
-                        );
+                    "BackupManager - Failed to restore backups",
+                    "Something went wrong while trying to restore backups directly."
+                    );
                 return;
             }
 
@@ -458,7 +464,7 @@ namespace YAAL
             if (!cache.apworldList.ContainsKey(archipelagoFolder))
             {
                 ErrorManager.AddNewError(
-                    "IOManager_Backup - Tried to restore apworlds in an instant that hasn't isolated them",
+                    "BackupManager - Tried to restore apworlds in an instant that hasn't isolated them",
                     "Some Isolate command tried to restore apworlds for the archipelago instance at " + archipelago + " but the list of apworlds backed up for this installation is null. This shouldn't ever happen, please report this."
                     );
                 return false;
@@ -511,7 +517,7 @@ namespace YAAL
             catch (System.Exception e)
             {
                 ErrorManager.AddNewError(
-                    "IOManager_FileExtra - IsolateApworlds threw an exception",
+                    "BackupManager - IsolateApworlds threw an exception",
                     "Trying to get the Archipelago folder raised the following exception : " + e.Message
                     );
                 return false;
@@ -520,7 +526,7 @@ namespace YAAL
             if (!Directory.Exists(customWorlds) || !Directory.Exists(worlds))
             {
                 ErrorManager.AddNewError(
-                    "IOManager_FileExtra - Restore apworlds couldn't find apworld directories",
+                    "BackupManager - Restore apworlds couldn't find apworld directories",
                     "The temporary customWorlds or lib/worlds created by the isolate apworld function doesn't appear to exist, this shouldn't ever happen. If you've not caused this yourself, please report this issue."
                     );
                 return false;
@@ -529,7 +535,7 @@ namespace YAAL
             if (!Directory.Exists(old_customWorlds) || !Directory.Exists(old_worlds))
             {
                 ErrorManager.AddNewError(
-                    "IOManager_FileExtra - Restore apworlds couldn't find apworld backups",
+                    "BackupManager - Restore apworlds couldn't find apworld backups",
                     "The renamed customWorlds or lib/worlds created by the isolate apworld function doesn't appear to exist, this shouldn't ever happen. If you've not caused this yourself, please report this issue."
                     );
                 return false;
@@ -561,7 +567,7 @@ namespace YAAL
             }
 
             ErrorManager.AddNewError(
-                "IOManager_FileExtra - Couldn't restore apworlds",
+                "BackupManager - Couldn't restore apworlds",
                 "Trying to restore custom_worlds and/or lib/worlds failed. Please see other errors for more informations. The original ones are still there, they've just been renamed, please restore them manually."
                 );
 
@@ -598,12 +604,6 @@ namespace YAAL
             return true;
         }
 
-        public static void ResetBackupList()
-        {
-            Cache_BackupList cache = new Cache_BackupList();
-            CacheManager.SaveCache<Cache_BackupList>(SettingsManager.GetSaveLocation(backupList), cache);
-        }
-
         public static bool SetUpMinimumWorlds()
         {
             string targetFolder = SettingsManager.GetSaveLocation(MinimumWorlds);
@@ -623,7 +623,7 @@ namespace YAAL
             if (!Directory.Exists(archipelagoFolder))
             {
                 ErrorManager.AddNewError(
-                    "IOManager - Archipelago folder doesn't exists",
+                    "BackupManager - Archipelago folder doesn't exists",
                     "Your ArchipelagoLauncher.exe is at : " + pathToAPFolder + " sadly, the folder containing this file doesn't appear to exist."
                     );
                 return false;
@@ -658,7 +658,7 @@ namespace YAAL
             if (!Directory.Exists(customWorlds) || !Directory.Exists(worlds))
             {
                 ErrorManager.AddNewError(
-                    "IOManager_FileExtra - IsolateApworlds failed to create directories",
+                    "BackupManager - IsolateApworlds failed to create directories",
                     "While trying to isolate the relevant apworlds, IOManager somehow failed to create customWorlds and/or lib/worlds. Please report this issue, you also should clean up the folder yourself (the old, pre-isolate folders are just renamed as old.name)"
                     );
                 return false;
@@ -667,7 +667,7 @@ namespace YAAL
             if (Directory.Exists(old_customWorlds) || Directory.Exists(old_worlds))
             {
                 ErrorManager.AddNewError(
-                    "IOManager_FileExtra - IsolateApworlds already running",
+                    "BackupManager - IsolateApworlds already running",
                     "Another launcher is waiting to automatically restore the apworld directories. This is not allowed. Please wait for the auto-restore, or if this is caused by another bug, restore them manually."
                     );
                 return false;
@@ -687,7 +687,7 @@ namespace YAAL
             if (path == "")
             {
                 ErrorManager.AddNewError(
-                    "IOManager_FileExtra - Empty path",
+                    "BackupManager - Empty path",
                     "Something tried to update a file version, but didn't set a path for said file."
                     );
                 return false;
@@ -696,7 +696,7 @@ namespace YAAL
             if (version == "")
             {
                 ErrorManager.AddNewError(
-                    "IOManager_FileExtra - No version selected",
+                    "BackupManager - No version selected",
                     "This particular slot doesn't have a version selected, please set one."
                     );
                 return false;
@@ -732,7 +732,7 @@ namespace YAAL
                 if (isNecessary == true.ToString())
                 {
                     ErrorManager.AddNewError(
-                        "IOManager_FileExtra - Missing mandatory apworld",
+                        "BackupManager - Missing mandatory apworld",
                         "This launcher requires the following file, which doesn't seem to exists for the selected version : " + fileName
                         );
                     return false;

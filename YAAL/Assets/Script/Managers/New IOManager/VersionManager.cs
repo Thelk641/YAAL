@@ -12,6 +12,21 @@ namespace YAAL
 {
     public static class VersionManager
     {
+        public static bool AddDefaultVersion(string launcherName, string versionName, string apworldPath)
+        {
+            if (!File.Exists(apworldPath))
+            {
+                ErrorManager.AddNewError(
+                    "VersionManager - Apworld doesn't exist",
+                    "File at " + apworldPath + " doesn't exists"
+                    );
+                return false;
+            }
+            string directoryPath = Path.Combine(SettingsManager.GetSaveLocation(ManagedApworlds), launcherName, versionName);
+            Directory.CreateDirectory(directoryPath);
+            return FileManager.CopyFile(apworldPath, Path.Combine(directoryPath, IO_Tools.GetFileName(apworldPath)));
+        }
+
         public static void AddDownloadedFilesToVersion(string gameName, string version, List<string> URLs, List<string> files)
         {
             string path = Path.Combine(SettingsManager.GetSaveLocation(ManagedApworlds), gameName, versions.GetFileName());
@@ -88,42 +103,56 @@ namespace YAAL
                 }
                 CopyVersionToWorkingDirectory(newCache, gameName, version);
             }
-
-            //LauncherManager.UpdatedLauncher?.Invoke(gameName);
         }
 
-        public static void UpdateVersion(string gameName, string version, List<string> files)
+        public static string CopyToVersionDirectory(string fileToCopy, string gameName, string version)
         {
-            string path = Path.Combine(SettingsManager.GetSaveLocation(ManagedApworlds), gameName, versions.GetFileName());
-            Cache_Versions cache = CacheManager.LoadCache<Cache_Versions>(path);
-            cache.versions[version] = files;
-            CopyVersionToWorkingDirectory(cache, gameName, version);
-        }
+            string workingName = IO_Tools.GetFileName(fileToCopy);
 
-        public static void UpdateVersion(string gameName, string oldName, string newName, List<string> files)
-        {
-            string path = Path.Combine(SettingsManager.GetSaveLocation(ManagedApworlds), gameName, versions.GetFileName());
-            Cache_Versions cache = CacheManager.LoadCache<Cache_Versions>(path);
-            if (cache.versions.ContainsKey(newName))
+
+            string output = Path.Combine(
+                SettingsManager.GetSaveLocation(ManagedApworlds),
+                gameName,
+                version,
+                workingName
+                );
+
+            if (output == fileToCopy)
+            {
+                return fileToCopy;
+            }
+
+            if (FileManager.CopyFile(fileToCopy, output))
+            {
+                return output;
+            }
+            else
             {
                 ErrorManager.ThrowError(
-                    "IOManager_Download - Version already exists",
-                    "Tried to rename version " + oldName + " to " + newName + " but there's already a version of this name for this game. This is not allowed. Because of this, the version failed to save."
-                    );
-                return;
+                "VersionManager - Failed to copy file to version directory",
+                "Couldn't copy file " + fileToCopy + " to " + output
+                );
+                return fileToCopy;
             }
-            if (cache.downloaded.ContainsKey(oldName))
-            {
-                cache.downloaded[newName] = files;
-                cache.downloaded.Remove(oldName);
-            }
-
-            cache.versions[newName] = files;
-            cache.versions.Remove(oldName);
-            CopyVersionToWorkingDirectory(cache, gameName, newName);
         }
 
-        public static void CreateNewVersionCache(string gameName, string version) {
+        public static void CopyVersionToWorkingDirectory(Cache_Versions cache, string gameName, string version)
+        {
+            string path = Path.Combine(SettingsManager.GetSaveLocation(ManagedApworlds), gameName, versions.GetFileName());
+            string versionDirectory = Path.Combine(SettingsManager.GetSaveLocation(ManagedApworlds), gameName, version);
+            Directory.CreateDirectory(versionDirectory);
+            List<string> filesToCopy = cache.versions[version];
+            List<string> copiedFiles = new List<string>();
+            foreach (var item in filesToCopy)
+            {
+                copiedFiles.Add(CopyToVersionDirectory(item, gameName, version));
+            }
+            cache.versions[version] = copiedFiles;
+            CacheManager.SaveCache<Cache_Versions>(path, cache);
+        }
+
+        public static void CreateNewVersionCache(string gameName, string version)
+        {
             string folder = Path.Combine(SettingsManager.GetSaveLocation(ManagedApworlds), gameName);
             Directory.CreateDirectory(folder);
             string fullPath = Path.Combine(folder, versions.GetFileName());
@@ -145,18 +174,6 @@ namespace YAAL
             return downloadedVersions;
         }
 
-        public static List<string> GetVersions(string gameName)
-        {
-            string path = Path.Combine(SettingsManager.GetSaveLocation(ManagedApworlds), gameName, FileSettings.versions.GetFileName());
-            Cache_Versions cache = CacheManager.LoadCache<Cache_Versions>(path);
-            List<string> versions = new List<string>();
-            foreach (var item in cache.versions)
-            {
-                versions.Add(item.Key);
-            }
-            return versions;
-        }
-
         public static List<string> GetFilesFromVersion(string gameName, string version)
         {
             string path = Path.Combine(SettingsManager.GetSaveLocation(ManagedApworlds), gameName, FileSettings.versions.GetFileName());
@@ -170,6 +187,18 @@ namespace YAAL
                 }
             }
             return output;
+        }
+
+        public static List<string> GetVersions(string gameName)
+        {
+            string path = Path.Combine(SettingsManager.GetSaveLocation(ManagedApworlds), gameName, FileSettings.versions.GetFileName());
+            Cache_Versions cache = CacheManager.LoadCache<Cache_Versions>(path);
+            List<string> versions = new List<string>();
+            foreach (var item in cache.versions)
+            {
+                versions.Add(item.Key);
+            }
+            return versions;
         }
 
         public static bool HasThisBeenAlreadyDownloaded(string game, string version, string file)
@@ -209,50 +238,35 @@ namespace YAAL
             }
         }
 
-        public static void CopyVersionToWorkingDirectory(Cache_Versions cache, string gameName, string version)
+        public static void UpdateVersion(string gameName, string version, List<string> files)
         {
             string path = Path.Combine(SettingsManager.GetSaveLocation(ManagedApworlds), gameName, versions.GetFileName());
-            string versionDirectory = Path.Combine(SettingsManager.GetSaveLocation(ManagedApworlds), gameName, version);
-            Directory.CreateDirectory(versionDirectory);
-            List<string> filesToCopy = cache.versions[version];
-            List<string> copiedFiles = new List<string>();
-            foreach (var item in filesToCopy)
-            {
-                copiedFiles.Add(CopyToVersionDirectory(item, gameName, version));
-            }
-            cache.versions[version] = copiedFiles;
-            CacheManager.SaveCache<Cache_Versions>(path, cache);
+            Cache_Versions cache = CacheManager.LoadCache<Cache_Versions>(path);
+            cache.versions[version] = files;
+            CopyVersionToWorkingDirectory(cache, gameName, version);
         }
 
-        public static string CopyToVersionDirectory(string fileToCopy, string gameName, string version)
+        public static void UpdateVersion(string gameName, string oldName, string newName, List<string> files)
         {
-            string workingName = IO_Tools.GetFileName(fileToCopy);
-
-
-            string output = Path.Combine(
-                SettingsManager.GetSaveLocation(ManagedApworlds),
-                gameName,
-                version,
-                workingName
-                );
-
-            if (output == fileToCopy)
-            {
-                return fileToCopy;
-            }
-
-            if (FileManager.CopyFile(fileToCopy, output))
-            {
-                return output;
-            }
-            else
+            string path = Path.Combine(SettingsManager.GetSaveLocation(ManagedApworlds), gameName, versions.GetFileName());
+            Cache_Versions cache = CacheManager.LoadCache<Cache_Versions>(path);
+            if (cache.versions.ContainsKey(newName))
             {
                 ErrorManager.ThrowError(
-                "IOManager_Download - Failed to copy file to version directory",
-                "Couldn't copy file " + fileToCopy + " to " + output
-                );
-                return fileToCopy;
+                    "VersionManager - Version already exists",
+                    "Tried to rename version " + oldName + " to " + newName + " but there's already a version of this name for this game. This is not allowed. Because of this, the version failed to save."
+                    );
+                return;
             }
+            if (cache.downloaded.ContainsKey(oldName))
+            {
+                cache.downloaded[newName] = files;
+                cache.downloaded.Remove(oldName);
+            }
+
+            cache.versions[newName] = files;
+            cache.versions.Remove(oldName);
+            CopyVersionToWorkingDirectory(cache, gameName, newName);
         }
     }
 }

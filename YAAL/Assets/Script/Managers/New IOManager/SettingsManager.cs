@@ -20,18 +20,36 @@ namespace YAAL
 
     public static class SettingsManager
     {
-        #if DEBUG
-                private static string baseDirectory = "I:\\Emulators\\vba\\rom\\OOS rando\\YAAL - dev";
-#else
-                private static string baseDirectory = AppContext.BaseDirectory;
-#endif
-
         private static Cache_UserSettings settings;
-
 
         static SettingsManager()
         {
-            
+            settings = CacheManager.LoadCache<Cache_UserSettings>(userSettings.GetFullPath());
+
+            if (settings.generalSettings.ContainsKey(zoom) && double.TryParse(settings.generalSettings[zoom], out double newZoom))
+            {
+                App.Settings.Zoom = newZoom;
+            }
+
+            if (settings.saveLocation.Count == 0)
+            {
+                settings.SetDefaultPath();
+                CacheManager.SaveCache<Cache_UserSettings>(userSettings.GetFullPath(), settings);
+            }
+        }
+
+        public static Cache_Settings GetGeneralSettings()
+        {
+            Cache_Settings output = new Cache_Settings();
+
+            foreach (var item in settings.GetSettings())
+            {
+                string key = item.Key;
+                string value = item.Value;
+                output.settings[item.Key] = item.Value;
+            }
+
+            return output;
         }
 
         public static string GetSaveLocation(FileSettings key)
@@ -39,7 +57,7 @@ namespace YAAL
             if (!settings.saveLocation.ContainsKey(key))
             {
                 ErrorManager.ThrowError(
-                    "IOManager - Save location doesn't exist",
+                    "SettingsManager - Save location doesn't exist",
                     "The code tried to get the save location named " + key.ToString() + " but it doesn't seem to exist ?"
                     );
             }
@@ -67,7 +85,7 @@ namespace YAAL
                 throw;
             }
         }
-
+        
         public static Dictionary<GeneralSettings, string> GetUserSettings(out Dictionary<string, string> customSettings)
         {
             Dictionary<GeneralSettings, string> output = new Dictionary<GeneralSettings, string>();

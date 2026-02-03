@@ -40,7 +40,7 @@ namespace YAAL
             catch (Exception e)
             {
                 ErrorManager.AddNewError(
-                    "IOManager_Cache - Failed to Load Cache",
+                    "CacheManager - Failed to Load Cache",
                     "Trying to load cache " + path + " lead to the following exception : " + e.Message
                     );
                 ErrorManager.ThrowError();
@@ -54,16 +54,6 @@ namespace YAAL
         {
             string json = JsonConvert.SerializeObject(cache, Formatting.Indented);
             FileManager.SaveFile(path, json);
-        }
-
-        public static Cache_Windows GetWindowSettings()
-        {
-            return LoadCache<Cache_Windows>(SettingsManager.GetSaveLocation(windows));
-        }
-
-        public static void SetWindowSettings(Cache_Windows newSettings)
-        {
-            SaveCache<Cache_Windows>(SettingsManager.GetSaveLocation(windows), newSettings);
         }
     }
 }
