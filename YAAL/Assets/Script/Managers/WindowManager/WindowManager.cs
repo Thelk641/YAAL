@@ -162,9 +162,9 @@ namespace YAAL
             return window;
         }
 
-        public static VersionManager OpenVersionWindow(string gameName)
+        public static VersionWindow OpenVersionWindow(string gameName)
         {
-            VersionManager window = new VersionManager(gameName);
+            VersionWindow window = new VersionWindow(gameName);
 
             if (windowsData.positions.ContainsKey(WindowType.CLMaker))
             {
@@ -180,9 +180,9 @@ namespace YAAL
 
         
 
-        public static VersionManager OpenVersionWindow(string gameName, string versionName)
+        public static VersionWindow OpenVersionWindow(string gameName, string versionName)
         {
-            VersionManager window = new VersionManager(gameName, versionName);
+            VersionWindow window = new VersionWindow(gameName, versionName);
 
             if (windowsData.positions.ContainsKey(WindowType.CLMaker))
             {

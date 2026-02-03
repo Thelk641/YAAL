@@ -56,10 +56,10 @@
     <Compile Update="Assets\Axaml\CLMaker\Commands\Components\Display Info.axaml.cs">
       <DependentUpon>Display Info.axaml</DependentUpon>
     </Compile>
-    <Compile Update="Assets\Axaml\CLMaker\VersionManager\VersionManager.axaml.cs">
-      <DependentUpon>VersionManager.axaml</DependentUpon>
+    <Compile Update="Assets\Axaml\VersionWindow\VersionWindow.axaml.cs">
+      <DependentUpon>VersionWindow.axaml</DependentUpon>
     </Compile>
-    <Compile Update="Assets\Axaml\CLMaker\VersionManager\VersionFile.axaml.cs">
+    <Compile Update="Assets\Axaml\VersionWindow\VersionFile.axaml.cs">
       <DependentUpon>VersionFile.axaml</DependentUpon>
     </Compile>
     <Compile Update="Assets\Axaml\ColorSelector\ColorSelector.axaml.cs">

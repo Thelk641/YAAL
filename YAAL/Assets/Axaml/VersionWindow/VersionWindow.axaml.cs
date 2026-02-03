@@ -15,13 +15,13 @@ using static YAAL.LauncherSettings;
 
 namespace YAAL;
 
-public partial class VersionManager : ScalableWindow
+public partial class VersionWindow : ScalableWindow
 {
     List<VersionFile> filesToAdd = new List<VersionFile>();
     public string gameName = "";
     public string originalName = "";
 
-    public VersionManager()
+    public VersionWindow()
     {
         InitializeComponent();
         AutoTheme.SetTheme(TrueBackground, ThemeSettings.backgroundColor);
@@ -44,7 +44,7 @@ public partial class VersionManager : ScalableWindow
         };
     }
 
-    public VersionManager(string game) : this()
+    public VersionWindow(string game) : this()
     {
         gameName = game;
         VersionFile firstVersion = new VersionFile(this);
@@ -52,7 +52,7 @@ public partial class VersionManager : ScalableWindow
         FileHolder.Children.Add(firstVersion);
     }
 
-    public VersionManager(string game, string versionName) : this()
+    public VersionWindow(string game, string versionName) : this()
     {
         gameName = game;
         VersionName.Text = versionName;

@@ -37,7 +37,7 @@ public partial class VersionFile : UserControl
         };
 
         RemoveVersion.Click += (_, _) => {
-            if(window is VersionManager manager)
+            if(window is VersionWindow manager)
             {
                 manager.RemoveFile(this);
             }

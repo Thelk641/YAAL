@@ -90,7 +90,7 @@ namespace YAAL
                 string trueName = newName;
                 if (Directory.Exists(newPath))
                 {
-                    trueName = IO_Tools.FindAvailableDirectoryName(GetSaveLocation(Themes), newName);
+                    trueName = IO_Tools.FindAvailableDirectoryName(SettingsManager.GetSaveLocation(Themes), newName);
                 }
                 try
                 {
