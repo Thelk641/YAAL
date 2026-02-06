@@ -32,22 +32,22 @@
     <Compile Update="Assets\General\Windows\ConfirmationWindow\ConfirmationWindow.axaml.cs">
       <DependentUpon>ConfirmationWindow.axaml</DependentUpon>
     </Compile>
-    <Compile Update="Assets\Custom Theme\Windows\CustomThemeMaker\CustomThemeMaker.axaml.cs">
+    <Compile Update="(unused) Custom Theme\Windows\CustomThemeMaker\CustomThemeMaker.axaml.cs">
       <DependentUpon>CustomThemeMaker.axaml</DependentUpon>
     </Compile>
-    <Compile Update="Assets\Custom Theme\Windows\CustomThemeMaker\CustomThemeCollumn.axaml.cs">
+    <Compile Update="(unused) Custom Theme\Windows\CustomThemeMaker\CustomThemeCollumn.axaml.cs">
       <DependentUpon>CustomThemeCollumn.axaml</DependentUpon>
     </Compile>
-    <Compile Update="Assets\Custom Theme\Windows\CustomThemeMaker\BrushHolder.axaml.cs">
+    <Compile Update="(unused) Custom Theme\Windows\CustomThemeMaker\BrushHolder.axaml.cs">
       <DependentUpon>BrushHolder.axaml</DependentUpon>
     </Compile>
-    <Compile Update="Assets\Custom Theme\Windows\CustomThemeMaker\ThemeHolder.axaml.cs">
+    <Compile Update="(unused) Custom Theme\Windows\CustomThemeMaker\ThemeHolder.axaml.cs">
       <DependentUpon>ThemeHolder.axaml</DependentUpon>
     </Compile>
-    <Compile Update="Assets\Custom Theme\Windows\CustomThemeMaker\EmptySlot.axaml.cs">
+    <Compile Update="(unused) Custom Theme\Windows\CustomThemeMaker\EmptySlot.axaml.cs">
       <DependentUpon>EmptySlot.axaml</DependentUpon>
     </Compile>
-    <Compile Update="Assets\Custom Theme\Windows\CustomThemeMaker\ThemeSlot.axaml.cs">
+    <Compile Update="(unused) Custom Theme\Windows\CustomThemeMaker\ThemeSlot.axaml.cs">
       <DependentUpon>ThemeSlot.axaml</DependentUpon>
     </Compile>
     <Compile Update="Assets\Main\Windows\Main Window\Components\AsyncHolder.axaml.cs">
@@ -65,7 +65,7 @@
     <Compile Update="Assets\General\Windows\Settings\SettingManager\SettingWindow.axaml.cs">
       <DependentUpon>SettingWindow.axaml</DependentUpon>
     </Compile>
-    <Compile Update="Assets\Custom Theme\Windows\CustomThemeMaker\BrushMaker.axaml.cs">
+    <Compile Update="(unused) Custom Theme\Windows\CustomThemeMaker\BrushMaker.axaml.cs">
       <DependentUpon>BrushMaker.axaml</DependentUpon>
     </Compile>
   </ItemGroup>
