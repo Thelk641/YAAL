@@ -20,101 +20,66 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Assets\Axaml\CLM v2\CLM.axaml.cs">
-      <DependentUpon>CLM.axaml</DependentUpon>
-    </Compile>
-    <Compile Update="Assets\Axaml\CLM v2\CLM_BottomBar.axaml.cs">
-      <DependentUpon>CLM_BottomBar.axaml</DependentUpon>
-    </Compile>
-    <Compile Update="Assets\Axaml\CLM v2\CLM_Selector.axaml.cs">
-      <DependentUpon>CLM_Selector.axaml</DependentUpon>
-    </Compile>
-    <Compile Update="Assets\Axaml\CLM v2\CLM_Commands.axaml.cs">
-      <DependentUpon>CLM_Commands.axaml</DependentUpon>
-    </Compile>
-    <Compile Update="Assets\Axaml\CLM v2\CLM_Buttons.axaml.cs">
-      <DependentUpon>CLM_Buttons.axaml</DependentUpon>
-    </Compile>
-    <Compile Update="Assets\Axaml\CLMaker\Commands\Command_Input.axaml.cs">
-      <DependentUpon>Command_Input.axaml</DependentUpon>
-    </Compile>
-    <Compile Update="Assets\Axaml\CLMaker\Commands\Command_Wait.axaml.cs">
-      <DependentUpon>Command_Wait.axaml</DependentUpon>
-    </Compile>
-    <Compile Update="Assets\Axaml\CLMaker\Commands\Command_Display.axaml.cs">
-      <DependentUpon>Command_Display.axaml</DependentUpon>
-    </Compile>
-    <Compile Update="Assets\Axaml\CLMaker\Commands\Components\Input Window.axaml.cs">
-      <DependentUpon>Input Window.axaml</DependentUpon>
-    </Compile>
-    <Compile Update="Assets\Axaml\DisplayWindow\Info.axaml.cs">
+    <Compile Update="Assets\Executer\Windows\DisplayWindow\Info.axaml.cs">
       <DependentUpon>Info.axaml</DependentUpon>
     </Compile>
-    <Compile Update="Assets\Axaml\DisplayWindow\Display Window.axaml.cs">
+    <Compile Update="Assets\Executer\Windows\DisplayWindow\Display Window.axaml.cs">
       <DependentUpon>Display Window.axaml</DependentUpon>
     </Compile>
-    <Compile Update="Assets\Axaml\CLMaker\Commands\Components\Display Info.axaml.cs">
-      <DependentUpon>Display Info.axaml</DependentUpon>
-    </Compile>
-    <Compile Update="Assets\Axaml\VersionWindow\VersionWindow.axaml.cs">
-      <DependentUpon>VersionWindow.axaml</DependentUpon>
-    </Compile>
-    <Compile Update="Assets\Axaml\VersionWindow\VersionFile.axaml.cs">
-      <DependentUpon>VersionFile.axaml</DependentUpon>
-    </Compile>
-    <Compile Update="Assets\Axaml\ColorSelector\ColorSelector.axaml.cs">
+    <Compile Update="Assets\General\Windows\Settings\ColorSelector\ColorSelector.axaml.cs">
       <DependentUpon>ColorSelector.axaml</DependentUpon>
     </Compile>
-    <Compile Update="Assets\Axaml\ConfirmationWindow\ConfirmationWindow.axaml.cs">
+    <Compile Update="Assets\General\Windows\ConfirmationWindow\ConfirmationWindow.axaml.cs">
       <DependentUpon>ConfirmationWindow.axaml</DependentUpon>
     </Compile>
-    <Compile Update="Assets\Axaml\CustomThemeMaker\CustomThemeMaker.axaml.cs">
+    <Compile Update="Assets\Custom Theme\Windows\CustomThemeMaker\CustomThemeMaker.axaml.cs">
       <DependentUpon>CustomThemeMaker.axaml</DependentUpon>
     </Compile>
-    <Compile Update="Assets\Axaml\CustomThemeMaker\CustomThemeCollumn.axaml.cs">
+    <Compile Update="Assets\Custom Theme\Windows\CustomThemeMaker\CustomThemeCollumn.axaml.cs">
       <DependentUpon>CustomThemeCollumn.axaml</DependentUpon>
     </Compile>
-    <Compile Update="Assets\Axaml\CustomThemeMaker\BrushHolder.axaml.cs">
+    <Compile Update="Assets\Custom Theme\Windows\CustomThemeMaker\BrushHolder.axaml.cs">
       <DependentUpon>BrushHolder.axaml</DependentUpon>
     </Compile>
-    <Compile Update="Assets\Axaml\CustomThemeMaker\ThemeHolder.axaml.cs">
+    <Compile Update="Assets\Custom Theme\Windows\CustomThemeMaker\ThemeHolder.axaml.cs">
       <DependentUpon>ThemeHolder.axaml</DependentUpon>
     </Compile>
-    <Compile Update="Assets\Axaml\CustomThemeMaker\EmptySlot.axaml.cs">
+    <Compile Update="Assets\Custom Theme\Windows\CustomThemeMaker\EmptySlot.axaml.cs">
       <DependentUpon>EmptySlot.axaml</DependentUpon>
     </Compile>
-    <Compile Update="Assets\Axaml\CustomThemeMaker\ThemeSlot.axaml.cs">
+    <Compile Update="Assets\Custom Theme\Windows\CustomThemeMaker\ThemeSlot.axaml.cs">
       <DependentUpon>ThemeSlot.axaml</DependentUpon>
     </Compile>
-    <Compile Update="Assets\Axaml\Main Window\Components\AsyncHolder.axaml.cs">
+    <Compile Update="Assets\Main\Windows\Main Window\Components\AsyncHolder.axaml.cs">
       <DependentUpon>AsyncHolder.axaml</DependentUpon>
     </Compile>
-    <Compile Update="Assets\Axaml\Main Window\Components\SlotHolder.axaml.cs">
+    <Compile Update="Assets\Main\Windows\Main Window\Components\SlotHolder.axaml.cs">
       <DependentUpon>SlotHolder.axaml</DependentUpon>
     </Compile>
-    <Compile Update="Assets\Axaml\Main Window\MainWindow.axaml.cs">
+    <Compile Update="Assets\Main\Windows\Main Window\MainWindow.axaml.cs">
       <DependentUpon>MainWindow.axaml</DependentUpon>
     </Compile>
-    <Compile Update="Assets\Axaml\SettingManager\Setting.axaml.cs">
+    <Compile Update="Assets\General\Windows\Settings\SettingManager\Setting.axaml.cs">
       <DependentUpon>Setting.axaml</DependentUpon>
     </Compile>
-    <Compile Update="Assets\Axaml\SettingManager\SettingWindow.axaml.cs">
+    <Compile Update="Assets\General\Windows\Settings\SettingManager\SettingWindow.axaml.cs">
       <DependentUpon>SettingWindow.axaml</DependentUpon>
     </Compile>
-    <Compile Update="Assets\Axaml\SettingManager\Settings\Setting_Tool.axaml.cs">
-      <DependentUpon>Setting_Tool.axaml</DependentUpon>
-    </Compile>
-    <Compile Update="Assets\Axaml\CustomThemeMaker\BrushMaker.axaml.cs">
+    <Compile Update="Assets\Custom Theme\Windows\CustomThemeMaker\BrushMaker.axaml.cs">
       <DependentUpon>BrushMaker.axaml</DependentUpon>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <AvaloniaResource Include="Assets\Icons\**" />
+    <AvaloniaResource Include="Assets\Theme\Icons\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Assets\Script\Managers\DefaultManager\Config\*.json" />
+    <EmbeddedResource Include="Assets\General\Managers\DefaultManager\Config\*.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Assets\Launcher Setup\Scripts\" />
   </ItemGroup>
 
 </Project>

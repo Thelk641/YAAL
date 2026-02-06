@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace YAAL
 {
-    public class DebugManager : TraceListener
+    public class TraceListener : System.Diagnostics.TraceListener
     {
         ConcurrentQueue<string> messages = new ConcurrentQueue<string>();
 

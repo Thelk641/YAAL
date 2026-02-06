@@ -24,7 +24,7 @@ public partial class App : Application
     bool logDebug = false;
     bool hasErroredOut = false;
     bool ignoreBase = false;
-    DebugManager logger = new DebugManager();
+    TraceListener logger = new TraceListener();
 
     public static UISettings Settings { get; } = new UISettings();
 
